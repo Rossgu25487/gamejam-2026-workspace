@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T13:07:13.246Z",
+  "generated_at": "2026-09-18T13:31:41.116Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "be68853333eadaa814264434e6bfc2bc25d8ae15",
-    "short_sha": "be68853",
-    "committed_at": "2026-09-18T13:07:05.000Z",
-    "message": "确定唯一策划的文档剧情与体验验收职责，保留任务回退依据",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/be68853333eadaa814264434e6bfc2bc25d8ae15",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/be68853333eadaa814264434e6bfc2bc25d8ae15.zip"
+    "sha": "dbe3453c0bfffae08bb415e1f5c5f3041a17f203",
+    "short_sha": "dbe3453",
+    "committed_at": "2026-09-18T13:31:32.000Z",
+    "message": "补齐两位副程序的已确认分工与成员入口，修复发布限流",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/dbe3453c0bfffae08bb415e1f5c5f3041a17f203",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/dbe3453c0bfffae08bb415e1f5c5f3041a17f203.zip"
   },
   "release": null,
   "tasks": [
@@ -107,7 +107,7 @@
         "gameplay"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:18.000Z",
+      "updated_at": "2026-09-18T13:22:49.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -121,7 +121,7 @@
         "integration"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:19.000Z",
+      "updated_at": "2026-09-18T13:22:50.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -309,7 +309,8 @@
   "roles": [
     {
       "id": "planner",
-      "name": "策划 / 队长"
+      "name": "策划 / 队长",
+      "member": "Rossgu25487"
     },
     {
       "id": "lead",
@@ -317,11 +318,13 @@
     },
     {
       "id": "gameplay",
-      "name": "副程序 A · 逻辑"
+      "name": "副程序 A · 逻辑",
+      "member": "bcynuaa"
     },
     {
       "id": "integration",
-      "name": "副程序 B · 界面接入"
+      "name": "副程序 B · 界面接入",
+      "member": "wangruijie21"
     },
     {
       "id": "ui_art",

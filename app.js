@@ -1,3 +1,5 @@
+import { resolveTaskResponsibility } from "./data/github-data.mjs?v=20260918-members";
+
 const STATUS = {
   todo: { label: "待做", order: 2 },
   doing: { label: "进行中", order: 0 },
@@ -154,7 +156,7 @@ async function refreshProject() {
   if (!state.snapshot) { await loadSnapshot(); return; }
   setBusy(true, "正在读取 GitHub 当前状态");
   try {
-    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs");
+    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs?v=20260918-members");
     const previous = state.snapshot;
     const latest = await fetchGitHubData({ repository: previous.repository.full_name, includeWorkspace: true, timeoutMs: 15000 });
     const next = createSnapshot({
@@ -231,7 +233,7 @@ function formatSize(value) {
 
 function renderRoleOptions(roles) {
   controls.role.replaceChildren(new Option("全部岗位", "all"));
-  for (const role of roles) controls.role.add(new Option(role.name, role.id));
+  for (const role of roles) controls.role.add(new Option(role.member ? `${role.name} · @${role.member}` : role.name, role.id));
   if (!roles.some((role) => role.id === state.role)) state.role = "all";
   controls.role.value = state.role;
 }
@@ -269,7 +271,8 @@ export function filterTasks(tasks, filters, roles = []) {
   return tasks.filter((task) => {
     if (filters.role !== "all" && !task.roles.includes(filters.role)) return false;
     if (filters.phase !== "all" && task.phase !== filters.phase) return false;
-    const haystack = [task.title, `#${task.number}`, task.milestone || "", ...task.assignees.map((person) => person.login), ...task.roles.map((id) => roleNames.get(id) || id)].join(" ").toLocaleLowerCase();
+    const responsibility = resolveTaskResponsibility(task, roles);
+    const haystack = [task.title, `#${task.number}`, task.milestone || "", ...responsibility.logins.map((login) => `@${login}`), ...task.roles.map((id) => roleNames.get(id) || id)].join(" ").toLocaleLowerCase();
     return words.every((word) => haystack.includes(word));
   });
 }
@@ -286,7 +289,7 @@ function renderTasks() {
   visibleTasks.sort((a, b) => STATUS[a.status].order - STATUS[b.status].order || (validDate(b.updated_at)?.getTime() || 0) - (validDate(a.updated_at)?.getTime() || 0));
   const page = visibleTasks.slice(0, state.visible);
   const roleNames = new Map(snapshot.roles.map((role) => [role.id, role.name]));
-  $("task-list").replaceChildren(...page.map((task) => renderTask(task, roleNames)));
+  $("task-list").replaceChildren(...page.map((task) => renderTask(task, roleNames, snapshot.roles)));
   $("results-summary").textContent = visibleTasks.length ? `共 ${visibleTasks.length} 项${page.length < visibleTasks.length ? `，当前显示 ${page.length} 项` : ""}` : "";
   $("show-more").hidden = page.length >= visibleTasks.length;
   $("show-more").textContent = `再显示 ${Math.min(PAGE_SIZE, visibleTasks.length - page.length)} 项任务`;
@@ -301,7 +304,7 @@ function renderTasks() {
   for (const button of controls.statusButtons) button.setAttribute("aria-pressed", String(button.dataset.status === state.status));
 }
 
-function renderTask(task, roleNames) {
+function renderTask(task, roleNames, roles) {
   const item = element("li", "task-item");
   const link = externalLink(task.url, "task-card", "");
   const heading = element("div", "task-title-row");
@@ -310,8 +313,12 @@ function renderTask(task, roleNames) {
   details.append(element("span", "task-number", `#${task.number}`));
   for (const role of task.roles) details.append(element("span", "task-role", roleNames.get(role) || role));
   details.append(element("span", "", PHASES[task.phase] || task.phase || "阶段未标注"));
-  const people = task.assignees.map((person) => `@${person.login}`).join("、");
-  details.append(element("span", "", people || "负责人待分配"));
+  const responsibility = resolveTaskResponsibility(task, roles);
+  const people = responsibility.logins.map((login) => `@${login}`).join("、");
+  const responsibilityLabel = people
+    ? `${responsibility.source === "assignees" ? "任务指派" : "岗位负责人"} ${people}`
+    : "负责人待分配";
+  details.append(element("span", "", responsibilityLabel));
   if (task.milestone) details.append(element("span", "", `里程碑：${task.milestone}`));
   const day = calendarDay(task.updated_at);
   details.append(element("span", "task-update", day ? `${day.slice(5).replace("-", "/")} 更新` : "更新时间未提供"));
