@@ -14,5 +14,6 @@
 *.docx binary
 *.kra binary
 *.psd binary
+*.zip binary
 # Imported originals must keep byte identity across Windows/Linux checkouts.
 planning/inbox/** -text
