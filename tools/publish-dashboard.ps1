@@ -24,7 +24,7 @@ if (-not $AuthorName -or -not $AuthorEmail) {
 $uncommitted = Invoke-Git @('status','--porcelain','--','site','tools/build-dashboard.mjs','tools/dashboard-data.mjs','workspace/roadmap.json','workspace/manifest.json')
 if ($uncommitted) { throw '请先提交本次网页、数据构建或排期修改，再发布对应版本。游戏中的其他未完成工作会保留。' }
 $workspaceCommit = Invoke-Git @('rev-parse','HEAD')
-$remoteMain = (Invoke-Git @('ls-remote','--heads','origin','main') -split '\s+')[0]
+$remoteMain = ((Invoke-Git @('ls-remote','--heads','origin','main')) -split '\s+')[0]
 if ($workspaceCommit -ne $remoteMain) { throw '当前提交与远端 main 不同，请先同步或推送已确认版本，再发布网页。' }
 & node (Join-Path $PSScriptRoot 'build-dashboard.mjs')
 if ($LASTEXITCODE -ne 0) { throw '网页数据构建失败，未发布。' }
