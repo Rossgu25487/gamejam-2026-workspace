@@ -43,8 +43,31 @@ function normalizeRoles(manifest) {
     const id = text(role.id, '岗位 id');
     if (seen.has(id)) throw new Error('岗位 id 重复：' + id);
     seen.add(id);
-    return { id, name: text(role.name, '岗位名称') };
+    const normalized = { id, name: text(role.name, '岗位名称') };
+    if (role.member != null) {
+      const member = text(role.member, '岗位负责人', true).trim();
+      if (member) normalized.member = member;
+    }
+    return normalized;
   });
+}
+
+export function resolveTaskResponsibility(task, roles = []) {
+  function uniqueLogins(values) {
+    const seen = new Set();
+    return values.filter((value) => typeof value === 'string' && value.trim())
+      .map((value) => value.trim()).filter((login) => {
+        const key = login.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }
+  const assigned = uniqueLogins(task.assignees.map((assignee) => assignee.login));
+  if (assigned.length) return { source: 'assignees', logins: assigned };
+  const members = new Map(roles.map((role) => [role.id, role.member]));
+  const known = uniqueLogins(task.roles.map((roleId) => members.get(roleId)));
+  return { source: known.length ? 'role_members' : 'unassigned', logins: known };
 }
 
 function normalizeRoadmap(roadmap) {

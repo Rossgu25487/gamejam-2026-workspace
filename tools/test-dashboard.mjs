@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile, rm, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve, basename } from 'node:path';
-import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData } from './dashboard-data.mjs';
-import { buildDashboard } from './build-dashboard.mjs';
+import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility } from './dashboard-data.mjs';
+import { buildDashboard, createGhFetch } from './build-dashboard.mjs';
 
 const API = 'https://api.github.com/repos/' + DEFAULT_REPOSITORY;
 const WEB = 'https://github.com/' + DEFAULT_REPOSITORY;
@@ -66,6 +66,58 @@ async function temporaryFixture(t) {
   return { directory, manifestPath, roadmapPath, outputPath };
 }
 
+test('gh transport preserves JSON, Link headers and read-only request options', async () => {
+  const controller = new AbortController();
+  const next = API + '/issues?state=all&page=2';
+  const fetchImpl = createGhFetch('fixture-gh.exe', {
+    execute: async (file, args, options) => {
+      assert.equal(file, 'fixture-gh.exe');
+      assert.ok(args.includes('--include'));
+      assert.equal(args[args.indexOf('--method') + 1], 'GET');
+      assert.equal(args.at(-1), '/repos/' + DEFAULT_REPOSITORY + '/issues?state=all');
+      assert.ok(args.includes('accept: application/vnd.github+json'));
+      assert.ok(args.includes('x-github-api-version: 2026-03-10'));
+      assert.equal(options.windowsHide, true);
+      assert.equal(options.signal, controller.signal);
+      assert.equal(args.includes('auth'), false);
+      return { stdout: 'HTTP/2.0 200 OK\r\nContent-Type: application/json\r\nLink: <' + next + '>; rel="next"\r\n\r\n{"title":"中文任务 🎮"}' };
+    },
+  });
+  const result = await fetchImpl(API + '/issues?state=all', {
+    headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10' }, signal: controller.signal,
+  });
+  assert.equal(result.status, 200);
+  assert.equal(result.headers.get('link'), '<' + next + '>; rel="next"');
+  assert.deepEqual(await result.json(), { title: '中文任务 🎮' });
+});
+
+test('gh HTTP error output stays an HTTP response, allowing the release 404 branch', async () => {
+  const fetchImpl = createGhFetch('fixture-gh.exe', {
+    execute: async () => {
+      throw Object.assign(new Error('fixture private stderr'), {
+        code: 1, stdout: 'HTTP/2.0 404 Not Found\nContent-Type: application/json\n\n{"message":"Not Found"}',
+        stderr: 'fixture private stderr',
+      });
+    },
+  });
+  const result = await fetchImpl(API + '/releases/latest');
+  assert.equal(result.status, 404);
+  assert.equal(result.ok, false);
+  assert.deepEqual(await result.json(), { message: 'Not Found' });
+});
+
+test('gh process cancellation remains AbortError and diagnostic output stays private', async () => {
+  const cancelled = createGhFetch('fixture-gh.exe', {
+    execute: async () => { throw Object.assign(new Error('private transport details'), { name: 'AbortError' }); },
+  });
+  await assert.rejects(cancelled(API), (error) => error.name === 'AbortError' && !error.message.includes('private'));
+  const failed = createGhFetch('fixture-gh.exe', {
+    execute: async () => { throw Object.assign(new Error('fixture-secret-value'), { code: 'ENOENT', stderr: 'fixture-secret-value' }); },
+  });
+  await assert.rejects(failed(API), (error) => error.message.includes('CLI 请求失败') && !error.message.includes('fixture-secret-value'));
+  await assert.rejects(failed(API, { headers: { Authorization: 'Bearer fixture-secret-value' } }), /不接受额外的认证/);
+});
+
 test('PR filtering preserves real issues, roles, people and milestone identity', () => {
   const result = normalizeIssues([
     issue(3, { pull_request: { url: API + '/pulls/3' } }),
@@ -99,6 +151,63 @@ test('closed reasons win over in-progress labels; transient label conflicts rema
   assert.ok(result.notes.some((note) => note.includes('production')));
   assert.ok(result.notes.some((note) => note.includes('role:unknown')));
   assert.ok(result.notes.some((note) => note.includes('2 个未标有效阶段')));
+});
+
+test('snapshot preserves optional role members without manufacturing issue assignees', () => {
+  const snapshot = createSnapshot({
+    repository, commit, release: null, roadmap, generatedAt: NOW,
+    manifest: { roles: [
+      { id: 'gameplay', name: '逻辑', member: 'bcynuaa' },
+      { id: 'integration', name: '界面接入', member: 'wangruijie21' },
+      { id: 'qa', name: '测试' },
+      { id: 'ui_art', name: '美术 A', member: '' },
+    ] },
+    issues: [issue(1, { labels: ['phase:preparation', 'role:gameplay'] })],
+  });
+  assert.equal(snapshot.roles[0].member, 'bcynuaa');
+  assert.equal(snapshot.roles[1].member, 'wangruijie21');
+  assert.equal(Object.hasOwn(snapshot.roles[2], 'member'), false);
+  assert.equal(Object.hasOwn(snapshot.roles[3], 'member'), false);
+  assert.deepEqual(snapshot.tasks[0].assignees, []);
+  assert.deepEqual(resolveTaskResponsibility(snapshot.tasks[0], snapshot.roles), {
+    source: 'role_members', logins: ['bcynuaa'],
+  });
+});
+
+test('native GitHub assignees take priority over known role members', () => {
+  const task = Object.freeze({
+    roles: Object.freeze(['gameplay', 'integration']),
+    assignees: Object.freeze([Object.freeze({ login: 'native-owner', url: 'https://github.com/native-owner' })]),
+  });
+  const result = resolveTaskResponsibility(task, [
+    { id: 'gameplay', name: '逻辑', member: 'bcynuaa' },
+    { id: 'integration', name: '界面接入', member: 'wangruijie21' },
+  ]);
+  assert.deepEqual(result, { source: 'assignees', logins: ['native-owner'] });
+  assert.equal(task.assignees[0].login, 'native-owner');
+});
+
+test('unassigned tasks use only explicitly known members and leave unknown roles unassigned', () => {
+  const knownRoles = [
+    { id: 'integration', name: '界面接入', member: 'wangruijie21' },
+    { id: 'qa', name: '测试' },
+  ];
+  assert.deepEqual(resolveTaskResponsibility({ assignees: [], roles: ['integration'] }, knownRoles), {
+    source: 'role_members', logins: ['wangruijie21'],
+  });
+  assert.deepEqual(resolveTaskResponsibility({ assignees: [], roles: ['qa', 'unknown'] }, knownRoles), {
+    source: 'unassigned', logins: [],
+  });
+});
+
+test('multiple role mappings deduplicate GitHub handles case-insensitively', () => {
+  const task = Object.freeze({ assignees: Object.freeze([]), roles: Object.freeze(['gameplay', 'qa', 'integration']) });
+  assert.deepEqual(resolveTaskResponsibility(task, [
+    { id: 'gameplay', name: '逻辑', member: 'bcynuaa' },
+    { id: 'qa', name: '测试', member: 'BCYNUAA' },
+    { id: 'integration', name: '界面接入', member: 'wangruijie21' },
+  ]), { source: 'role_members', logins: ['bcynuaa', 'wangruijie21'] });
+  assert.deepEqual(task.assignees, []);
 });
 
 test('follows the next Link even when the first page contains only a PR', async () => {

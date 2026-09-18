@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-18T21:22:47.5954991+08:00",
+  "note": "两位分工已确认，邀请仍待接受；未伪造GitHub原生Assignees。恢复正文前比较当前内容与applied，只撤销本轮字段。",
+  "schema_version": 1,
+  "updated_issues": [
+    {
+      "role": "gameplay",
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 同步已有 .gitignore / .gitattributes，确认本人副本与分支。\n- [ ] 熟悉 CounterModel 的配置、读取、增加、重置和信号。\n- [ ] 在本人环境运行现有逻辑检查，记录真实结果。\n\n交付：对应提交、自测结果、接口疑问；通过的现有实现无需为练习重写。"
+      },
+      "confirmed_member": "bcynuaa",
+      "number": 6,
+      "applied": {
+        "body_sha256": "a1fca29a2aa96dfaa7148234bbf6343b40cdc7d03b13593ba266b20fd05bd9fd"
+      }
+    },
+    {
+      "role": "integration",
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 在本人副本运行现有入口，核对计数变化、重置和步长显示。\n- [ ] 找到界面请求信号、真实模型接线及两份 SVG 引用。\n- [ ] 查看一次实际窗口缩放，记录文字与资源显示结果。\n\n交付：对应提交、实际操作结果与待处理项；缺少图形环境时明确未测。"
+      },
+      "confirmed_member": "wangruijie21",
+      "number": 7,
+      "applied": {
+        "body_sha256": "10c9ac891b99904a5f97e69dde2bcb8b948f8f10e55cb3efc9d7086adb586775"
+      }
+    }
+  ],
+  "base_commit": "5461c5fc6e5796e461231c0acb4415aa7b469b10"
+}

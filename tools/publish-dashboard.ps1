@@ -26,7 +26,14 @@ if ($uncommitted) { throw '请先提交本次网页、数据构建或排期修�
 $workspaceCommit = Invoke-Git @('rev-parse','HEAD')
 $remoteMain = ((Invoke-Git @('ls-remote','--heads','origin','main')) -split '\s+')[0]
 if ($workspaceCommit -ne $remoteMain) { throw '当前提交与远端 main 不同，请先同步或推送已确认版本，再发布网页。' }
-& node (Join-Path $PSScriptRoot 'build-dashboard.mjs')
+$buildArguments = @((Join-Path $PSScriptRoot 'build-dashboard.mjs'))
+$ghCommand = Get-Command gh -ErrorAction SilentlyContinue
+$ghExecutable = if ($ghCommand) { $ghCommand.Source } else { Join-Path $repoRoot '.local/github-cli/bin/gh.exe' }
+if (Test-Path -LiteralPath $ghExecutable -PathType Leaf) {
+  & $ghExecutable auth status --hostname github.com *> $null
+  if ($LASTEXITCODE -eq 0) { $buildArguments += @('--gh',$ghExecutable) }
+}
+& node @buildArguments
 if ($LASTEXITCODE -ne 0) { throw '网页数据构建失败，未发布。' }
 $snapshot = Get-Content -LiteralPath (Join-Path $repoRoot 'site/data/snapshot.json') -Encoding UTF8 -Raw | ConvertFrom-Json
 if ($snapshot.version.sha -ne $workspaceCommit) { throw '构建期间 main 已更新，请取得新版本后再发布；现有线上页面未更改。' }
