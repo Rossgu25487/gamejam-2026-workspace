@@ -2,7 +2,9 @@
 
 这是题目前的共同工作区：用同一份策划依据连接八个岗位，让逻辑、界面、美术、测试与发布材料能够独立维护并接入同一个工程。
 
-**GitHub 私有仓库：** [Rossgu25487/gamejam-2026-workspace](https://github.com/Rossgu25487/gamejam-2026-workspace)。八个岗位已预留，成员名单由队长后续提供后邀请。仓库同步使用 Git，Godot 中显示的是各人本机副本。
+**GitHub 公开仓库：** [Rossgu25487/gamejam-2026-workspace](https://github.com/Rossgu25487/gamejam-2026-workspace)。任何人都可查看和克隆；向团队仓库推送修改需要接受协作者邀请。八个岗位已预留，邀请状态以 GitHub 为准。仓库同步使用 Git，Godot 中显示的是各人本机副本。
+
+**第一次使用：** [协作空间使用指南](docs/协作空间使用指南.md)包含入口、打开方法、三个工作页、上传策划案、日常同步和换岗步骤。
 
 **技术基线：** Godot **4.7.2 Standard / GDScript / Compatibility**。当前计数界面是协作接口演练，正式题材、玩法和内容尚未确定；预制代码能否带入比赛仍需按赛事规则确认。
 
@@ -10,7 +12,7 @@
 
 ## 从这里开始
 
-1. 每位成员取得仓库访问权限后，在自己的电脑独立克隆：
+1. 每位成员在自己的电脑独立克隆公开仓库；尚未接受邀请也可以先准备：
 
    ```powershell
    git clone https://github.com/Rossgu25487/gamejam-2026-workspace.git
@@ -33,7 +35,7 @@
 
 在“协作空间”选择 **策划 / 队长 → 策划依据**：
 
-1. 点击 **导入策划案**，选择 `.md`、`.txt`、`.docx` 或 `.pdf`。插件把原件复制到 `planning/inbox/`，保留源文件，同名文件另加编号。
+1. 点击 **导入原件…**，选择 `.md`、`.txt`、`.docx` 或 `.pdf`。插件把原件复制到 `planning/inbox/`，保留源文件，同名文件另加编号。
 2. 在列表中查看文件；Markdown/TXT 可预览，Word/PDF 用系统软件打开。原件只保存，不由插件自动解析或改写。
 3. 确认本次采用的版本后，点击 **设为当前依据**。这会更新 `planning/current.json` 的路径、版本和时间；单纯导入不会激活方案。
 4. 将新原件和 `planning/current.json` 一起提交并合入，其他成员同步后，点击“刷新本机文件”读取同一版本。
