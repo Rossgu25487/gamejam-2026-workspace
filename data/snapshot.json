@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T13:31:41.116Z",
+  "generated_at": "2026-09-18T13:39:47.681Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "dbe3453c0bfffae08bb415e1f5c5f3041a17f203",
-    "short_sha": "dbe3453",
-    "committed_at": "2026-09-18T13:31:32.000Z",
-    "message": "补齐两位副程序的已确认分工与成员入口，修复发布限流",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/dbe3453c0bfffae08bb415e1f5c5f3041a17f203",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/dbe3453c0bfffae08bb415e1f5c5f3041a17f203.zip"
+    "sha": "b6e3941892c34ea469b8b57991af5540a2fe1ceb",
+    "short_sha": "b6e3941",
+    "committed_at": "2026-09-18T13:39:38.000Z",
+    "message": "确定 follerdf 为主程序并绑定准备任务",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/b6e3941892c34ea469b8b57991af5540a2fe1ceb",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/b6e3941892c34ea469b8b57991af5540a2fe1ceb.zip"
   },
   "release": null,
   "tasks": [
@@ -93,7 +93,7 @@
         "lead"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:17.000Z",
+      "updated_at": "2026-09-18T13:38:15.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -314,7 +314,8 @@
     },
     {
       "id": "lead",
-      "name": "主程序"
+      "name": "主程序",
+      "member": "follerdf"
     },
     {
       "id": "gameplay",
