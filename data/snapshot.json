@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T12:54:02.727Z",
+  "generated_at": "2026-09-18T12:55:34.991Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "70a3817b52e297e105bec9eb29be80ba64393a74",
-    "short_sha": "70a3817",
-    "committed_at": "2026-09-18T12:46:30.000Z",
-    "message": "修正网页发布时的主分支版本核对",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/70a3817b52e297e105bec9eb29be80ba64393a74",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/70a3817b52e297e105bec9eb29be80ba64393a74.zip"
+    "sha": "fc1e77947f448760b1b43deb728dad544315d13c",
+    "short_sha": "fc1e779",
+    "committed_at": "2026-09-18T12:55:26.000Z",
+    "message": "恢复网页发布后的默认 Git 索引环境",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/fc1e77947f448760b1b43deb728dad544315d13c",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/fc1e77947f448760b1b43deb728dad544315d13c.zip"
   },
   "release": null,
   "tasks": [
