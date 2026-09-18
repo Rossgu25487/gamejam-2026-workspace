@@ -1,0 +1,20 @@
+{
+  "updated_issues": [
+    {
+      "applied": {
+        "body_sha256": "90a51be4eb635d5a6c1bc47eebbca28c6991ec8292b75076d981460f82fa04f5"
+      },
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 取得独立工作副本，核对 Godot 4.7.2 和当前 main 提交。\n- [ ] 运行现有检查并定位主入口、日志和公共接口。\n- [ ] 核对本人导出模板与交包方式；确实导出并运行后记录对应结果。\n\n交付：提交号、实际检查结果和未测项。不需要重建现有工程。"
+      },
+      "number": 5
+    }
+  ],
+  "created_at": "2026-09-18T21:38:13.0047020+08:00",
+  "recovery_note": "恢复前比较当前正文与applied，只恢复本轮改动；岗位文件用本轮撤销提交恢复。",
+  "confirmed_member": "follerdf",
+  "base_commit": "dbe3453c0bfffae08bb415e1f5c5f3041a17f203",
+  "role": "lead",
+  "invitation_change": "本轮新发协作者邀请；实际接受状态在GitHub核对，撤销邀请或权限需单独操作。",
+  "schema_version": 1
+}
