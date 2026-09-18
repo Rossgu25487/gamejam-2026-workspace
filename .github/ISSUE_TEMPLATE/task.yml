@@ -1,0 +1,37 @@
+name: 团队任务
+description: 写清要做什么、由哪个岗位接手、怎样算完成。
+title: "[任务] "
+labels: ["phase:preparation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        当前默认创建赛前准备任务。正式开题后由队长改为 phase:production，并补对应 role: 岗位标签及负责人。
+        完成后附交付位置与实际验证，验收通过再关闭。任务取消请选择关闭菜单中的 Not planned。
+  - type: textarea
+    id: objective
+    attributes:
+      label: 需要完成什么
+      description: 写清范围、需求依据及接收者；已有任务可直接附链接。
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 完成条件
+      description: 给出能检查的结果，避免只写“完成开发”。
+      placeholder: |
+        - [ ] 交付……
+        - [ ] 在指定版本验证……
+    validations:
+      required: true
+  - type: input
+    id: delivery
+    attributes:
+      label: 交付位置与版本
+      description: 可以先留空；完成时补文件、PR、运行包或其他真实链接，以及提交号。
+  - type: input
+    id: time
+    attributes:
+      label: 时间与依赖
+      description: 正式阶段写预计投入和依赖，实际用时由本人记录；每人正式累计不超过 12 小时。

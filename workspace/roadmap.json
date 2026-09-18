@@ -1,0 +1,59 @@
+{
+  "phase": {
+    "id": "preparation",
+    "label": "命题前准备",
+    "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
+  },
+  "schedule": [
+    {
+      "id": "registration",
+      "title": "报名期结束",
+      "at": "2026-09-30T00:00:00+08:00",
+      "date_only": true,
+      "kind": "confirmed",
+      "is_deadline": true,
+      "note": "核对赛事报名与 TapTap 队伍成员；GitHub 入库和赛事入队分别确认。具体截止时刻以平台为准。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA"
+    },
+    {
+      "id": "theme",
+      "title": "命题公布，确认制作范围",
+      "at": "2026-10-01T12:00:00+08:00",
+      "date_only": false,
+      "kind": "confirmed",
+      "is_deadline": false,
+      "note": "公布后再明确玩法、正式任务与每个人的时间分配。日期到达不代表方案已确认。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA"
+    },
+    {
+      "id": "early-review",
+      "title": "建议首次送审",
+      "at": "2026-10-17T00:00:00+08:00",
+      "date_only": true,
+      "kind": "suggested",
+      "is_deadline": false,
+      "note": "预留审核与修正时间的建议，具体交包时段待开题排期确认。",
+      "source_url": ""
+    },
+    {
+      "id": "internal-submit",
+      "title": "队内首次提交截止",
+      "at": "2026-10-19T00:00:00+08:00",
+      "date_only": false,
+      "kind": "confirmed",
+      "is_deadline": true,
+      "note": "队长已确定：10 月 18 日结束前完成首次提交。整合、测试和修正计入各人 12 小时内。",
+      "source_url": ""
+    },
+    {
+      "id": "official-submit",
+      "title": "官方有效投稿截止",
+      "at": "2026-10-21T12:00:00+08:00",
+      "date_only": false,
+      "kind": "confirmed",
+      "is_deadline": true,
+      "note": "需完成审核与活动投稿；上传成功、审核通过、投稿成功分别确认。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA"
+    }
+  ]
+}

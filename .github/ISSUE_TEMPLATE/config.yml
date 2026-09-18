@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 查看团队工作台
+    url: https://rossgu25487.github.io/gamejam-2026-workspace/
+    about: 当前工程版本、任务状态与项目节点。

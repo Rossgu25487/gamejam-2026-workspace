@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-const WorkspacePanel = preload("workspace_panel.gd")
+const WorkspaceHome = preload("workspace_home.gd")
 const WorkspaceExport = preload("workspace_export.gd")
 
 var _panel: Control
@@ -9,7 +9,7 @@ var _export_plugin: EditorExportPlugin
 
 
 func _enter_tree() -> void:
-	_panel = WorkspacePanel.new()
+	_panel = WorkspaceHome.new()
 	_panel.setup(ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir())
 	EditorInterface.get_editor_main_screen().add_child(_panel)
 	_export_plugin = WorkspaceExport.new()
@@ -31,6 +31,8 @@ func _has_main_screen() -> bool:
 func _make_visible(is_visible: bool) -> void:
 	if is_instance_valid(_panel):
 		_panel.visible = is_visible
+		if is_visible:
+			_panel.refresh_git_status()
 
 
 func _get_plugin_name() -> String:

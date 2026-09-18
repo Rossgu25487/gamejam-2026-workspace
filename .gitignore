@@ -14,4 +14,7 @@ qa/evidence/local/
 .DS_Store
 Thumbs.db
 *.translation
+# Dashboard data is rebuilt from GitHub; never commit local snapshots.
+/site/data/snapshot.json
+/site/data/github-data.mjs
 # Source .uid and resource-side .import files ARE tracked.
