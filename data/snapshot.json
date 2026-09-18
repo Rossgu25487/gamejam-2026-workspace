@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T12:46:36.202Z",
+  "generated_at": "2026-09-18T12:54:02.727Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -180,15 +180,15 @@
       "number": 12,
       "title": "[准备] 简化协作入口并上线团队工作台",
       "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/12",
-      "status": "doing",
+      "status": "done",
       "phase": "preparation",
       "roles": [
         "planner",
         "lead"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:24.000Z",
-      "closed_at": null,
+      "updated_at": "2026-09-18T12:52:46.000Z",
+      "closed_at": "2026-09-18T12:52:46.000Z",
       "milestone": null
     }
   ],
