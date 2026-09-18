@@ -1,41 +1,13 @@
-# 本机协作状态与路由
+# 岗位、任务与恢复线索
 
-从仓库根打开 Codex；Godot 工程位于 [game/project.godot](../game/project.godot)。
-本目录把角色、文件和交接连起来，不保存第二套产品规则。
+日常从[团队工作台](https://rossgu25487.github.io/gamejam-2026-workspace/)查看工程版本、任务与排期；GitHub Issues 统一维护执行任务、负责人和验收状态。
 
-## 1. 路由与当前依据
+- [manifest.json](manifest.json)：岗位与负责目录。已确定 Rossgu25487 为唯一策划兼队长，职责包括策划案、剧情和部分设计／体验测试；个人正式职责共用 12 小时。
+- [roadmap.json](roadmap.json)：当前阶段与排期节点。
+- [planning/current.json](../planning/current.json)：本人明确指定的正式策划依据。
+- `handoffs/<role>.md`：任务链接、本人分支、未提交工作及下次恢复需要的线索；不重复维护团队状态。
+- `recovery/`：确有外部状态变更需要回退时，保存不含凭据的必要原记录。仓库文件的历史由 Git 保留。
 
-- [manifest.json](manifest.json)：由 lead 维护基础路由、阶段、岗位与路径。字段以实际文件及插件实现为准。
-- [planning/current.json](../planning/current.json)：只有 planner 明确指定后才更新当前策划依据。
-- 具体接口：[docs/接口与交接.md](../docs/接口与交接.md)；共同规则：[docs/协作协议.md](../docs/协作协议.md)。
+Godot 的协作入口只显示网页快捷入口和本机版本。策划资料在 planning 维护，任务在 GitHub 更新；具体步骤见[使用指南](../docs/协作空间使用指南.md)。
 
-路由缺项只影响对应入口，先记录差异并继续已明确工作；不擅自用其他资料取代当前依据。
-
-## 2. 每人一份交接
-
-| 角色 | 独占记录 |
-|---|---|
-| planner | [handoffs/planner.md](handoffs/planner.md) |
-| lead | [handoffs/lead.md](handoffs/lead.md) |
-| gameplay | [handoffs/gameplay.md](handoffs/gameplay.md) |
-| integration | [handoffs/integration.md](handoffs/integration.md) |
-| ui_art | [handoffs/ui_art.md](handoffs/ui_art.md) |
-| visual_art | [handoffs/visual_art.md](handoffs/visual_art.md) |
-| qa | [handoffs/qa.md](handoffs/qa.md) |
-| ops | [handoffs/ops.md](handoffs/ops.md) |
-
-内容保持简短：当前目标与需求 ID/依据版本、分支及相关版本、改动文件、实际验证、卡点、接收者与下一步；正式制作时另记本人确认的实际工时。
-持续更新本人的文件，不替别人改状态，不另造个人 README、逐日报告或重复断点表。
-交接可以写“已完成本地实现，待接入/待独立验收”，避免将局部成功当作全队完成。
-
-## 3. Godot“协作空间”
-
-插件读取当前 clone 的路由和策划指针，可导入原件、查看依据、编辑本人的交接文件。编辑前核对当前角色。
-原件导入只落到 planning/inbox；设当前依据须由 planner 明确执行。
-保存发生在本机，其他成员需要通过 Git 提交、拉取和合并取得更新；多人不得共享一个可写工作目录。
-没有插件或图形环境时，直接使用对应文件继续工作，不能把未执行的界面操作记为成功。
-
-## 4. 恢复
-
-先读自己的交接记录，再核对当前分支、工作区变化、当前依据和直接依赖。复用未变内容的通过结果，从下一步继续。
-没有新包或新信息时保留成果并结束本轮等待，不做无限轮询；恢复后确认新旧版本再接着验证。
+每轮完成后保存、核验、独立提交并推送，报告提交号。恢复前核对最新任务和本机改动，避免覆盖其他成果；[回退步骤](../docs/加入与同步.md)。

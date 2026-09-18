@@ -1,0 +1,63 @@
+{
+  "created_at": "2026-09-18T21:01:41.68705+08:00",
+  "purpose": "本轮唯一策划职责与任务指派的恢复依据",
+  "recovery_notes": [
+    "先保护当前未提交工作，仓库文件用独立撤销提交恢复。",
+    "Issue恢复前比较当前记录与applied；只还原before列出的字段，后续他人更新先人工对齐。",
+    "新增任务需要取消时按明确要求用not_planned关闭，保留历史；不要直接删除。",
+    "本记录不包含凭据，只保存本轮修改过的公开任务内容。"
+  ],
+  "updated_issues": [
+    {
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 核对赛事报名和 TapTap 队伍状态，和 GitHub 协作者状态分开记录。\n- [ ] 保留赛前代码能否正式复用等未明确事项。\n- [ ] 明确命题公布后由谁确认当前策划依据、任务验收和个人时间预算。\n\n交付：已确认事项、待核项和实际资料位置；正式题材与制作任务继续待命题。",
+        "labels": [
+          "phase:preparation",
+          "role:planner"
+        ],
+        "assignees": [],
+        "title": "[准备] 策划队长：核对报名、规则与开题入口"
+      },
+      "applied": {
+        "labels": [
+          "phase:preparation",
+          "role:planner"
+        ],
+        "title": "[准备] 策划队长：准备策划、剧情与体验验收底稿",
+        "assignees": [
+          "Rossgu25487"
+        ],
+        "body_sha256": "3461120a75ce742da55aa4c7d41518ba11213a09a8779770e9f267f180e3aa4f"
+      },
+      "number": 4
+    },
+    {
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 明确接收工程或运行包的版本、平台与启动方法。\n- [ ] 在本人环境检查启动、计数操作、重置和重开。\n- [ ] 熟悉问题的步骤、预期、实际结果、证据与回归记录方式。\n\n交付：实际检查结果，分别写清脚本、窗口、运行包与跨机器范围；缺少包时先准备接收与验证清单。"
+      },
+      "applied": {
+        "body_sha256": "19ea04e0a305428bb074020ee1e9fdb69abad16e6693ab450f6ea4c5e4dff208"
+      },
+      "number": 10
+    }
+  ],
+  "base_commit": "fc1e77947f448760b1b43deb728dad544315d13c",
+  "created_issues": [
+    {
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/13",
+      "title": "[职责·待命题] 输出并维护正式策划案",
+      "number": 13
+    },
+    {
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/14",
+      "title": "[职责·待命题] 撰写剧情与游戏文本",
+      "number": 14
+    },
+    {
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/15",
+      "title": "[职责·待命题] 完成设计、剧情与关键玩家流程验收",
+      "number": 15
+    }
+  ],
+  "schema_version": 1
+}
