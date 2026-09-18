@@ -52,7 +52,11 @@ try {
   }
   $tree = Invoke-Git @('write-tree')
 } finally {
-  [Environment]::SetEnvironmentVariable('GIT_INDEX_FILE',$previousIndex,'Process')
+  if ([string]::IsNullOrEmpty($previousIndex)) {
+    Remove-Item Env:GIT_INDEX_FILE -ErrorAction SilentlyContinue
+  } else {
+    $env:GIT_INDEX_FILE = $previousIndex
+  }
 }
 $arguments = @('-c',('user.name='+$AuthorName),'-c',('user.email='+$AuthorEmail),'commit-tree',$tree)
 if ($parent) { $arguments += @('-p',$parent) }
