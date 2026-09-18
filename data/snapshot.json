@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-18T12:46:36.202Z",
+  "repository": {
+    "full_name": "Rossgu25487/gamejam-2026-workspace",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
+    "default_branch": "main"
+  },
+  "phase": {
+    "id": "preparation",
+    "label": "命题前准备",
+    "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
+  },
+  "version": {
+    "sha": "70a3817b52e297e105bec9eb29be80ba64393a74",
+    "short_sha": "70a3817",
+    "committed_at": "2026-09-18T12:46:30.000Z",
+    "message": "修正网页发布时的主分支版本核对",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/70a3817b52e297e105bec9eb29be80ba64393a74",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/70a3817b52e297e105bec9eb29be80ba64393a74.zip"
+  },
+  "release": null,
+  "tasks": [
+    {
+      "number": 1,
+      "title": "[准备] 建立团队仓库与八岗独立工作分支",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/1",
+      "status": "done",
+      "phase": "preparation",
+      "roles": [
+        "lead"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:10.000Z",
+      "closed_at": "2026-09-18T12:29:10.000Z",
+      "milestone": null
+    },
+    {
+      "number": 2,
+      "title": "[准备] 完成八岗工作流分发",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/2",
+      "status": "done",
+      "phase": "preparation",
+      "roles": [
+        "planner"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:12.000Z",
+      "closed_at": "2026-09-18T12:29:12.000Z",
+      "milestone": null
+    },
+    {
+      "number": 3,
+      "title": "[准备] 完成 Godot 接口演练基线检查",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/3",
+      "status": "done",
+      "phase": "preparation",
+      "roles": [
+        "lead",
+        "qa"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:14.000Z",
+      "closed_at": "2026-09-18T12:29:14.000Z",
+      "milestone": null
+    },
+    {
+      "number": 4,
+      "title": "[准备] 策划队长：核对报名、规则与开题入口",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/4",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "planner"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:16.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 5,
+      "title": "[准备] 主程序：在本人电脑验证工程与导出",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/5",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "lead"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:17.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 6,
+      "title": "[准备] 副程序 A：复现逻辑接口与自测",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/6",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "gameplay"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:18.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 7,
+      "title": "[准备] 副程序 B：复现界面接入与资源引用",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/7",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "integration"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:19.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 8,
+      "title": "[准备] 美术 A：确认 UI 源文件编辑与交接",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/8",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "ui_art"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:20.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 9,
+      "title": "[准备] 美术 B：确认二维资源编辑与交接",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/9",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "visual_art"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:21.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 10,
+      "title": "[准备] 测试：完成独立运行与问题记录演练",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/10",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "qa"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:22.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 11,
+      "title": "[准备] 运营：确认截图录屏与投稿材料清单",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/11",
+      "status": "todo",
+      "phase": "preparation",
+      "roles": [
+        "ops"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:23.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 12,
+      "title": "[准备] 简化协作入口并上线团队工作台",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/12",
+      "status": "doing",
+      "phase": "preparation",
+      "roles": [
+        "planner",
+        "lead"
+      ],
+      "assignees": [],
+      "updated_at": "2026-09-18T12:29:24.000Z",
+      "closed_at": null,
+      "milestone": null
+    }
+  ],
+  "schedule": [
+    {
+      "id": "registration",
+      "title": "报名期结束",
+      "at": "2026-09-29T16:00:00.000Z",
+      "date_only": true,
+      "kind": "confirmed",
+      "note": "核对赛事报名与 TapTap 队伍成员；GitHub 入库和赛事入队分别确认。具体截止时刻以平台为准。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA",
+      "is_deadline": true
+    },
+    {
+      "id": "theme",
+      "title": "命题公布，确认制作范围",
+      "at": "2026-10-01T04:00:00.000Z",
+      "date_only": false,
+      "kind": "confirmed",
+      "note": "公布后再明确玩法、正式任务与每个人的时间分配。日期到达不代表方案已确认。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA",
+      "is_deadline": false
+    },
+    {
+      "id": "early-review",
+      "title": "建议首次送审",
+      "at": "2026-10-16T16:00:00.000Z",
+      "date_only": true,
+      "kind": "suggested",
+      "note": "预留审核与修正时间的建议，具体交包时段待开题排期确认。",
+      "source_url": "",
+      "is_deadline": false
+    },
+    {
+      "id": "internal-submit",
+      "title": "队内首次提交截止",
+      "at": "2026-10-18T16:00:00.000Z",
+      "date_only": false,
+      "kind": "confirmed",
+      "note": "队长已确定：10 月 18 日结束前完成首次提交。整合、测试和修正计入各人 12 小时内。",
+      "source_url": "",
+      "is_deadline": true
+    },
+    {
+      "id": "official-submit",
+      "title": "官方有效投稿截止",
+      "at": "2026-10-21T04:00:00.000Z",
+      "date_only": false,
+      "kind": "confirmed",
+      "note": "需完成审核与活动投稿；上传成功、审核通过、投稿成功分别确认。",
+      "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA",
+      "is_deadline": true
+    }
+  ],
+  "roles": [
+    {
+      "id": "planner",
+      "name": "策划 / 队长"
+    },
+    {
+      "id": "lead",
+      "name": "主程序"
+    },
+    {
+      "id": "gameplay",
+      "name": "副程序 A · 逻辑"
+    },
+    {
+      "id": "integration",
+      "name": "副程序 B · 界面接入"
+    },
+    {
+      "id": "ui_art",
+      "name": "美术 A · UI 组件"
+    },
+    {
+      "id": "visual_art",
+      "name": "美术 B · 二维图形"
+    },
+    {
+      "id": "qa",
+      "name": "测试"
+    },
+    {
+      "id": "ops",
+      "name": "运营"
+    }
+  ],
+  "source": {
+    "mode": "snapshot"
+  }
+}
