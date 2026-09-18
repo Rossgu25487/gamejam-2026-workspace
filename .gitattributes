@@ -1,0 +1,18 @@
+* text=auto eol=lf
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+*.cfg text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.svg text eol=lf
+*.ps1 text eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
+*.docx binary
+*.kra binary
+*.psd binary
+# Imported originals must keep byte identity across Windows/Linux checkouts.
+planning/inbox/** -text

@@ -1,0 +1,23 @@
+; Godot 4.7.2 collaboration starter. Competition gameplay is not defined yet.
+config_version=5
+
+[application]
+config/name="Game Jam 协作试作"
+run/main_scene="res://main/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=1152
+window/size/viewport_height=720
+window/size/window_width_override=1152
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/team_workspace/plugin.cfg")
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.055, 0.075, 0.1, 1)

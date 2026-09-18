@@ -1,0 +1,274 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://ui/counter_view.gd" id="1_view"]
+[ext_resource type="Theme" path="res://ui/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://art/visual/ambient_grid.svg" id="3_background"]
+[ext_resource type="Texture2D" path="res://art/visual/loop_mark.svg" id="4_mark"]
+
+[node name="CounterView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_view")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PageMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 26
+
+[node name="Page" type="VBoxContainer" parent="PageMargin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" type="HBoxContainer" parent="PageMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Mark" type="TextureRect" parent="PageMargin/Page/Header"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_mark")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heading" type="VBoxContainer" parent="PageMargin/Page/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Title" type="Label" parent="PageMargin/Page/Header/Heading"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "协作接口演练"
+
+[node name="Subtitle" type="Label" parent="PageMargin/Page/Header/Heading"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "先让一个简单的变化，完整地发生。"
+
+[node name="Badge" type="PanelContainer" parent="PageMargin/Page/Header"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"BadgePanel"
+
+[node name="Label" type="Label" parent="PageMargin/Page/Header/Badge"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "Godot  ·  预备样例"
+
+[node name="Body" type="HBoxContainer" parent="PageMargin/Page"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 22
+
+[node name="CounterCard" type="PanelContainer" parent="PageMargin/Page/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
+theme_type_variation = &"CardPanel"
+
+[node name="Content" type="VBoxContainer" parent="PageMargin/Page/Body/CounterCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Eyebrow" type="Label" parent="PageMargin/Page/Body/CounterCard/Content"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+theme_override_font_sizes/font_size = 13
+text = "01  /  交互回路"
+
+[node name="Title" type="Label" parent="PageMargin/Page/Body/CounterCard/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "从一个变化开始"
+
+[node name="ValueArea" type="VBoxContainer" parent="PageMargin/Page/Body/CounterCard/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="ValueCaption" type="Label" parent="PageMargin/Page/Body/CounterCard/Content/ValueArea"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "当前数值"
+horizontal_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="PageMargin/Page/Body/CounterCard/Content/ValueArea"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeroValue"
+text = "—"
+horizontal_alignment = 1
+
+[node name="StepNote" type="Label" parent="PageMargin/Page/Body/CounterCard/Content/ValueArea"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SmallLabel"
+text = "每次变化 1  ·  重置回到起点"
+horizontal_alignment = 1
+
+[node name="Actions" type="HBoxContainer" parent="PageMargin/Page/Body/CounterCard/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="IncrementButton" type="Button" parent="PageMargin/Page/Body/CounterCard/Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PrimaryButton"
+text = "加 1"
+mouse_default_cursor_shape = 2
+
+[node name="ResetButton" type="Button" parent="PageMargin/Page/Body/CounterCard/Content/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "重置"
+mouse_default_cursor_shape = 2
+
+[node name="ConnectionStatus" type="Label" parent="PageMargin/Page/Body/CounterCard/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SmallLabel"
+text = "独立界面预览 · 尚未连接逻辑"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Aside" type="VBoxContainer" parent="PageMargin/Page/Body"]
+custom_minimum_size = Vector2(258, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 18
+
+[node name="GuideCard" type="PanelContainer" parent="PageMargin/Page/Body/Aside"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"SidePanel"
+
+[node name="Content" type="VBoxContainer" parent="PageMargin/Page/Body/Aside/GuideCard"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Eyebrow" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+theme_override_font_sizes/font_size = 13
+text = "02  /  清楚的边界"
+
+[node name="Title" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "各自负责，彼此接上"
+
+[node name="Description" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "一次操作经过逻辑，再把结果带回界面。"
+autowrap_mode = 3
+
+[node name="Roles" type="GridContainer" parent="PageMargin/Page/Body/Aside/GuideCard/Content"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 13
+columns = 2
+
+[node name="LogicName" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "逻辑"
+
+[node name="LogicRole" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+text = "管理数值变化"
+
+[node name="ViewName" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "界面"
+
+[node name="ViewRole" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+text = "传达操作与结果"
+
+[node name="SkinName" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "皮肤"
+
+[node name="SkinRole" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+text = "调整组件与层级"
+
+[node name="ArtName" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "图形"
+
+[node name="ArtRole" type="Label" parent="PageMargin/Page/Body/Aside/GuideCard/Content/Roles"]
+layout_mode = 2
+text = "替换图标与背景"
+
+[node name="ResourceCard" type="PanelContainer" parent="PageMargin/Page/Body/Aside"]
+layout_mode = 2
+theme_type_variation = &"SidePanel"
+
+[node name="Content" type="VBoxContainer" parent="PageMargin/Page/Body/Aside/ResourceCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="PageMargin/Page/Body/Aside/ResourceCard/Content"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+text = "资源出处"
+
+[node name="SourceText" type="Label" parent="PageMargin/Page/Body/Aside/ResourceCard/Content"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "图标与背景：本项目原创 SVG\n文字：本机系统字体"
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="PageMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Note" type="Label" parent="PageMargin/Page/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SmallLabel"
+text = "题前协作夹具  /  用于接口与资源接入验证"
+autowrap_mode = 3
+
+[node name="Hint" type="Label" parent="PageMargin/Page/Footer"]
+layout_mode = 2
+theme_type_variation = &"SmallLabel"
+text = "Tab 切换焦点 · Enter / 空格操作"
+
+[connection signal="pressed" from="PageMargin/Page/Body/CounterCard/Content/Actions/IncrementButton" to="." method="_on_increment_pressed"]
+[connection signal="pressed" from="PageMargin/Page/Body/CounterCard/Content/Actions/ResetButton" to="." method="_on_reset_pressed"]

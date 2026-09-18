@@ -1,0 +1,17 @@
+# Local editor state, credentials, generated builds and QA captures
+.local/
+game/.godot/
+game/.godot/**
+game/.mono/
+builds/
+qa/evidence/local/
+*.tmp
+*.tmp-*
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.translation
+# Source .uid and resource-side .import files ARE tracked.

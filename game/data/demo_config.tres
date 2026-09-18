@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="DemoConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/demo_config.gd" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+initial_value = 0
+step = 1
