@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T12:55:34.991Z",
+  "generated_at": "2026-09-18T13:07:13.246Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "fc1e77947f448760b1b43deb728dad544315d13c",
-    "short_sha": "fc1e779",
-    "committed_at": "2026-09-18T12:55:26.000Z",
-    "message": "恢复网页发布后的默认 Git 索引环境",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/fc1e77947f448760b1b43deb728dad544315d13c",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/fc1e77947f448760b1b43deb728dad544315d13c.zip"
+    "sha": "be68853333eadaa814264434e6bfc2bc25d8ae15",
+    "short_sha": "be68853",
+    "committed_at": "2026-09-18T13:07:05.000Z",
+    "message": "确定唯一策划的文档剧情与体验验收职责，保留任务回退依据",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/be68853333eadaa814264434e6bfc2bc25d8ae15",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/be68853333eadaa814264434e6bfc2bc25d8ae15.zip"
   },
   "release": null,
   "tasks": [
@@ -66,15 +66,20 @@
     },
     {
       "number": 4,
-      "title": "[准备] 策划队长：核对报名、规则与开题入口",
+      "title": "[准备] 策划队长：准备策划、剧情与体验验收底稿",
       "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/4",
       "status": "todo",
       "phase": "preparation",
       "roles": [
         "planner"
       ],
-      "assignees": [],
-      "updated_at": "2026-09-18T12:29:16.000Z",
+      "assignees": [
+        {
+          "login": "Rossgu25487",
+          "url": "https://github.com/Rossgu25487"
+        }
+      ],
+      "updated_at": "2026-09-18T13:04:02.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -158,7 +163,7 @@
         "qa"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:22.000Z",
+      "updated_at": "2026-09-18T13:04:04.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -189,6 +194,63 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:52:46.000Z",
       "closed_at": "2026-09-18T12:52:46.000Z",
+      "milestone": null
+    },
+    {
+      "number": 13,
+      "title": "[职责·待命题] 输出并维护正式策划案",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/13",
+      "status": "todo",
+      "phase": "production",
+      "roles": [
+        "planner"
+      ],
+      "assignees": [
+        {
+          "login": "Rossgu25487",
+          "url": "https://github.com/Rossgu25487"
+        }
+      ],
+      "updated_at": "2026-09-18T13:04:06.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 14,
+      "title": "[职责·待命题] 撰写剧情与游戏文本",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/14",
+      "status": "todo",
+      "phase": "production",
+      "roles": [
+        "planner"
+      ],
+      "assignees": [
+        {
+          "login": "Rossgu25487",
+          "url": "https://github.com/Rossgu25487"
+        }
+      ],
+      "updated_at": "2026-09-18T13:04:08.000Z",
+      "closed_at": null,
+      "milestone": null
+    },
+    {
+      "number": 15,
+      "title": "[职责·待命题] 完成设计、剧情与关键玩家流程验收",
+      "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/issues/15",
+      "status": "todo",
+      "phase": "production",
+      "roles": [
+        "planner"
+      ],
+      "assignees": [
+        {
+          "login": "Rossgu25487",
+          "url": "https://github.com/Rossgu25487"
+        }
+      ],
+      "updated_at": "2026-09-18T13:04:09.000Z",
+      "closed_at": null,
       "milestone": null
     }
   ],
