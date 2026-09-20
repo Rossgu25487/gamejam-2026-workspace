@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-18T13:39:47.681Z",
+  "generated_at": "2026-09-20T03:55:15.278Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "b6e3941892c34ea469b8b57991af5540a2fe1ceb",
-    "short_sha": "b6e3941",
-    "committed_at": "2026-09-18T13:39:38.000Z",
-    "message": "确定 follerdf 为主程序并绑定准备任务",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/b6e3941892c34ea469b8b57991af5540a2fe1ceb",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/b6e3941892c34ea469b8b57991af5540a2fe1ceb.zip"
+    "sha": "36db33bb0b6e12dce3048d3dab099d89570be4e2",
+    "short_sha": "36db33b",
+    "committed_at": "2026-09-20T03:55:04.000Z",
+    "message": "确定 Aprilwwwang 为美术 A 并绑定准备任务",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/36db33bb0b6e12dce3048d3dab099d89570be4e2",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/36db33bb0b6e12dce3048d3dab099d89570be4e2.zip"
   },
   "release": null,
   "tasks": [
@@ -120,8 +120,13 @@
       "roles": [
         "integration"
       ],
-      "assignees": [],
-      "updated_at": "2026-09-18T13:22:50.000Z",
+      "assignees": [
+        {
+          "login": "wangruijie21",
+          "url": "https://github.com/wangruijie21"
+        }
+      ],
+      "updated_at": "2026-09-20T03:54:15.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -135,7 +140,7 @@
         "ui_art"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:20.000Z",
+      "updated_at": "2026-09-20T03:54:14.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -329,7 +334,8 @@
     },
     {
       "id": "ui_art",
-      "name": "美术 A · UI 组件"
+      "name": "美术 A · UI 组件",
+      "member": "Aprilwwwang"
     },
     {
       "id": "visual_art",
