@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T03:55:15.278Z",
+  "generated_at": "2026-09-20T10:23:58.245Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "36db33bb0b6e12dce3048d3dab099d89570be4e2",
-    "short_sha": "36db33b",
-    "committed_at": "2026-09-20T03:55:04.000Z",
-    "message": "确定 Aprilwwwang 为美术 A 并绑定准备任务",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/36db33bb0b6e12dce3048d3dab099d89570be4e2",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/36db33bb0b6e12dce3048d3dab099d89570be4e2.zip"
+    "sha": "6f89f778674db55ccf35c1a8c35c346532e30a43",
+    "short_sha": "6f89f77",
+    "committed_at": "2026-09-20T10:23:49.000Z",
+    "message": "记录 FreeSFX 本地素材目录与已验证下载流程",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/6f89f778674db55ccf35c1a8c35c346532e30a43",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/6f89f778674db55ccf35c1a8c35c346532e30a43.zip"
   },
   "release": null,
   "tasks": [
