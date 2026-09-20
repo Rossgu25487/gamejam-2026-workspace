@@ -44,6 +44,7 @@ git clone https://github.com/Rossgu25487/gamejam-2026-workspace.git
 | 本人分支的恢复线索 | `workspace/handoffs/<role>.md`；引用任务，不重复维护全队状态 |
 | 网页与数据构建 | `site/`、`tools/build-dashboard.mjs` |
 | 游戏与接口 | `game/`、[接口与交接](docs/接口与交接.md) |
+| 本机音效素材库 | [FreeSFX 目录、来源与使用说明](docs/音效素材库.md) |
 
 岗位长 MD 保留为已分发的 Codex 工作参考：[文件目录](岗位工作流/)。其中旧版 Godot 三页操作以当前使用说明为准。
 
