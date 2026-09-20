@@ -1,0 +1,32 @@
+{
+  "invitation_change": "本轮新发Aprilwwwang协作者邀请；接受状态需另查，撤销邀请或权限需要单独处理。",
+  "schema_version": 1,
+  "role": "ui_art",
+  "base_commit": "b6e3941892c34ea469b8b57991af5540a2fe1ceb",
+  "recovery_note": "回退前比较当前内容与applied，仅恢复本轮字段，保留他人后续修改。",
+  "updated_issues": [
+    {
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 用本人熟悉的工具确认能够查看和编辑已有 UI Theme 或二维源文件。\n- [ ] 与界面接入岗位对齐尺寸、字体和必要按钮状态。\n- [ ] 写明可编辑源稿、直接可用资源以及需要接入验证的部分。\n\n交付：工具与格式、源文件位置、接收规格；无需额外画一整套菜单。"
+      },
+      "applied": {
+        "body_sha256": "8608f15dbb2dba7b453213d5613c678ff50a34b6f8873014ab58418185caddcb"
+      },
+      "number": 8
+    },
+    {
+      "before": {
+        "assignees": []
+      },
+      "applied": {
+        "assignees": [
+          "wangruijie21"
+        ]
+      },
+      "number": 7,
+      "note": "已确认该成员接受邀请，补齐此前授权的任务原生指派。"
+    }
+  ],
+  "created_at": "2026-09-20T11:54:09.4095150+08:00",
+  "confirmed_member": "Aprilwwwang"
+}

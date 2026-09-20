@@ -8,7 +8,7 @@
 - 先读当前 Issue、`workspace/manifest.json`、本角色工作流及相关文件，已有明确角色直接沿用。旧岗位附件中的 Godot 三页操作和重复状态记录，以本文件及当前使用指南为准。
 - 当前仍是命题前协作试作，Godot 4.7.2 Standard / GDScript / Compatibility；计数夹具仅用于接口演练，不推定正式游戏设计。
 - 当前用户 Rossgu25487 固定担任唯一策划兼队长，负责策划案输出、剧情撰写，以及设计规则、剧情和关键玩家流程的部分测试。Codex 是本人的执行助手，协助整理、制作、检查和交接；产品取舍沿本人已确认要求。独立测试岗的环境、包体和回归职责仍保留。本人全部正式职责合计最多 12 小时。
-- 已确定主程序 / lead 为 follerdf，副程序 A / gameplay 为 bcynuaa，副程序 B / integration 为 wangruijie21。固定岗位分工写入 manifest.member；具体任务显式指派优先采用 GitHub Assignees。邀请是否接受单独核验，不能因为待接受就把已确认的岗位负责人显示为待分配。
+- 已确定主程序 / lead 为 follerdf，副程序 A / gameplay 为 bcynuaa，副程序 B / integration 为 wangruijie21，美术 A / ui_art 为 Aprilwwwang，负责 UI 布局、组件与二维资源。固定岗位分工写入 manifest.member；具体任务显式指派优先采用 GitHub Assignees。邀请是否接受单独核验，不能因为待接受就把已确认的岗位负责人显示为待分配。
 
 ## 执行与同步
 
