@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-20T10:23:58.245Z",
+  "generated_at": "2026-09-22T01:11:29.974Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
   },
   "version": {
-    "sha": "6f89f778674db55ccf35c1a8c35c346532e30a43",
-    "short_sha": "6f89f77",
-    "committed_at": "2026-09-20T10:23:49.000Z",
-    "message": "记录 FreeSFX 本地素材目录与已验证下载流程",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/6f89f778674db55ccf35c1a8c35c346532e30a43",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/6f89f778674db55ccf35c1a8c35c346532e30a43.zip"
+    "sha": "b14b72def68bb62e783a4a6eb0f3bd9b541671f7",
+    "short_sha": "b14b72d",
+    "committed_at": "2026-09-22T01:11:19.000Z",
+    "message": "确定 stephaniez1 为美术 B 并绑定准备任务",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/b14b72def68bb62e783a4a6eb0f3bd9b541671f7",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/b14b72def68bb62e783a4a6eb0f3bd9b541671f7.zip"
   },
   "release": null,
   "tasks": [
@@ -154,7 +154,7 @@
         "visual_art"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:21.000Z",
+      "updated_at": "2026-09-22T01:10:13.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -339,7 +339,8 @@
     },
     {
       "id": "visual_art",
-      "name": "美术 B · 二维图形"
+      "name": "美术 B · 二维图形",
+      "member": "stephaniez1"
     },
     {
       "id": "qa",
