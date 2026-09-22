@@ -12,7 +12,7 @@
 
 [使用说明](docs/协作空间使用指南.md) · [任务列表](https://github.com/Rossgu25487/gamejam-2026-workspace/issues) · [策划资料](planning/) · [成员与版本同步](docs/加入与同步.md)
 
-当前使用 Rossgu25487 的个人仓库，尚未建立 Organization。已确定分工：Rossgu25487（唯一策划／队长）、follerdf（主程序）、bcynuaa（副程序 A）、wangruijie21（副程序 B）、Aprilwwwang（美术 A：UI 布局／组件／二维资源）；其余岗位待名单。[查看成员与邀请（队长）](https://github.com/Rossgu25487/gamejam-2026-workspace/settings/access)
+当前使用 Rossgu25487 的个人仓库，尚未建立 Organization。已确定分工：Rossgu25487（唯一策划／队长）、follerdf（主程序）、bcynuaa（副程序 A）、wangruijie21（副程序 B）、Aprilwwwang（美术 A：UI 布局／组件／二维资源）、stephaniez1（美术 B：二维图标／背景／物件及源资源交接）；其余岗位待名单。[查看成员与邀请（队长）](https://github.com/Rossgu25487/gamejam-2026-workspace/settings/access)
 
 工程版本显示共同 `main` 提交，不代表每位成员的本机已同步。代码下载与可试玩版本分开列出；尚无发布包时会明确显示。网页给出最近获取数据的时间，刷新失败会保留原数据和失败提示。
 

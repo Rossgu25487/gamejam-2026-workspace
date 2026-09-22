@@ -9,7 +9,7 @@
     {"id":"gameplay","name":"副程序 A · 逻辑","member":"bcynuaa","responsibilities":["负责分配的交互与状态逻辑、接口交付和自测"],"workflow":"岗位工作流/02_副程序A_交互与逻辑.md","handoff":"workspace/handoffs/gameplay.md","owned_paths":["game/features/counter_demo/"]},
     {"id":"integration","name":"副程序 B · 界面接入","member":"wangruijie21","responsibilities":["负责界面接线、状态显示与二维资源接入"],"workflow":"岗位工作流/03_副程序B_界面与资源接入.md","handoff":"workspace/handoffs/integration.md","owned_paths":["game/ui/counter_view.gd","game/ui/counter_view.tscn"]},
     {"id":"ui_art","name":"美术 A · UI 组件","member":"Aprilwwwang","responsibilities":["负责 UI 布局、组件表现、主题与对应二维源资源的制作和交接"],"workflow":"岗位工作流/04_美术A_UI布局与组件.md","handoff":"workspace/handoffs/ui_art.md","owned_paths":["game/ui/theme.tres","game/art/ui/"]},
-    {"id":"visual_art","name":"美术 B · 二维图形","workflow":"岗位工作流/05_美术B_二维图形与视觉资源.md","handoff":"workspace/handoffs/visual_art.md","owned_paths":["game/art/visual/"]},
+    {"id":"visual_art","name":"美术 B · 二维图形","member":"stephaniez1","responsibilities":["负责二维图标、背景和物件的视觉源资源与交接"],"workflow":"岗位工作流/05_美术B_二维图形与视觉资源.md","handoff":"workspace/handoffs/visual_art.md","owned_paths":["game/art/visual/"]},
     {"id":"qa","name":"测试","workflow":"岗位工作流/06_测试_独立验收与问题回归.md","handoff":"workspace/handoffs/qa.md","owned_paths":["qa/","game/tests/"]},
     {"id":"ops","name":"运营","workflow":"岗位工作流/08_运营_记录与提交材料.md","handoff":"workspace/handoffs/ops.md","owned_paths":["release/"]}
   ]

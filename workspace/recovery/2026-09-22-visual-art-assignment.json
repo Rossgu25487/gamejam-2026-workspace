@@ -1,0 +1,20 @@
+{
+  "recovery_note": "恢复前比较当前正文与applied，仅还原本轮字段；岗位文件用撤销提交恢复。",
+  "updated_issues": [
+    {
+      "number": 9,
+      "before": {
+        "body": "赛前准备；各成员完成情况以本人实际结果为准。\n\n- [ ] 查看已有背景与图形 SVG，确认源尺寸及可编辑对象。\n- [ ] 与接入岗位对齐透明边缘、锚点、显示尺寸和缩放方式。\n- [ ] 确认源稿、导出和许可说明的交付方式。\n\n交付：实际使用格式与规格、文件位置及待接入项；正式资源清单待命题。"
+      },
+      "applied": {
+        "body_sha256": "008a3c470d29dadd01f543a6db80d8de579e00d848e7a814c0acb4dc62a723a1"
+      }
+    }
+  ],
+  "role": "visual_art",
+  "invitation_change": "本轮新发协作者邀请；接受状态在GitHub核验，撤销邀请或权限需单独操作。",
+  "confirmed_member": "stephaniez1",
+  "created_at": "2026-09-22T09:10:10.9018651+08:00",
+  "base_commit": "6f89f778674db55ccf35c1a8c35c346532e30a43",
+  "schema_version": 1
+}
