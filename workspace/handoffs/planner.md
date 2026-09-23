@@ -18,3 +18,9 @@
 关联准备任务 #4；工作副本为本机 `.local/roles/planner`，分支 `codex/planner/gameplay-prestudy`，基准提交 `b14b72def68bb62e783a4a6eb0f3bd9b541671f7`。讨论稿为 `planning/proposals/玩法预研_候选与赛前准备.md`，结果提交由本文件 Git 历史定位；本轮文件提交后无遗留未提交内容。
 
 原故事稿继续保留在 `codex/planner/story-outline` 与 PR #16。下次先核对 Issue #4、当前 main 与本机差异；候选方向的反馈继续修改本稿，正式采用后另按策划依据流程处理。回退本轮文档使用独立撤销提交，保留其他分支成果。
+
+## 2026-09-24 四稿续接
+
+在同一分支修订，文档基准为 `0852efc`，四稿入口仍为上述预研文件；图示位于 `planning/proposals/figures/`，配置样例位于 `planning/proposals/fixtures/`，均为题前候选资料。结果提交由本文件历史定位，候选评审继续使用 PR #17。
+
+正式工时上限的独立提交为 `3d04cd7`，已进入 main；Issues #4、#13、#14、#15 与 PR #17 修改前记录在本机 `.local/recovery/hour-budget-20260924/`。这些外部记录需单独恢复，Git 撤销只恢复文件。主题与正式策划依据仍待采用，未制作正式游戏内容。
