@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-22T01:11:29.974Z",
+  "generated_at": "2026-09-23T16:18:39.092Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -9,15 +9,15 @@
   "phase": {
     "id": "preparation",
     "label": "命题前准备",
-    "note": "先完成各自工具与交接准备。正式题材、制作任务和个人排期在命题公布后确定；正式制作每人累计不超过 12 小时。"
+    "note": "题前工具与交接准备单独计时。正式题材、制作任务和个人排期在命题公布后确定；每人正式制作以 12 小时为基线，必要时可扩大，累计最多 24 小时，任务中记录估时与本人可投入时间。24 小时是上限，不要求用满。"
   },
   "version": {
-    "sha": "b14b72def68bb62e783a4a6eb0f3bd9b541671f7",
-    "short_sha": "b14b72d",
-    "committed_at": "2026-09-22T01:11:19.000Z",
-    "message": "确定 stephaniez1 为美术 B 并绑定准备任务",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/b14b72def68bb62e783a4a6eb0f3bd9b541671f7",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/b14b72def68bb62e783a4a6eb0f3bd9b541671f7.zip"
+    "sha": "3d04cd78a563e842ad756f43b5d89ce7b55957d2",
+    "short_sha": "3d04cd7",
+    "committed_at": "2026-09-23T16:08:00.000Z",
+    "message": "明确正式制作 12 小时基线与每人 24 小时上限",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/3d04cd78a563e842ad756f43b5d89ce7b55957d2",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/3d04cd78a563e842ad756f43b5d89ce7b55957d2.zip"
   },
   "release": null,
   "tasks": [
@@ -79,7 +79,7 @@
           "url": "https://github.com/Rossgu25487"
         }
       ],
-      "updated_at": "2026-09-18T13:04:02.000Z",
+      "updated_at": "2026-09-23T16:18:26.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -216,7 +216,7 @@
           "url": "https://github.com/Rossgu25487"
         }
       ],
-      "updated_at": "2026-09-18T13:04:06.000Z",
+      "updated_at": "2026-09-23T16:18:29.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -235,7 +235,7 @@
           "url": "https://github.com/Rossgu25487"
         }
       ],
-      "updated_at": "2026-09-18T13:04:08.000Z",
+      "updated_at": "2026-09-23T16:18:32.000Z",
       "closed_at": null,
       "milestone": null
     },
@@ -254,7 +254,7 @@
           "url": "https://github.com/Rossgu25487"
         }
       ],
-      "updated_at": "2026-09-18T13:04:09.000Z",
+      "updated_at": "2026-09-23T16:18:37.000Z",
       "closed_at": null,
       "milestone": null
     }
@@ -296,7 +296,7 @@
       "at": "2026-10-18T16:00:00.000Z",
       "date_only": false,
       "kind": "confirmed",
-      "note": "队长已确定：10 月 18 日结束前完成首次提交。整合、测试和修正计入各人 12 小时内。",
+      "note": "队长已确定：10 月 18 日结束前完成首次提交。协调、制作、整合、验证、交包与返修均计入本人正式额度：12 小时为基线，必要时扩大，累计最多 24 小时。",
       "source_url": "",
       "is_deadline": true
     },
