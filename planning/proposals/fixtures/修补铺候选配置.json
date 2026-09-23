@@ -1,33 +1,244 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "candidate_pretheme",
-  "description": "命题前标准 Demo 样例：3 回合、6 订单；未成为正式参赛依据，未由游戏加载。资源键均为待接入的语义键，短文本为结构示例。",
+  "description": "用途修补候选：三段四件委托；只供题前讨论和规则核对，未接入游戏。",
   "settings": {
-    "initial_cash": 10,
-    "initial_inventory": {"C": 0, "G": 0},
-    "radio": {"item_id": "radio", "from_round": 2, "yield": {"C": 1}}
+    "resource_units": {
+      "work": "格",
+      "module": "块"
+    },
+    "min_checks_before_diagnosis": 1,
+    "characters": {
+      "cheng": "阿程",
+      "zhou": "周姐"
+    }
   },
-  "parts": [
-    {"id": "C", "name": "线圈", "icon_key": "part_C"},
-    {"id": "G", "name": "齿轮", "icon_key": "part_G"}
+  "tools": [
+    {
+      "id": "contact_test",
+      "name": "检查接点",
+      "hint": "观察连接处是否影响发声。"
+    },
+    {
+      "id": "speaker_test",
+      "name": "单独测试发声模块",
+      "hint": "绕开其他连接，观察模块是否正常。"
+    }
   ],
-  "items": [
-    {"id": "lamp", "name": "台灯", "base_visual": "item_lamp_base", "repaired_visual": "item_lamp_repaired", "dismantled_visual": null, "description": "灯罩的边缘被人仔细擦过。"},
-    {"id": "clock", "name": "钟", "base_visual": "item_clock_base", "repaired_visual": "item_clock_repaired", "dismantled_visual": null, "description": "旧钟壳上留着数次维修的划痕。"},
-    {"id": "warmer", "name": "保温器", "base_visual": "item_warmer_base", "repaired_visual": "item_warmer_repaired", "dismantled_visual": null, "description": "把手上缠着一段替换过的布条。"},
-    {"id": "radio", "name": "寄存收音机", "base_visual": "item_radio_stored", "repaired_visual": null, "dismantled_visual": "item_radio_dismantled", "description": "这台收音机仍在寄存中。拆取会破坏灌封机芯，本次尝试内无法修复并完整归还。"}
+  "diagnoses": [
+    {
+      "id": "contact_fault",
+      "name": "接点松动",
+      "help": "接点影响声音，独立发声正常时，可以检查连接。"
+    },
+    {
+      "id": "speaker_fault",
+      "name": "发声模块故障",
+      "help": "连接稳定，独立发声仍异常时，需要处理发声模块。"
+    }
   ],
-  "rounds": [
-    {"id": "R1", "number": 1, "supply": {"C": 2, "G": 1}, "operating_fee": 8, "order_ids": ["R1_lamp", "R1_clock"], "purchase_options": [], "purchase_limit": 0},
-    {"id": "R2", "number": 2, "supply": {"C": 1, "G": 1}, "operating_fee": 8, "order_ids": ["R2_lamp", "R2_clock"], "purchase_options": [{"part_id": "C", "quantity": 1, "price": 8}], "purchase_limit": 1},
-    {"id": "R3", "number": 3, "supply": {"C": 1, "G": 1}, "operating_fee": 8, "order_ids": ["R3_warmer", "R3_clock"], "purchase_options": [{"part_id": "C", "quantity": 1, "price": 12}, {"part_id": "G", "quantity": 1, "price": 6}], "purchase_limit": 1}
+  "methods": [
+    {
+      "id": "reconnect",
+      "name": "重新接好",
+      "diagnosis": "contact_fault",
+      "cost": {
+        "work": 1,
+        "module": 0
+      },
+      "result_state": "reconnected"
+    },
+    {
+      "id": "replace",
+      "name": "更换发声模块",
+      "diagnosis": "speaker_fault",
+      "cost": {
+        "work": 1,
+        "module": 1
+      },
+      "result_state": "original"
+    },
+    {
+      "id": "headphones",
+      "name": "改为耳机输出",
+      "diagnosis": "speaker_fault",
+      "cost": {
+        "work": 2,
+        "module": 0
+      },
+      "result_state": "headphones"
+    }
   ],
-  "orders": [
-    {"id": "R1_lamp", "item_id": "lamp", "customer": "A", "requirements": {"C": 1}, "reward": 4, "request_text": "给台灯换一个线圈就能用了。", "delivered_text": "亮了，今晚能继续看书。", "declined_text": "那我先带回去。"},
-    {"id": "R1_clock", "item_id": "clock", "customer": "B", "requirements": {"C": 1, "G": 1}, "reward": 6, "request_text": "这个钟需要一个线圈和一个齿轮。", "delivered_text": "指针又走起来了。", "declined_text": "我再想想其他办法。"},
-    {"id": "R2_lamp", "item_id": "lamp", "customer": "A", "requirements": {"C": 1}, "reward": 6, "request_text": "这次带来另一盏灯，仍需要一个线圈。", "delivered_text": "这盏可以交给等着的人了。", "declined_text": "我会告诉他今天还没修好。"},
-    {"id": "R2_clock", "item_id": "clock", "customer": "B", "requirements": {"C": 1, "G": 1}, "reward": 9, "request_text": "另一个钟的线圈和齿轮都需要更换。", "delivered_text": "它又走起来了，谢谢。", "declined_text": "那我先把它带回去。"},
-    {"id": "R3_warmer", "item_id": "warmer", "customer": "A", "requirements": {"C": 2}, "reward": 10, "request_text": "保温器需要两个线圈，两处都得修。", "delivered_text": "这样就能多留住一些温度。", "declined_text": "我会再找个能保温的办法。"},
-    {"id": "R3_clock", "item_id": "clock", "customer": "B", "requirements": {"G": 2}, "reward": 8, "request_text": "这个钟的线圈完好，需要更换两个齿轮。", "delivered_text": "两个齿轮都换好了，指针又走起来了。", "declined_text": "那今天先到这里吧。"}
-  ]
+  "cases": [
+    {
+      "id": "c01_private_radio",
+      "item_key": "private_radio",
+      "owner_id": "cheng",
+      "title": "私人收音机",
+      "symptom": "能通电，播放声音断续。",
+      "need": "保留与孩子一起听转播的外放。",
+      "observations": {
+        "contact_test": "轻触接点，声音随之变化。",
+        "speaker_test": "独立测试时，发声正常。"
+      },
+      "diagnosis": "contact_fault",
+      "plans": [
+        {
+          "method_id": "reconnect",
+          "accepted": true,
+          "reason": "",
+          "requires_agreement": null,
+          "response": "我先放在这里，下班后来取。"
+        }
+      ]
+    },
+    {
+      "id": "c02_doorbell",
+      "item_key": "doorbell",
+      "owner_id": "zhou",
+      "title": "宿舍门铃",
+      "symptom": "通电后，按门铃没有声音。",
+      "need": "让来访者在门外提醒屋里的人。",
+      "observations": {
+        "contact_test": "连接稳定，轻触接点没有变化。",
+        "speaker_test": "独立测试仍不能正常发声。"
+      },
+      "diagnosis": "speaker_fault",
+      "plans": [
+        {
+          "method_id": "replace",
+          "accepted": true,
+          "reason": "",
+          "requires_agreement": null,
+          "response": "这下有人敲门就能听见了。"
+        }
+      ]
+    },
+    {
+      "id": "c03_alarm",
+      "item_key": "alarm",
+      "owner_id": "cheng",
+      "title": "夜班闹钟",
+      "symptom": "指示正常，到了时间却不响。",
+      "need": "睡着时也能被独立叫醒。",
+      "observations": {
+        "contact_test": "连接稳定，轻触接点没有变化。",
+        "speaker_test": "独立测试仍不能正常发声。"
+      },
+      "diagnosis": "speaker_fault",
+      "plans": [
+        {
+          "method_id": "replace",
+          "accepted": true,
+          "reason": "",
+          "requires_agreement": null,
+          "response": "闹钟能响，我就能放心睡了。"
+        },
+        {
+          "method_id": "headphones",
+          "accepted": false,
+          "reason": "睡觉时不会戴耳机，这样无法把我叫醒。",
+          "requires_agreement": null,
+          "response": ""
+        }
+      ]
+    },
+    {
+      "id": "c04_public_radio",
+      "item_key": "public_radio",
+      "owner_id": "zhou",
+      "title": "公共收音机",
+      "symptom": "可以调台，但没有外放声音。",
+      "need": "让宿舍住户及时收到搬入安排。",
+      "observations": {
+        "contact_test": "连接稳定，轻触接点没有变化。",
+        "speaker_test": "独立测试仍不能正常发声。"
+      },
+      "diagnosis": "speaker_fault",
+      "plans": [
+        {
+          "method_id": "replace",
+          "accepted": true,
+          "reason": "",
+          "requires_agreement": null,
+          "response": "大家可以直接到这里听通知。"
+        },
+        {
+          "method_id": "headphones",
+          "accepted": true,
+          "reason": "",
+          "requires_agreement": "public_manual_notice",
+          "response": "我听完抄下来，再逐间转告。"
+        }
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "id": "s01",
+      "case_ids": [
+        "c01_private_radio"
+      ],
+      "resources": {
+        "work": 1,
+        "module": 0
+      },
+      "must_complete": true,
+      "allow_replan": false
+    },
+    {
+      "id": "s02",
+      "case_ids": [
+        "c02_doorbell"
+      ],
+      "resources": {
+        "work": 1,
+        "module": 1
+      },
+      "must_complete": true,
+      "allow_replan": false
+    },
+    {
+      "id": "s03",
+      "case_ids": [
+        "c03_alarm",
+        "c04_public_radio"
+      ],
+      "resources": {
+        "work": 3,
+        "module": 1
+      },
+      "must_complete": false,
+      "allow_replan": true
+    }
+  ],
+  "agreements": [
+    {
+      "id": "public_manual_notice",
+      "owner_id": "zhou",
+      "request": "耳机输出需要有人听写后逐间转告，你能接受吗？",
+      "reply": "可以，我来做这份通知。"
+    },
+    {
+      "id": "donor_transfer",
+      "owner_id": "cheng",
+      "request": "转用会使你的收音机失去外放，只能用耳机收听。是否同意？",
+      "reply": "保留耳机就行。公共设备修好后，我再和孩子去那里听。"
+    }
+  ],
+  "transfer": {
+    "chapter_id": "s03",
+    "source_case_id": "c01_private_radio",
+    "agreement_id": "donor_transfer",
+    "cost": {
+      "work": 1,
+      "module": 0
+    },
+    "gain": {
+      "work": 0,
+      "module": 1
+    },
+    "result_state": "headphones",
+    "limit": 1
+  }
 }
