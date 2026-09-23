@@ -2,7 +2,7 @@
 
 日常从[团队工作台](https://rossgu25487.github.io/gamejam-2026-workspace/)查看工程版本、任务与排期；GitHub Issues 统一维护执行任务、负责人和验收状态。
 
-- [manifest.json](manifest.json)：岗位与负责目录。已确定 Rossgu25487 为唯一策划兼队长，职责包括策划案、剧情和部分设计／体验测试；个人正式职责共用 12 小时。
+- [manifest.json](manifest.json)：岗位与负责目录。已确定 Rossgu25487 为唯一策划兼队长，职责包括策划案、剧情和部分设计／体验测试；个人正式职责及协调、验证、交包、返修共用 12 小时基线，必要时可扩大，累计最多 24 小时。扩大时在任务中记录估时与本人可投入时间，24 小时是上限，不要求用满；题前准备单独计时。
 - [roadmap.json](roadmap.json)：当前阶段与排期节点。
 - [planning/current.json](../planning/current.json)：本人明确指定的正式策划依据。
 - `handoffs/<role>.md`：任务链接、本人分支、未提交工作及下次恢复需要的线索；不重复维护团队状态。
