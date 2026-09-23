@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "candidate_pretheme",
+  "description": "命题前标准 Demo 样例：3 回合、6 订单；未成为正式参赛依据，未由游戏加载。资源键均为待接入的语义键，短文本为结构示例。",
+  "settings": {
+    "initial_cash": 10,
+    "initial_inventory": {"C": 0, "G": 0},
+    "radio": {"item_id": "radio", "from_round": 2, "yield": {"C": 1}}
+  },
+  "parts": [
+    {"id": "C", "name": "线圈", "icon_key": "part_C"},
+    {"id": "G", "name": "齿轮", "icon_key": "part_G"}
+  ],
+  "items": [
+    {"id": "lamp", "name": "台灯", "base_visual": "item_lamp_base", "repaired_visual": "item_lamp_repaired", "dismantled_visual": null, "description": "灯罩的边缘被人仔细擦过。"},
+    {"id": "clock", "name": "钟", "base_visual": "item_clock_base", "repaired_visual": "item_clock_repaired", "dismantled_visual": null, "description": "旧钟壳上留着数次维修的划痕。"},
+    {"id": "warmer", "name": "保温器", "base_visual": "item_warmer_base", "repaired_visual": "item_warmer_repaired", "dismantled_visual": null, "description": "把手上缠着一段替换过的布条。"},
+    {"id": "radio", "name": "寄存收音机", "base_visual": "item_radio_stored", "repaired_visual": null, "dismantled_visual": "item_radio_dismantled", "description": "这台收音机仍在寄存中。拆取会破坏灌封机芯，本次尝试内无法修复并完整归还。"}
+  ],
+  "rounds": [
+    {"id": "R1", "number": 1, "supply": {"C": 2, "G": 1}, "operating_fee": 8, "order_ids": ["R1_lamp", "R1_clock"], "purchase_options": [], "purchase_limit": 0},
+    {"id": "R2", "number": 2, "supply": {"C": 1, "G": 1}, "operating_fee": 8, "order_ids": ["R2_lamp", "R2_clock"], "purchase_options": [{"part_id": "C", "quantity": 1, "price": 8}], "purchase_limit": 1},
+    {"id": "R3", "number": 3, "supply": {"C": 1, "G": 1}, "operating_fee": 8, "order_ids": ["R3_warmer", "R3_clock"], "purchase_options": [{"part_id": "C", "quantity": 1, "price": 12}, {"part_id": "G", "quantity": 1, "price": 6}], "purchase_limit": 1}
+  ],
+  "orders": [
+    {"id": "R1_lamp", "item_id": "lamp", "customer": "A", "requirements": {"C": 1}, "reward": 4, "request_text": "给台灯换一个线圈就能用了。", "delivered_text": "亮了，今晚能继续看书。", "declined_text": "那我先带回去。"},
+    {"id": "R1_clock", "item_id": "clock", "customer": "B", "requirements": {"C": 1, "G": 1}, "reward": 6, "request_text": "这个钟需要一个线圈和一个齿轮。", "delivered_text": "指针又走起来了。", "declined_text": "我再想想其他办法。"},
+    {"id": "R2_lamp", "item_id": "lamp", "customer": "A", "requirements": {"C": 1}, "reward": 6, "request_text": "这次带来另一盏灯，仍需要一个线圈。", "delivered_text": "这盏可以交给等着的人了。", "declined_text": "我会告诉他今天还没修好。"},
+    {"id": "R2_clock", "item_id": "clock", "customer": "B", "requirements": {"C": 1, "G": 1}, "reward": 9, "request_text": "另一个钟的线圈和齿轮都需要更换。", "delivered_text": "它又走起来了，谢谢。", "declined_text": "那我先把它带回去。"},
+    {"id": "R3_warmer", "item_id": "warmer", "customer": "A", "requirements": {"C": 2}, "reward": 10, "request_text": "保温器需要两个线圈，两处都得修。", "delivered_text": "这样就能多留住一些温度。", "declined_text": "我会再找个能保温的办法。"},
+    {"id": "R3_clock", "item_id": "clock", "customer": "B", "requirements": {"G": 2}, "reward": 8, "request_text": "这个钟的线圈完好，需要更换两个齿轮。", "delivered_text": "两个齿轮都换好了，指针又走起来了。", "declined_text": "那今天先到这里吧。"}
+  ]
+}
