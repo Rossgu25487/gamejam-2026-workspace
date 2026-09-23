@@ -1,72 +1,158 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "candidate_pretheme",
-  "description": "用途修补候选：三段四件委托；只供题前讨论和规则核对，未接入游戏。",
+  "description": "用途修补候选：三段四件委托，免费试修与用途询问；只供设计数据检验，未接入 Godot。",
   "settings": {
     "resource_units": {
       "work": "格",
       "module": "块"
     },
-    "min_checks_before_diagnosis": 1,
+    "resource_names": {
+      "work": "工作量",
+      "module": "外放模块"
+    },
+    "module_definition": "仅指外放功放板。耳机与外放分为两路；检测模块属于工具，不进入库存。",
     "characters": {
       "cheng": "阿程",
       "zhou": "周姐"
-    }
+    },
+    "presentation_binding": "unbound"
   },
-  "tools": [
+  "questions": [
     {
-      "id": "contact_test",
-      "name": "检查接点",
-      "hint": "观察连接处是否影响发声。"
+      "id": "who",
+      "name": "谁来用"
     },
     {
-      "id": "speaker_test",
-      "name": "单独测试发声模块",
-      "hint": "绕开其他连接，观察模块是否正常。"
+      "id": "how",
+      "name": "怎样用"
     }
   ],
-  "diagnoses": [
+  "trials": [
     {
-      "id": "contact_fault",
-      "name": "接点松动",
-      "help": "接点影响声音，独立发声正常时，可以检查连接。"
+      "id": "contact_trial",
+      "name": "临时接好接点",
+      "instruction": "临时固定连接处，再点击试听，对照原来的现象。"
     },
     {
-      "id": "speaker_fault",
-      "name": "发声模块故障",
-      "help": "连接稳定，独立发声仍异常时，需要处理发声模块。"
+      "id": "module_trial",
+      "name": "接入检测模块",
+      "instruction": "将工具中的检测模块临时接入外放通路，再点击试听；检测件会收回。"
+    }
+  ],
+  "items": [
+    {
+      "id": "private_radio",
+      "name": "私人收音机",
+      "visual_key": "item_radio_private",
+      "shape_key": "radio",
+      "has_headphone_port": true
+    },
+    {
+      "id": "doorbell",
+      "name": "宿舍门铃",
+      "visual_key": "item_doorbell",
+      "shape_key": "doorbell",
+      "has_headphone_port": false
+    },
+    {
+      "id": "alarm",
+      "name": "夜班闹钟",
+      "visual_key": "item_alarm",
+      "shape_key": "alarm",
+      "has_headphone_port": false
+    },
+    {
+      "id": "public_radio",
+      "name": "公共收音机",
+      "visual_key": "item_radio_public",
+      "shape_key": "radio",
+      "has_headphone_port": false
+    }
+  ],
+  "presentation": [
+    {
+      "id": "intermittent",
+      "visual_state": "signal_flicker",
+      "audio_key": "speaker_intermittent",
+      "text": "声音断断续续，播放指示随之中断。"
+    },
+    {
+      "id": "silent",
+      "visual_state": "signal_on_speaker_off",
+      "audio_key": "speaker_silent",
+      "text": "输入指示稳定，外放没有声音。"
+    },
+    {
+      "id": "trial_stable",
+      "visual_state": "test_signal_stable",
+      "audio_key": "speaker_stable",
+      "text": "保持临时处理时，外放恢复稳定。"
+    },
+    {
+      "id": "reconnected",
+      "visual_state": "contact_repaired",
+      "audio_key": "speaker_stable",
+      "text": "接点已经固定，外放恢复稳定。"
+    },
+    {
+      "id": "original",
+      "visual_state": "speaker_restored",
+      "audio_key": "speaker_stable",
+      "text": "外放已经恢复。"
+    },
+    {
+      "id": "headphones",
+      "visual_state": "headphone_port_on_speaker_off",
+      "audio_key": "headphone_monitor",
+      "text": "耳机中可以听见声音，设备不能外放。"
+    },
+    {
+      "id": "donor_test",
+      "visual_state": "donor_headphone_signal_on",
+      "audio_key": "headphone_monitor",
+      "text": "私人收音机的耳机口工作正常；拆走外放模块后仍可用耳机收听。"
     }
   ],
   "methods": [
     {
       "id": "reconnect",
       "name": "重新接好",
-      "diagnosis": "contact_fault",
+      "fault_kind": "contact_fault",
       "cost": {
         "work": 1,
         "module": 0
       },
-      "result_state": "reconnected"
+      "result_state": "reconnected",
+      "feedback_id": "reconnected",
+      "keeps": "固定接点，保留原有输出功能。",
+      "loses": "无功能损失。"
     },
     {
       "id": "replace",
-      "name": "更换发声模块",
-      "diagnosis": "speaker_fault",
+      "name": "更换外放模块",
+      "fault_kind": "speaker_fault",
       "cost": {
         "work": 1,
         "module": 1
       },
-      "result_state": "original"
+      "result_state": "original",
+      "feedback_id": "original",
+      "keeps": "恢复外放，原有耳机口保持可用。",
+      "loses": "无功能损失。"
     },
     {
       "id": "headphones",
       "name": "改为耳机输出",
-      "diagnosis": "speaker_fault",
+      "fault_kind": "speaker_fault",
       "cost": {
         "work": 2,
         "module": 0
       },
-      "result_state": "headphones"
+      "result_state": "headphones",
+      "feedback_id": "headphones",
+      "keeps": "增设耳机接口，保留耳机收听。",
+      "loses": "无法外放，需要使用者戴耳机收听。"
     }
   ],
   "cases": [
@@ -75,20 +161,42 @@
       "item_key": "private_radio",
       "owner_id": "cheng",
       "title": "私人收音机",
+      "entry_text": "这台最近总是一句有声、半句没声。我先放你这儿，下班再来取。",
       "symptom": "能通电，播放声音断续。",
-      "need": "保留与孩子一起听转播的外放。",
-      "observations": {
-        "contact_test": "轻触接点，声音随之变化。",
-        "speaker_test": "独立测试时，发声正常。"
+      "initial_feedback_id": "intermittent",
+      "fault_kind": "contact_fault",
+      "fault_confirmed": false,
+      "questions": {
+        "who": {
+          "reply": "我和孩子听，他总抢着调台。",
+          "record": "阿程和孩子一起使用。"
+        },
+        "how": {
+          "reply": "晚饭后放在桌上，听一会儿比赛转播。",
+          "record": "需要外放，保留两个人在家一起听的习惯。"
+        }
       },
-      "diagnosis": "contact_fault",
+      "trial_results": {
+        "contact_trial": {
+          "improves": true,
+          "feedback_id": "trial_stable"
+        },
+        "module_trial": {
+          "improves": false,
+          "feedback_id": "intermittent"
+        }
+      },
+      "hints": [
+        "对照临时处理前后的声音和播放指示。",
+        "接入检测模块后仍会断续；临时固定接点后恢复稳定，可以把接点重新接好。"
+      ],
       "plans": [
         {
           "method_id": "reconnect",
           "accepted": true,
           "reason": "",
           "requires_agreement": null,
-          "response": "我先放在这里，下班后来取。"
+          "response": "这样就能听清了。先替我收着，下班来取。"
         }
       ]
     },
@@ -97,20 +205,42 @@
       "item_key": "doorbell",
       "owner_id": "zhou",
       "title": "宿舍门铃",
-      "symptom": "通电后，按门铃没有声音。",
-      "need": "让来访者在门外提醒屋里的人。",
-      "observations": {
-        "contact_test": "连接稳定，轻触接点没有变化。",
-        "speaker_test": "独立测试仍不能正常发声。"
+      "entry_text": "门外的人按了半天，我们在里面一点动静也听不见。",
+      "symptom": "输入指示正常，按下后没有铃声。",
+      "initial_feedback_id": "silent",
+      "fault_kind": "speaker_fault",
+      "fault_confirmed": false,
+      "questions": {
+        "who": {
+          "reply": "来报到的人在门外按，值班的人在屋里听。",
+          "record": "门外来访者触发，屋内值班人员接收。"
+        },
+        "how": {
+          "reply": "我还得整理房间，不能一直守在门边。",
+          "record": "铃声必须能直接提醒屋里的人。"
+        }
       },
-      "diagnosis": "speaker_fault",
+      "trial_results": {
+        "contact_trial": {
+          "improves": false,
+          "feedback_id": "silent"
+        },
+        "module_trial": {
+          "improves": true,
+          "feedback_id": "trial_stable"
+        }
+      },
+      "hints": [
+        "同样没有声音，临时接好接点后是否有变化？",
+        "接点处理没有改善，接入检测模块后铃声恢复，可更换外放模块。"
+      ],
       "plans": [
         {
           "method_id": "replace",
           "accepted": true,
           "reason": "",
           "requires_agreement": null,
-          "response": "这下有人敲门就能听见了。"
+          "response": "这下在屋里忙也能听见。"
         }
       ]
     },
@@ -119,20 +249,33 @@
       "item_key": "alarm",
       "owner_id": "cheng",
       "title": "夜班闹钟",
-      "symptom": "指示正常，到了时间却不响。",
-      "need": "睡着时也能被独立叫醒。",
-      "observations": {
-        "contact_test": "连接稳定，轻触接点没有变化。",
-        "speaker_test": "独立测试仍不能正常发声。"
+      "entry_text": "上回醒晚了，出去时班车已经走了。这只钟到了点只亮灯。",
+      "symptom": "定时指示正常，外放故障已确认。",
+      "initial_feedback_id": "silent",
+      "fault_kind": "speaker_fault",
+      "fault_confirmed": true,
+      "questions": {
+        "who": {
+          "reply": "我自己用，白天补觉，夜里上工。",
+          "record": "阿程独自补觉时使用。"
+        },
+        "how": {
+          "reply": "放在床边。我睡觉不戴耳机，得让它响出声。",
+          "record": "需要外放，在睡眠中独立叫醒使用者。"
+        }
       },
-      "diagnosis": "speaker_fault",
+      "trial_results": {},
+      "hints": [
+        "先问清闹钟放在哪里、使用时人是什么状态。",
+        "睡着时不会戴耳机，恢复外放才能完成叫醒用途。"
+      ],
       "plans": [
         {
           "method_id": "replace",
           "accepted": true,
           "reason": "",
           "requires_agreement": null,
-          "response": "闹钟能响，我就能放心睡了。"
+          "response": "行，放床边就能用了。"
         },
         {
           "method_id": "headphones",
@@ -148,27 +291,40 @@
       "item_key": "public_radio",
       "owner_id": "zhou",
       "title": "公共收音机",
-      "symptom": "可以调台，但没有外放声音。",
-      "need": "让宿舍住户及时收到搬入安排。",
-      "observations": {
-        "contact_test": "连接稳定，轻触接点没有变化。",
-        "speaker_test": "独立测试仍不能正常发声。"
+      "entry_text": "晚上的广播有供水和接驳安排，今天得把消息送到各个房间。",
+      "symptom": "接收正常，外放故障已确认；这台没有现成耳机口。",
+      "initial_feedback_id": "silent",
+      "fault_kind": "speaker_fault",
+      "fault_confirmed": true,
+      "questions": {
+        "who": {
+          "reply": "宿舍里的人都要知道。我也会在这里听，记下重要的事。",
+          "record": "周姐负责接收通知，再让住户知道。"
+        },
+        "how": {
+          "reply": "能一起听最省事。只接耳机的话，我可以抄下来，再逐间转告。",
+          "record": "可恢复公共外放；改用耳机时，需要周姐同意承担听写和转告。"
+        }
       },
-      "diagnosis": "speaker_fault",
+      "trial_results": {},
+      "hints": [
+        "先确认通知需要怎样传到住户那里。",
+        "周姐能承担听写和转告时，耳机输出也能完成本次通知。"
+      ],
       "plans": [
         {
           "method_id": "replace",
           "accepted": true,
           "reason": "",
           "requires_agreement": null,
-          "response": "大家可以直接到这里听通知。"
+          "response": "晚上让大家来这里听，轮班错过的人我再补一遍。"
         },
         {
           "method_id": "headphones",
           "accepted": true,
           "reason": "",
-          "requires_agreement": "public_manual_notice",
-          "response": "我听完抄下来，再逐间转告。"
+          "requires_agreement": "manual_notice_agreement",
+          "response": "我先抄下来。几间房的门牌还没挂好，得挨个找。"
         }
       ]
     }
@@ -214,22 +370,28 @@
   ],
   "agreements": [
     {
-      "id": "public_manual_notice",
+      "id": "manual_notice_agreement",
       "owner_id": "zhou",
-      "request": "耳机输出需要有人听写后逐间转告，你能接受吗？",
-      "reply": "可以，我来做这份通知。"
+      "case_id": "c04_public_radio",
+      "request": "耳机只能一个人听，需要你记下消息、逐间转告。这份工作你能接下来吗？",
+      "reply": "能，我来抄，再逐间送过去。",
+      "refused_reply": "这份活我今天腾不出手，先别按耳机方案施工。"
     },
     {
       "id": "donor_transfer",
       "owner_id": "cheng",
-      "request": "转用会使你的收音机失去外放，只能用耳机收听。是否同意？",
-      "reply": "保留耳机就行。公共设备修好后，我再和孩子去那里听。"
+      "case_id": "c01_private_radio",
+      "request": "耳机口已经试过。取走外放模块后，你这台只能用耳机听，家里没法再一起听。你愿意转用吗？",
+      "reply": "耳机还能用就先这样。孩子那边我回去说，平时在家一起听得另想办法。",
+      "refused_reply": "还是留着吧，家里两个人听习惯了。"
     }
   ],
   "transfer": {
     "chapter_id": "s03",
     "source_case_id": "c01_private_radio",
     "agreement_id": "donor_transfer",
+    "headphone_test_feedback_id": "donor_test",
+    "offer_text": "阿程听见缺件，指了指柜台上的旧收音机：先试试我那台的耳机口，看看能不能留着用。",
     "cost": {
       "work": 1,
       "module": 0
@@ -239,6 +401,14 @@
       "module": 1
     },
     "result_state": "headphones",
+    "feedback_id": "headphones",
     "limit": 1
+  },
+  "followup": {
+    "donor_preserved": "阿程把原样修好的收音机提回家，刻度贴纸仍留在原处。",
+    "donor_transferred": "阿程收好耳机线，带走失去外放的私人收音机。在家一起听转播的习惯暂时中断。",
+    "manual_notice": "周姐带回折过几次的通知纸，说还有几间房需要补送。",
+    "public_broadcast": "公共收听固定在晚间值班时段；阿程可以带孩子来，私人设备原有的时间和地点自由仍未恢复。",
+    "unresolved": "逐项说明还没有解决的委托和用途，人物按当前设备状态取回物件。"
   }
 }
