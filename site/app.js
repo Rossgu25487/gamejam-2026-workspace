@@ -1,5 +1,5 @@
-import { resolveTaskResponsibility, filterTasks, readTaskFilters } from "./data/github-data.mjs?v=20260924b";
-import { summarizeTasks, summarizeTeam } from "./data/dashboard-progress.mjs?v=20260924b";
+import { resolveTaskResponsibility, filterTasks, readTaskFilters } from "./data/github-data.mjs?v=20260924c";
+import { summarizeTasks, summarizeTeam } from "./data/dashboard-progress.mjs?v=20260924c";
 export { filterTasks };
 
 const STATUS = {
@@ -15,10 +15,13 @@ const PAGE_SIZE = 12;
 const state = { snapshot: null, status: "open", role: "all", phase: "all", query: "", visible: PAGE_SIZE, busy: false, phaseInitialized: false, initialRefreshStarted: false };
 const $ = (id) => document.getElementById(id);
 const ROLE_KEY = "gamejam.preferred-role";
-const automation = { available: false, repository: null, url: "" };
+const REMEMBER_KEY = "gamejam.remember-role";
+const automation = { available: false, repository: null, url: "", requestId: 0 };
 let reminderTasks = [];
-function rememberedRole() { try { return localStorage.getItem(ROLE_KEY) || "all"; } catch { return "all"; } }
+function rememberEnabled() { try { return localStorage.getItem(REMEMBER_KEY) !== "false"; } catch { return true; } }
+function rememberedRole() { try { return rememberEnabled() ? localStorage.getItem(ROLE_KEY) || "all" : "all"; } catch { return "all"; } }
 function rememberRole(value) { try { if (value === null) localStorage.removeItem(ROLE_KEY); else localStorage.setItem(ROLE_KEY, value); } catch { /* URL still keeps the current view. */ } }
+$("remember-role").checked = rememberEnabled();
 function defaultPhase() { return state.snapshot?.phase.id in PHASES ? state.snapshot.phase.id : "all"; }
 function viewURL() {
   const url = new URL(location.href);
@@ -178,7 +181,7 @@ async function refreshProject() {
   if (!state.snapshot) { await loadSnapshot(); return; }
   setBusy(true, "正在读取 GitHub 当前状态");
   try {
-    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs?v=20260924b");
+    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs?v=20260924c");
     const previous = state.snapshot;
     const latest = await fetchGitHubData({ repository: previous.repository.full_name, includeWorkspace: true, timeoutMs: 15000 });
     const next = createSnapshot({
@@ -407,6 +410,7 @@ function renderReminderCoverage(snapshot) {
 
 async function checkReminderWorkflow(snapshot) {
   if (automation.repository === snapshot.repository.full_name) return;
+  const requestId = ++automation.requestId;
   automation.repository = snapshot.repository.full_name;
   automation.available = false;
   $("automation-link").hidden = true;
@@ -414,15 +418,18 @@ async function checkReminderWorkflow(snapshot) {
   automation.url = `${snapshot.repository.url}/actions/workflows/task-reminders.yml`;
   try {
     const response = await fetch(`https://api.github.com/repos/${snapshot.repository.full_name}/actions/workflows/task-reminders.yml`, { signal: AbortSignal.timeout(10000), cache: "no-store" });
+    if (requestId !== automation.requestId) return;
     if (response.status === 404) {
       $("automation-state").textContent = "尚未部署 · 自动提醒未启用"; return;
     }
     if (!response.ok) throw new Error("无法读取工作流");
     const workflow = await response.json();
+    if (requestId !== automation.requestId) return;
     automation.available = workflow.state === "active";
     $("automation-state").textContent = automation.available ? "工作流已部署；发送开关与运行结果请到 GitHub 核对。" : "工作流已停用 · 不会自动提醒";
     setLink($("automation-link"), automation.url); $("automation-link").hidden = false;
   } catch {
+    if (requestId !== automation.requestId) return;
     $("automation-state").textContent = "暂时无法核验提醒工作流，请到 GitHub 查看。";
     setLink($("automation-link"), automation.url); $("automation-link").hidden = false;
     automation.repository = null;
@@ -451,7 +458,9 @@ function openReminder(tasks, login) {
     section.append(actions); return section;
   }));
   $("run-reminder").hidden = !automation.available;
-  $("reminder-run-note").textContent = automation.available ? "批量提醒使用标准模板，上方草稿修改不会带入。前往 GitHub 运行工作流，粘贴 issue_numbers 并选择 send；执行前复核任务，通知每项任务的全部负责人。" : "批量提醒工作流尚未就绪；现在可逐条复制评论草稿。";
+  $("reminder-batch").replaceChildren(...Array.from({ length: Math.ceil(tasks.length / 20) }, (_, index) => new Option(`第 ${index + 1} 组 · 第 ${index * 20 + 1}—${Math.min((index + 1) * 20, tasks.length)} 项任务`, index)));
+  $("reminder-batch-picker").hidden = !automation.available || tasks.length <= 20;
+  $("reminder-run-note").textContent = automation.available ? "批量提醒每次最多 20 项，使用标准模板，上方草稿修改不会带入。前往 GitHub 运行工作流，粘贴 issue_numbers 并选择 send；执行前复核任务，通知每项任务的全部负责人。" : "批量提醒工作流尚未就绪；现在可逐条复制评论草稿。";
   $("reminder-dialog").showModal();
 }
 
@@ -523,13 +532,19 @@ function renderSchedule(schedule) {
   }
 }
 
-controls.refresh.addEventListener("click", () => { automation.repository = null; refreshProject(); });
+controls.refresh.addEventListener("click", () => {
+  automation.repository = null;
+  if (state.snapshot) checkReminderWorkflow(state.snapshot);
+  refreshProject();
+});
 $("close-reminder").addEventListener("click", () => $("reminder-dialog").close());
 $("run-reminder").addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText(reminderTasks.map(task => task.number).join(","));
+    const start = Number($("reminder-batch").value) * 20;
+    const batch = reminderTasks.slice(start, start + 20);
+    await navigator.clipboard.writeText(batch.map(task => task.number).join(","));
     window.open(automation.url, "_blank", "noopener,noreferrer");
-    $("reminder-feedback").textContent = "任务编号已复制。请在 GitHub 运行工作流；此处尚未发送。";
+    $("reminder-feedback").textContent = `${batch.length} 个任务编号已复制。请在 GitHub 运行工作流；此处尚未发送。`;
   } catch { $("reminder-feedback").textContent = "复制失败，请手动记录任务编号后到 GitHub 运行。"; }
 });
 $("task-filters").addEventListener("submit", (event) => event.preventDefault());
@@ -542,7 +557,11 @@ controls.search.addEventListener("input", updateSearch);
 controls.search.addEventListener("compositionend", updateSearch);
 controls.role.addEventListener("change", () => { state.role = controls.role.value; if ($("remember-role").checked) rememberRole(state.role); updateFilters(); });
 controls.phase.addEventListener("change", () => { state.phase = controls.phase.value; updateFilters(); });
-$("remember-role").addEventListener("change", () => rememberRole($("remember-role").checked ? state.role : null));
+$("remember-role").addEventListener("change", () => {
+  const enabled = $("remember-role").checked;
+  try { localStorage.setItem(REMEMBER_KEY, String(enabled)); } catch { /* Keep the choice for this page when storage is unavailable. */ }
+  rememberRole(enabled ? state.role : null);
+});
 for (const button of controls.statusButtons) {
     button.addEventListener("click", () => { state.status = button.dataset.status; updateFilters(); });
 }

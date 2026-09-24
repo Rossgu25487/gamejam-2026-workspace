@@ -119,36 +119,79 @@ export function createGitHubClient({ repository = DEFAULT_REPOSITORY, token = ''
   };
 }
 
+function stoppedRun({ mode, send, results, number = null, stage, pending = [], uncertain = false }) {
+  const target = number == null ? '提醒运行' : `任务 #${number}`;
+  const error = new Error(uncertain
+    ? `${target} 的评论创建结果待核实；本次运行已停止，请先查看该 Issue 评论，不要自动重试。`
+    : `${target} 在 ${stage} 阶段失败；本次运行已停止，失败任务尚未尝试发送。`);
+  // Keep useful recovery evidence without including request bodies or raw API errors.
+  const summaries = results.map(({ body, marker, ...summary }) => summary);
+  error.report = {
+    mode, send, stopped: true, failed_issue: number, failure_stage: stage,
+    results: [
+      ...summaries,
+      { number, action: uncertain ? 'uncertain' : 'failed', stage },
+      ...pending.map(issue => ({ number: issue.number, action: 'not-attempted', reason: 'run-stopped' })),
+    ],
+  };
+  return error;
+}
+
 export async function runReminders({ api, issueNumbers = [], send = false, enabled = false, senderLogin = '', now = () => new Date() }) {
   if (send && !enabled) throw new Error('发送尚未启用。需要 TASK_REMINDERS_ENABLED=true 和 --send 同时生效。');
   if (issueNumbers.length > 20 || issueNumbers.some(number => !Number.isSafeInteger(number) || number < 1)) throw new Error('任务编号无效或超过 20 个。');
   const mode = issueNumbers.length ? 'manual' : 'auto';
-  const roles = await api.getRoles();
-  const issues = issueNumbers.length
-    ? await Promise.all([...new Set(issueNumbers)].map(number => api.getIssue(number))) : await api.listIssues();
-  const sender = send ? senderLogin || (await api.getUser()).login : '';
-  if (send && (!sender || typeof sender !== 'string')) throw new Error('无法确认当前发信身份。');
   const results = [];
-  for (const issue of issues) {
-    let plan = buildReminderPlan(issue, { roles, mode, now: now() });
-    if (plan.action === 'skip') { results.push(plan); continue; }
-    if (!send) { results.push({ ...plan, action: 'preview' }); continue; }
-    const comments = await api.listComments(issue.number);
-    // Read the issue after comment pagination, immediately before deciding whether to write.
-    // Never send from a saved dashboard snapshot.
-    const freshRoles = await api.getRoles();
-    const freshIssue = await api.getIssue(issue.number);
-    plan = buildReminderPlan(freshIssue, { roles: freshRoles, mode, now: now() });
-    if (plan.action === 'skip') { results.push(plan); continue; }
-    if (hasReminder(comments, plan.marker, sender)) {
-      results.push({ ...plan, action: 'skip', reason: 'already-reminded' });
-      continue;
+  let roles, sender;
+  let issues = [...new Set(issueNumbers)].map(number => ({ number }));
+  let stage = 'read-roles';
+  try {
+    roles = await api.getRoles();
+    stage = 'list-issues';
+    if (!issueNumbers.length) issues = await api.listIssues();
+    stage = 'confirm-sender';
+    sender = send ? senderLogin || (await api.getUser()).login : '';
+    if (send && (!sender || typeof sender !== 'string')) throw new Error('无法确认当前发信身份。');
+  } catch {
+    throw stoppedRun({ mode, send, results, stage, pending: issues });
+  }
+  for (const [index, selectedIssue] of issues.entries()) {
+    const number = selectedIssue.number;
+    let attemptedPost = false;
+    try {
+      stage = 'read-issue';
+      const issue = mode === 'manual' ? await api.getIssue(number) : selectedIssue;
+      stage = 'plan';
+      let plan = buildReminderPlan(issue, { roles, mode, now: now() });
+      if (plan.action === 'skip') { results.push(plan); continue; }
+      if (!send) { results.push({ ...plan, action: 'preview' }); continue; }
+      stage = 'read-comments';
+      const comments = await api.listComments(number);
+      // Read the issue after comment pagination, immediately before deciding whether to write.
+      // Never send from a saved dashboard snapshot.
+      stage = 'recheck-roles';
+      const freshRoles = await api.getRoles();
+      stage = 'recheck-issue';
+      const freshIssue = await api.getIssue(number);
+      stage = 'recheck-plan';
+      plan = buildReminderPlan(freshIssue, { roles: freshRoles, mode, now: now() });
+      if (plan.action === 'skip') { results.push(plan); continue; }
+      stage = 'check-duplicate';
+      if (hasReminder(comments, plan.marker, sender)) {
+        results.push({ ...plan, action: 'skip', reason: 'already-reminded' });
+        continue;
+      }
+      stage = 'create-comment';
+      attemptedPost = true;
+      const comment = await api.createComment(number, plan.body);
+      stage = 'confirm-comment';
+      if (!comment?.id || comment.user?.login?.toLowerCase() !== sender.toLowerCase()) {
+        throw new Error('评论返回身份或编号未通过核对。');
+      }
+      results.push({ ...plan, action: 'sent', comment_url: comment.html_url });
+    } catch {
+      throw stoppedRun({ mode, send, results, number, stage, pending: issues.slice(index + 1), uncertain: attemptedPost });
     }
-    const comment = await api.createComment(issue.number, plan.body);
-    if (!comment?.id || comment.user?.login?.toLowerCase() !== sender.toLowerCase()) {
-      throw new Error('评论返回身份或编号未通过核对，发送结果待核实；请查看 Issue 后再继续。');
-    }
-    results.push({ ...plan, action: 'sent', comment_url: comment.html_url });
   }
   return { mode, send, results };
 }
@@ -182,5 +225,9 @@ async function main() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch(error => { process.stderr.write(error.message + '\n'); process.exitCode = 1; });
+  main().catch(error => {
+    if (error.report) process.stdout.write(JSON.stringify(error.report, null, 2) + '\n');
+    process.stderr.write(error.message + '\n');
+    process.exitCode = 1;
+  });
 }

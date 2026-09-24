@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { resolveTaskDeadline } from './task-deadline.mjs';
 import { parseIssueNumbers, selectReminderWindow, makeReminderMarker, buildReminderPlan, hasReminder, createGitHubClient, runReminders } from './remind-tasks.mjs';
 
@@ -155,4 +157,118 @@ test('API 错误不暴露 token、响应正文、请求正文', async () => {
   await assert.rejects(api.getIssue(5), error => error.message.includes('403') && !error.message.includes('super-secret-token'));
   const uncertain = createGitHubClient({ repository: 'example/repo', fetchImpl: async () => { throw new Error('super-secret-token'); } });
   await assert.rejects(uncertain.createComment(5, 'private-content'), error => /不确定/.test(error.message) && !/super-secret|private-content/.test(error.message));
+});
+
+function batchApi({ failAt = 'post', invalidReply = false } = {}) {
+  const api = fakeApi();
+  api.listIssues = async () => [issue({ number: 4, state: 'closed' }), ...[5, 6, 7].map(number => issue({ number }))];
+  api.getIssue = async number => {
+    api.calls.push(['read', number]);
+    if (number === 6 && failAt === 'read') throw new Error('private-api-response');
+    return issue({ number });
+  };
+  api.listComments = async number => {
+    api.calls.push(['comments', number]);
+    if (number === 6 && failAt === 'comments') throw new Error('private-api-response');
+    return [];
+  };
+  api.createComment = async number => {
+    api.calls.push(['post', number]);
+    if (number === 6 && failAt === 'post') {
+      if (invalidReply) return { id: 456, user: { login: 'unexpected-sender' } };
+      throw new Error('super-secret-token private-request-body');
+    }
+    return { id: number, user: { login: 'test-sender' }, html_url: `https://github.com/example/repo/issues/${number}#issuecomment-${number}` };
+  };
+  return api;
+}
+
+test('批量中途 POST 不确定：保留跳过与已发送结果，后续任务不尝试', async () => {
+  const api = batchApi();
+  await assert.rejects(runReminders({ api, send: true, enabled: true, now: () => now }), error => {
+    assert.match(error.message, /#6.*待核实/);
+    assert.equal(error.report.failed_issue, 6);
+    assert.equal(error.report.failure_stage, 'create-comment');
+    assert.deepEqual(error.report.results.map(({ number, action }) => [number, action]), [
+      [4, 'skip'], [5, 'sent'], [6, 'uncertain'], [7, 'not-attempted'],
+    ]);
+    assert.match(error.report.results[1].comment_url, /issues\/5#issuecomment-5$/);
+    assert.doesNotMatch(JSON.stringify(error.report) + error.message, /super-secret|private-|"body"|"marker"/);
+    return true;
+  });
+  assert.deepEqual(api.calls.filter(([type]) => type === 'post'), [['post', 5], ['post', 6]]);
+  assert.equal(api.calls.some(([, number]) => number === 7), false);
+});
+
+test('读取评论失败保留此前发送结果，标为 failed，失败与后续任务不发送', async () => {
+  const api = batchApi({ failAt: 'comments' });
+  await assert.rejects(runReminders({ api, send: true, enabled: true, now: () => now }), error => {
+    assert.match(error.message, /#6.*尚未尝试发送/);
+    assert.equal(error.report.failure_stage, 'read-comments');
+    assert.equal(error.report.results[1].action, 'sent');
+    assert.equal(error.report.results[2].action, 'failed');
+    assert.equal(error.report.results[3].action, 'not-attempted');
+    assert.doesNotMatch(JSON.stringify(error.report) + error.message, /private-api-response/);
+    return true;
+  });
+  assert.deepEqual(api.calls.filter(([type]) => type === 'post'), [['post', 5]]);
+});
+
+test('手动任务首次读取失败可定位编号，并停止读取后续任务', async () => {
+  const api = batchApi({ failAt: 'read' });
+  await assert.rejects(runReminders({ api, issueNumbers: [5, 6, 7], send: true, enabled: true, now: () => now }), error => {
+    assert.equal(error.report.failed_issue, 6);
+    assert.equal(error.report.failure_stage, 'read-issue');
+    assert.deepEqual(error.report.results.map(({ number, action }) => [number, action]), [[5, 'sent'], [6, 'failed'], [7, 'not-attempted']]);
+    return true;
+  });
+  assert.equal(api.calls.some(([, number]) => number === 7), false);
+  assert.deepEqual(api.calls.filter(([type]) => type === 'post'), [['post', 5]]);
+});
+
+test('评论响应身份不符也标为 uncertain，保留前项结果且不继续', async () => {
+  const api = batchApi({ invalidReply: true });
+  await assert.rejects(runReminders({ api, send: true, enabled: true, now: () => now }), error => {
+    assert.equal(error.report.failure_stage, 'confirm-comment');
+    assert.equal(error.report.results[2].action, 'uncertain');
+    return true;
+  });
+  assert.deepEqual(api.calls.filter(([type]) => type === 'post'), [['post', 5], ['post', 6]]);
+});
+
+test('CLI 批量失败以非零退出，stdout 保留部分 JSON，stderr 明确任务且无敏感请求信息', () => {
+  const entry = fileURLToPath(new URL('./remind-tasks.mjs', import.meta.url));
+  const script = `
+    const baseIssue = ${JSON.stringify(issue({ body: '' }))};
+    globalThis.fetch = async (url, options = {}) => {
+      const path = new URL(url).pathname;
+      let data;
+      if (path.endsWith('/contents/workspace/manifest.json')) data = { roles: ${JSON.stringify(roles)} };
+      else if (path === '/user') data = { login: 'test-sender' };
+      else {
+        const match = path.match(/\\/issues\\/(\\d+)(\\/comments)?$/);
+        if (!match) throw new Error('unexpected URL');
+        const number = Number(match[1]);
+        if (!match[2]) data = { ...baseIssue, number };
+        else if (options.method === 'POST') {
+          if (number === 6) throw new Error('super-secret-token private-request-body');
+          data = { id: number, user: { login: 'test-sender' }, html_url: 'https://github.com/example/repo/issues/' + number + '#issuecomment-' + number };
+        } else data = [];
+      }
+      return { ok: true, json: async () => data };
+    };
+    process.argv = [process.execPath, ${JSON.stringify(entry)}, '--issues', '5,6,7', '--send'];
+    await import(${JSON.stringify(new URL('./remind-tasks.mjs', import.meta.url).href)});
+  `;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], {
+    encoding: 'utf8', windowsHide: true, timeout: 10000,
+    env: { ...process.env, GH_TOKEN: 'super-secret-token', GITHUB_ACTIONS: 'false', GITHUB_REPOSITORY: 'example/repo', TASK_REMINDERS_ENABLED: 'true', REMINDER_ISSUE_NUMBERS: '' },
+  });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 1);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.stopped, true);
+  assert.deepEqual(report.results.map(({ number, action }) => [number, action]), [[5, 'sent'], [6, 'uncertain'], [7, 'not-attempted']]);
+  assert.match(result.stderr, /#6.*待核实/);
+  assert.doesNotMatch(result.stdout + result.stderr, /super-secret|private-request|"body"|"marker"/);
 });
