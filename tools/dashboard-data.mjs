@@ -48,6 +48,7 @@ function normalizeRoles(manifest) {
       const member = text(role.member, '岗位负责人', true).trim();
       if (member) normalized.member = member;
     }
+    if (role.workflow) normalized.workflow = text(role.workflow, '岗位工作流');
     return normalized;
   });
 }
@@ -68,6 +69,35 @@ export function resolveTaskResponsibility(task, roles = []) {
   const members = new Map(roles.map((role) => [role.id, role.member]));
   const known = uniqueLogins(task.roles.map((roleId) => members.get(roleId)));
   return { source: known.length ? 'role_members' : 'unassigned', logins: known };
+}
+
+// The overview and list share this scope; status tabs are applied afterwards.
+export function filterTasks(tasks, filters, roles = []) {
+  const roleNames = new Map(roles.map(role => [role.id, role.name]));
+  const words = (filters.query || '').trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  return tasks.filter(task => {
+    if (filters.role !== 'all' && !task.roles.includes(filters.role)) return false;
+    if (filters.phase !== 'all' && task.phase !== filters.phase) return false;
+    const responsibility = resolveTaskResponsibility(task, roles);
+    const haystack = [task.title, `#${task.number}`, task.milestone || '',
+      ...responsibility.logins.map(login => `@${login}`),
+      ...task.roles.map(id => roleNames.get(id) || id)].join(' ').toLocaleLowerCase();
+    return words.every(word => haystack.includes(word));
+  });
+}
+
+export function readTaskFilters(search, { roles, defaultPhase, rememberedRole = 'all' }) {
+  const params = new URLSearchParams(search);
+  const roleIds = new Set(['all', ...roles.map(role => role.id)]);
+  const role = params.get('role') ?? rememberedRole;
+  const phase = params.get('phase') ?? defaultPhase;
+  const status = params.get('status') ?? 'open';
+  return {
+    role: roleIds.has(role) ? role : 'all',
+    phase: ['all', 'preparation', 'production'].includes(phase) ? phase : defaultPhase,
+    status: ['open', 'todo', 'doing', 'review', 'done', 'all'].includes(status) ? status : 'open',
+    query: (params.get('q') || '').trim(),
+  };
 }
 
 function normalizeRoadmap(roadmap) {

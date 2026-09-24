@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile, rm, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve, basename } from 'node:path';
-import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility } from './dashboard-data.mjs';
+import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility, filterTasks, readTaskFilters } from './dashboard-data.mjs';
 import { buildDashboard, createGhFetch } from './build-dashboard.mjs';
 
 const API = 'https://api.github.com/repos/' + DEFAULT_REPOSITORY;
@@ -24,6 +24,38 @@ const commit = {
   sha: 'a'.repeat(40), html_url: WEB + '/commit/' + 'a'.repeat(40),
   commit: { message: 'Prepare workspace\n\nDocument current baseline.', committer: { date: NOW } },
 };
+
+test('task scope applies role, phase and search before overview counts', () => {
+  const memberRoles = [{ id: 'planner', name: '策划', member: 'planner-owner' }, { id: 'gameplay', name: '逻辑', member: 'developer' }];
+  const { tasks } = normalizeIssues([
+    issue(1, { state: 'closed', labels: ['role:planner', 'phase:preparation'] }),
+    issue(2, { labels: ['role:gameplay', 'phase:preparation'] }),
+    issue(3, { labels: ['role:planner', 'phase:production', 'status:review'] }),
+  ], memberRoles);
+  const scoped = filterTasks(tasks, { role: 'planner', phase: 'preparation', query: '@planner-owner' }, memberRoles);
+  assert.deepEqual(scoped.map(task => task.number), [1]);
+  assert.equal(scoped.filter(task => task.status === 'done').length, 1);
+  assert.equal(filterTasks(tasks, { role: 'all', phase: 'production', query: '#3' }, memberRoles)[0].status, 'review');
+});
+
+test('shared view filters override the remembered role and validate parameters', () => {
+  assert.deepEqual(readTaskFilters('?role=gameplay&phase=production&status=review&q=%20%23%203%20', {
+    roles, defaultPhase: 'preparation', rememberedRole: 'planner',
+  }), { role: 'gameplay', phase: 'production', status: 'review', query: '# 3' });
+  assert.equal(readTaskFilters('', { roles, defaultPhase: 'preparation', rememberedRole: 'planner' }).role, 'planner');
+  assert.deepEqual(readTaskFilters('?role=unknown&phase=bad&status=bad', { roles, defaultPhase: 'preparation' }), {
+    role: 'all', phase: 'preparation', status: 'open', query: '',
+  });
+});
+
+test('known role workflow stays available for commit-pinned team links', () => {
+  const snapshot = createSnapshot({ repository, commit, issues: [], release: null, roadmap,
+    manifest: { roles: [{ id: 'planner', name: '策划', member: 'owner', workflow: '岗位工作流/07_策划与队长_需求与决策.md' }] },
+    generatedAt: NOW,
+  });
+  assert.equal(snapshot.roles[0].workflow, '岗位工作流/07_策划与队长_需求与决策.md');
+  assert.equal(snapshot.roles[0].member, 'owner');
+});
 
 function issue(number, changes = {}) {
   return {

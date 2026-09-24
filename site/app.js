@@ -1,4 +1,5 @@
-import { resolveTaskResponsibility } from "./data/github-data.mjs?v=20260918-members";
+import { resolveTaskResponsibility, filterTasks, readTaskFilters } from "./data/github-data.mjs?v=20260924";
+export { filterTasks };
 
 const STATUS = {
   todo: { label: "待做", order: 2 },
@@ -12,6 +13,24 @@ const OPEN_STATUSES = new Set(["todo", "doing", "review"]);
 const PAGE_SIZE = 12;
 const state = { snapshot: null, status: "open", role: "all", phase: "all", query: "", visible: PAGE_SIZE, busy: false, phaseInitialized: false, initialRefreshStarted: false };
 const $ = (id) => document.getElementById(id);
+const ROLE_KEY = "gamejam.preferred-role";
+function rememberedRole() { try { return localStorage.getItem(ROLE_KEY) || "all"; } catch { return "all"; } }
+function rememberRole(value) { try { if (value === null) localStorage.removeItem(ROLE_KEY); else localStorage.setItem(ROLE_KEY, value); } catch { /* URL still keeps the current view. */ } }
+function defaultPhase() { return state.snapshot?.phase.id in PHASES ? state.snapshot.phase.id : "all"; }
+function viewURL() {
+  const url = new URL(location.href);
+  for (const key of ["role", "phase", "status"]) url.searchParams.set(key, state[key]);
+  if (state.query.trim()) url.searchParams.set("q", state.query.trim()); else url.searchParams.delete("q");
+  return url;
+}
+function updateFilters({ keepSearchInput = false } = {}) {
+  state.visible = PAGE_SIZE;
+  if (!keepSearchInput) controls.search.value = state.query;
+  controls.role.value = state.role; controls.phase.value = state.phase;
+  history.replaceState(null, "", viewURL());
+  $("copy-feedback").textContent = "";
+  renderTasks();
+}
 const controls = {
   refresh: $("refresh-button"), search: $("task-search"), role: $("role-filter"),
   phase: $("phase-filter"), statusButtons: [...document.querySelectorAll("[data-status]")],
@@ -99,7 +118,7 @@ function validateSnapshot(data) {
 function setBusy(busy, message) {
   state.busy = busy;
   controls.refresh.disabled = busy;
-  controls.refresh.textContent = busy ? "正在更新…" : "刷新项目数据 ↻";
+  controls.refresh.textContent = busy ? "更新中…" : "刷新 ↻";
   $("dashboard").setAttribute("aria-busy", String(busy));
   $("sync-bar").classList.toggle("is-loading", busy);
   if (message) $("sync-title").textContent = message;
@@ -108,9 +127,9 @@ function setBusy(busy, message) {
 function showSource(snapshot) {
   $("sync-bar").classList.remove("is-error");
   const live = snapshot.source?.mode === "live";
-  $("sync-title").textContent = live ? "已读取 GitHub" : "页面快照";
+  $("sync-title").textContent = live ? "已同步" : "已载入快照";
   $("sync-detail").textContent = `${live ? "读取时间" : "生成时间"}：${timestamp(snapshot.generated_at)}（北京）`;
-  $("source-note").textContent = "打开或刷新时读取 GitHub；失败保留发布快照或上次成功读取的数据。" + (snapshot.source?.note ? ` ${snapshot.source.note}` : "");
+  $("source-note").textContent = "任务来自 GitHub Issues；共同版本取自 main。刷新失败时保留上次读取的内容。" + (snapshot.source?.note ? ` ${snapshot.source.note}` : "");
 }
 
 function showFailure(error) {
@@ -156,7 +175,7 @@ async function refreshProject() {
   if (!state.snapshot) { await loadSnapshot(); return; }
   setBusy(true, "正在读取 GitHub 当前状态");
   try {
-    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs?v=20260918-members");
+    const { fetchGitHubData, createSnapshot } = await import("./data/github-data.mjs?v=20260924");
     const previous = state.snapshot;
     const latest = await fetchGitHubData({ repository: previous.repository.full_name, includeWorkspace: true, timeoutMs: 15000 });
     const next = createSnapshot({
@@ -164,7 +183,7 @@ async function refreshProject() {
       generatedAt: new Date().toISOString(),
     });
     const mappingNote = next.source?.note || "";
-    next.source = { ...next.source, mode: "live", note: `工程、任务与发布记录来自本次 GitHub 读取；岗位与排期取自同一工程提交。${mappingNote}` };
+    next.source = { ...next.source, mode: "live", note: mappingNote };
     applySnapshot(next);
   } catch (error) {
     showFailure(error);
@@ -175,20 +194,25 @@ export function applySnapshot(data) {
   const snapshot = validateSnapshot(data);
   state.snapshot = snapshot;
   if (!state.phaseInitialized) {
-    state.phase = snapshot.phase.id in PHASES ? snapshot.phase.id : "all";
+    Object.assign(state, readTaskFilters(location.search, { roles: snapshot.roles, defaultPhase: defaultPhase(), rememberedRole: rememberedRole() }));
     state.phaseInitialized = true;
-    controls.phase.value = state.phase;
   }
   $("dashboard").hidden = false;
   $("load-error").hidden = true;
   $("phase-label").textContent = snapshot.phase.label || PHASES[snapshot.phase.id] || snapshot.phase.id;
-  $("phase-note").textContent = snapshot.phase.note || "";
+  $("phase-note").textContent = snapshot.phase.id === "preparation" ? "先完成工具与交接准备，命题后确定制作任务。" : "按岗位查看任务，交付后提交验收。";
+  $("project-note").textContent = snapshot.phase.note || "";
   setLink($("repository-link"), snapshot.repository.url);
   setLink($("new-task-link"), `${snapshot.repository.url.replace(/\/$/, "")}/issues/new/choose`);
   renderVersion(snapshot);
   renderRoleOptions(snapshot.roles);
+  controls.phase.value = state.phase; controls.search.value = state.query;
   renderTasks();
   renderSchedule(snapshot.schedule);
+  renderResources(snapshot);
+  const currentTasks = snapshot.tasks.filter(task => task.phase === snapshot.phase.id && OPEN_STATUSES.has(task.status));
+  $("summary-task-label").textContent = `全队 · ${snapshot.phase.label || "当前阶段"}`;
+  $("summary-open").textContent = `${currentTasks.length} 项待处理`;
   showSource(snapshot);
 }
 
@@ -197,7 +221,10 @@ function renderVersion(snapshot) {
   $("branch-label").textContent = repository.default_branch || "默认分支";
   $("commit-sha").textContent = version.short_sha || version.sha.slice(0, 8);
   $("commit-sha").title = version.sha;
-  $("commit-message").textContent = version.message || "该提交未提供说明";
+  $("summary-version").textContent = `${repository.default_branch} · ${version.short_sha || version.sha.slice(0, 7)}`;
+  $("summary-release").textContent = release ? `试玩版 ${release.tag}` : "试玩包尚未发布";
+  $("commit-message").textContent = (version.message || "该提交未提供说明").split("\n")[0];
+  $("commit-message").title = version.message || "";
   $("commit-time").textContent = `提交时间：${timestamp(version.committed_at)}（北京）`;
   setLink($("commit-link"), version.url);
   setLink($("source-download"), version.download_url);
@@ -206,7 +233,7 @@ function renderVersion(snapshot) {
   if (!release) {
     $("release-status").textContent = "未发布";
     $("release-status").className = "badge badge-neutral";
-    $("release-note").textContent = "目前没有发布可直接下载的试玩版。上方提供当前工程源码。";
+    $("release-note").textContent = "源码需用开发环境运行。";
     return;
   }
   $("release-status").textContent = release.tag || "已有发布";
@@ -239,12 +266,13 @@ function renderRoleOptions(roles) {
 }
 
 function renderTaskOverview(tasks) {
-  const phaseTasks = state.phase === "all" ? tasks : tasks.filter((task) => task.phase === state.phase);
+  const phaseTasks = tasks;
   const eligible = phaseTasks.filter((task) => task.status !== "cancelled");
   const done = eligible.filter((task) => task.status === "done").length;
   const progress = eligible.length ? Math.round(done / eligible.length * 100) : 0;
-  $("progress-label").textContent = eligible.length ? `已完成 ${done} / ${eligible.length} 项` : "该阶段尚未发布任务";
-  $("progress-note").textContent = state.phase === "preparation" ? "准备任务完成情况" : state.phase === "production" ? "正式制作任务完成情况" : "各阶段分开统计";
+  $("progress-label").textContent = eligible.length ? `已完成 ${done} / ${eligible.length} 项` : tasks.length ? "当前范围的任务均已取消，不计入进度" : "当前筛选范围暂无任务";
+  const role = state.snapshot.roles.find(role => role.id === state.role)?.name || "全部岗位";
+  $("progress-note").textContent = `${role} · ${PHASES[state.phase] || "全部阶段"}${state.query.trim() ? " · 搜索结果" : ""}`;
   $("progress-bar").hidden = state.phase === "all";
   if (state.phase === "all") {
     $("progress-label").textContent = Object.entries(PHASES).map(([id]) => {
@@ -255,37 +283,17 @@ function renderTaskOverview(tasks) {
   $("progress-fill").style.width = `${progress}%`;
   $("progress-bar").setAttribute("aria-valuenow", String(progress));
   $("progress-bar").setAttribute("aria-valuetext", eligible.length ? `${done} 项已完成，共 ${eligible.length} 项` : "尚无任务");
-  $("task-counts").replaceChildren();
-  for (const [status, info] of Object.entries(STATUS)) {
-    const count = phaseTasks.filter((task) => task.status === status).length;
-    if (status === "cancelled" && count === 0) continue;
-    const chip = element("span", "", info.label);
-    chip.append(element("b", "", String(count)));
-    $("task-counts").append(chip);
-  }
-}
-
-export function filterTasks(tasks, filters, roles = []) {
-  const roleNames = new Map(roles.map((role) => [role.id, role.name]));
-  const words = filters.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  return tasks.filter((task) => {
-    if (filters.role !== "all" && !task.roles.includes(filters.role)) return false;
-    if (filters.phase !== "all" && task.phase !== filters.phase) return false;
-    const responsibility = resolveTaskResponsibility(task, roles);
-    const haystack = [task.title, `#${task.number}`, task.milestone || "", ...responsibility.logins.map((login) => `@${login}`), ...task.roles.map((id) => roleNames.get(id) || id)].join(" ").toLocaleLowerCase();
-    return words.every((word) => haystack.includes(word));
-  });
 }
 
 function renderTasks() {
   if (!state.snapshot) return;
   const snapshot = state.snapshot;
-  renderTaskOverview(snapshot.tasks);
   const matching = filterTasks(snapshot.tasks, state, snapshot.roles);
-  $("open-count").textContent = matching.filter((task) => OPEN_STATUSES.has(task.status)).length;
-  $("done-count").textContent = matching.filter((task) => task.status === "done").length;
-  $("all-count").textContent = matching.length;
-  const visibleTasks = matching.filter((task) => state.status === "all" || (state.status === "done" ? task.status === "done" : OPEN_STATUSES.has(task.status)));
+  renderTaskOverview(matching);
+  for (const node of document.querySelectorAll("[data-count]")) {
+    node.textContent = matching.filter(task => node.dataset.count === "all" || (node.dataset.count === "open" ? OPEN_STATUSES.has(task.status) : task.status === node.dataset.count)).length;
+  }
+  const visibleTasks = matching.filter((task) => state.status === "all" || (state.status === "open" ? OPEN_STATUSES.has(task.status) : task.status === state.status));
   visibleTasks.sort((a, b) => STATUS[a.status].order - STATUS[b.status].order || (validDate(b.updated_at)?.getTime() || 0) - (validDate(a.updated_at)?.getTime() || 0));
   const page = visibleTasks.slice(0, state.visible);
   const roleNames = new Map(snapshot.roles.map((role) => [role.id, role.name]));
@@ -293,7 +301,7 @@ function renderTasks() {
   $("results-summary").textContent = visibleTasks.length ? `共 ${visibleTasks.length} 项${page.length < visibleTasks.length ? `，当前显示 ${page.length} 项` : ""}` : "";
   $("show-more").hidden = page.length >= visibleTasks.length;
   $("show-more").textContent = `再显示 ${Math.min(PAGE_SIZE, visibleTasks.length - page.length)} 项任务`;
-  $("clear-filters").hidden = state.role === "all" && state.phase === "all" && state.query === "" && state.status === "open";
+  $("clear-filters").hidden = state.role === "all" && state.phase === defaultPhase() && state.query === "" && state.status === "open";
   $("tasks-empty").hidden = visibleTasks.length > 0;
   if (!visibleTasks.length) {
     const noTasks = snapshot.tasks.length === 0;
@@ -302,6 +310,29 @@ function renderTasks() {
     $("tasks-empty-note").textContent = noTasks ? "团队任务发布后会出现在这里；需要建立任务时，点击上方“新建任务”。" : noOpen ? "可切换到“已完成”或“全部”查看其他记录。" : "调整岗位、阶段或搜索内容后再看。";
   }
   for (const button of controls.statusButtons) button.setAttribute("aria-pressed", String(button.dataset.status === state.status));
+  for (const button of document.querySelectorAll("[data-team-role]")) button.setAttribute("aria-pressed", String(button.dataset.teamRole === state.role));
+}
+
+function renderResources(snapshot) {
+  const base = snapshot.repository.url.replace(/\/$/, "");
+  const fileURL = (path, tree = false) => `${base}/${tree ? "tree" : "blob"}/${snapshot.version.sha}/${path.split("/").map(encodeURIComponent).join("/")}`;
+  setLink($("member-admin"), `${base}/settings/access`);
+  $("team-list").replaceChildren(...snapshot.roles.map(role => {
+    const card = element("div", "team-card");
+    const button = element("button", "team-role", role.name);
+    button.type = "button"; button.dataset.teamRole = role.id;
+    button.setAttribute("aria-label", `筛选${role.name}的任务`);
+    button.setAttribute("aria-pressed", String(state.role === role.id));
+    button.addEventListener("click", () => {
+      Object.assign(state, { role: role.id, phase: defaultPhase(), query: "", status: "open" });
+      updateFilters(); $("tasks").scrollIntoView({ block: "start" }); controls.role.focus({ preventScroll: true });
+    });
+    card.append(button, role.member ? externalLink(`https://github.com/${encodeURIComponent(role.member)}`, "team-member", `@${role.member}`) : element("span", "metadata", "成员待登记"));
+    if (role.workflow) card.append(externalLink(fileURL(role.workflow), "team-workflow", "岗位工作流 ↗"));
+    return card;
+  }));
+  const links = [["docs/协作空间使用指南.md", "使用指南", false], ["docs/加入与同步.md", "加入与版本同步", false], ["planning", "已公开策划资料", true], ["docs/接口与交接.md", "接口与交接", false]];
+  $("resource-links").replaceChildren(...links.map(([path, label, tree]) => externalLink(fileURL(path, tree), "resource-link", `${label} ↗`)));
 }
 
 function renderTask(task, roleNames, roles) {
@@ -337,6 +368,8 @@ export function nodeHasArrived(node, now = new Date()) {
 function renderSchedule(schedule) {
   const nodes = [...schedule].sort((a, b) => validDate(a.at) - validDate(b.at));
   const next = nodes.find((node) => !nodeHasArrived(node));
+  $("summary-date").textContent = next ? `${Number(calendarDay(next.at).slice(5,7))}月${Number(calendarDay(next.at).slice(8,10))}日` : "暂无后续节点";
+  $("summary-node").textContent = next ? `${next.title}${next.date_only ? "" : ` · ${timestamp(next.at).split(" ").at(-1)}`}` : "查看全部排期 ↓";
   $("schedule-list").replaceChildren();
   $("schedule-empty").hidden = nodes.length > 0;
   for (const node of nodes) {
@@ -357,23 +390,46 @@ function renderSchedule(schedule) {
     if (nodeHasArrived(node)) meta.append(element("span", "schedule-arrived", "已到日期"));
     if (httpUrl(node.source_url)) meta.append(externalLink(node.source_url, "schedule-source", "查看依据 ↗"));
     item.append(meta);
-    if (node.note) item.append(element("p", "schedule-note-text", node.note));
+    if (node.note) {
+      const detail = element("details", "schedule-detail");
+      detail.append(element("summary", "", "说明"), element("p", "schedule-note-text", node.note));
+      item.append(detail);
+    }
     $("schedule-list").append(item);
   }
 }
 
 controls.refresh.addEventListener("click", refreshProject);
 $("task-filters").addEventListener("submit", (event) => event.preventDefault());
-controls.search.addEventListener("input", () => { state.query = controls.search.value.trim(); state.visible = PAGE_SIZE; renderTasks(); });
-controls.role.addEventListener("change", () => { state.role = controls.role.value; state.visible = PAGE_SIZE; renderTasks(); });
-controls.phase.addEventListener("change", () => { state.phase = controls.phase.value; state.visible = PAGE_SIZE; renderTasks(); });
+function updateSearch(event) {
+  if (event.isComposing) return;
+  state.query = controls.search.value;
+  updateFilters({ keepSearchInput: true });
+}
+controls.search.addEventListener("input", updateSearch);
+controls.search.addEventListener("compositionend", updateSearch);
+controls.role.addEventListener("change", () => { state.role = controls.role.value; if ($("remember-role").checked) rememberRole(state.role); updateFilters(); });
+controls.phase.addEventListener("change", () => { state.phase = controls.phase.value; updateFilters(); });
+$("remember-role").addEventListener("change", () => rememberRole($("remember-role").checked ? state.role : null));
 for (const button of controls.statusButtons) {
-  button.addEventListener("click", () => { state.status = button.dataset.status; state.visible = PAGE_SIZE; renderTasks(); });
+    button.addEventListener("click", () => { state.status = button.dataset.status; updateFilters(); });
 }
 $("clear-filters").addEventListener("click", () => {
-  Object.assign(state, { status: "open", role: "all", phase: "all", query: "", visible: PAGE_SIZE });
-  controls.search.value = ""; controls.role.value = "all"; controls.phase.value = "all";
-  renderTasks();
+  Object.assign(state, { status: "open", role: "all", phase: defaultPhase(), query: "" });
+  updateFilters();
+});
+$("summary-open").closest("a").addEventListener("click", () => {
+  Object.assign(state, { status: "open", role: "all", phase: defaultPhase(), query: "" }); updateFilters();
+});
+$("copy-view").addEventListener("click", async () => {
+  const url = viewURL(); url.hash = "tasks";
+  try { await navigator.clipboard.writeText(url.href); $("copy-feedback").textContent = "已复制，可打开同样的任务筛选。"; }
+  catch { $("copy-feedback").textContent = "复制未成功，可直接复制浏览器地址。"; }
+});
+window.addEventListener("popstate", () => {
+  if (!state.snapshot) return;
+  Object.assign(state, readTaskFilters(location.search, { roles: state.snapshot.roles, defaultPhase: defaultPhase(), rememberedRole: rememberedRole() }));
+  updateFilters();
 });
 $("show-more").addEventListener("click", () => { state.visible += PAGE_SIZE; renderTasks(); });
 loadSnapshot();

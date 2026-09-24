@@ -1,93 +1,73 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light">
-    <meta name="description" content="Game Jam 项目工作台：查看当前工程版本、团队任务与排期节点。">
-    <meta name="theme-color" content="#f3f2ed">
-    <title>项目工作台 · Game Jam 2026</title>
-    <link rel="stylesheet" href="./styles.css">
-    <script type="module" src="./app.js?v=20260918-members"></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">跳到项目内容</a>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="./" aria-label="Game Jam 项目工作台首页">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span>Game Jam <span class="brand-year">2026</span></span>
-        </a>
-        <nav class="section-nav" aria-label="页面导航">
-          <a href="#version">版本</a><a href="#tasks">任务</a><a href="#schedule">排期</a><a href="https://github.com/Rossgu25487/gamejam-2026-workspace/settings/access" target="_blank" rel="noopener noreferrer" title="队长可在这里查看协作者和待接受邀请">成员管理 ↗</a>
-        </nav>
-        <a id="repository-link" class="quiet-link" href="https://github.com/Rossgu25487/gamejam-2026-workspace" target="_blank" rel="noopener noreferrer">GitHub 仓库 <span aria-hidden="true">↗</span></a>
-      </div>
-    </header>
-
-    <main id="main-content" class="page-shell">
-      <div class="page-heading">
-        <div><p class="eyebrow">团队进度与交付</p><h1>项目工作台</h1></div>
-        <span id="phase-label" class="phase-pill">读取项目阶段…</span>
-      </div>
-      <p id="phase-note" class="phase-note">工程版本、任务状态与排期集中查看。</p>
-
-      <div id="sync-bar" class="sync-bar" role="status" aria-live="polite">
-        <div class="sync-copy"><span id="sync-dot" class="sync-dot" aria-hidden="true"></span><div><strong id="sync-title">正在读取页面快照</strong><span id="sync-detail">从项目的数据文件读取，不需要登录。</span></div></div>
-        <button id="refresh-button" class="button button-small button-quiet" type="button">刷新页面数据 <span aria-hidden="true">↻</span></button>
-      </div>
-
-      <section id="load-error" class="load-error" hidden aria-labelledby="load-error-title">
-        <h2 id="load-error-title">暂时无法读取项目数据</h2>
-        <p id="load-error-message">请重试，或到 GitHub 查看工程与任务。</p>
-        <a class="button button-primary" href="https://github.com/Rossgu25487/gamejam-2026-workspace" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库 ↗</a>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light"><meta name="theme-color" content="#f3f2ed">
+  <meta name="description" content="Game Jam 团队工作台：任务、共同版本、排期与团队入口。">
+  <title>团队工作台 · Game Jam 2026</title>
+  <link rel="stylesheet" href="./styles.css?v=20260924"><script type="module" src="./app.js?v=20260924"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳到工作台</a>
+<header class="site-header"><div class="header-inner">
+  <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Game Jam <span class="brand-year">2026</span></span></a>
+  <nav class="section-nav" aria-label="页面导航"><a href="#tasks">任务</a><a href="#version">版本</a><a href="#schedule">节点</a><a href="#resources">团队与资料</a></nav>
+  <a id="repository-link" class="quiet-link" href="https://github.com/Rossgu25487/gamejam-2026-workspace" target="_blank" rel="noopener noreferrer">仓库 ↗</a>
+</div></header>
+<main id="main-content" class="page-shell">
+  <div class="page-heading"><div><h1>团队工作台</h1><p id="phase-note" class="phase-note">找到任务，查看版本，准备下一次交接。</p></div><span id="phase-label" class="phase-pill">读取中</span></div>
+  <div id="sync-bar" class="sync-bar" role="status" aria-live="polite"><div class="sync-copy"><span id="sync-dot" class="sync-dot" aria-hidden="true"></span><div><strong id="sync-title">读取数据…</strong><span id="sync-detail"></span></div></div><button id="refresh-button" class="button button-small button-quiet" type="button">刷新 ↻</button></div>
+  <section id="load-error" class="load-error" hidden><h2>暂时无法读取项目数据</h2><p id="load-error-message"></p><a class="button button-primary" href="https://github.com/Rossgu25487/gamejam-2026-workspace/issues" target="_blank" rel="noopener noreferrer">到 GitHub 查看任务 ↗</a></section>
+  <div id="dashboard" hidden aria-busy="true">
+    <div class="overview-strip" aria-label="项目概况">
+      <a href="#version"><span>共同工程版本</span><strong id="summary-version">—</strong><small id="summary-release">—</small></a>
+      <a href="#tasks"><span id="summary-task-label">当前阶段待处理</span><strong id="summary-open">—</strong><small>查看任务 ↓</small></a>
+      <a href="#schedule"><span>下一节点 · 北京时间</span><strong id="summary-date">—</strong><small id="summary-node">—</small></a>
+    </div>
+    <div class="dashboard">
+      <section id="tasks" class="card tasks-card" aria-labelledby="tasks-heading">
+        <div class="section-heading"><h2 id="tasks-heading">任务</h2><a id="new-task-link" class="button button-small button-quiet" target="_blank" rel="noopener noreferrer">新建任务 ＋</a></div>
+        <form id="task-filters" class="task-filters" role="search" autocomplete="off">
+          <label class="role-picker" for="role-filter"><span>我的岗位</span><select id="role-filter"><option value="all">全部岗位</option></select></label>
+          <label class="phase-picker" for="phase-filter"><span>阶段</span><select id="phase-filter"><option value="preparation">命题前准备</option><option value="production">正式制作</option><option value="all">全部阶段</option></select></label>
+          <label class="search-field"><span class="sr-only">搜索任务、编号或负责人</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input id="task-search" type="search" placeholder="搜索任务、编号或负责人"></label>
+          <div class="filter-bottom"><label class="remember-choice"><input type="checkbox" id="remember-role" checked> 本机记住岗位</label><div class="filter-actions"><button id="copy-view" class="text-button" type="button">复制当前视图链接</button><button id="clear-filters" class="text-button" type="button" hidden>重置筛选</button></div></div>
+        </form>
+        <div class="task-overview"><div class="progress-copy"><strong id="progress-label">—</strong><span id="progress-note" class="metadata"></span></div><div class="progress-track" role="progressbar" id="progress-bar" aria-label="当前筛选范围的完成比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div></div>
+        <div class="status-switch" role="group" aria-label="任务状态">
+          <button type="button" data-status="open" aria-pressed="true">待处理 <span data-count="open">0</span></button>
+          <button type="button" data-status="todo" aria-pressed="false">待做 <span data-count="todo">0</span></button>
+          <button type="button" data-status="doing" aria-pressed="false">进行中 <span data-count="doing">0</span></button>
+          <button type="button" data-status="review" aria-pressed="false">待验收 <span data-count="review">0</span></button>
+          <button type="button" data-status="done" aria-pressed="false">已完成 <span data-count="done">0</span></button>
+          <button type="button" data-status="all" aria-pressed="false">全部 <span data-count="all">0</span></button>
+        </div>
+        <p id="results-summary" class="results-summary" aria-live="polite"></p><p id="copy-feedback" class="metadata" role="status"></p>
+        <ul id="task-list" class="task-list"></ul>
+        <div id="tasks-empty" class="empty-state" hidden><h3 id="tasks-empty-title">暂无任务</h3><p id="tasks-empty-note"></p></div>
+        <button id="show-more" class="button button-quiet show-more" type="button" hidden>显示更多</button>
+        <p class="section-footnote">打开任务，在 GitHub 查看要求或更新进度。</p>
       </section>
-
-      <div id="dashboard" class="dashboard" hidden aria-busy="true">
-        <section id="version" class="card version-card" aria-labelledby="version-heading">
-          <div class="section-heading"><div><p class="eyebrow">工程版本</p><h2 id="version-heading">当前工程</h2></div><span id="branch-label" class="branch-pill">—</span></div>
-          <div class="version-body"><div class="version-main">
-          <div class="commit-line"><code id="commit-sha">—</code><a id="commit-link" class="text-link" target="_blank" rel="noopener noreferrer">查看提交 ↗</a></div>
-          <p id="commit-message" class="commit-message">—</p>
-          <p id="commit-time" class="metadata">—</p>
-          <div class="version-actions"><a id="source-download" class="button button-primary" target="_blank" rel="noopener noreferrer">下载当前源码 <span aria-hidden="true">↓</span></a><span class="action-note">源码包需要开发环境运行</span></div>
-          </div><div class="release-block">
-            <div class="release-heading"><h3>试玩版</h3><span id="release-status" class="badge badge-neutral">读取中</span></div>
-            <p id="release-note" class="supporting-text"></p>
-            <div id="release-assets" class="asset-links"></div>
-            <a id="release-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>查看发布记录 ↗</a>
-          </div>
-          </div>
-        </section>
-
-        <section id="schedule" class="card schedule-card" aria-labelledby="schedule-heading">
-          <div class="section-heading"><div><p class="eyebrow">排期节点</p><h2 id="schedule-heading">重要时间</h2></div><span class="metadata timezone">北京时间</span></div>
-          <p class="supporting-text schedule-note">硬截止与建议节点分别标注。日期到来不会自动将任务标为完成。</p>
-          <ol id="schedule-list" class="schedule-list"></ol>
-          <p id="schedule-empty" class="empty-compact" hidden>暂未发布排期节点。</p>
-        </section>
-
-        <section id="tasks" class="card tasks-card" aria-labelledby="tasks-heading">
-          <div class="section-heading"><div><p class="eyebrow">任务进度</p><h2 id="tasks-heading">正在推进什么</h2></div><a id="new-task-link" class="button button-small button-quiet" target="_blank" rel="noopener noreferrer">新建任务 <span aria-hidden="true">＋</span></a></div>
-          <div class="task-overview">
-            <div class="progress-copy"><strong id="progress-label">—</strong><span id="progress-note" class="metadata">准备任务完成情况</span></div>
-            <div class="progress-track" role="progressbar" id="progress-bar" aria-label="所选阶段已完成任务比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
-            <div id="task-counts" class="task-counts"></div>
-          </div>
-          <form id="task-filters" class="task-filters" role="search" autocomplete="off">
-            <label class="search-field"><span class="sr-only">搜索任务、编号或负责人</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input id="task-search" type="search" placeholder="搜索任务、编号或负责人"></label>
-            <div class="select-row"><label><span>岗位</span><select id="role-filter"><option value="all">全部岗位</option></select></label><label><span>阶段</span><select id="phase-filter"><option value="all">全部阶段</option><option value="preparation">命题前准备</option><option value="production">正式制作</option></select></label></div>
-            <div class="filter-bottom"><div class="status-switch" role="group" aria-label="完成状态"><button type="button" data-status="open" aria-pressed="true">未完成 <span id="open-count">0</span></button><button type="button" data-status="done" aria-pressed="false">已完成 <span id="done-count">0</span></button><button type="button" data-status="all" aria-pressed="false">全部 <span id="all-count">0</span></button></div><button id="clear-filters" class="text-button" type="button" hidden>清除筛选</button></div>
-          </form>
-          <p id="results-summary" class="results-summary" aria-live="polite"></p>
-          <ul id="task-list" class="task-list"></ul>
-          <div id="tasks-empty" class="empty-state" hidden><span class="empty-symbol" aria-hidden="true">○</span><h3 id="tasks-empty-title">暂无任务</h3><p id="tasks-empty-note"></p></div>
-          <button id="show-more" class="button button-quiet show-more" type="button" hidden>显示更多任务</button>
-          <p class="section-footnote">点击任务前往 GitHub 查看详情或更新进度。本页只展示共享数据。</p>
-        </section>
-      </div>
-      <noscript><div class="load-error"><h2>需要启用 JavaScript</h2><p>工作台通过 JavaScript 读取项目快照。也可以直接访问上方 GitHub 仓库。</p></div></noscript>
-    </main>
-    <footer class="site-footer"><span>Game Jam · 项目工作台</span><p id="source-note">页面由项目快照生成，查看无需安装或登录。</p></footer>
-  </body>
-</html>
+      <div class="side-column"><section id="version" class="card version-card" aria-labelledby="version-heading">
+        <div class="section-heading"><h2 id="version-heading">共同版本</h2><span id="branch-label" class="branch-pill">—</span></div>
+        <div class="commit-line"><code id="commit-sha">—</code><a id="commit-link" class="text-link" target="_blank" rel="noopener noreferrer">提交详情 ↗</a></div>
+        <p id="commit-message" class="commit-message">—</p><p id="commit-time" class="metadata">—</p>
+        <div class="version-actions"><a id="source-download" class="button button-quiet" target="_blank" rel="noopener noreferrer">下载此版本源码 ↓</a></div>
+        <p class="metadata version-hint">本机分支请与此版本核对。</p>
+        <div class="release-block"><div class="release-heading"><h3>试玩包</h3><span id="release-status" class="badge badge-neutral">读取中</span></div><p id="release-note" class="supporting-text"></p><div id="release-assets" class="asset-links"></div><a id="release-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>发布记录 ↗</a></div>
+      </section>
+      <section id="schedule" class="card schedule-card" aria-labelledby="schedule-heading">
+        <div class="section-heading"><h2 id="schedule-heading">排期节点</h2><span class="metadata">北京时间</span></div><ol id="schedule-list" class="schedule-list"></ol><p id="schedule-empty" class="empty-compact" hidden>尚未公布节点。</p>
+      </section>
+      </div><section id="resources" class="card resources-card" aria-labelledby="resources-heading">
+        <div class="section-heading"><h2 id="resources-heading">团队与资料</h2><a id="member-admin" class="text-link" target="_blank" rel="noopener noreferrer">队长：仓库权限管理 ↗</a></div>
+        <div id="team-list" class="team-list"></div>
+        <div id="resource-links" class="resource-links"></div>
+        <details class="project-notes"><summary>项目约定与数据说明</summary><p id="project-note"></p><p>岗位名单表示已确定的分工；邀请接受情况由队长在仓库权限页核对。节点到期不会自动完成任务。</p><p id="source-note"></p></details>
+      </section>
+    </div>
+  </div>
+  <noscript><div class="load-error">请启用 JavaScript，或直接打开上方仓库。</div></noscript>
+</main>
+<footer class="site-footer"><span>Game Jam 2026 · 团队工作台</span></footer>
+</body></html>
