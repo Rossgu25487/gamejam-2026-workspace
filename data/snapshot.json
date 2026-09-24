@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-23T16:18:39.092Z",
+  "generated_at": "2026-09-24T05:00:35.659Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "题前工具与交接准备单独计时。正式题材、制作任务和个人排期在命题公布后确定；每人正式制作以 12 小时为基线，必要时可扩大，累计最多 24 小时，任务中记录估时与本人可投入时间。24 小时是上限，不要求用满。"
   },
   "version": {
-    "sha": "3d04cd78a563e842ad756f43b5d89ce7b55957d2",
-    "short_sha": "3d04cd7",
-    "committed_at": "2026-09-23T16:08:00.000Z",
-    "message": "明确正式制作 12 小时基线与每人 24 小时上限",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/3d04cd78a563e842ad756f43b5d89ce7b55957d2",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/3d04cd78a563e842ad756f43b5d89ce7b55957d2.zip"
+    "sha": "99e0cbd675505050db44d96c94cd0fe1d645e2d3",
+    "short_sha": "99e0cbd",
+    "committed_at": "2026-09-24T05:00:08.000Z",
+    "message": "记录工作台发布前回归与本次上传授权",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/99e0cbd675505050db44d96c94cd0fe1d645e2d3",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/99e0cbd675505050db44d96c94cd0fe1d645e2d3.zip"
   },
   "release": null,
   "tasks": [
@@ -33,7 +33,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:29:10.000Z",
       "closed_at": "2026-09-18T12:29:10.000Z",
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 2,
@@ -47,7 +52,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:29:12.000Z",
       "closed_at": "2026-09-18T12:29:12.000Z",
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 3,
@@ -62,7 +72,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:29:14.000Z",
       "closed_at": "2026-09-18T12:29:14.000Z",
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 4,
@@ -81,7 +96,12 @@
       ],
       "updated_at": "2026-09-23T16:18:26.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 5,
@@ -95,7 +115,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T13:38:15.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 6,
@@ -109,7 +134,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T13:22:49.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 7,
@@ -128,7 +158,12 @@
       ],
       "updated_at": "2026-09-20T03:54:15.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 8,
@@ -142,7 +177,12 @@
       "assignees": [],
       "updated_at": "2026-09-20T03:54:14.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 9,
@@ -156,7 +196,12 @@
       "assignees": [],
       "updated_at": "2026-09-22T01:10:13.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 10,
@@ -170,7 +215,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T13:04:04.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 11,
@@ -184,7 +234,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:29:23.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 12,
@@ -199,7 +254,12 @@
       "assignees": [],
       "updated_at": "2026-09-18T12:52:46.000Z",
       "closed_at": "2026-09-18T12:52:46.000Z",
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 13,
@@ -218,7 +278,12 @@
       ],
       "updated_at": "2026-09-23T16:18:29.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 14,
@@ -237,7 +302,12 @@
       ],
       "updated_at": "2026-09-23T16:18:32.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     },
     {
       "number": 15,
@@ -256,7 +326,12 @@
       ],
       "updated_at": "2026-09-23T16:18:37.000Z",
       "closed_at": null,
-      "milestone": null
+      "milestone": null,
+      "deadline": {
+        "at": null,
+        "source": null,
+        "error": null
+      }
     }
   ],
   "schedule": [
@@ -315,40 +390,48 @@
     {
       "id": "planner",
       "name": "策划 / 队长",
-      "member": "Rossgu25487"
+      "member": "Rossgu25487",
+      "workflow": "岗位工作流/07_策划与队长_需求与决策.md"
     },
     {
       "id": "lead",
       "name": "主程序",
-      "member": "follerdf"
+      "member": "follerdf",
+      "workflow": "岗位工作流/01_主程序_工程与协作.md"
     },
     {
       "id": "gameplay",
       "name": "副程序 A · 逻辑",
-      "member": "bcynuaa"
+      "member": "bcynuaa",
+      "workflow": "岗位工作流/02_副程序A_交互与逻辑.md"
     },
     {
       "id": "integration",
       "name": "副程序 B · 界面接入",
-      "member": "wangruijie21"
+      "member": "wangruijie21",
+      "workflow": "岗位工作流/03_副程序B_界面与资源接入.md"
     },
     {
       "id": "ui_art",
       "name": "美术 A · UI 组件",
-      "member": "Aprilwwwang"
+      "member": "Aprilwwwang",
+      "workflow": "岗位工作流/04_美术A_UI布局与组件.md"
     },
     {
       "id": "visual_art",
       "name": "美术 B · 二维图形",
-      "member": "stephaniez1"
+      "member": "stephaniez1",
+      "workflow": "岗位工作流/05_美术B_二维图形与视觉资源.md"
     },
     {
       "id": "qa",
-      "name": "测试"
+      "name": "测试",
+      "workflow": "岗位工作流/06_测试_独立验收与问题回归.md"
     },
     {
       "id": "ops",
-      "name": "运营"
+      "name": "运营",
+      "workflow": "岗位工作流/08_运营_记录与提交材料.md"
     }
   ],
   "source": {

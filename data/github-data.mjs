@@ -1,4 +1,5 @@
 // Shared by Node and the browser. This module has no filesystem or environment access.
+import { resolveTaskDeadline } from './task-deadline.mjs';
 export const DEFAULT_REPOSITORY = 'Rossgu25487/gamejam-2026-workspace';
 const API_ROOT = 'https://api.github.com';
 const API_VERSION = '2026-03-10';
@@ -48,6 +49,7 @@ function normalizeRoles(manifest) {
       const member = text(role.member, '岗位负责人', true).trim();
       if (member) normalized.member = member;
     }
+    if (role.workflow) normalized.workflow = text(role.workflow, '岗位工作流');
     return normalized;
   });
 }
@@ -68,6 +70,52 @@ export function resolveTaskResponsibility(task, roles = []) {
   const members = new Map(roles.map((role) => [role.id, role.member]));
   const known = uniqueLogins(task.roles.map((roleId) => members.get(roleId)));
   return { source: known.length ? 'role_members' : 'unassigned', logins: known };
+}
+
+// The overview and list share this scope; status tabs are applied afterwards.
+export function filterTasks(tasks, filters, roles = []) {
+  const roleNames = new Map(roles.map(role => [role.id, role.name]));
+  const words = (filters.query || '').trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  return tasks.filter(task => {
+    if (filters.role !== 'all' && !task.roles.includes(filters.role)) return false;
+    if (filters.phase !== 'all' && task.phase !== filters.phase) return false;
+    const responsibility = resolveTaskResponsibility(task, roles);
+    const haystack = [task.title, `#${task.number}`, task.milestone || '',
+      ...responsibility.logins.map(login => `@${login}`),
+      ...task.roles.map(id => roleNames.get(id) || id)].join(' ').toLocaleLowerCase();
+    return words.every(word => word.startsWith('@')
+      ? responsibility.logins.some(login => login.toLocaleLowerCase() === word.slice(1))
+      : haystack.includes(word));
+  });
+}
+
+export function readTaskFilters(search, { roles, defaultPhase, rememberedRole = 'all' }) {
+  const params = new URLSearchParams(search);
+  const roleIds = new Set(['all', ...roles.map(role => role.id)]);
+  const role = params.get('role') ?? rememberedRole;
+  const phase = params.get('phase') ?? defaultPhase;
+  const status = params.get('status') ?? 'open';
+  const sort = params.get('sort') ?? 'priority';
+  return {
+    role: roleIds.has(role) ? role : 'all',
+    phase: ['all', 'preparation', 'production'].includes(phase) ? phase : defaultPhase,
+    status: ['open', 'todo', 'doing', 'review', 'done', 'all'].includes(status) ? status : 'open',
+    query: (params.get('q') || '').trim(),
+    sort: ['priority', 'deadline', 'updated'].includes(sort) ? sort : 'priority',
+  };
+}
+
+export function sortTasks(tasks, sort = 'priority') {
+  const order = { doing: 0, review: 1, todo: 2, done: 3, cancelled: 4 };
+  const date = value => Number.isFinite(Date.parse(value)) ? Date.parse(value) : 0;
+  const due = task => ['todo', 'doing', 'review'].includes(task.status) && Number.isFinite(Date.parse(task.deadline?.at)) ? Date.parse(task.deadline.at) : Infinity;
+  return [...tasks].sort((a, b) => {
+    const updated = date(b.updated_at) - date(a.updated_at);
+    const deadline = due(a) - due(b) || 0;
+    if (sort === 'updated') return updated || a.number - b.number;
+    if (sort === 'deadline') return deadline || order[a.status] - order[b.status] || updated || a.number - b.number;
+    return order[a.status] - order[b.status] || deadline || updated || a.number - b.number;
+  });
 }
 
 function normalizeRoadmap(roadmap) {
@@ -163,6 +211,7 @@ export function normalizeIssues(issues, roles) {
       closed_at: issue.closed_at == null ? null : isoTime(issue.closed_at, 'Issue 关闭时间'),
       milestone: issue.milestone == null
         ? null : text(object(issue.milestone, '里程碑').title, '里程碑名称'),
+      deadline: resolveTaskDeadline(issue),
     };
     tasks.push(task);
   }
