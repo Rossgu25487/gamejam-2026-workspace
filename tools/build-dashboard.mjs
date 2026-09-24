@@ -111,10 +111,15 @@ export async function buildDashboard({
   }
   const snapshot = createSnapshot({ ...remote, manifest, roadmap, generatedAt, workspaceCommit });
   const sharedModule = await readFile(join(TOOL_DIRECTORY, 'dashboard-data.mjs'), 'utf8');
+  const progressModule = (await readFile(join(TOOL_DIRECTORY, 'dashboard-progress.mjs'), 'utf8'))
+    .replace("'./dashboard-data.mjs'", "'./github-data.mjs'");
+  const deadlineModule = await readFile(join(TOOL_DIRECTORY, 'task-deadline.mjs'), 'utf8');
   const output = resolve(outputPath);
   // No output is touched until every remote request and normalization succeeds.
   await mkdir(dirname(output), { recursive: true });
   await replaceFile(join(dirname(output), 'github-data.mjs'), sharedModule);
+  await replaceFile(join(dirname(output), 'dashboard-progress.mjs'), progressModule);
+  await replaceFile(join(dirname(output), 'task-deadline.mjs'), deadlineModule);
   await replaceFile(output, JSON.stringify(snapshot, null, 2) + '\n');
   return snapshot;
 }

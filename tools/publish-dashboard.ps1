@@ -21,7 +21,7 @@ if (-not $AuthorEmail) { $AuthorEmail = (& git -C $repoRoot config user.email | 
 if (-not $AuthorName -or -not $AuthorEmail) {
   throw '请配置本人的 Git 提交身份，或提供 -AuthorName 与 -AuthorEmail。'
 }
-$uncommitted = Invoke-Git @('status','--porcelain','--','site','tools/build-dashboard.mjs','tools/dashboard-data.mjs','workspace/roadmap.json','workspace/manifest.json')
+$uncommitted = Invoke-Git @('status','--porcelain','--','site','tools/build-dashboard.mjs','tools/dashboard-data.mjs','tools/dashboard-progress.mjs','tools/task-deadline.mjs','workspace/roadmap.json','workspace/manifest.json')
 if ($uncommitted) { throw '请先提交本次网页、数据构建或排期修改，再发布对应版本。游戏中的其他未完成工作会保留。' }
 $workspaceCommit = Invoke-Git @('rev-parse','HEAD')
 $remoteMain = ((Invoke-Git @('ls-remote','--heads','origin','main')) -split '\s+')[0]
@@ -38,7 +38,7 @@ if ($LASTEXITCODE -ne 0) { throw '网页数据构建失败，未发布。' }
 $snapshot = Get-Content -LiteralPath (Join-Path $repoRoot 'site/data/snapshot.json') -Encoding UTF8 -Raw | ConvertFrom-Json
 if ($snapshot.version.sha -ne $workspaceCommit) { throw '构建期间 main 已更新，请取得新版本后再发布；现有线上页面未更改。' }
 
-$files = @('index.html','styles.css','app.js','data/snapshot.json','data/github-data.mjs','.nojekyll')
+$files = @('index.html','styles.css','app.js','data/snapshot.json','data/github-data.mjs','data/dashboard-progress.mjs','data/task-deadline.mjs','.nojekyll')
 $remoteBranch = Invoke-Git @('ls-remote','--heads','origin','gh-pages')
 $parent = ''
 if ($remoteBranch) {

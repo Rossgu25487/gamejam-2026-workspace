@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, dirname, resolve, basename } from 'node:path';
 import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility, filterTasks, readTaskFilters } from './dashboard-data.mjs';
 import { buildDashboard, createGhFetch } from './build-dashboard.mjs';
+import { pathToFileURL } from 'node:url';
 
 const API = 'https://api.github.com/repos/' + DEFAULT_REPOSITORY;
 const WEB = 'https://github.com/' + DEFAULT_REPOSITORY;
@@ -24,6 +25,44 @@ const commit = {
   sha: 'a'.repeat(40), html_url: WEB + '/commit/' + 'a'.repeat(40),
   commit: { message: 'Prepare workspace\n\nDocument current baseline.', committer: { date: NOW } },
 };
+
+test('member links search exact responsible logins rather than similarly named members', () => {
+  const memberRoles = [{ id: 'planner', name: '策划', member: 'owner' }];
+  const { tasks } = normalizeIssues([
+    issue(1, { assignees: [{ login: 'owner', html_url: 'https://github.com/owner' }] }),
+    issue(2, { assignees: [{ login: 'owner-two', html_url: 'https://github.com/owner-two' }] }),
+  ], memberRoles);
+  assert.deepEqual(filterTasks(tasks, { role: 'all', phase: 'all', query: '@OWNER' }, memberRoles).map(task => task.number), [1]);
+});
+
+test('dashboard preserves the same deadline result used by reminder rules', () => {
+  const { tasks } = normalizeIssues([
+    issue(1, { body: '截止时间: 2026-10-17T20:00:00+08:00' }),
+    issue(2, { body: '截止时间: 未定' }),
+    issue(3),
+  ], roles);
+  assert.equal(tasks[0].deadline.at, '2026-10-17T12:00:00.000Z');
+  assert.equal(tasks[1].deadline.at, null);
+  assert.ok(tasks[1].deadline.error);
+  assert.deepEqual(tasks[2].deadline, { at: null, source: null, error: null });
+});
+
+test('built browser progress module resolves its copied data and deadline dependencies', async t => {
+  const fixture = await temporaryFixture(t);
+  await buildDashboard({ ...fixture, fetchImpl: fakeApi(), generatedAt: NOW });
+  const module = await import(pathToFileURL(join(fixture.directory, 'dashboard-progress.mjs')).href);
+  assert.equal(module.summarizeTasks([]).percent, null);
+  const data = await import(pathToFileURL(join(fixture.directory, 'github-data.mjs')).href);
+  assert.equal(data.normalizeIssues([issue(1)], roles).tasks[0].deadline.at, null);
+});
+
+test('publishing includes every generated browser module without executing a release', async () => {
+  const script = await readFile(new URL('./publish-dashboard.ps1', import.meta.url), 'utf8');
+  const files = script.match(/^\$files = (.+)$/m)?.[1] || '';
+  for (const name of ['data/github-data.mjs', 'data/dashboard-progress.mjs', 'data/task-deadline.mjs']) {
+    assert.ok(files.includes(`'${name}'`), `Missing published module: ${name}`);
+  }
+});
 
 test('task scope applies role, phase and search before overview counts', () => {
   const memberRoles = [{ id: 'planner', name: '策划', member: 'planner-owner' }, { id: 'gameplay', name: '逻辑', member: 'developer' }];

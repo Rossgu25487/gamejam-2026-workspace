@@ -5,13 +5,13 @@
   <meta name="color-scheme" content="light"><meta name="theme-color" content="#f3f2ed">
   <meta name="description" content="Game Jam 团队工作台：任务、共同版本、排期与团队入口。">
   <title>团队工作台 · Game Jam 2026</title>
-  <link rel="stylesheet" href="./styles.css?v=20260924"><script type="module" src="./app.js?v=20260924"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260924b"><script type="module" src="./app.js?v=20260924b"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">跳到工作台</a>
 <header class="site-header"><div class="header-inner">
   <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Game Jam <span class="brand-year">2026</span></span></a>
-  <nav class="section-nav" aria-label="页面导航"><a href="#tasks">任务</a><a href="#version">版本</a><a href="#schedule">节点</a><a href="#resources">团队与资料</a></nav>
+  <nav class="section-nav" aria-label="页面导航"><a href="#project-progress">进度</a><a href="#tasks">任务</a><a href="#resources">成员</a><a href="#schedule">节点</a></nav>
   <a id="repository-link" class="quiet-link" href="https://github.com/Rossgu25487/gamejam-2026-workspace" target="_blank" rel="noopener noreferrer">仓库 ↗</a>
 </div></header>
 <main id="main-content" class="page-shell">
@@ -24,6 +24,7 @@
       <a href="#tasks"><span id="summary-task-label">当前阶段待处理</span><strong id="summary-open">—</strong><small>查看任务 ↓</small></a>
       <a href="#schedule"><span>下一节点 · 北京时间</span><strong id="summary-date">—</strong><small id="summary-node">—</small></a>
     </div>
+    <section id="project-progress" class="project-progress" aria-label="全队分阶段进度"></section>
     <div class="dashboard">
       <section id="tasks" class="card tasks-card" aria-labelledby="tasks-heading">
         <div class="section-heading"><h2 id="tasks-heading">任务</h2><a id="new-task-link" class="button button-small button-quiet" target="_blank" rel="noopener noreferrer">新建任务 ＋</a></div>
@@ -35,11 +36,11 @@
         </form>
         <div class="task-overview"><div class="progress-copy"><strong id="progress-label">—</strong><span id="progress-note" class="metadata"></span></div><div class="progress-track" role="progressbar" id="progress-bar" aria-label="当前筛选范围的完成比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div></div>
         <div class="status-switch" role="group" aria-label="任务状态">
-          <button type="button" data-status="open" aria-pressed="true">待处理 <span data-count="open">0</span></button>
+          <button class="status-major status-open" type="button" data-status="open" aria-pressed="true"><span class="status-icon" aria-hidden="true">◷</span> 待处理 <span data-count="open">0</span><small>待做 / 进行中 / 待验收</small></button>
+          <button class="status-major status-done" type="button" data-status="done" aria-pressed="false"><span class="status-icon" aria-hidden="true">✓</span> 已完成 <span data-count="done">0</span><small>已验收并关闭的任务</small></button>
           <button type="button" data-status="todo" aria-pressed="false">待做 <span data-count="todo">0</span></button>
           <button type="button" data-status="doing" aria-pressed="false">进行中 <span data-count="doing">0</span></button>
           <button type="button" data-status="review" aria-pressed="false">待验收 <span data-count="review">0</span></button>
-          <button type="button" data-status="done" aria-pressed="false">已完成 <span data-count="done">0</span></button>
           <button type="button" data-status="all" aria-pressed="false">全部 <span data-count="all">0</span></button>
         </div>
         <p id="results-summary" class="results-summary" aria-live="polite"></p><p id="copy-feedback" class="metadata" role="status"></p>
@@ -56,11 +57,20 @@
         <p class="metadata version-hint">本机分支请与此版本核对。</p>
         <div class="release-block"><div class="release-heading"><h3>试玩包</h3><span id="release-status" class="badge badge-neutral">读取中</span></div><p id="release-note" class="supporting-text"></p><div id="release-assets" class="asset-links"></div><a id="release-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>发布记录 ↗</a></div>
       </section>
+      <section id="reminders" class="card reminders-card" aria-labelledby="reminders-heading">
+        <div class="section-heading"><h2 id="reminders-heading">到期提醒</h2><span class="badge badge-neutral">GitHub @通知</span></div>
+        <p><strong>截止前 3 天、24 小时</strong></p>
+        <p id="deadline-coverage" class="supporting-text"></p>
+        <p id="automation-state" class="automation-state" role="status">正在检查提醒工作流…</p>
+        <a id="automation-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>运行与设置 ↗</a>
+        <details class="project-notes"><summary>提醒如何发送</summary><p>“提醒”按钮先生成评论草稿。任务评论 @负责人后，GitHub 按成员通知设置发送站内或邮件通知。</p><p>自动任务每小时检查一次，可能延迟。发送前复核任务，已关闭和已提醒的同档位任务会跳过。</p><p>未设截止时间的任务可手动提醒；自动提醒需先在 Issue 补充截止时间。</p></details>
+      </section>
       <section id="schedule" class="card schedule-card" aria-labelledby="schedule-heading">
         <div class="section-heading"><h2 id="schedule-heading">排期节点</h2><span class="metadata">北京时间</span></div><ol id="schedule-list" class="schedule-list"></ol><p id="schedule-empty" class="empty-compact" hidden>尚未公布节点。</p>
       </section>
       </div><section id="resources" class="card resources-card" aria-labelledby="resources-heading">
-        <div class="section-heading"><h2 id="resources-heading">团队与资料</h2><a id="member-admin" class="text-link" target="_blank" rel="noopener noreferrer">队长：仓库权限管理 ↗</a></div>
+        <div class="section-heading"><h2 id="resources-heading">成员待办</h2><a id="member-admin" class="text-link" target="_blank" rel="noopener noreferrer">队长：仓库权限管理 ↗</a></div>
+        <p id="team-scope" class="supporting-text"></p>
         <div id="team-list" class="team-list"></div>
         <div id="resource-links" class="resource-links"></div>
         <details class="project-notes"><summary>项目约定与数据说明</summary><p id="project-note"></p><p>岗位名单表示已确定的分工；邀请接受情况由队长在仓库权限页核对。节点到期不会自动完成任务。</p><p id="source-note"></p></details>
@@ -69,5 +79,12 @@
   </div>
   <noscript><div class="load-error">请启用 JavaScript，或直接打开上方仓库。</div></noscript>
 </main>
+<dialog id="reminder-dialog" aria-labelledby="reminder-title">
+  <div class="section-heading"><h2 id="reminder-title">提醒成员</h2><button id="close-reminder" class="button button-small" type="button" aria-label="关闭提醒预览">关闭 ×</button></div>
+  <p class="supporting-text">先核对评论草稿，再到对应 GitHub 任务发送。共享任务会列出全部负责人；此页不会直接发表评论。</p>
+  <div id="reminder-tasks"></div>
+  <p id="reminder-feedback" class="metadata" role="status"></p>
+  <div class="reminder-run"><p id="reminder-run-note" class="supporting-text"></p><button id="run-reminder" class="button button-primary" type="button" hidden>复制任务编号，前往批量提醒</button></div>
+</dialog>
 <footer class="site-footer"><span>Game Jam 2026 · 团队工作台</span></footer>
 </body></html>

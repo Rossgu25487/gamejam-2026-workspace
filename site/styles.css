@@ -11,3 +11,65 @@
 @media(max-width:780px){.dashboard{grid-template-columns:1fr;grid-template-areas:"tasks" "side" "resources";grid-template-rows:auto}.side-column{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.section-nav{gap:15px}.header-inner{gap:18px}.overview-strip{gap:9px}.overview-strip>a{padding:12px}.overview-strip strong{font-size:18px}.task-filters{grid-template-columns:minmax(0,1fr) minmax(150px,.6fr)}.role-picker,.phase-picker{display:flex}.resource-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.header-inner{padding:14px 16px;flex-wrap:wrap;gap:12px}.brand{font-size:16px}.section-nav{order:3;width:100%;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;font-size:13px}.quiet-link{margin-left:auto}.page-shell{padding:22px 14px}.page-heading{align-items:flex-start}h1{font-size:26px}.phase-pill{font-size:12px;padding:4px 8px;max-width:43%;white-space:nowrap;flex-shrink:0}.phase-note{font-size:13px}.sync-bar{margin:16px 0 12px;padding:10px}.sync-copy>div{display:block}.sync-copy #sync-detail{display:block;font-size:11px}.sync-bar .button{flex-shrink:0;font-size:12px}.overview-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}.overview-strip>a:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;column-gap:10px}.overview-strip>a:last-child small{grid-column:1/-1}.overview-strip strong{font-size:17px}.overview-strip span,.overview-strip small{font-size:11px}.card{padding:16px;border-radius:12px}.task-filters{grid-template-columns:1fr}.role-picker,.phase-picker{display:grid;grid-template-columns:60px minmax(0,1fr)}.filter-bottom{font-size:11px}.filter-actions{gap:10px}.status-switch{gap:2px}.status-switch button{font-size:12px;padding:6px 7px}.task-title-row{align-items:flex-start}.task-title{font-size:14px}.task-update{margin-left:0}.side-column{grid-template-columns:1fr}.section-heading{margin-bottom:14px;gap:10px}h2{font-size:20px}.section-heading .text-link{font-size:11px;max-width:45%;text-align:right}.team-list{gap:8px}.team-card{padding:10px}.resource-links{gap:8px}.site-footer{padding:0 18px 24px}}
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}.button,.task-card,.resource-link{transition:background-color .12s ease}}
+
+/* Progress, member workload, and reminder review. */
+.project-progress { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-bottom: 20px; }
+.phase-progress-card { padding: 20px 22px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.phase-progress-card h2 { font-size: 17px; }
+.phase-progress-card .section-heading { margin-bottom: 8px; }
+.phase-percent { color: var(--accent-dark); font-size: 23px; white-space: nowrap; }
+.phase-progress-detail { font-size: 14px; }
+.phase-stages { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 8px; }
+.phase-stage { border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; background: var(--quiet); font-size: 12px; }
+.phase-stage-done { background: #dfeee1; color: #285e49; }
+.phase-stage:hover { border-color: var(--accent); }
+.status-switch { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; }
+.status-switch .status-major { grid-column: span 2; min-height: 88px; padding: 12px; text-align: left; border: 2px solid var(--border); font-size: 17px; font-weight: 700; }
+.status-major small { display: block; font-size: 11px; font-weight: 400; margin-top: 5px; }
+.status-switch .status-major [data-count] { font-size: 25px; float: right; line-height: 1.3; }
+.status-switch .status-icon { font-size: 19px; }
+.status-switch .status-open { color: #795518; background: #faf1dd; border-color: #e4d4b6; }
+.status-switch .status-done { color: #285e49; background: #e8f2e9; border-color: #b9d4c0; }
+.status-switch .status-major[aria-pressed=true] { border-color: currentColor; box-shadow: inset 0 -4px 0 currentColor; }
+.results-summary { font-size: 13px; font-weight: 600; margin-top: 14px; }
+.task-item { position: relative; border-left: 4px solid transparent; padding-left: 8px; }
+.task-todo { border-left-color: #c0984d; }
+.task-doing { border-left-color: #3c7c82; }
+.task-review { border-left-color: #a86f33; }
+.task-done { border-left-color: #4f8969; background: #f0f6ef; }
+.task-cancelled { border-left-color: #a6a1a6; }
+.task-remind { display: block; margin: -9px 0 10px auto; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+.task-deadline { color: #795518; }
+.team-list { display: block; margin-top: 16px; }
+.member-group + .member-group { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.member-group-title { margin-bottom: 10px; font-size: 14px; }
+.member-group-pending .member-group-title { color: #795518; }
+.member-group-clear .member-group-title { color: #285e49; }
+.member-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.member-grid > .metadata { grid-column: 1/-1; }
+.team-card { gap: 8px; padding: 14px; border: 1px solid var(--border); }
+.member-pending { background: #faf6eb; border-color: #dfd4b9; }
+.member-clear { background: #ecf4eb; border-color: #b9d4c0; }
+.member-card-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; justify-content: space-between; width: 100%; }
+.member-card-heading .team-member { color: var(--ink); font-size: 14px; font-weight: 600; }
+.member-roles { font-size: 12px; }
+.member-counts { font-size: 12px; color: var(--muted); }
+.member-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-top: 2px; }
+.member-actions .team-workflow { margin: 0; }
+.reminder-button { color: #795518; border-color: #d6c5a1; background: #fffdf6; }
+.unassigned-task { display: block; color: var(--accent); font-size: 13px; margin: 6px 0; }
+.automation-state { margin: 12px 0; padding: 9px 10px; background: var(--quiet); border-radius: 7px; font-size: 12px; }
+.reminders-card .supporting-text { margin-top: 8px; }
+#reminder-dialog { width: min(700px,calc(100% - 28px)); max-height: 85vh; border: 1px solid var(--border); border-radius: 16px; padding: 24px; color: var(--ink); background: var(--surface); }
+#reminder-dialog::backdrop { background: rgb(25 40 32 / 45%); }
+.reminder-task { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.reminder-draft { display: block; resize: vertical; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin: 10px 0; background: white; color: var(--ink); font: inherit; font-size: 13px; line-height: 1.7; }
+.reminder-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+#reminder-feedback { margin-top: 14px; color: var(--accent); }
+.reminder-run { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.reminder-run button { margin-top: 10px; }
+@media(max-width:1000px) { .member-grid { grid-template-columns: 1fr; } }
+@media(max-width:780px) { .side-column { grid-template-columns: 1fr; } .member-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width:540px) { .project-progress { grid-template-columns: 1fr; gap: 10px; } .phase-progress-card { padding: 16px; } .member-grid { grid-template-columns: 1fr; } .status-switch .status-major { font-size: 15px; padding: 10px; } .status-switch .status-major [data-count] { font-size: 22px; } #reminder-dialog { padding: 16px; } }
+.status-switch .status-open[aria-pressed=true] { color: #795518; background: #faf1dd; border-color: #9a7027; }
+.status-switch .status-done[aria-pressed=true] { color: #285e49; background: #e8f2e9; border-color: #357053; }

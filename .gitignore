@@ -17,6 +17,8 @@ Thumbs.db
 # Dashboard data is rebuilt from GitHub; never commit local snapshots.
 /site/data/snapshot.json
 /site/data/github-data.mjs
+/site/data/dashboard-progress.mjs
+/site/data/task-deadline.mjs
 # Verified local extraction of the already tracked v2 distribution archive.
 /分发包/八人岗位工作流_v2/
 # Source .uid and resource-side .import files ARE tracked.

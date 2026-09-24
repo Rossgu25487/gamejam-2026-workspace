@@ -1,4 +1,5 @@
 // Shared by Node and the browser. This module has no filesystem or environment access.
+import { resolveTaskDeadline } from './task-deadline.mjs';
 export const DEFAULT_REPOSITORY = 'Rossgu25487/gamejam-2026-workspace';
 const API_ROOT = 'https://api.github.com';
 const API_VERSION = '2026-03-10';
@@ -82,7 +83,9 @@ export function filterTasks(tasks, filters, roles = []) {
     const haystack = [task.title, `#${task.number}`, task.milestone || '',
       ...responsibility.logins.map(login => `@${login}`),
       ...task.roles.map(id => roleNames.get(id) || id)].join(' ').toLocaleLowerCase();
-    return words.every(word => haystack.includes(word));
+    return words.every(word => word.startsWith('@')
+      ? responsibility.logins.some(login => login.toLocaleLowerCase() === word.slice(1))
+      : haystack.includes(word));
   });
 }
 
@@ -193,6 +196,7 @@ export function normalizeIssues(issues, roles) {
       closed_at: issue.closed_at == null ? null : isoTime(issue.closed_at, 'Issue 关闭时间'),
       milestone: issue.milestone == null
         ? null : text(object(issue.milestone, '里程碑').title, '里程碑名称'),
+      deadline: resolveTaskDeadline(issue),
     };
     tasks.push(task);
   }

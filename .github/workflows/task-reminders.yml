@@ -1,0 +1,69 @@
+name: 任务提醒
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      issue_numbers:
+        description: '手动提醒的任务编号，以英文逗号分隔，最多 20 个；留空按截止窗口检查'
+        required: false
+        type: string
+        default: ''
+      send:
+        description: '实际创建提醒评论；未启用仓库开关时仍只预览'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: task-reminders
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    if: vars.TASK_REMINDERS_ENABLED != 'true' || (github.event_name == 'workflow_dispatch' && !inputs.send)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: 预览提醒对象，不发送
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REMINDER_ISSUE_NUMBERS: ${{ inputs.issue_numbers }}
+        run: node tools/remind-tasks.mjs
+
+  send:
+    if: vars.TASK_REMINDERS_ENABLED == 'true' && (github.event_name == 'schedule' || inputs.send)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: 发送未完成任务提醒
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TASK_REMINDERS_ENABLED: ${{ vars.TASK_REMINDERS_ENABLED }}
+          REMINDER_SENDER_LOGIN: 'github-actions[bot]'
+          REMINDER_ISSUE_NUMBERS: ${{ inputs.issue_numbers }}
+        run: node tools/remind-tasks.mjs --send
