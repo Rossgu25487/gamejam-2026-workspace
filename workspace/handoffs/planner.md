@@ -7,7 +7,7 @@
 - [剧情与文本 #14](https://github.com/Rossgu25487/gamejam-2026-workspace/issues/14)
 - [设计／剧情／玩家流程验收 #15](https://github.com/Rossgu25487/gamejam-2026-workspace/issues/15)
 
-当前本机分支：`codex/planner/workbench-usability`。本轮基准为 `3f64816ee4ea9980f2621b2e8c0ffeb6e4fcfbd4`；结果提交从本文件的 Git 历史定位。本轮调整工作台布局、配色和搜索排序，并修复刷新期间的草稿、输入法和提醒状态问题。冒烟范围见 `qa/工作台冒烟测试.md`，本机截图与机器结果在 `.local/dashboard-review/`。未操作远端任务，未上传或发布，未发送提醒。
+当前本机分支：`codex/planner/workbench-usability`。本轮检查基准为 `aae64fab4ba77d18044fc73d7be848eeb50d34bf`；结果提交从本文件的 Git 历史定位。用户已授权本次通过测试后上传 GitHub 并更新工作台。冒烟范围见 `qa/工作台冒烟测试.md`，本机证据在 `.local/dashboard-review/`，发布前后提交号保存在 `.local/recovery/dashboard-release.json`。未修改远端任务，自动发送开关保持关闭。
 
 续接先核对 `git status`、当前 Issue 和共同 main。工作台可按 `docs/工作台维护.md` 在本机预览；上传或发布前需取得本次内容的明确授权。撤回的策划稿保持撤回，不纳入资料入口。
 
