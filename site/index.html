@@ -2,16 +2,16 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light"><meta name="theme-color" content="#f3f2ed">
+  <meta name="color-scheme" content="light"><meta name="theme-color" content="#f3f5f7">
   <meta name="description" content="Game Jam 团队工作台：任务、共同版本、排期与团队入口。">
   <title>团队工作台 · Game Jam 2026</title>
-  <link rel="stylesheet" href="./styles.css?v=20260924c"><script type="module" src="./app.js?v=20260924c"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260924d"><script type="module" src="./app.js?v=20260924d"></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">跳到工作台</a>
 <header class="site-header"><div class="header-inner">
   <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Game Jam <span class="brand-year">2026</span></span></a>
-  <nav class="section-nav" aria-label="页面导航"><a href="#project-progress">进度</a><a href="#tasks">任务</a><a href="#resources">成员</a><a href="#schedule">节点</a></nav>
+  <nav class="section-nav" aria-label="页面导航"><a href="#tasks">任务</a><a href="#resources">成员</a><a href="#schedule">节点</a><a href="#version">版本</a></nav>
   <a id="repository-link" class="quiet-link" href="https://github.com/Rossgu25487/gamejam-2026-workspace" target="_blank" rel="noopener noreferrer">仓库 ↗</a>
 </div></header>
 <main id="main-content" class="page-shell">
@@ -24,14 +24,13 @@
       <a href="#tasks"><span id="summary-task-label">当前阶段待处理</span><strong id="summary-open">—</strong><small>查看任务 ↓</small></a>
       <a href="#schedule"><span>下一节点 · 北京时间</span><strong id="summary-date">—</strong><small id="summary-node">—</small></a>
     </div>
-    <section id="project-progress" class="project-progress" aria-label="全队分阶段进度"></section>
     <div class="dashboard">
       <section id="tasks" class="card tasks-card" aria-labelledby="tasks-heading">
-        <div class="section-heading"><h2 id="tasks-heading">任务</h2><a id="new-task-link" class="button button-small button-quiet" target="_blank" rel="noopener noreferrer">新建任务 ＋</a></div>
+        <div class="section-heading"><div><span class="section-kicker">接下来做什么</span><h2 id="tasks-heading">任务</h2></div><a id="new-task-link" class="button button-small button-quiet" target="_blank" rel="noopener noreferrer">新建任务 ＋</a></div>
         <form id="task-filters" class="task-filters" role="search" autocomplete="off">
           <label class="role-picker" for="role-filter"><span>我的岗位</span><select id="role-filter"><option value="all">全部岗位</option></select></label>
           <label class="phase-picker" for="phase-filter"><span>阶段</span><select id="phase-filter"><option value="preparation">命题前准备</option><option value="production">正式制作</option><option value="all">全部阶段</option></select></label>
-          <label class="search-field"><span class="sr-only">搜索任务、编号或负责人</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input id="task-search" type="search" placeholder="搜索任务、编号或负责人"></label>
+          <div class="search-field"><label class="sr-only" for="task-search">搜索任务、编号或负责人</label><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"></path></svg><input id="task-search" type="search" placeholder="搜索任务、#编号、@负责人"><kbd class="search-shortcut" title="按斜杠键聚焦搜索">/</kbd><button id="clear-search" class="icon-button" type="button" aria-label="清空搜索" hidden>×</button></div>
           <div class="filter-bottom"><label class="remember-choice"><input type="checkbox" id="remember-role" checked> 本机记住岗位</label><div class="filter-actions"><button id="copy-view" class="text-button" type="button">复制当前视图链接</button><button id="clear-filters" class="text-button" type="button" hidden>重置筛选</button></div></div>
         </form>
         <div class="task-overview"><div class="progress-copy"><strong id="progress-label">—</strong><span id="progress-note" class="metadata"></span></div><div class="progress-track" role="progressbar" id="progress-bar" aria-label="当前筛选范围的完成比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div></div>
@@ -43,13 +42,13 @@
           <button type="button" data-status="review" aria-pressed="false">待验收 <span data-count="review">0</span></button>
           <button type="button" data-status="all" aria-pressed="false">全部 <span data-count="all">0</span></button>
         </div>
-        <p id="results-summary" class="results-summary" aria-live="polite"></p><p id="copy-feedback" class="metadata" role="status"></p>
+        <div class="list-toolbar"><p id="results-summary" class="results-summary" aria-live="polite"></p><label class="sort-picker"><span class="sr-only">任务排序</span><select id="sort-filter" aria-label="任务排序"><option value="priority">优先处理</option><option value="deadline">截止最近</option><option value="updated">最近更新</option></select></label></div><p id="copy-feedback" class="metadata" role="status"></p>
         <ul id="task-list" class="task-list"></ul>
         <div id="tasks-empty" class="empty-state" hidden><h3 id="tasks-empty-title">暂无任务</h3><p id="tasks-empty-note"></p></div>
         <button id="show-more" class="button button-quiet show-more" type="button" hidden>显示更多</button>
         <p class="section-footnote">打开任务，在 GitHub 查看要求或更新进度。</p>
       </section>
-      <div class="side-column"><section id="version" class="card version-card" aria-labelledby="version-heading">
+      <div class="side-column"><section id="project-progress" class="project-progress" aria-label="全队分阶段进度"></section><section id="version" class="card version-card" aria-labelledby="version-heading">
         <div class="section-heading"><h2 id="version-heading">共同版本</h2><span id="branch-label" class="branch-pill">—</span></div>
         <div class="commit-line"><code id="commit-sha">—</code><a id="commit-link" class="text-link" target="_blank" rel="noopener noreferrer">提交详情 ↗</a></div>
         <p id="commit-message" class="commit-message">—</p><p id="commit-time" class="metadata">—</p>

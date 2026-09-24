@@ -69,6 +69,7 @@ async function environment(options = {}) {
     // External links open a harmless local fixture response, never the real destination.
     if (url.hostname !== 'api.github.com') return route.fulfill({ contentType: 'text/html', body: '<p>Smoke test link destination</p>' });
     if (url.pathname.endsWith('/actions/workflows/task-reminders.yml')) {
+      if (control.workflowGate) await control.workflowGate;
       return route.fulfill(control.workflow === 'missing' ? { status: 404, json: {} }
         : control.workflow === 'failed' ? { status: 503, json: {} } : { json: { state: control.workflow } });
     }
@@ -95,12 +96,12 @@ async function environment(options = {}) {
   page.on('response', response => {
     if (response.url().startsWith(baseURL.origin) && response.status() >= 400) missingFiles.push(response.url());
   });
-  const go = async (query = '') => {
+  const go = async (query = '', { waitWorkflow = true } = {}) => {
     await page.goto(new URL(query || './', baseURL).href);
     await page.waitForFunction(() => !document.querySelector('#refresh-button').disabled);
     if (!control.initialStatus) {
       await page.locator('#dashboard').waitFor({ state: 'visible' });
-      await page.waitForFunction(() => !document.querySelector('#automation-state').textContent.includes('正在'));
+      if (waitWorkflow) await page.waitForFunction(() => !document.querySelector('#automation-state').textContent.includes('正在'));
     }
   };
   return { control, context, page, go, errors, writes, missingFiles };
@@ -312,6 +313,83 @@ try {
       assert.equal((await context.request.get(new URL(path, baseURL).href)).status(), 404);
     }
     assert.equal((await context.request.post(baseURL.href, { data: 'smoke' })).status(), 405);
+  });
+  await check('截止排序、视图分享与搜索快捷操作', async ({ page, go, control }) => {
+    control.snapshot.tasks.find(task => task.number === 5).deadline = { at: '2026-10-17T12:00:00Z', source: 'body', error: null };
+    control.snapshot.tasks.find(task => task.number === 6).deadline = { at: '2026-10-16T12:00:00Z', source: 'body', error: null };
+    await go('?role=all&phase=preparation&status=open');
+    await page.locator('#sort-filter').selectOption('deadline');
+    assert.equal(await page.locator('#task-list .task-number').first().textContent(), '#6');
+    await page.locator('#copy-view').click();
+    const url = await page.evaluate(() => navigator.clipboard.readText());
+    assert.equal(new URL(url).searchParams.get('sort'), 'deadline');
+    await go(url); assert.equal(await page.locator('#sort-filter').inputValue(), 'deadline');
+    await page.locator('h1').click(); await page.keyboard.press('/');
+    assert.equal(await page.locator('#task-search').evaluate(node => node === document.activeElement), true);
+    await page.keyboard.type('missing'); await page.locator('#clear-search').click();
+    assert.equal(await page.locator('#task-search').inputValue(), '');
+    await page.keyboard.type('missing'); await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#task-search').inputValue(), '');
+  });
+  await check('刷新保留提醒草稿，任务关闭和负责人变化有提示', async ({ page, go, control }) => {
+    await go('?role=planner&phase=preparation&status=open');
+    await page.locator('.task-remind').click(); await page.locator('.reminder-draft').fill('保留我的编辑内容');
+    const apply = data => page.evaluate(async snapshot => (await import(document.querySelector('script[type=module]').src)).applySnapshot(snapshot), data);
+    await apply(control.snapshot);
+    assert.equal(await page.locator('#reminder-dialog').isVisible(), true);
+    assert.equal(await page.locator('.reminder-draft').inputValue(), '保留我的编辑内容');
+    await page.locator('#close-reminder').click(); await page.locator('.task-remind').click();
+    assert.equal(await page.locator('.reminder-draft').inputValue(), '保留我的编辑内容');
+    control.snapshot.tasks.find(task => task.number === 4).assignees = [{ login: 'changed-owner', url: 'https://github.com/changed-owner' }];
+    await apply(control.snapshot); assert.match(await page.locator('.reminder-warning').textContent(), /changed-owner/);
+    control.snapshot.tasks.find(task => task.number === 4).status = 'done';
+    await apply(control.snapshot); assert.match(await page.locator('.reminder-warning').textContent(), /已完成/);
+    assert.equal(await page.locator('#run-reminder').isHidden(), true);
+    assert.equal(await page.locator('.reminder-draft').inputValue(), '保留我的编辑内容');
+    await page.screenshot({ path: resolve(output, 'smoke-reminder-preserved.png') });
+  });
+  await check('刷新不覆盖输入法组合中的汉字', async ({ page, go, control }) => {
+    await go('?role=planner&phase=production&status=open');
+    await page.locator('#task-search').evaluate(input => {
+      input.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+      input.value = '剧情'; input.dispatchEvent(new InputEvent('input', { bubbles: true, isComposing: true }));
+    });
+    await page.evaluate(async data => (await import(document.querySelector('script[type=module]').src)).applySnapshot(data), control.snapshot);
+    assert.equal(await page.locator('#task-search').inputValue(), '剧情');
+    await page.locator('#task-search').evaluate(input => input.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '剧情' })));
+    assert.equal(await page.locator('#task-list > li').count(), 1);
+    assert.equal(new URL(page.url()).searchParams.get('q'), '剧情');
+  });
+  await check('已打开提醒弹窗随异步工作流状态更新', async ({ page, go, control }) => {
+    let release; control.workflowGate = new Promise(resolve => { release = resolve; });
+    await go('?role=planner&phase=preparation&status=open', { waitWorkflow: false });
+    await page.locator('.task-remind').click(); await page.locator('.reminder-draft').fill('异步检查期间的草稿');
+    assert.equal(await page.locator('#run-reminder').isHidden(), true);
+    release(); await page.locator('#run-reminder').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('.reminder-draft').inputValue(), '异步检查期间的草稿');
+  });
+  await check('常用文字配色对比度与固定导航无遮挡', async ({ page, go }) => {
+    await go('?role=planner&phase=preparation&status=open');
+    const ratios = await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      const value = name => name.startsWith('--') ? style.getPropertyValue(name).trim() : name;
+      const luminance = name => {
+        const rgb = value(name).replace('#', '').match(/../g).map(hex => parseInt(hex,16)/255).map(v => v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
+        return rgb[0]*.2126 + rgb[1]*.7152 + rgb[2]*.0722;
+      };
+      return [['--ink','--surface'],['--muted','--surface'],['--accent','--surface'],['#ffffff','--accent'],['--todo','--todo-soft'],['--doing','--doing-soft'],['--review','--review-soft'],['--done','--done-soft'],['--danger','--error-soft']].map(([fg,bg]) => {
+        const a=luminance(fg), b=luminance(bg); return {fg,bg,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+      });
+    });
+    assert(ratios.every(pair => pair.ratio >= 4.5), JSON.stringify(ratios));
+    for (const width of [1440,390]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.locator('.section-nav a[href="#tasks"]').click();
+      const header = await page.locator('.site-header').boundingBox();
+      const task = await page.locator('#tasks').boundingBox();
+      assert(task.y >= header.y + header.height, `固定导航覆盖任务：${width}`);
+    }
+    console.log('color contrast minimum: ' + Math.min(...ratios.map(pair => pair.ratio)).toFixed(2));
   });
 } finally {
   await browser.close();

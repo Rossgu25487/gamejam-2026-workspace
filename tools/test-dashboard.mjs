@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile, rm, access } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve, basename } from 'node:path';
-import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility, filterTasks, readTaskFilters } from './dashboard-data.mjs';
+import { DEFAULT_REPOSITORY, normalizeIssues, createSnapshot, fetchGitHubData, resolveTaskResponsibility, filterTasks, readTaskFilters, sortTasks } from './dashboard-data.mjs';
 import { buildDashboard, createGhFetch } from './build-dashboard.mjs';
 import { pathToFileURL } from 'node:url';
 
@@ -80,11 +80,26 @@ test('task scope applies role, phase and search before overview counts', () => {
 test('shared view filters override the remembered role and validate parameters', () => {
   assert.deepEqual(readTaskFilters('?role=gameplay&phase=production&status=review&q=%20%23%203%20', {
     roles, defaultPhase: 'preparation', rememberedRole: 'planner',
-  }), { role: 'gameplay', phase: 'production', status: 'review', query: '# 3' });
+  }), { role: 'gameplay', phase: 'production', status: 'review', query: '# 3', sort: 'priority' });
   assert.equal(readTaskFilters('', { roles, defaultPhase: 'preparation', rememberedRole: 'planner' }).role, 'planner');
   assert.deepEqual(readTaskFilters('?role=unknown&phase=bad&status=bad', { roles, defaultPhase: 'preparation' }), {
-    role: 'all', phase: 'preparation', status: 'open', query: '',
+    role: 'all', phase: 'preparation', status: 'open', query: '', sort: 'priority',
   });
+});
+
+test('task sorting prioritizes active work, respects deadlines and keeps undated tasks last', () => {
+  const tasks = [
+    { number: 1, status: 'todo', updated_at: '2026-09-24T00:00:00Z' },
+    { number: 2, status: 'doing', updated_at: '2026-09-22T00:00:00Z', deadline: { at: '2026-10-19T00:00:00+08:00' } },
+    { number: 3, status: 'todo', updated_at: '2026-09-23T00:00:00Z', deadline: { at: '2026-10-17T12:00:00+08:00' } },
+    { number: 4, status: 'done', updated_at: '2026-09-21T00:00:00Z', deadline: { at: '2026-10-01T12:00:00+08:00' } },
+  ];
+  assert.deepEqual(sortTasks(tasks).map(task => task.number), [2, 3, 1, 4]);
+  assert.deepEqual(sortTasks(tasks, 'deadline').map(task => task.number), [3, 2, 1, 4]);
+  assert.deepEqual(sortTasks(tasks, 'updated').map(task => task.number), [1, 3, 2, 4]);
+  assert.deepEqual(tasks.map(task => task.number), [1, 2, 3, 4]);
+  assert.equal(readTaskFilters('?sort=deadline', { roles, defaultPhase: 'preparation' }).sort, 'deadline');
+  assert.equal(readTaskFilters('?sort=unknown', { roles, defaultPhase: 'preparation' }).sort, 'priority');
 });
 
 test('known role workflow stays available for commit-pinned team links', () => {

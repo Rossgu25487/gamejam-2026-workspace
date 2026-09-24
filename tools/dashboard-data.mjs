@@ -95,12 +95,27 @@ export function readTaskFilters(search, { roles, defaultPhase, rememberedRole = 
   const role = params.get('role') ?? rememberedRole;
   const phase = params.get('phase') ?? defaultPhase;
   const status = params.get('status') ?? 'open';
+  const sort = params.get('sort') ?? 'priority';
   return {
     role: roleIds.has(role) ? role : 'all',
     phase: ['all', 'preparation', 'production'].includes(phase) ? phase : defaultPhase,
     status: ['open', 'todo', 'doing', 'review', 'done', 'all'].includes(status) ? status : 'open',
     query: (params.get('q') || '').trim(),
+    sort: ['priority', 'deadline', 'updated'].includes(sort) ? sort : 'priority',
   };
+}
+
+export function sortTasks(tasks, sort = 'priority') {
+  const order = { doing: 0, review: 1, todo: 2, done: 3, cancelled: 4 };
+  const date = value => Number.isFinite(Date.parse(value)) ? Date.parse(value) : 0;
+  const due = task => ['todo', 'doing', 'review'].includes(task.status) && Number.isFinite(Date.parse(task.deadline?.at)) ? Date.parse(task.deadline.at) : Infinity;
+  return [...tasks].sort((a, b) => {
+    const updated = date(b.updated_at) - date(a.updated_at);
+    const deadline = due(a) - due(b) || 0;
+    if (sort === 'updated') return updated || a.number - b.number;
+    if (sort === 'deadline') return deadline || order[a.status] - order[b.status] || updated || a.number - b.number;
+    return order[a.status] - order[b.status] || deadline || updated || a.number - b.number;
+  });
 }
 
 function normalizeRoadmap(roadmap) {
