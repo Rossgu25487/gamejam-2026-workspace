@@ -11,6 +11,6 @@
     {"id":"ui_art","name":"美术 A · UI 组件","member":"Aprilwwwang","responsibilities":["负责 UI 布局、组件表现、主题与对应二维源资源的制作和交接"],"workflow":"岗位工作流/04_美术A_UI布局与组件.md","handoff":"workspace/handoffs/ui_art.md","owned_paths":["game/ui/theme.tres","game/art/ui/"]},
     {"id":"visual_art","name":"美术 B · 二维图形","member":"stephaniez1","responsibilities":["负责二维图标、背景和物件的视觉源资源与交接"],"workflow":"岗位工作流/05_美术B_二维图形与视觉资源.md","handoff":"workspace/handoffs/visual_art.md","owned_paths":["game/art/visual/"]},
     {"id":"qa","name":"测试","workflow":"岗位工作流/06_测试_独立验收与问题回归.md","handoff":"workspace/handoffs/qa.md","owned_paths":["qa/","game/tests/"]},
-    {"id":"ops","name":"运营","workflow":"岗位工作流/08_运营_记录与提交材料.md","handoff":"workspace/handoffs/ops.md","owned_paths":["release/"]}
+    {"id":"ops","name":"运营","member":"BllllueZ","workflow":"岗位工作流/08_运营_记录与提交材料.md","handoff":"workspace/handoffs/ops.md","owned_paths":["release/"]}
   ]
 }
