@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-24T05:00:35.659Z",
+  "generated_at": "2026-09-30T15:52:22.791Z",
   "repository": {
     "full_name": "Rossgu25487/gamejam-2026-workspace",
     "url": "https://github.com/Rossgu25487/gamejam-2026-workspace",
@@ -12,12 +12,12 @@
     "note": "题前工具与交接准备单独计时。正式题材、制作任务和个人排期在命题公布后确定；每人正式制作以 12 小时为基线，必要时可扩大，累计最多 24 小时，任务中记录估时与本人可投入时间。24 小时是上限，不要求用满。"
   },
   "version": {
-    "sha": "99e0cbd675505050db44d96c94cd0fe1d645e2d3",
-    "short_sha": "99e0cbd",
-    "committed_at": "2026-09-24T05:00:08.000Z",
-    "message": "记录工作台发布前回归与本次上传授权",
-    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/99e0cbd675505050db44d96c94cd0fe1d645e2d3",
-    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/99e0cbd675505050db44d96c94cd0fe1d645e2d3.zip"
+    "sha": "98f831f165e91f20ef7e6209c50aeeabefa70e6e",
+    "short_sha": "98f831f",
+    "committed_at": "2026-09-30T15:49:43.000Z",
+    "message": "确认赛事报名成功并更新工作台节点",
+    "url": "https://github.com/Rossgu25487/gamejam-2026-workspace/commit/98f831f165e91f20ef7e6209c50aeeabefa70e6e",
+    "download_url": "https://github.com/Rossgu25487/gamejam-2026-workspace/archive/98f831f165e91f20ef7e6209c50aeeabefa70e6e.zip"
   },
   "release": null,
   "tasks": [
@@ -94,7 +94,7 @@
           "url": "https://github.com/Rossgu25487"
         }
       ],
-      "updated_at": "2026-09-23T16:18:26.000Z",
+      "updated_at": "2026-09-30T15:27:19.000Z",
       "closed_at": null,
       "milestone": null,
       "deadline": {
@@ -232,7 +232,7 @@
         "ops"
       ],
       "assignees": [],
-      "updated_at": "2026-09-18T12:29:23.000Z",
+      "updated_at": "2026-09-28T13:19:08.000Z",
       "closed_at": null,
       "milestone": null,
       "deadline": {
@@ -341,7 +341,7 @@
       "at": "2026-09-29T16:00:00.000Z",
       "date_only": true,
       "kind": "confirmed",
-      "note": "核对赛事报名与 TapTap 队伍成员；GitHub 入库和赛事入队分别确认。具体截止时刻以平台为准。",
+      "note": "赛事报名已成功（队长 2026-09-30 确认）。核对赛事报名与 TapTap 队伍成员；GitHub 入库和赛事入队分别确认。具体截止时刻以平台为准。",
       "source_url": "https://www.taptap.cn/poster/NIKiDS1YShdA",
       "is_deadline": true
     },
@@ -431,6 +431,7 @@
     {
       "id": "ops",
       "name": "运营",
+      "member": "BllllueZ",
       "workflow": "岗位工作流/08_运营_记录与提交材料.md"
     }
   ],
