@@ -1,24 +1,9 @@
 # 主程序 · 本机工作续接
 
-任务：[准备] 主程序：在本人电脑验证工程与导出（Issue #5）
-本机分支：`codex/lead/local-setup`
-上一提交：`b672811`
+任务： https://github.com/Rossgu25487/gamejam-2026-workspace/issues/5
 
-本轮新增入口与导航实现：
-- `game/main/main.gd` 接入 A1 标题、新游戏、继续、读取、设置、退出、暂停六项、子页返回和离开确认骨架。
-- 标题扫描初始锁定继续/新游戏/读取，扫描完成后按无进度状态开放读取并聚焦新游戏。
-- 调查中支持菜单/暂停状态、设置返回原入口、Esc 分层处理，以及 200ms 打开 / 150ms 关闭过渡锁。
-- 离开确认保留取消、直接返回和保存并返回三个动作位置；存档系统接入前保存项按演练状态禁用。
-- `game/tests/navigation_checks.gd` 验证标题 → 新游戏 → 暂停 → 设置返回 → 离开确认 → 取消流程。
+本机分支：`codex/lead/local-setup`；当前提交用 `git log -1` 查询。
 
-已测：
-- `tools/project.ps1 -Action test`：原有计数合同、UI 集成、八岗位路由、工作台检查全部通过。
-- `navigation_checks.gd`：`NAV_PASS`。
+本轮将标题页落为 `game/main/main.tscn` 的 `TitlePage` 节点；标题状态隐藏 `CounterView`，进入调查再显示。原有计数界面的布局偏移保留。导航测试覆盖启动、进入调查、返回标题的显示切换。
 
-未测／限制：
-- 尚未完成 GUI 人工操作、窗口失焦、物理鼠标键盘和导出成品验收。
-- Windows 导出模板仍缺失，导出命令暂不可用。
-- 读取、设置、存档实际业务由对应系统接入；本轮只完成 A1 导航骨架。
-- 旧 `preview_demo.gd` 的固定计数按钮自动注入在导航层接入后失败，不能作为桌面 GUI 结论。
-
-下一步：由存档、设置和调查模块接入真实动作与状态；安装同版导出模板后运行 Windows 导出并单独验收。
+恢复入口：`game/main/main.gd`、`game/main/main.tscn`、`game/tests/navigation_checks.gd`；日志在 `.local/`。编辑器如有未保存场景，先核对磁盘更改再重新加载。

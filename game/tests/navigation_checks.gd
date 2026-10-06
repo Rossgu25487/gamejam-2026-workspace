@@ -8,12 +8,12 @@ func _run() -> void:
     root.add_child(scene)
     await process_frame
     await process_frame
-    if scene.current_layer != "title":
+    if scene.current_layer != "title" or not scene.get_node("TitlePage").visible or scene.counter_view.visible:
         printerr("NAV_FAILED: initial layer")
         quit(1)
         return
     scene._on_new_game()
-    if scene.current_layer != "investigation":
+    if scene.current_layer != "investigation" or scene.get_node("TitlePage").visible or not scene.counter_view.visible:
         printerr("NAV_FAILED: new game")
         quit(1)
         return
@@ -40,6 +40,11 @@ func _run() -> void:
     scene._on_confirm_cancel()
     if scene.current_layer != "pause":
         printerr("NAV_FAILED: cancel confirmation")
+        quit(1)
+        return
+    scene._on_confirm_direct()
+    if not scene.get_node("TitlePage").visible or scene.counter_view.visible:
+        printerr("NAV_FAILED: return to title visibility")
         quit(1)
         return
     print("NAV_PASS: title, new game, pause, settings return and leave confirmation")
