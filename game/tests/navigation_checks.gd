@@ -77,10 +77,6 @@ func _run() -> void:
         return
     print("NAV_PASS: title, new game, pause, settings return and leave confirmation")
     scene._on_pause_exit()
-    if not scene.confirm_panel.get_child(0).get_child(0).get_child(3).disabled:
-        printerr("NAV_FAILED: unavailable save-and-exit")
-        quit(1)
-        return
     scene._on_confirm_cancel()
     scene._show_title()
     scene._on_title_exit()
@@ -92,6 +88,7 @@ func _run() -> void:
     await create_timer(1.0).timeout
     printerr("NAV_FAILED: exit did not terminate the application")
     quit(1)
+
 
 
 

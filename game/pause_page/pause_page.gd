@@ -1,4 +1,5 @@
 extends Control
+## 暂停页负责自己的按钮连接、可用状态和焦点，不直接修改主场景。
 signal resume_requested
 signal save_requested
 signal load_requested
@@ -12,8 +13,10 @@ signal exit_requested
 @onready var return_title_button: Button = $PanelContainer/VBoxContainer/ReturnTitle
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
 func _ready() -> void:
+	# 按钮只发出动作请求，由 Main 决定页面跳转。
  resume_button.pressed.connect(resume_requested.emit); save_button.pressed.connect(save_requested.emit); load_button.pressed.connect(load_requested.emit); settings_button.pressed.connect(settings_requested.emit); return_title_button.pressed.connect(return_title_requested.emit); exit_button.pressed.connect(exit_requested.emit); save_button.disabled = true; hide()
 func show_page() -> void:
+	# 页面恢复时由自身恢复默认焦点。
  show()
  if is_instance_valid(resume_button): resume_button.grab_focus()
 func hide_page() -> void: hide()
