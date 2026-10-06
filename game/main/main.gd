@@ -48,7 +48,7 @@ func _build_shared_pages() -> void:
 	var close := Button.new()
 	close.text = "关闭设置"
 	close.pressed.connect(_on_close_subpage)
-	subpage_panel.get_child(0).add_child(close)
+	subpage_panel.get_child(0).get_child(0).add_child(close)
 	add_child(confirm_panel)
 	add_child(subpage_panel)
 	confirm_panel.hide()

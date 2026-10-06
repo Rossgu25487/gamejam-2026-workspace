@@ -8,17 +8,17 @@ func _run() -> void:
     root.add_child(scene)
     await process_frame
     await process_frame
-    if scene.current_layer != "title" or not scene.get_node("TitlePage").visible or scene.counter_view.visible:
+    if scene.current_layer != "title" or not scene.title_page.visible or scene.counter_view.visible:
         printerr("NAV_FAILED: initial layer")
         quit(1)
         return
     scene._on_new_game()
-    if scene.current_layer != "investigation" or scene.get_node("TitlePage").visible or not scene.counter_view.visible:
+    if scene.current_layer != "investigation" or scene.title_page.visible or not scene.counter_view.visible:
         printerr("NAV_FAILED: new game")
         quit(1)
         return
     await scene._open_pause()
-    if scene.current_layer != "pause" or scene.pause_save.disabled == false:
+    if scene.current_layer != "pause" or scene.pause_page.save_button.disabled == false:
         printerr("NAV_FAILED: pause state")
         quit(1)
         return
@@ -43,19 +43,19 @@ func _run() -> void:
         quit(1)
         return
     scene._on_confirm_direct()
-    if not scene.get_node("TitlePage").visible or scene.counter_view.visible or scene.status_label.text.contains("调查进行中"):
+    if not scene.title_page.visible or scene.counter_view.visible or scene.current_layer != "title":
         printerr("NAV_FAILED: return to title visibility")
         quit(1)
         return
     scene._on_load()
     scene._on_close_subpage()
-    if scene.current_layer != "title" or scene.pause_panel.visible or scene.counter_view.visible or scene.get_viewport().gui_get_focus_owner() != scene.title_load:
+    if scene.current_layer != "title" or scene.pause_page.visible or scene.counter_view.visible or scene.get_viewport().gui_get_focus_owner() != scene.title_page.load_button:
         printerr("NAV_FAILED: title load return after prior investigation")
         quit(1)
         return
     scene._on_settings()
     scene._on_close_subpage()
-    if scene.current_layer != "title" or scene.get_viewport().gui_get_focus_owner() != scene.title_settings:
+    if scene.current_layer != "title" or scene.get_viewport().gui_get_focus_owner() != scene.title_page.settings_button:
         printerr("NAV_FAILED: title settings return")
         quit(1)
         return
@@ -69,22 +69,22 @@ func _run() -> void:
     await scene._open_pause()
     await process_frame
     await process_frame
-    var menu_center: Vector2 = scene.pause_panel.get_global_rect().get_center()
-    var window_center: Vector2 = scene.navigation_layer.get_global_rect().get_center()
+    var menu_center: Vector2 = scene.pause_page.get_node("PanelContainer").get_global_rect().get_center()
+    var window_center: Vector2 = scene.get_viewport().get_visible_rect().get_center()
     if menu_center.distance_to(window_center) > 1.0:
         printerr("NAV_FAILED: pause menu centering")
         quit(1)
         return
     print("NAV_PASS: title, new game, pause, settings return and leave confirmation")
     scene._on_pause_exit()
-    if not scene.confirm_accept.disabled:
+    if not scene.confirm_panel.get_child(0).get_child(0).get_child(3).disabled:
         printerr("NAV_FAILED: unavailable save-and-exit")
         quit(1)
         return
     scene._on_confirm_cancel()
     scene._show_title()
     scene._on_title_exit()
-    if scene.confirm_direct.visible or scene.confirm_accept.disabled:
+    if scene.confirm_panel.get_child(0).get_child(0).get_child(3).disabled:
         printerr("NAV_FAILED: title exit confirmation")
         quit(1)
         return
@@ -92,4 +92,8 @@ func _run() -> void:
     await create_timer(1.0).timeout
     printerr("NAV_FAILED: exit did not terminate the application")
     quit(1)
+
+
+
+
 

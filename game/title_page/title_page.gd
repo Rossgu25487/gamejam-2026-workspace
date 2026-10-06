@@ -17,7 +17,9 @@ func _ready() -> void:
 func begin_scan() -> void:
  scan_complete = false; status.text = "正在读取进度"; continue_button.disabled = true; load_button.disabled = true; call_deferred("_finish_scan")
 func _finish_scan() -> void:
- await get_tree().create_timer(0.2).timeout; scan_complete = true; status.text = "尚无可继续的进度"; load_button.disabled = false; if visible: new_game_button.grab_focus()
+ await get_tree().create_timer(0.2).timeout; scan_complete = true; status.text = "尚无可继续的进度"; load_button.disabled = false; if visible and is_instance_valid(new_game_button): new_game_button.grab_focus()
 func show_page() -> void:
- show(); status.text = "尚无可继续的进度" if scan_complete else "正在读取进度"; new_game_button.grab_focus()
+ show()
+ status.text = "尚无可继续的进度" if scan_complete else "正在读取进度"
+ if is_instance_valid(new_game_button): new_game_button.grab_focus()
 func hide_page() -> void: hide()
