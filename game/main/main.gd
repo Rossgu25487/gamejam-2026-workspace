@@ -157,3 +157,4 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif current_layer == "subpage": _on_close_subpage()
 		elif current_layer == "pause": _on_resume()
 		elif current_layer == "investigation": _open_pause()
+
