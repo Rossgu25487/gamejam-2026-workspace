@@ -60,6 +60,8 @@ func _make_panel(title: String, detail: String) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(330, 0)
 	var host := CenterContainer.new()
+	# 宿主始终铺满窗口；面板隐藏后，宿主不能截住下层按钮点击。
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(host)
 	host.add_child(panel)
