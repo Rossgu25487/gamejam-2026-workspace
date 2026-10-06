@@ -33,6 +33,8 @@ var subpage_origin := "title"
 var subpage_focus: Button
 var confirm_origin := "title"
 var confirm_focus: Button
+var confirm_exits := false
+var scan_complete := false
 
 func _ready() -> void:
 	model = ModelScript.new()
@@ -95,6 +97,7 @@ func _build_navigation() -> void:
 
 func _finish_scan() -> void:
 	await get_tree().create_timer(0.2).timeout
+	scan_complete = true
 	status_label.text = "尚无可继续的进度"
 	title_load.disabled = false
 	if current_layer == "title":
@@ -139,6 +142,7 @@ func _build_subpage() -> void:
 
 func _show_title() -> void:
 	current_layer = "title"
+	status_label.text = "尚无可继续的进度" if scan_complete else "正在读取进度"
 	title_page.show()
 	counter_view.hide()
 	title_panel.show()
@@ -235,6 +239,7 @@ func _on_title_exit() -> void:
 	_open_confirm("退出游戏", "确认退出游戏？", "确认退出", true)
 
 func _open_confirm(title: String, detail: String, accept_text: String, exits: bool) -> void:
+	confirm_exits = exits
 	confirm_origin = current_layer
 	confirm_focus = title_exit if confirm_origin == "title" else (pause_exit if exits else pause_title)
 	current_layer = "confirm"
@@ -243,6 +248,9 @@ func _open_confirm(title: String, detail: String, accept_text: String, exits: bo
 	(box.get_child(1) as Label).text = detail
 	confirm_direct.text = "直接退出" if exits else "直接返回"
 	confirm_accept.text = accept_text
+	confirm_direct.visible = confirm_origin != "title"
+	confirm_accept.disabled = confirm_origin != "title"
+	confirm_accept.tooltip_text = "存档系统尚未接入" if confirm_accept.disabled else ""
 	title_panel.hide()
 	pause_panel.hide()
 	confirm_panel.show()
@@ -259,9 +267,14 @@ func _on_confirm_cancel() -> void:
 		confirm_focus.grab_focus()
 
 func _on_confirm_direct() -> void:
-	_show_title()
+	if confirm_exits:
+		get_tree().quit()
+	else:
+		_show_title()
 
 func _on_confirm_accept() -> void:
+	if confirm_accept.disabled:
+		return
 	_on_confirm_direct()
 
 func _on_increment_requested() -> void:

@@ -43,7 +43,7 @@ func _run() -> void:
         quit(1)
         return
     scene._on_confirm_direct()
-    if not scene.get_node("TitlePage").visible or scene.counter_view.visible:
+    if not scene.get_node("TitlePage").visible or scene.counter_view.visible or scene.status_label.text.contains("调查进行中"):
         printerr("NAV_FAILED: return to title visibility")
         quit(1)
         return
@@ -76,5 +76,20 @@ func _run() -> void:
         quit(1)
         return
     print("NAV_PASS: title, new game, pause, settings return and leave confirmation")
-    quit(0)
+    scene._on_pause_exit()
+    if not scene.confirm_accept.disabled:
+        printerr("NAV_FAILED: unavailable save-and-exit")
+        quit(1)
+        return
+    scene._on_confirm_cancel()
+    scene._show_title()
+    scene._on_title_exit()
+    if scene.confirm_direct.visible or scene.confirm_accept.disabled:
+        printerr("NAV_FAILED: title exit confirmation")
+        quit(1)
+        return
+    scene._on_confirm_accept()
+    await create_timer(1.0).timeout
+    printerr("NAV_FAILED: exit did not terminate the application")
+    quit(1)
 
