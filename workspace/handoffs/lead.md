@@ -2,17 +2,23 @@
 
 任务：[准备] 主程序：在本人电脑验证工程与导出（Issue #5）
 本机分支：`codex/lead/local-setup`
-基准提交：`98f831f165e91f20ef7e6209c50aeeabefa70e6e`
+上一提交：`b672811`
 
-本轮已完成：
-- 确认 Godot `4.7.2.stable.official.ed1daf0bf`，技术基线为 Standard / GDScript / Compatibility。
-- 运行 `tools/project.ps1 -Action test`：导入、计数合同、UI 集成、八岗位路由、文档导入、当前依据、交接冲突保护和协作空间控件全部通过。
-- 已核对 `planning/current.json`：`pending`，尚未指定正式策划依据。
-- 已确认 `game/project.godot`、主场景、接口、测试入口和 Windows Desktop 预设。
+本轮新增入口与导航实现：
+- `game/main/main.gd` 接入 A1 标题、新游戏、继续、读取、设置、退出、暂停六项、子页返回和离开确认骨架。
+- 标题扫描初始锁定继续/新游戏/读取，扫描完成后按无进度状态开放读取并聚焦新游戏。
+- 调查中支持菜单/暂停状态、设置返回原入口、Esc 分层处理，以及 200ms 打开 / 150ms 关闭过渡锁。
+- 离开确认保留取消、直接返回和保存并返回三个动作位置；存档系统接入前保存项按演练状态禁用。
+- `game/tests/navigation_checks.gd` 验证标题 → 新游戏 → 暂停 → 设置返回 → 离开确认 → 取消流程。
 
-未完成／限制：
-- Windows 导出未成功：本机缺少 `C:/Users/高泽林/AppData/Roaming/Godot/export_templates/4.7.2.stable/windows_debug_x86_64.exe` 与 `windows_release_x86_64.exe`。安装同版导出模板后，重新运行 `tools/project.ps1 -Action export -Godot <Godot控制台路径>`。
-- `workspace_home_test.gd` 在当前受限环境中报告 Git status 不可读；独立本机工作区可复测。
-- 尚未完成 GUI 画面、键盘输入和导出成品的人工验收。
+已测：
+- `tools/project.ps1 -Action test`：原有计数合同、UI 集成、八岗位路由、工作台检查全部通过。
+- `navigation_checks.gd`：`NAV_PASS`。
 
-下一步：安装 Godot 4.7.2 Standard 导出模板，运行 Windows 导出并在 `builds/windows/` 启动 `collaboration-demo.exe`；将提交号、包位置和人工验收结果写回 Issue #5。
+未测／限制：
+- 尚未完成 GUI 人工操作、窗口失焦、物理鼠标键盘和导出成品验收。
+- Windows 导出模板仍缺失，导出命令暂不可用。
+- 读取、设置、存档实际业务由对应系统接入；本轮只完成 A1 导航骨架。
+- 旧 `preview_demo.gd` 的固定计数按钮自动注入在导航层接入后失败，不能作为桌面 GUI 结论。
+
+下一步：由存档、设置和调查模块接入真实动作与状态；安装同版导出模板后运行 Windows 导出并单独验收。
