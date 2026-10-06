@@ -29,6 +29,10 @@ var confirm_accept: Button
 var current_layer := "title"
 var has_progress := false
 var transition_locked := false
+var subpage_origin := "title"
+var subpage_focus: Button
+var confirm_origin := "title"
+var confirm_focus: Button
 
 func _ready() -> void:
 	model = ModelScript.new()
@@ -96,10 +100,16 @@ func _finish_scan() -> void:
 	if current_layer == "title":
 		title_new.grab_focus()
 
+func _center_panel(panel: PanelContainer) -> void:
+	var center := CenterContainer.new()
+	navigation_layer.add_child(center)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(panel)
+
 func _build_pause() -> void:
 	pause_panel = _panel("暂停菜单", "当前调查与选择已保留")
-	pause_panel.position = Vector2(650, 90)
-	navigation_layer.add_child(pause_panel)
+	_center_panel(pause_panel)
 	var box := pause_panel.get_child(0) as VBoxContainer
 	pause_resume = _button(box, "继续调查", _on_resume)
 	pause_save = _button(box, "保存游戏", _on_save)
@@ -112,8 +122,7 @@ func _build_pause() -> void:
 
 func _build_confirm() -> void:
 	confirm_panel = _panel("离开确认", "当前调查尚未保存。请选择离开方式。")
-	confirm_panel.position = Vector2(610, 150)
-	navigation_layer.add_child(confirm_panel)
+	_center_panel(confirm_panel)
 	var box := confirm_panel.get_child(0) as VBoxContainer
 	confirm_cancel = _button(box, "取消", _on_confirm_cancel)
 	confirm_direct = _button(box, "直接返回", _on_confirm_direct)
@@ -122,8 +131,7 @@ func _build_confirm() -> void:
 
 func _build_subpage() -> void:
 	subpage_panel = _panel("游戏设置", "设置页由设置系统接管；本入口已接通。")
-	subpage_panel.position = Vector2(610, 170)
-	navigation_layer.add_child(subpage_panel)
+	_center_panel(subpage_panel)
 	var box := subpage_panel.get_child(0) as VBoxContainer
 	var close := _button(box, "关闭设置", _on_close_subpage)
 	close.name = "CloseSettings"
@@ -190,10 +198,16 @@ func _on_settings() -> void:
 	_open_subpage("游戏设置", "设置页由设置系统接管；关闭后回到原入口。")
 
 func _open_subpage(title: String, detail: String) -> void:
+	subpage_origin = current_layer
+	if title == "读取存档":
+		subpage_focus = title_load if subpage_origin == "title" else pause_load
+	else:
+		subpage_focus = title_settings if subpage_origin == "title" else pause_settings
 	current_layer = "subpage"
 	var box := subpage_panel.get_child(0) as VBoxContainer
 	(box.get_child(0) as Label).text = title
 	(box.get_child(1) as Label).text = detail
+	(box.get_node("CloseSettings") as Button).text = "关闭读取" if title == "读取存档" else "关闭设置"
 	title_panel.hide()
 	pause_panel.hide()
 	subpage_panel.show()
@@ -201,14 +215,15 @@ func _open_subpage(title: String, detail: String) -> void:
 
 func _on_close_subpage() -> void:
 	subpage_panel.hide()
-	if has_progress:
-		current_layer = "pause"
-		pause_panel.show()
-		pause_settings.grab_focus()
-	else:
-		current_layer = "title"
+	current_layer = subpage_origin
+	if subpage_origin == "title":
+		title_page.show()
 		title_panel.show()
-		title_settings.grab_focus()
+		counter_view.hide()
+	else:
+		pause_panel.show()
+	if is_instance_valid(subpage_focus) and not subpage_focus.disabled:
+		subpage_focus.grab_focus()
 
 func _on_return_title() -> void:
 	_open_confirm("返回标题", "保存当前调查后返回标题？", "保存并返回", false)
@@ -220,6 +235,8 @@ func _on_title_exit() -> void:
 	_open_confirm("退出游戏", "确认退出游戏？", "确认退出", true)
 
 func _open_confirm(title: String, detail: String, accept_text: String, exits: bool) -> void:
+	confirm_origin = current_layer
+	confirm_focus = title_exit if confirm_origin == "title" else (pause_exit if exits else pause_title)
 	current_layer = "confirm"
 	var box := confirm_panel.get_child(0) as VBoxContainer
 	(box.get_child(0) as Label).text = title
@@ -233,13 +250,13 @@ func _open_confirm(title: String, detail: String, accept_text: String, exits: bo
 
 func _on_confirm_cancel() -> void:
 	confirm_panel.hide()
-	if has_progress:
-		current_layer = "pause"
-		pause_panel.show()
-		pause_title.grab_focus()
+	current_layer = confirm_origin
+	if confirm_origin == "title":
+		title_panel.show()
 	else:
-		_show_title()
-		title_exit.grab_focus()
+		pause_panel.show()
+	if is_instance_valid(confirm_focus):
+		confirm_focus.grab_focus()
 
 func _on_confirm_direct() -> void:
 	_show_title()

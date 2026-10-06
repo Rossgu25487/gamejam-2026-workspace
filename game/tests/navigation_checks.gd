@@ -47,6 +47,34 @@ func _run() -> void:
         printerr("NAV_FAILED: return to title visibility")
         quit(1)
         return
+    scene._on_load()
+    scene._on_close_subpage()
+    if scene.current_layer != "title" or scene.pause_panel.visible or scene.counter_view.visible or scene.get_viewport().gui_get_focus_owner() != scene.title_load:
+        printerr("NAV_FAILED: title load return after prior investigation")
+        quit(1)
+        return
+    scene._on_settings()
+    scene._on_close_subpage()
+    if scene.current_layer != "title" or scene.get_viewport().gui_get_focus_owner() != scene.title_settings:
+        printerr("NAV_FAILED: title settings return")
+        quit(1)
+        return
+    scene._on_title_exit()
+    scene._on_confirm_cancel()
+    if scene.current_layer != "title":
+        printerr("NAV_FAILED: title exit cancel")
+        quit(1)
+        return
+    scene._start_investigation()
+    await scene._open_pause()
+    await process_frame
+    await process_frame
+    var menu_center: Vector2 = scene.pause_panel.get_global_rect().get_center()
+    var window_center: Vector2 = scene.navigation_layer.get_global_rect().get_center()
+    if menu_center.distance_to(window_center) > 1.0:
+        printerr("NAV_FAILED: pause menu centering")
+        quit(1)
+        return
     print("NAV_PASS: title, new game, pause, settings return and leave confirmation")
     quit(0)
 
