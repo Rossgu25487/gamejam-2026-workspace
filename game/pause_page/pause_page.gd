@@ -12,12 +12,29 @@ signal exit_requested
 @onready var settings_button: Button = $PanelContainer/VBoxContainer/Settings
 @onready var return_title_button: Button = $PanelContainer/VBoxContainer/ReturnTitle
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
+
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
- resume_button.pressed.connect(resume_requested.emit); save_button.pressed.connect(save_requested.emit); load_button.pressed.connect(load_requested.emit); settings_button.pressed.connect(settings_requested.emit); return_title_button.pressed.connect(return_title_requested.emit); exit_button.pressed.connect(exit_requested.emit); save_button.disabled = true; hide()
+	resume_button.pressed.connect(resume_requested.emit)
+	save_button.pressed.connect(save_requested.emit)
+	load_button.pressed.connect(load_requested.emit)
+	settings_button.pressed.connect(settings_requested.emit)
+	return_title_button.pressed.connect(return_title_requested.emit)
+	exit_button.pressed.connect(exit_requested.emit) 
+	# 初始化为true，后续根据场景进行分类
+	save_button.disabled = true
+	hide()
+	
+func _process(delta: float) -> void:
+	pass
+	
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
- show()
- if is_instance_valid(resume_button): resume_button.grab_focus()
-func hide_page() -> void: hide()
-func set_save_available(enabled: bool, reason: String = "") -> void: save_button.disabled = not enabled; save_button.tooltip_text = reason
+	show()
+	if is_instance_valid(resume_button): 
+		resume_button.grab_focus()
+func hide_page() -> void: 
+	hide()
+func set_save_available(enabled: bool, reason: String = "") -> void: 
+	save_button.disabled = not enabled
+	save_button.tooltip_text = reason
