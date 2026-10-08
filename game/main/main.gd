@@ -3,6 +3,9 @@ extends Control
 ## 标题页、暂停页和计数界面各自处理自己的私有逻辑。
 
 const ModelScript = preload("res://features/counter_demo/counter_model.gd")
+const SettingsServiceScript = preload("res://systems/game_settings/settings_service.gd")
+const SaveLoadServiceScript = preload("res://systems/save_load/save_load_service.gd")
+const GameStartServiceScript = preload("res://systems/game_start/game_start_service.gd")
 @export var demo_config: Resource = preload("res://data/demo_config.tres")
 @onready var counter_view: Control = $CounterView
 @onready var title_page: Control = $TitlePage
@@ -21,11 +24,23 @@ var subpage_panel: PanelContainer
 var confirm_cancel: Button
 var confirm_direct: Button
 var confirm_accept: Button
+var settings_service: Node
+var save_service: Node
+var game_start_service: Node
+var current_snapshot: Dictionary = {}
 
 func _ready() -> void:
 	# 主程序只创建模型、连接子页面信号，再决定当前显示哪一页。
 	# 初始化外部计数器单例
 	model = ModelScript.new()
+	settings_service = SettingsServiceScript.new()
+	save_service = SaveLoadServiceScript.new()
+	game_start_service = GameStartServiceScript.new()
+	add_child(settings_service)
+	add_child(save_service)
+	add_child(game_start_service)
+	game_start_service.ready_for_title.connect(_on_start_ready)
+	game_start_service.initialize(settings_service, save_service)
 	model.configure(demo_config.initial_value, demo_config.step)
 	model.value_changed.connect(counter_view.show_value)
 	# 计数器demo页面初始化
@@ -111,20 +126,103 @@ func _show_title() -> void:
 func _start_investigation() -> void:
 	# 调度调查页面；具体调查内容和状态不在主入口实现。
 	has_progress = true
+	if current_snapshot.is_empty():
+		current_snapshot = game_start_service.create_new_game()
+		# 新游戏初始化完成后才建立普通自动档。
+		save_service.save_snapshot("auto", 0, current_snapshot)
 	current_layer = "investigation"
 	title_page.hide_page()
 	pause_page.hide_page()
 	counter_view.show()
 
 func _on_continue() -> void: _start_investigation()
-func _on_new_game() -> void: _start_investigation()
+func _on_new_game() -> void:
+	current_snapshot = game_start_service.create_new_game()
+	_start_investigation()
 func _on_resume() -> void:
 	current_layer = "investigation"
 	pause_page.hide_page()
 	counter_view.show()
-func _on_save() -> void: pause_page.set_save_available(false, "存档系统尚未接入")
-func _on_load() -> void: _open_subpage("读取存档", "读取列表由存档系统提供；当前没有可读取的有效档案。")
-func _on_settings() -> void: _open_subpage("游戏设置", "设置页由设置系统接管；关闭后回到原入口。")
+func _on_save() -> void:
+	if not has_progress:
+		pause_page.set_save_available(false, "当前没有可保存的调查")
+		return
+	_open_subpage("保存存档", "请选择手动存档栏位（共3栏）。")
+	_build_save_buttons()
+func _on_load() -> void:
+	var records: Array = save_service.scan()
+	_open_subpage("读取存档", "请选择要读取的有效存档；读取失败会保留当前会话。")
+	_build_load_buttons(records)
+func _on_settings() -> void:
+	_open_subpage("游戏设置", "设置会独立保存，不会被调查存档覆盖。")
+	_build_settings_controls()
+
+func _on_start_ready(has_save: bool) -> void:
+	# 初始化服务完成后再决定标题页默认焦点。
+	title_page.apply_scan_result(has_save)
+
+func _clear_subpage_content() -> VBoxContainer:
+	var box := subpage_panel.get_child(0) as VBoxContainer
+	while box.get_child_count() > 3:
+		box.get_child(3).queue_free()
+	return box
+
+func _build_save_buttons() -> void:
+	var box := _clear_subpage_content()
+	for i in range(3):
+		var button := Button.new()
+		button.text = "手动存档 %d" % (i + 1)
+		button.pressed.connect(func() -> void:
+			if save_service.save_snapshot("manual", i, current_snapshot):
+				_on_close_subpage())
+		box.add_child(button)
+
+func _build_load_buttons(records: Array) -> void:
+	var box := _clear_subpage_content()
+	for record in records:
+		var button := Button.new()
+		var kind := str(record.get("slot_kind", "manual"))
+		var index := int(record.get("slot_index", 0))
+		button.text = "%s %d  |  序号 %s" % [kind, index + 1, str(record.get("save_sequence", "-"))]
+		button.pressed.connect(func() -> void:
+			var loaded: Dictionary = save_service.load_snapshot(kind, index)
+			if not loaded.is_empty():
+				current_snapshot = loaded
+				has_progress = true
+				_on_close_subpage())
+		box.add_child(button)
+	if records.is_empty():
+		var empty := Label.new()
+		empty.text = "没有可读取的有效存档"
+		box.add_child(empty)
+
+func _build_settings_controls() -> void:
+	var box := _clear_subpage_content()
+	for key in ["master_volume", "bgm_volume", "ambient_volume", "effect_volume"]:
+		var row := HBoxContainer.new()
+		var label := Label.new()
+		label.text = key
+		row.add_child(label)
+		var slider := HSlider.new()
+		slider.min_value = 0
+		slider.max_value = 100
+		slider.step = 5
+		slider.value = settings_service.get_value(key, 0)
+		slider.value_changed.connect(func(value: float) -> void: settings_service.set_value(key, int(value)))
+		row.add_child(slider)
+		box.add_child(row)
+	for key in ["mute", "reduce_motion"]:
+		var check := CheckButton.new()
+		check.text = "静音" if key == "mute" else "减弱动态"
+		check.button_pressed = settings_service.get_value(key, false)
+		check.toggled.connect(func(value: bool) -> void: settings_service.set_value(key, value))
+		box.add_child(check)
+	var reset := Button.new()
+	reset.text = "恢复默认"
+	reset.pressed.connect(func() -> void:
+		settings_service.restore_defaults()
+		_build_settings_controls())
+	box.add_child(reset)
 
 func _open_pause() -> void:
 	if current_layer != "investigation": return

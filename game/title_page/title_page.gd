@@ -13,6 +13,7 @@ signal exit_requested
 @onready var settings_button: Button = $PanelContainer/VBoxContainer/Settings
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
 var scan_complete := false
+var has_progress := false
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
 	continue_button.pressed.connect(continue_requested.emit)
@@ -30,16 +31,28 @@ func begin_scan() -> void:
 	call_deferred("_finish_scan")
 func _finish_scan() -> void:
 	await get_tree().create_timer(0.2).timeout
+	if scan_complete:
+		return
 	scan_complete = true
 	status.text = "尚无可继续的进度"
 	load_button.disabled = false
 	if visible and is_instance_valid(new_game_button): 
 		new_game_button.grab_focus()
+
+func apply_scan_result(has_progress: bool) -> void:
+	# 初始化服务完成后由主程序注入扫描结果，标题页只更新自身显示。
+	scan_complete = true
+	self.has_progress = has_progress
+	status.text = "已有可继续的调查" if has_progress else "尚无可继续的进度"
+	continue_button.disabled = not has_progress
+	load_button.disabled = not has_progress
+	if visible:
+		(continue_button if has_progress else new_game_button).grab_focus()
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
 	show()
-	status.text = "尚无可继续的进度" if scan_complete else "正在读取进度"
+	status.text = ("已有可继续的调查" if has_progress else "尚无可继续的进度") if scan_complete else "正在读取进度"
 	if is_instance_valid(new_game_button): 
-		new_game_button.grab_focus()
+		(continue_button if has_progress else new_game_button).grab_focus()
 func hide_page() -> void: 
 	hide()
