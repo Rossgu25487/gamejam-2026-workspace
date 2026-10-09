@@ -46,6 +46,10 @@ func save_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> 
 	operation_completed.emit(true, "存档成功")
 	return true
 
+func save_auto(snapshot: Dictionary) -> bool:
+	# 普通自动档固定写入唯一自动栏，不占用手动存档栏位。
+	return save_snapshot("auto", 0, snapshot)
+
 func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 	if not _valid_slot(slot_kind, slot_index):
 		operation_completed.emit(false, "存档栏位无效")

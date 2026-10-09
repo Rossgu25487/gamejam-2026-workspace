@@ -44,7 +44,7 @@ func _ready() -> void:
 	game_start_service.ready_for_title.connect(_on_start_ready)
 	game_start_service.initialize(settings_service, save_service)
 	model.configure(demo_config.initial_value, demo_config.step)
-	model.value_changed.connect(counter_view.show_value)
+	model.value_changed.connect(_on_model_value_changed)
 	# 计数器demo页面初始化
 	counter_view.increment_requested.connect(model.increment)
 	counter_view.reset_requested.connect(model.reset)
@@ -102,8 +102,8 @@ func _start_investigation() -> void:
 	pause_page.set_save_available(true)
 	if current_snapshot.is_empty():
 		current_snapshot = game_start_service.create_new_game()
-		# 新游戏初始化完成后才建立普通自动档。
-		save_service.save_snapshot("auto", 0, current_snapshot)
+	# 新游戏或继续调查进入调查页时都确保普通自动档存在。
+	_save_auto_snapshot()
 	current_layer = "investigation"
 	title_page.hide_page()
 	pause_page.hide_page()
@@ -113,6 +113,13 @@ func _on_continue() -> void: _start_investigation()
 func _on_new_game() -> void:
 	current_snapshot = game_start_service.create_new_game()
 	_start_investigation()
+
+func _on_model_value_changed(value: int) -> void:
+	# 演示核心状态发生变化后更新完整快照，并覆盖唯一普通自动档。
+	counter_view.show_value(value)
+	if has_progress and current_layer == "investigation":
+		current_snapshot["counter_value"] = value
+		save_service.save_auto(current_snapshot)
 func _on_resume() -> void:
 	current_layer = "investigation"
 	pause_page.set_save_available(has_progress)
@@ -147,10 +154,16 @@ func _on_start_ready(has_save: bool) -> void:
 func _on_loaded(snapshot: Dictionary) -> void:
 	current_snapshot = snapshot.duplicate(true)
 	has_progress = true
+	_save_auto_snapshot()
 	_on_close_subpage()
+
+func _save_auto_snapshot() -> void:
+	if has_progress and not current_snapshot.is_empty():
+		save_service.save_auto(current_snapshot)
 
 func _open_pause() -> void:
 	if current_layer != "investigation": return
+	_save_auto_snapshot()
 	current_layer = "pause"
 	pause_page.set_save_available(has_progress)
 	pause_page.show_page()
@@ -193,6 +206,7 @@ func _on_confirm_cancel() -> void:
 	else: current_layer = "pause"; pause_page.show_page()
 	if is_instance_valid(confirm_focus): confirm_focus.grab_focus()
 func _on_confirm_direct() -> void:
+	_save_auto_snapshot()
 	if confirm_exits: get_tree().quit()
 	else: _show_title()
 func _on_confirm_accept() -> void:
