@@ -22,6 +22,21 @@ func _run() -> void:
         printerr("NAV_FAILED: pause state or save unavailable")
         quit(1)
         return
+    scene._on_load()
+    await process_frame
+    if not scene.load_page.visible:
+        printerr("NAV_FAILED: first load page")
+        quit(1)
+        return
+    scene.load_page._load_slot("auto", 0)
+    await process_frame
+    scene._on_load()
+    await process_frame
+    if not scene.load_page.visible:
+        printerr("NAV_FAILED: repeated load page after auto load")
+        quit(1)
+        return
+    scene._on_close_subpage()
     scene._on_save()
     if scene.current_layer != "subpage" or not scene.save_page.visible:
         printerr("NAV_FAILED: save page")

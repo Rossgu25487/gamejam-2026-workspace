@@ -30,6 +30,7 @@ var settings_service: Node
 var save_service: Node
 var game_start_service: Node
 var current_snapshot: Dictionary = {}
+var auto_save_initialized := false
 
 func _ready() -> void:
 	# 主程序只创建模型、连接子页面信号，再决定当前显示哪一页。
@@ -102,8 +103,6 @@ func _start_investigation() -> void:
 	pause_page.set_save_available(true)
 	if current_snapshot.is_empty():
 		current_snapshot = game_start_service.create_new_game()
-	# 新游戏或继续调查进入调查页时都确保普通自动档存在。
-	_save_auto_snapshot()
 	current_layer = "investigation"
 	title_page.hide_page()
 	pause_page.hide_page()
@@ -112,6 +111,9 @@ func _start_investigation() -> void:
 func _on_continue() -> void: _start_investigation()
 func _on_new_game() -> void:
 	current_snapshot = game_start_service.create_new_game()
+	# 初始自动档只在第一次点击“新游戏”时建立。
+	if not auto_save_initialized:
+		auto_save_initialized = save_service.save_auto(current_snapshot)
 	_start_investigation()
 
 func _on_model_value_changed(value: int) -> void:
@@ -154,7 +156,7 @@ func _on_start_ready(has_save: bool) -> void:
 func _on_loaded(snapshot: Dictionary) -> void:
 	current_snapshot = snapshot.duplicate(true)
 	has_progress = true
-	_save_auto_snapshot()
+	auto_save_initialized = true
 	_on_close_subpage()
 
 func _save_auto_snapshot() -> void:

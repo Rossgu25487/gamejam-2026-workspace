@@ -56,8 +56,11 @@ func close_page() -> void:
 	hide()
 
 func _clear_records() -> void:
-	while box.get_child_count() > 3:
-		box.get_child(3).queue_free()
+	# 先从容器移除旧条目，再延迟释放节点，确保读取回调结束后可以再次打开页面。
+	for index in range(box.get_child_count() - 1, 2, -1):
+		var old_record := box.get_child(index)
+		box.remove_child(old_record)
+		old_record.queue_free()
 
 func _add_record_button(record: Dictionary) -> void:
 	var kind := str(record.get("slot_kind", "manual"))
