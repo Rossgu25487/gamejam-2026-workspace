@@ -18,10 +18,16 @@ func _run() -> void:
         quit(1)
         return
     await scene._open_pause()
-    if scene.current_layer != "pause" or scene.pause_page.save_button.disabled == false:
-        printerr("NAV_FAILED: pause state")
+    if scene.current_layer != "pause" or scene.pause_page.save_button.disabled:
+        printerr("NAV_FAILED: pause state or save unavailable")
         quit(1)
         return
+    scene._on_save()
+    if scene.current_layer != "subpage" or not scene.save_page.visible:
+        printerr("NAV_FAILED: save page")
+        quit(1)
+        return
+    scene._on_close_subpage()
     scene._on_settings()
     if scene.current_layer != "subpage":
         printerr("NAV_FAILED: settings subpage")

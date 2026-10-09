@@ -98,6 +98,8 @@ func _show_title() -> void:
 func _start_investigation() -> void:
 	# 调度调查页面；具体调查内容和状态不在主入口实现。
 	has_progress = true
+	# 进入调查后，暂停页的手动保存按钮才具备保存资格。
+	pause_page.set_save_available(true)
 	if current_snapshot.is_empty():
 		current_snapshot = game_start_service.create_new_game()
 		# 新游戏初始化完成后才建立普通自动档。
@@ -113,6 +115,7 @@ func _on_new_game() -> void:
 	_start_investigation()
 func _on_resume() -> void:
 	current_layer = "investigation"
+	pause_page.set_save_available(has_progress)
 	pause_page.hide_page()
 	counter_view.show()
 func _on_save() -> void:
@@ -149,6 +152,7 @@ func _on_loaded(snapshot: Dictionary) -> void:
 func _open_pause() -> void:
 	if current_layer != "investigation": return
 	current_layer = "pause"
+	pause_page.set_save_available(has_progress)
 	pause_page.show_page()
 
 func _open_subpage(title: String, detail: String) -> void:
