@@ -8,6 +8,7 @@ var panel: PanelContainer
 var box: VBoxContainer
 var controls_box: VBoxContainer
 var close_button: Button
+var rebuild_queued := false
 
 func _ready() -> void:
 	_build_page()
@@ -52,9 +53,13 @@ func close_page() -> void:
 	hide()
 
 func _rebuild_controls() -> void:
-	# 立即释放旧控件，避免恢复默认时旧节点仍占用父容器而导致重复挂载崩溃。
+	rebuild_queued = false
+	# 先从父容器移除旧控件，再延迟释放它们，避免在 pressed/toggled 信号回调
+	# 仍持有控件锁时直接 free()。
 	while controls_box.get_child_count() > 0:
-		controls_box.get_child(0).free()
+		var old_control := controls_box.get_child(0)
+		controls_box.remove_child(old_control)
+		old_control.queue_free()
 	for key in ["master_volume", "bgm_volume", "ambient_volume", "effect_volume"]:
 		var row := HBoxContainer.new()
 		var label := Label.new()
@@ -88,4 +93,7 @@ func _set_value(value, key: String) -> void:
 
 func _restore_defaults() -> void:
 	if is_instance_valid(settings_service): settings_service.restore_defaults()
-	_rebuild_controls()
+	# Button.pressed 仍在分发期间，延迟到本帧信号处理结束后重建控件。
+	if not rebuild_queued:
+		rebuild_queued = true
+		call_deferred("_rebuild_controls")
