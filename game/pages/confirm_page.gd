@@ -1,9 +1,9 @@
 extends Control
 ## 确认页只负责确认文案、按钮状态和用户选择。
 
-signal cancelled
-signal direct_requested
-signal accepted
+signal cancelled # 用户取消离开。
+signal direct_requested # 用户选择直接返回或退出。
+signal accepted # 用户选择确认保存后离开。
 
 var panel: PanelContainer
 var box: VBoxContainer
@@ -12,10 +12,12 @@ var direct_button: Button
 var accept_button: Button
 
 func _ready() -> void:
+	# 页面创建一次，后续打开时只更新文字和按钮状态。
 	_build_page()
 	hide()
 
 func _build_page() -> void:
+	# 所有确认页控件由本节点创建，避免 Main 持有私有界面逻辑。
 	var host := CenterContainer.new()
 	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -37,6 +39,7 @@ func _build_page() -> void:
 	accept_button = _button("确认", accepted.emit)
 
 func _button(text: String, callback: Callable) -> Button:
+	# 统一创建并连接确认页按钮。
 	var button := Button.new()
 	button.text = text
 	button.pressed.connect(callback)
@@ -44,6 +47,7 @@ func _button(text: String, callback: Callable) -> Button:
 	return button
 
 func open(title: String, detail: String, direct_text: String, accept_text: String, show_direct: bool, show_accept: bool) -> void:
+	# 根据调用场景配置确认文案和可见按钮。
 	(box.get_child(0) as Label).text = title
 	(box.get_child(1) as Label).text = detail
 	direct_button.text = direct_text
@@ -54,4 +58,5 @@ func open(title: String, detail: String, direct_text: String, accept_text: Strin
 	cancel_button.grab_focus()
 
 func close_page() -> void:
+	# 隐藏页面，保留控件供下次复用。
 	hide()

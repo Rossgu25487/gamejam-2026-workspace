@@ -1,6 +1,6 @@
 @tool
 extends RichTextLabel
-## A small read-only Markdown view for team instructions, without HTML or active links.
+## 只读 Markdown 渲染控件：将工作流文本转换为安全的 BBCode 显示。
 
 var source_text := ""
 var _bold_pattern := RegEx.new()

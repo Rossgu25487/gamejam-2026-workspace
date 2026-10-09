@@ -1,4 +1,5 @@
 extends SceneTree
+## 鼠标分发回归测试：验证真实 Control 输入可以点击主要页面按钮。
 
 func _initialize() -> void:
     call_deferred("_run")

@@ -1,18 +1,20 @@
 extends Control
 ## 读取页只负责有效存档列表、焦点和读取结果展示。
 
-signal closed
-signal loaded(snapshot: Dictionary)
+signal closed # 用户关闭读取页。
+signal loaded(snapshot: Dictionary) # 成功读取后把完整快照交给主程序。
 
 var save_service: Node
 var panel: PanelContainer
 var box: VBoxContainer
 
 func _ready() -> void:
+	# 页面只初始化一次，重复打开通过 open() 刷新列表。
 	_build_page()
 	hide()
 
 func _build_page() -> void:
+	# 创建读取页标题、说明和关闭按钮。
 	var host := CenterContainer.new()
 	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -37,6 +39,7 @@ func _build_page() -> void:
 	box.add_child(close)
 
 func open(service: Node) -> void:
+	# 扫描磁盘中的有效栏位并重新生成当前列表。
 	save_service = service
 	_clear_records()
 	var records: Array = save_service.scan() if is_instance_valid(save_service) else []
@@ -53,6 +56,7 @@ func open(service: Node) -> void:
 	if is_instance_valid(focus_control): focus_control.grab_focus()
 
 func close_page() -> void:
+	# 隐藏读取页，不销毁页面本身。
 	hide()
 
 func _clear_records() -> void:
@@ -63,6 +67,7 @@ func _clear_records() -> void:
 		old_record.queue_free()
 
 func _add_record_button(record: Dictionary) -> void:
+	# 每个按钮只保存栏位身份，读取时再由服务校验和加载。
 	var kind := str(record.get("slot_kind", "manual"))
 	var index := int(record.get("slot_index", 0))
 	var button := Button.new()
@@ -71,6 +76,7 @@ func _add_record_button(record: Dictionary) -> void:
 	box.add_child(button)
 
 func _load_slot(kind: String, index: int) -> void:
+	# 加载成功才发出 loaded，失败时保留当前会话。
 	var record: Dictionary = save_service.load_snapshot(kind, index) if is_instance_valid(save_service) else {}
 	if not record.is_empty():
 		loaded.emit(record)

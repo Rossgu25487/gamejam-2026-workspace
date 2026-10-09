@@ -1,5 +1,6 @@
 @tool
 extends EditorPlugin
+## Godot 编辑器插件入口：创建协作空间面板并注册导出过滤器。
 
 const WorkspaceHome = preload("workspace_home.gd")
 const WorkspaceExport = preload("workspace_export.gd")

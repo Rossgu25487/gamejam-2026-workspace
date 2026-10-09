@@ -1,4 +1,5 @@
 extends SceneTree
+## 工程综合测试入口：组合计数器合同和协作工作台数据测试。
 
 const CounterChecks = preload("res://tests/counter_checks.gd")
 const Store = preload("res://addons/team_workspace/workspace_store.gd")

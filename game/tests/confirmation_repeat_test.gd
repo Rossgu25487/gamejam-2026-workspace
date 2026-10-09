@@ -1,4 +1,5 @@
 extends SceneTree
+## 回归测试：确认页重复打开时不重复创建按钮。
 
 func _initialize() -> void:
     call_deferred("_run")

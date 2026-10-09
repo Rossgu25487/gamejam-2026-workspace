@@ -1,4 +1,5 @@
 extends SceneTree
+## 导航回归测试：覆盖标题、调查、暂停、保存、读取、设置和确认流程。
 
 func _initialize() -> void:
     call_deferred("_run")

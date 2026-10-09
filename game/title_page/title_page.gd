@@ -1,5 +1,6 @@
 extends Control
 ## 标题页负责扫描提示、标题按钮和自身焦点，不直接调度其他页面。
+# 标题页只报告用户选择，页面跳转由 Main 统一调度。
 signal continue_requested
 signal new_game_requested
 signal load_requested
@@ -13,8 +14,8 @@ signal exit_requested
 @onready var settings_button: Button = $PanelContainer/VBoxContainer/Settings
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
-var scan_complete := false
-var has_progress := false
+var scan_complete := false # 存档扫描是否完成。
+var has_progress := false # 是否存在可以继续的有效存档。
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
 	continue_button.pressed.connect(continue_requested.emit)
@@ -31,6 +32,7 @@ func begin_scan() -> void:
 	load_button.disabled = true
 	call_deferred("_finish_scan")
 func _finish_scan() -> void:
+	# 兜底完成标题页自身的异步状态；正式结果由初始化服务注入。
 	await get_tree().create_timer(0.2).timeout
 	if scan_complete:
 		return
@@ -62,4 +64,5 @@ func show_page() -> void:
 	if is_instance_valid(new_game_button): 
 		(continue_button if has_progress else new_game_button).grab_focus()
 func hide_page() -> void: 
+	# 隐藏标题页，避免标题按钮在调查期间接收输入。
 	hide()

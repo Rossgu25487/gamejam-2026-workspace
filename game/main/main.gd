@@ -18,21 +18,22 @@ const GameStartServiceScript = preload("res://systems/game_start/game_start_serv
 var confirm_panel: Control
 var confirm_compat_accept: Button
 
-var model: RefCounted
-var current_layer := "title"
-var has_progress := false
-var subpage_origin := "title"
-var subpage_focus: Button
-var confirm_origin := "title"
-var confirm_focus: Button
-var confirm_exits := false
-var settings_service: Node
-var save_service: Node
-var game_start_service: Node
-var current_snapshot: Dictionary = {}
-var auto_save_initialized := false
+var model: RefCounted # 核心玩法模型，由主入口连接到计数器视图。
+var current_layer := "title" # 当前最高层页面：title/investigation/pause/subpage/confirm。
+var has_progress := false # 当前会话是否已经建立调查进度。
+var subpage_origin := "title" # 子页面关闭后要返回的来源页面。
+var subpage_focus: Button # 子页面关闭后恢复焦点的来源按钮。
+var confirm_origin := "title" # 确认页打开前所在的页面。
+var confirm_focus: Button # 取消确认后恢复焦点的按钮。
+var confirm_exits := false # 确认操作是退出进程还是返回标题。
+var settings_service: Node # 独立设置服务。
+var save_service: Node # 存读档服务。
+var game_start_service: Node # 启动顺序和新游戏初始化服务。
+var current_snapshot: Dictionary = {} # 当前会话的完整快照。
+var auto_save_initialized := false # 是否已经建立过初始自动档。
 
 func _ready() -> void:
+	# Main 只负责组装节点、服务和信号，不实现页面内部控件逻辑。
 	# 主程序只创建模型、连接子页面信号，再决定当前显示哪一页。
 	# 初始化外部计数器单例
 	model = ModelScript.new()
@@ -86,6 +87,7 @@ func _ready() -> void:
 	_show_title()
 
 func _show_title() -> void:
+	# 统一切换到标题层，同时关闭所有覆盖页面。
 	# 返回标题时隐藏调查和所有上层页面，由标题页恢复自己的焦点。
 	current_layer = "title"
 	confirm_page.close_page()
@@ -98,6 +100,7 @@ func _show_title() -> void:
 	title_page.show_page()
 
 func _start_investigation() -> void:
+	# 统一切换到调查层；具体调查内容由核心玩法节点接管。
 	# 调度调查页面；具体调查内容和状态不在主入口实现。
 	has_progress = true
 	# 进入调查后，暂停页的手动保存按钮才具备保存资格。
@@ -129,6 +132,7 @@ func _on_new_game() -> void:
 	_start_investigation()
 
 func _on_model_value_changed(value: int) -> void:
+	# 接收模型变化，更新视图并把最新核心值写入自动档快照。
 	# 演示核心状态发生变化后更新完整快照，并覆盖唯一普通自动档。
 	counter_view.show_value(value)
 	if has_progress and current_layer == "investigation":
@@ -140,6 +144,7 @@ func _on_resume() -> void:
 	pause_page.hide_page()
 	counter_view.show()
 func _on_save() -> void:
+	# 只负责记录来源并打开保存节点，保存栏位逻辑由 SavePage 处理。
 	if not has_progress:
 		pause_page.set_save_available(false, "当前没有可保存的调查")
 		return
@@ -149,12 +154,14 @@ func _on_save() -> void:
 	title_page.hide_page(); pause_page.hide_page()
 	save_page.open(save_service, current_snapshot)
 func _on_load() -> void:
+	# 只负责记录来源并打开读取节点，列表逻辑由 LoadPage 处理。
 	subpage_origin = current_layer
 	subpage_focus = title_page.load_button if subpage_origin == "title" else pause_page.load_button
 	current_layer = "subpage"
 	title_page.hide_page(); pause_page.hide_page()
 	load_page.open(save_service)
 func _on_settings() -> void:
+	# 只负责记录来源并打开设置节点，控件逻辑由 SettingsPage 处理。
 	subpage_origin = current_layer
 	subpage_focus = title_page.settings_button if subpage_origin == "title" else pause_page.settings_button
 	current_layer = "subpage"
@@ -167,6 +174,7 @@ func _on_start_ready(has_save: bool) -> void:
 	title_page.apply_latest_summary(save_service.latest_summary())
 
 func _on_loaded(snapshot: Dictionary) -> void:
+	# 接收读取页发出的完整快照，并交给核心模型恢复当前值。
 	current_snapshot = snapshot.duplicate(true)
 	has_progress = true
 	auto_save_initialized = true
@@ -176,6 +184,7 @@ func _on_loaded(snapshot: Dictionary) -> void:
 	_on_close_subpage()
 
 func _save_auto_snapshot() -> void:
+	# 在暂停或离开前保存当前会话的普通自动档。
 	if has_progress and not current_snapshot.is_empty():
 		save_service.save_auto(current_snapshot)
 
@@ -198,6 +207,7 @@ func _open_subpage(title: String, detail: String) -> void:
 	elif title == "游戏设置": settings_page.open(settings_service)
 
 func _on_close_subpage() -> void:
+	# 关闭任一子页后恢复原页面、原焦点和最新进度摘要。
 	save_page.close_page(); load_page.close_page(); settings_page.close_page()
 	title_page.apply_latest_summary(save_service.latest_summary())
 	if subpage_origin == "title": _show_title()
@@ -209,6 +219,7 @@ func _on_pause_exit() -> void: _open_confirm("退出游戏", "保存当前调查
 func _on_title_exit() -> void: _open_confirm("退出游戏", "确认退出游戏？\n" + save_service.latest_summary(), "确认退出", true)
 
 func _open_confirm(title: String, detail: String, accept_text: String, exits: bool) -> void:
+	# 记录离开上下文并打开确认节点；确认按钮逻辑由 ConfirmPage 实现。
 	# 共用确认框只负责离开选择，保存业务仍交给存档系统。
 	confirm_exits = exits
 	confirm_origin = current_layer
@@ -234,6 +245,7 @@ func _on_confirm_accept() -> void:
 	_on_confirm_direct()
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	# 只在最上层页面处理 Esc，防止输入穿透到下面的页面。
 	# Esc 只交给当前最上层页面处理，避免输入穿透到下层。
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if current_layer == "confirm": _on_confirm_cancel()

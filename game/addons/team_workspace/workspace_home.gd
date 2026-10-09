@@ -1,6 +1,6 @@
 @tool
 extends MarginContainer
-## The editor home only links out and reads local Git state.
+## 协作空间主页：提供外部链接，并只读显示本机 Git 状态。
 
 const TEAM_URL := "https://rossgu25487.github.io/gamejam-2026-workspace/"
 const REPOSITORY_URL := "https://github.com/Rossgu25487/gamejam-2026-workspace"

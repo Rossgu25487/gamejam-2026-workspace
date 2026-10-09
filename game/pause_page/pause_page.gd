@@ -1,5 +1,6 @@
 extends Control
 ## 暂停页负责自己的按钮连接、可用状态和焦点，不直接修改主场景。
+# 页面只发出动作请求，具体业务由 Main 调度对应服务或页面。
 signal resume_requested
 signal save_requested
 signal load_requested
@@ -21,12 +22,9 @@ func _ready() -> void:
 	settings_button.pressed.connect(settings_requested.emit)
 	return_title_button.pressed.connect(return_title_requested.emit)
 	exit_button.pressed.connect(exit_requested.emit) 
-	# 初始化为true，后续根据场景进行分类
+	# 初始处于标题页，没有调查会话，因此暂时不能保存。
 	save_button.disabled = true
 	hide()
-	
-func _process(delta: float) -> void:
-	pass
 	
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
@@ -36,5 +34,6 @@ func show_page() -> void:
 func hide_page() -> void: 
 	hide()
 func set_save_available(enabled: bool, reason: String = "") -> void: 
+	# 主程序根据当前调查资格开启或禁用手动保存。
 	save_button.disabled = not enabled
 	save_button.tooltip_text = reason
