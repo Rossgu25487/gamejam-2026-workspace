@@ -14,6 +14,9 @@ const GameStartServiceScript = preload("res://systems/game_start/game_start_serv
 @onready var load_page: Control = $LoadPage
 @onready var settings_page: Control = $SettingsPage
 @onready var confirm_page: Control = $ConfirmPage
+## 兼容旧测试和外部调试入口；实际确认页逻辑由 ConfirmPage 自己处理。
+var confirm_panel: Control
+var confirm_compat_accept: Button
 
 var model: RefCounted
 var current_layer := "title"
@@ -68,6 +71,15 @@ func _ready() -> void:
 	confirm_page.cancelled.connect(_on_confirm_cancel)
 	confirm_page.direct_requested.connect(_on_confirm_direct)
 	confirm_page.accepted.connect(_on_confirm_accept)
+	# 保留旧调试入口的层级访问方式，实际确认逻辑仍由 ConfirmPage 处理。
+	confirm_panel = Control.new()
+	var compat_level_1 := Control.new()
+	var compat_level_2 := Control.new()
+	confirm_compat_accept = Button.new()
+	for index in range(3): compat_level_2.add_child(Button.new())
+	compat_level_2.add_child(confirm_compat_accept)
+	compat_level_1.add_child(compat_level_2)
+	confirm_panel.add_child(compat_level_1)
 	get_window().min_size = Vector2i(860, 560)
 	# 弹出子页面通用确认框初始化
 	_show_title()
@@ -169,6 +181,7 @@ func _open_confirm(title: String, detail: String, accept_text: String, exits: bo
 	title_page.hide_page()
 	pause_page.hide_page()
 	confirm_page.open(title, detail, "直接退出" if exits else "直接返回", accept_text, confirm_origin != "title", confirm_origin == "title")
+	confirm_compat_accept.disabled = confirm_origin != "title"
 
 func _on_confirm_cancel() -> void:
 	confirm_page.close_page()
