@@ -159,7 +159,7 @@ func _on_loaded(snapshot: Dictionary) -> void:
 	auto_save_initialized = true
 	# 读取完整快照后恢复演示核心状态，不能只恢复导航记录。
 	if current_snapshot.has("counter_value"):
-		model.configure(int(current_snapshot["counter_value"]), demo_config.step)
+		model.restore_value(int(current_snapshot["counter_value"]))
 	_on_close_subpage()
 
 func _save_auto_snapshot() -> void:

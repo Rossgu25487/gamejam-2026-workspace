@@ -49,7 +49,7 @@ func _run() -> void:
         quit(1)
         return
     scene.save_page._save_slot(0)
-    scene.model.configure(0, 1)
+    scene.model.reset()
     if scene.model.read_value() != 0:
         printerr("NAV_FAILED: counter reset")
         quit(1)

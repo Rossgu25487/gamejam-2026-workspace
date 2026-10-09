@@ -15,6 +15,11 @@ func configure(initial: int, step: int) -> void:
 	_value = initial
 	value_changed.emit(_value)
 
+func restore_value(value: int) -> void:
+	# 读取存档只恢复当前值，保留初始值作为重置目标。
+	_value = value
+	value_changed.emit(_value)
+
 
 func read_value() -> int:
 	return _value
