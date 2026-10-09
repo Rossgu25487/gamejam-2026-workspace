@@ -10,6 +10,10 @@ const GameStartServiceScript = preload("res://systems/game_start/game_start_serv
 @onready var counter_view: Control = $CounterView
 @onready var title_page: Control = $TitlePage
 @onready var pause_page: Control = $PausePage
+@onready var save_page: Control = $SavePage
+@onready var load_page: Control = $LoadPage
+@onready var settings_page: Control = $SettingsPage
+@onready var confirm_page: Control = $ConfirmPage
 
 var model: RefCounted
 var current_layer := "title"
@@ -19,11 +23,6 @@ var subpage_focus: Button
 var confirm_origin := "title"
 var confirm_focus: Button
 var confirm_exits := false
-var confirm_panel: PanelContainer
-var subpage_panel: PanelContainer
-var confirm_cancel: Button
-var confirm_direct: Button
-var confirm_accept: Button
 var settings_service: Node
 var save_service: Node
 var game_start_service: Node
@@ -62,63 +61,24 @@ func _ready() -> void:
 	pause_page.settings_requested.connect(_on_settings)
 	pause_page.return_title_requested.connect(_on_return_title)
 	pause_page.exit_requested.connect(_on_pause_exit)
+	save_page.closed.connect(_on_close_subpage)
+	load_page.closed.connect(_on_close_subpage)
+	load_page.loaded.connect(_on_loaded)
+	settings_page.closed.connect(_on_close_subpage)
+	confirm_page.cancelled.connect(_on_confirm_cancel)
+	confirm_page.direct_requested.connect(_on_confirm_direct)
+	confirm_page.accepted.connect(_on_confirm_accept)
 	get_window().min_size = Vector2i(860, 560)
 	# 弹出子页面通用确认框初始化
-	_build_shared_pages()
 	_show_title()
-
-func _build_shared_pages() -> void:
-	# 分为弹出通用的确认框和提示子框，是跨标题/暂停共用的导航容器。
-	confirm_panel = _make_panel("离开确认", "当前调查尚未保存。请选择离开方式。")
-	# 确认按钮只初始化一次；重复打开时复用，避免 box 中不断累积按钮。
-	var confirm_box := confirm_panel.get_child(0) as VBoxContainer
-	confirm_cancel = Button.new()
-	confirm_cancel.text = "取消"
-	confirm_cancel.pressed.connect(_on_confirm_cancel)
-	confirm_box.add_child(confirm_cancel)
-	confirm_direct = Button.new()
-	confirm_direct.pressed.connect(_on_confirm_direct)
-	confirm_box.add_child(confirm_direct)
-	confirm_accept = Button.new()
-	confirm_accept.pressed.connect(_on_confirm_accept)
-	confirm_box.add_child(confirm_accept)
-	subpage_panel = _make_panel("游戏设置", "设置页由设置系统接管；本入口已接通。")
-	var close := Button.new()
-	close.text = "关闭设置"
-	close.pressed.connect(_on_close_subpage)
-	subpage_panel.get_child(0).add_child(close)
-	confirm_panel.hide()
-	subpage_panel.hide()
-
-func _make_panel(title: String, detail: String) -> PanelContainer:
-	# 面板放入全屏 CenterContainer，确保读取、设置和确认页始终居中。
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(330, 0)
-	var host := CenterContainer.new()
-	# host始终铺满窗口；面板隐藏后，host不能截住下层按钮点击。
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(host)
-	host.add_child(panel)
-	# 垂直容器，自动编排内部的节点
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 12)
-	panel.add_child(box)
-	var heading := Label.new()
-	heading.text = title
-	heading.add_theme_font_size_override("font_size", 28)
-	box.add_child(heading)
-	var subtitle := Label.new()
-	subtitle.text = detail
-	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	box.add_child(subtitle)
-	return panel
 
 func _show_title() -> void:
 	# 返回标题时隐藏调查和所有上层页面，由标题页恢复自己的焦点。
 	current_layer = "title"
-	confirm_panel.hide()
-	subpage_panel.hide()
+	confirm_page.close_page()
+	save_page.close_page()
+	load_page.close_page()
+	settings_page.close_page()
 	pause_page.hide_page()
 	counter_view.hide()
 	title_page.show_page()
@@ -147,82 +107,32 @@ func _on_save() -> void:
 	if not has_progress:
 		pause_page.set_save_available(false, "当前没有可保存的调查")
 		return
-	_open_subpage("保存存档", "请选择手动存档栏位（共3栏）。")
-	_build_save_buttons()
+	subpage_origin = current_layer
+	subpage_focus = pause_page.save_button
+	current_layer = "subpage"
+	title_page.hide_page(); pause_page.hide_page()
+	save_page.open(save_service, current_snapshot)
 func _on_load() -> void:
-	var records: Array = save_service.scan()
-	_open_subpage("读取存档", "请选择要读取的有效存档；读取失败会保留当前会话。")
-	_build_load_buttons(records)
+	subpage_origin = current_layer
+	subpage_focus = title_page.load_button if subpage_origin == "title" else pause_page.load_button
+	current_layer = "subpage"
+	title_page.hide_page(); pause_page.hide_page()
+	load_page.open(save_service)
 func _on_settings() -> void:
-	_open_subpage("游戏设置", "设置会独立保存，不会被调查存档覆盖。")
-	_build_settings_controls()
+	subpage_origin = current_layer
+	subpage_focus = title_page.settings_button if subpage_origin == "title" else pause_page.settings_button
+	current_layer = "subpage"
+	title_page.hide_page(); pause_page.hide_page()
+	settings_page.open(settings_service)
 
 func _on_start_ready(has_save: bool) -> void:
 	# 初始化服务完成后再决定标题页默认焦点。
 	title_page.apply_scan_result(has_save)
 
-func _clear_subpage_content() -> VBoxContainer:
-	var box := subpage_panel.get_child(0) as VBoxContainer
-	while box.get_child_count() > 3:
-		box.get_child(3).queue_free()
-	return box
-
-func _build_save_buttons() -> void:
-	var box := _clear_subpage_content()
-	for i in range(3):
-		var button := Button.new()
-		button.text = "手动存档 %d" % (i + 1)
-		button.pressed.connect(func() -> void:
-			if save_service.save_snapshot("manual", i, current_snapshot):
-				_on_close_subpage())
-		box.add_child(button)
-
-func _build_load_buttons(records: Array) -> void:
-	var box := _clear_subpage_content()
-	for record in records:
-		var button := Button.new()
-		var kind := str(record.get("slot_kind", "manual"))
-		var index := int(record.get("slot_index", 0))
-		button.text = "%s %d  |  序号 %s" % [kind, index + 1, str(record.get("save_sequence", "-"))]
-		button.pressed.connect(func() -> void:
-			var loaded: Dictionary = save_service.load_snapshot(kind, index)
-			if not loaded.is_empty():
-				current_snapshot = loaded
-				has_progress = true
-				_on_close_subpage())
-		box.add_child(button)
-	if records.is_empty():
-		var empty := Label.new()
-		empty.text = "没有可读取的有效存档"
-		box.add_child(empty)
-
-func _build_settings_controls() -> void:
-	var box := _clear_subpage_content()
-	for key in ["master_volume", "bgm_volume", "ambient_volume", "effect_volume"]:
-		var row := HBoxContainer.new()
-		var label := Label.new()
-		label.text = key
-		row.add_child(label)
-		var slider := HSlider.new()
-		slider.min_value = 0
-		slider.max_value = 100
-		slider.step = 5
-		slider.value = settings_service.get_value(key, 0)
-		slider.value_changed.connect(func(value: float) -> void: settings_service.set_value(key, int(value)))
-		row.add_child(slider)
-		box.add_child(row)
-	for key in ["mute", "reduce_motion"]:
-		var check := CheckButton.new()
-		check.text = "静音" if key == "mute" else "减弱动态"
-		check.button_pressed = settings_service.get_value(key, false)
-		check.toggled.connect(func(value: bool) -> void: settings_service.set_value(key, value))
-		box.add_child(check)
-	var reset := Button.new()
-	reset.text = "恢复默认"
-	reset.pressed.connect(func() -> void:
-		settings_service.restore_defaults()
-		_build_settings_controls())
-	box.add_child(reset)
+func _on_loaded(snapshot: Dictionary) -> void:
+	current_snapshot = snapshot.duplicate(true)
+	has_progress = true
+	_on_close_subpage()
 
 func _open_pause() -> void:
 	if current_layer != "investigation": return
@@ -235,16 +145,13 @@ func _open_subpage(title: String, detail: String) -> void:
 	subpage_focus = title_page.load_button if title == "读取存档" and subpage_origin == "title" else (pause_page.load_button if title == "读取存档" else (title_page.settings_button if subpage_origin == "title" else pause_page.settings_button))
 	current_layer = "subpage"
 	# 通用弹出子框赋值
-	var box := subpage_panel.get_child(0) as VBoxContainer
-	(box.get_child(0) as Label).text = title
-	(box.get_child(1) as Label).text = detail
 	title_page.hide_page()
 	pause_page.hide_page()
-	subpage_panel.show()
-	(box.get_child(2) as Button).grab_focus()
+	if title == "读取存档": load_page.open(save_service)
+	elif title == "游戏设置": settings_page.open(settings_service)
 
 func _on_close_subpage() -> void:
-	subpage_panel.hide()
+	save_page.close_page(); load_page.close_page(); settings_page.close_page()
 	if subpage_origin == "title": _show_title()
 	else: current_layer = "pause"; pause_page.show_page()
 	if is_instance_valid(subpage_focus): subpage_focus.grab_focus()
@@ -259,21 +166,12 @@ func _open_confirm(title: String, detail: String, accept_text: String, exits: bo
 	confirm_origin = current_layer
 	confirm_focus = title_page.exit_button if confirm_origin == "title" else pause_page.exit_button
 	current_layer = "confirm"
-	var box := confirm_panel.get_child(0) as VBoxContainer
-	(box.get_child(0) as Label).text = title
-	(box.get_child(1) as Label).text = detail
-	# 只更新已有按钮，不在每次打开时创建新节点或重复连接信号。
-	confirm_direct.text = "直接退出" if exits else "直接返回"
-	confirm_direct.visible = confirm_origin != "title"
-	confirm_accept.text = accept_text
-	confirm_accept.disabled = confirm_origin != "title"
 	title_page.hide_page()
 	pause_page.hide_page()
-	confirm_panel.show()
-	confirm_cancel.grab_focus()
+	confirm_page.open(title, detail, "直接退出" if exits else "直接返回", accept_text, confirm_origin != "title", confirm_origin == "title")
 
 func _on_confirm_cancel() -> void:
-	confirm_panel.hide()
+	confirm_page.close_page()
 	if confirm_origin == "title": _show_title()
 	else: current_layer = "pause"; pause_page.show_page()
 	if is_instance_valid(confirm_focus): confirm_focus.grab_focus()
@@ -281,7 +179,7 @@ func _on_confirm_direct() -> void:
 	if confirm_exits: get_tree().quit()
 	else: _show_title()
 func _on_confirm_accept() -> void:
-	if confirm_accept.disabled:
+	if not confirm_page.accept_button.visible:
 		return
 	_on_confirm_direct()
 
