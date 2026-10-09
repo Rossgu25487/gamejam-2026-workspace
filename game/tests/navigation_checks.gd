@@ -17,6 +17,20 @@ func _run() -> void:
         printerr("NAV_FAILED: new game")
         quit(1)
         return
+    scene.model.increment()
+    scene._on_save()
+    await process_frame
+    scene.save_page._save_slot(0)
+    await process_frame
+    scene._on_close_subpage()
+    scene.model.reset()
+    scene._show_title()
+    scene._on_continue()
+    if scene.model.read_value() != 1:
+        printerr("NAV_FAILED: continue did not restore latest manual save")
+        quit(1)
+        return
+    scene.model.reset()
     for _index in range(7):
         scene.model.increment()
     if scene.model.read_value() != 7:

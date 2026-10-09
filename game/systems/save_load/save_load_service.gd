@@ -23,6 +23,7 @@ func scan() -> Array:
 			var data = JSON.parse_string(file.get_as_text()) if file else null
 			if typeof(data) == TYPE_DICTIONARY and int(data.get("schema_version", -1)) == SCHEMA_VERSION:
 				records.append(data)
+				sequence = maxi(sequence, int(data.get("save_sequence", 0)))
 	scan_completed.emit(records.duplicate(true))
 	return records.duplicate(true)
 
@@ -65,6 +66,30 @@ func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 		return {}
 	operation_completed.emit(true, "读取存档成功")
 	return data
+
+func latest_record() -> Dictionary:
+	var all_records: Array = scan()
+	var latest: Dictionary = {}
+	for record in all_records:
+		if latest.is_empty() or int(record.get("save_sequence", 0)) > int(latest.get("save_sequence", 0)):
+			latest = record
+	return latest.duplicate(true)
+
+func load_latest() -> Dictionary:
+	var record := latest_record()
+	if record.is_empty():
+		operation_completed.emit(false, "没有可继续的有效存档")
+		return {}
+	return load_snapshot(str(record.get("slot_kind", "manual")), int(record.get("slot_index", 0)))
+
+func latest_summary() -> String:
+	var record := latest_record()
+	if record.is_empty():
+		return "当前没有已保存的存档。"
+	var kind := str(record.get("slot_kind", "manual"))
+	var index := int(record.get("slot_index", 0)) + 1
+	var kind_text := "手动存档" if kind == "manual" else ("自动存档" if kind == "auto" else "保护存档")
+	return "最新保存：%s %d（保存序号 %d）" % [kind_text, index, int(record.get("save_sequence", 0))]
 
 func _valid_slot(kind: String, index: int) -> bool:
 	return (kind == "manual" and index >= 0 and index < MANUAL_SLOT_COUNT) or (kind == "auto" and index == 0) or (kind == "pre_accusation" and index == 0)

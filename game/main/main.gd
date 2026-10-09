@@ -108,7 +108,18 @@ func _start_investigation() -> void:
 	pause_page.hide_page()
 	counter_view.show()
 
-func _on_continue() -> void: _start_investigation()
+func _on_continue() -> void:
+	# 继续游戏始终恢复成功保存序号最高的完整快照。
+	var latest: Dictionary = save_service.load_latest()
+	if latest.is_empty():
+		_start_investigation()
+		return
+	current_snapshot = latest.duplicate(true)
+	has_progress = true
+	auto_save_initialized = true
+	if current_snapshot.has("counter_value"):
+		model.restore_value(int(current_snapshot["counter_value"]))
+	_start_investigation()
 func _on_new_game() -> void:
 	current_snapshot = game_start_service.create_new_game()
 	# 初始自动档只在第一次点击“新游戏”时建立。
@@ -190,9 +201,9 @@ func _on_close_subpage() -> void:
 	else: current_layer = "pause"; pause_page.show_page()
 	if is_instance_valid(subpage_focus): subpage_focus.grab_focus()
 
-func _on_return_title() -> void: _open_confirm("返回标题", "保存当前调查后返回标题？", "保存并返回", false)
-func _on_pause_exit() -> void: _open_confirm("退出游戏", "保存当前调查后退出游戏？", "保存并退出", true)
-func _on_title_exit() -> void: _open_confirm("退出游戏", "确认退出游戏？", "确认退出", true)
+func _on_return_title() -> void: _open_confirm("返回标题", "保存当前调查后返回标题？\n" + save_service.latest_summary(), "保存并返回", false)
+func _on_pause_exit() -> void: _open_confirm("退出游戏", "保存当前调查后退出游戏？\n" + save_service.latest_summary(), "保存并退出", true)
+func _on_title_exit() -> void: _open_confirm("退出游戏", "确认退出游戏？\n" + save_service.latest_summary(), "确认退出", true)
 
 func _open_confirm(title: String, detail: String, accept_text: String, exits: bool) -> void:
 	# 共用确认框只负责离开选择，保存业务仍交给存档系统。
