@@ -12,6 +12,7 @@ signal exit_requested
 @onready var load_button: Button = $PanelContainer/VBoxContainer/Load
 @onready var settings_button: Button = $PanelContainer/VBoxContainer/Settings
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
+@onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false
 var has_progress := false
 func _ready() -> void:
@@ -44,10 +45,16 @@ func apply_scan_result(has_progress: bool) -> void:
 	scan_complete = true
 	self.has_progress = has_progress
 	status.text = "已有可继续的调查" if has_progress else "尚无可继续的进度"
+	if not has_progress:
+		detail.text = "最近有效进度：尚无可继续的进度"
 	continue_button.disabled = not has_progress
 	load_button.disabled = not has_progress
 	if visible:
 		(continue_button if has_progress else new_game_button).grab_focus()
+
+func apply_latest_summary(summary: String) -> void:
+	# 标题页只负责显示存档服务提供的最新有效进度摘要。
+	detail.text = "最近有效进度：" + summary
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
 	show()

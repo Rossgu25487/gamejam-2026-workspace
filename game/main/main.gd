@@ -94,6 +94,7 @@ func _show_title() -> void:
 	settings_page.close_page()
 	pause_page.hide_page()
 	counter_view.hide()
+	title_page.apply_latest_summary(save_service.latest_summary())
 	title_page.show_page()
 
 func _start_investigation() -> void:
@@ -163,6 +164,7 @@ func _on_settings() -> void:
 func _on_start_ready(has_save: bool) -> void:
 	# 初始化服务完成后再决定标题页默认焦点。
 	title_page.apply_scan_result(has_save)
+	title_page.apply_latest_summary(save_service.latest_summary())
 
 func _on_loaded(snapshot: Dictionary) -> void:
 	current_snapshot = snapshot.duplicate(true)
@@ -197,6 +199,7 @@ func _open_subpage(title: String, detail: String) -> void:
 
 func _on_close_subpage() -> void:
 	save_page.close_page(); load_page.close_page(); settings_page.close_page()
+	title_page.apply_latest_summary(save_service.latest_summary())
 	if subpage_origin == "title": _show_title()
 	else: current_layer = "pause"; pause_page.show_page()
 	if is_instance_valid(subpage_focus): subpage_focus.grab_focus()

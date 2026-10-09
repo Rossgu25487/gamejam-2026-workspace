@@ -40,11 +40,15 @@ func save_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> 
 	if file == null:
 		operation_completed.emit(false, "存档写入失败")
 		return false
-	sequence += 1
+	# 序号只在写入成功后提交；同一服务实例启动时先从磁盘最大序号继续。
+	if sequence == 0:
+		scan()
+	var next_sequence := sequence + 1
 	var record := snapshot.duplicate(true)
 	# 强制写入本次目标栏位的元数据，避免从自动档恢复后手动保存仍被标记为 auto。
-	record.merge({"schema_version": SCHEMA_VERSION, "slot_kind": slot_kind, "slot_index": slot_index, "save_sequence": sequence, "saved_at_utc": Time.get_datetime_string_from_system(true)}, true)
+	record.merge({"schema_version": SCHEMA_VERSION, "slot_kind": slot_kind, "slot_index": slot_index, "save_sequence": next_sequence, "saved_at_utc": Time.get_datetime_string_from_system(true)}, true)
 	file.store_string(JSON.stringify(record))
+	sequence = next_sequence
 	operation_completed.emit(true, "存档成功")
 	return true
 

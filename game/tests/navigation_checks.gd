@@ -30,6 +30,10 @@ func _run() -> void:
         printerr("NAV_FAILED: continue did not restore latest manual save")
         quit(1)
         return
+    if not scene.title_page.detail.text.begins_with("最近有效进度："):
+        printerr("NAV_FAILED: latest summary text")
+        quit(1)
+        return
     scene.model.reset()
     for _index in range(7):
         scene.model.increment()
