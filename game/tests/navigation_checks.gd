@@ -17,6 +17,12 @@ func _run() -> void:
         printerr("NAV_FAILED: new game")
         quit(1)
         return
+    for _index in range(7):
+        scene.model.increment()
+    if scene.model.read_value() != 7:
+        printerr("NAV_FAILED: counter setup")
+        quit(1)
+        return
     await scene._open_pause()
     if scene.current_layer != "pause" or scene.pause_page.save_button.disabled:
         printerr("NAV_FAILED: pause state or save unavailable")
@@ -40,6 +46,20 @@ func _run() -> void:
     scene._on_save()
     if scene.current_layer != "subpage" or not scene.save_page.visible:
         printerr("NAV_FAILED: save page")
+        quit(1)
+        return
+    scene.save_page._save_slot(0)
+    scene.model.configure(0, 1)
+    if scene.model.read_value() != 0:
+        printerr("NAV_FAILED: counter reset")
+        quit(1)
+        return
+    scene._on_load()
+    await process_frame
+    scene.load_page._load_slot("manual", 0)
+    await process_frame
+    if scene.model.read_value() != 7:
+        printerr("NAV_FAILED: manual save restore")
         quit(1)
         return
     scene._on_close_subpage()

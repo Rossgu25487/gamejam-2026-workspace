@@ -41,7 +41,8 @@ func save_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> 
 		return false
 	sequence += 1
 	var record := snapshot.duplicate(true)
-	record.merge({"schema_version": SCHEMA_VERSION, "slot_kind": slot_kind, "slot_index": slot_index, "save_sequence": sequence, "saved_at_utc": Time.get_datetime_string_from_system(true)})
+	# 强制写入本次目标栏位的元数据，避免从自动档恢复后手动保存仍被标记为 auto。
+	record.merge({"schema_version": SCHEMA_VERSION, "slot_kind": slot_kind, "slot_index": slot_index, "save_sequence": sequence, "saved_at_utc": Time.get_datetime_string_from_system(true)}, true)
 	file.store_string(JSON.stringify(record))
 	operation_completed.emit(true, "存档成功")
 	return true
