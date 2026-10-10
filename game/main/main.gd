@@ -1,65 +1,54 @@
 extends Control
-## 主入口只负责初始化模块、连接信号和在页面之间调度。
-## 标题页、暂停页和计数界面各自处理自己的私有逻辑。
+## Main 只初始化模块、连接公开接口和调度页面；玩法与存档字段交给会话服务。
 
-const ModelScript = preload("res://features/counter_demo/counter_model.gd")
-const SettingsServiceScript = preload("res://systems/game_settings/settings_service.gd")
-const SaveLoadServiceScript = preload("res://systems/save_load/save_load_service.gd")
-const GameStartServiceScript = preload("res://systems/game_start/game_start_service.gd")
-@export var demo_config: Resource = preload("res://data/demo_config.tres")
-@onready var counter_view: Control = $CounterView
+const SessionScript = preload("res://systems/core_gameplay/game_session_service.gd")
+const SettingsScript = preload("res://systems/game_settings/settings_service.gd")
+const SaveScript = preload("res://systems/save_load/save_load_service.gd")
+const StartScript = preload("res://systems/game_start/game_start_service.gd")
+@onready var gameplay_page: Control = $CoreGameplayPage
 @onready var title_page: Control = $TitlePage
 @onready var pause_page: Control = $PausePage
 @onready var save_page: Control = $SavePage
 @onready var load_page: Control = $LoadPage
 @onready var settings_page: Control = $SettingsPage
 @onready var confirm_page: Control = $ConfirmPage
-## 兼容旧测试和外部调试入口；实际确认页逻辑由 ConfirmPage 自己处理。
-var confirm_panel: Control
-var confirm_compat_accept: Button
-
-var model: RefCounted # 核心玩法模型，由主入口连接到计数器视图。
-var current_layer := "title" # 当前最高层页面：title/investigation/pause/subpage/confirm。
-var has_progress := false # 当前会话是否已经建立调查进度。
-var subpage_origin := "title" # 子页面关闭后要返回的来源页面。
-var subpage_focus: Button # 子页面关闭后恢复焦点的来源按钮。
-var confirm_origin := "title" # 确认页打开前所在的页面。
-var confirm_focus: Button # 取消确认后恢复焦点的按钮。
-var confirm_exits := false # 确认操作是退出进程还是返回标题。
-var settings_service: Node # 独立设置服务。
-var save_service: Node # 存读档服务。
-var game_start_service: Node # 启动顺序和新游戏初始化服务。
-var current_snapshot: Dictionary = {} # 当前会话的完整快照。
-var auto_save_initialized := false # 是否已经建立过初始自动档。
+var session_service: Node
+var settings_service: Node
+var save_service: Node
+var game_start_service: Node
+var current_layer := "title"
+var subpage_origin := "title"
+var subpage_focus: Button
+var confirm_origin := "title"
+var confirm_focus: Button
+var confirm_exits := false
+var has_progress := false
+var pending_leave := false
+@export var test_storage_path := "" # 测试注入独立目录，避免改写玩家存档与设置。
 
 func _ready() -> void:
-	# Main 只负责组装节点、服务和信号，不实现页面内部控件逻辑。
-	# 主程序只创建模型、连接子页面信号，再决定当前显示哪一页。
-	# 初始化外部计数器单例
-	model = ModelScript.new()
-	settings_service = SettingsServiceScript.new()
-	save_service = SaveLoadServiceScript.new()
-	game_start_service = GameStartServiceScript.new()
-	add_child(settings_service)
-	add_child(save_service)
-	add_child(game_start_service)
-	game_start_service.ready_for_title.connect(_on_start_ready)
-	game_start_service.initialize(settings_service, save_service)
-	model.configure(demo_config.initial_value, demo_config.step)
-	model.value_changed.connect(_on_model_value_changed)
-	# 计数器demo页面初始化
-	counter_view.increment_requested.connect(model.increment)
-	counter_view.reset_requested.connect(model.reset)
-	counter_view.set_connected(true)
-	counter_view.set_step(demo_config.step)
-	counter_view.show_value(model.read_value())
-	# 标题页初始化
+	session_service = SessionScript.new()
+	settings_service = SettingsScript.new()
+	save_service = SaveScript.new()
+	game_start_service = StartScript.new()
+	for service in [session_service, settings_service, save_service, game_start_service]: add_child(service)
+	if not test_storage_path.is_empty():
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(test_storage_path))
+		save_service.storage_path = test_storage_path.path_join("saves")
+		settings_service.storage_path = test_storage_path.path_join("settings.json")
+	if not session_service.initialize():
+		push_error("核心配置无效：" + str(session_service.core.catalog.errors))
+		return
+	save_service.snapshot_validator = session_service.validate_snapshot
+	session_service.autosave_requested.connect(save_service.save_auto)
+	gameplay_page.bind(session_service.core)
+	gameplay_page.menu_requested.connect(_open_pause)
+	settings_service.changed.connect(gameplay_page.set_preferences)
 	title_page.continue_requested.connect(_on_continue)
 	title_page.new_game_requested.connect(_on_new_game)
 	title_page.load_requested.connect(_on_load)
 	title_page.settings_requested.connect(_on_settings)
 	title_page.exit_requested.connect(_on_title_exit)
-	# 暂停页面初始化
 	pause_page.resume_requested.connect(_on_resume)
 	pause_page.save_requested.connect(_on_save)
 	pause_page.load_requested.connect(_on_load)
@@ -67,188 +56,161 @@ func _ready() -> void:
 	pause_page.return_title_requested.connect(_on_return_title)
 	pause_page.exit_requested.connect(_on_pause_exit)
 	save_page.closed.connect(_on_close_subpage)
+	save_page.saved.connect(_on_saved)
 	load_page.closed.connect(_on_close_subpage)
 	load_page.loaded.connect(_on_loaded)
 	settings_page.closed.connect(_on_close_subpage)
 	confirm_page.cancelled.connect(_on_confirm_cancel)
 	confirm_page.direct_requested.connect(_on_confirm_direct)
 	confirm_page.accepted.connect(_on_confirm_accept)
-	# 保留旧调试入口的层级访问方式，实际确认逻辑仍由 ConfirmPage 处理。
-	confirm_panel = Control.new()
-	var compat_level_1 := Control.new()
-	var compat_level_2 := Control.new()
-	confirm_compat_accept = Button.new()
-	for index in range(3): compat_level_2.add_child(Button.new())
-	compat_level_2.add_child(confirm_compat_accept)
-	compat_level_1.add_child(compat_level_2)
-	confirm_panel.add_child(compat_level_1)
-	get_window().min_size = Vector2i(860, 560)
-	# 弹出子页面通用确认框初始化
+	game_start_service.ready_for_title.connect(_on_start_ready)
+	game_start_service.initialize(settings_service, save_service)
+	gameplay_page.set_preferences(settings_service.values)
+	get_window().min_size = Vector2i(1100, 720)
+	get_window().focus_exited.connect(_open_pause)
 	_show_title()
 
 func _show_title() -> void:
-	# 统一切换到标题层，同时关闭所有覆盖页面。
-	# 返回标题时隐藏调查和所有上层页面，由标题页恢复自己的焦点。
 	current_layer = "title"
-	confirm_page.close_page()
-	save_page.close_page()
-	load_page.close_page()
-	settings_page.close_page()
+	for page in [save_page, load_page, settings_page, confirm_page]: page.close_page()
 	pause_page.hide_page()
-	counter_view.hide()
+	gameplay_page.set_active(false)
+	gameplay_page.hide()
 	title_page.apply_latest_summary(save_service.latest_summary())
+	title_page.apply_scan_result(save_service.has_valid_record())
 	title_page.show_page()
 
 func _start_investigation() -> void:
-	# 统一切换到调查层；具体调查内容由核心玩法节点接管。
-	# 调度调查页面；具体调查内容和状态不在主入口实现。
 	has_progress = true
-	# 进入调查后，暂停页的手动保存按钮才具备保存资格。
-	pause_page.set_save_available(true)
-	if current_snapshot.is_empty():
-		current_snapshot = game_start_service.create_new_game()
 	current_layer = "investigation"
 	title_page.hide_page()
 	pause_page.hide_page()
-	counter_view.show()
+	gameplay_page.show()
+	gameplay_page.set_active(true)
+
+func _on_new_game() -> void:
+	gameplay_page.reset_page()
+	var snapshot: Dictionary = session_service.start_new_game()
+	_start_investigation()
+	save_service.save_auto(snapshot)
 
 func _on_continue() -> void:
-	# 继续游戏始终恢复成功保存序号最高的完整快照。
-	var latest: Dictionary = save_service.load_latest()
-	if latest.is_empty():
-		_start_investigation()
-		return
-	current_snapshot = latest.duplicate(true)
-	has_progress = true
-	auto_save_initialized = true
-	if current_snapshot.has("counter_value"):
-		model.restore_value(int(current_snapshot["counter_value"]))
-	_start_investigation()
-func _on_new_game() -> void:
-	current_snapshot = game_start_service.create_new_game()
-	# 初始自动档只在第一次点击“新游戏”时建立。
-	if not auto_save_initialized:
-		auto_save_initialized = save_service.save_auto(current_snapshot)
+	var snapshot: Dictionary = save_service.load_latest()
+	if snapshot.is_empty() or not session_service.restore_snapshot(snapshot): return
+	gameplay_page.reset_page()
 	_start_investigation()
 
-func _on_model_value_changed(value: int) -> void:
-	# 接收模型变化，更新视图并把最新核心值写入自动档快照。
-	# 演示核心状态发生变化后更新完整快照，并覆盖唯一普通自动档。
-	counter_view.show_value(value)
-	if has_progress and current_layer == "investigation":
-		current_snapshot["counter_value"] = value
-		save_service.save_auto(current_snapshot)
+func _open_pause() -> void:
+	if current_layer != "investigation" or not session_service.core.can_menu(): return
+	current_layer = "pause"
+	gameplay_page.set_active(false)
+	gameplay_page.hide()
+	pause_page.set_save_available(session_service.can_save(), session_service.core.save_disabled_reason())
+	pause_page.show_page()
+
 func _on_resume() -> void:
-	current_layer = "investigation"
-	pause_page.set_save_available(has_progress)
-	pause_page.hide_page()
-	counter_view.show()
+	_start_investigation()
+
 func _on_save() -> void:
-	# 只负责记录来源并打开保存节点，保存栏位逻辑由 SavePage 处理。
-	if not has_progress:
-		pause_page.set_save_available(false, "当前没有可保存的调查")
-		return
+	if not session_service.can_save(): return
 	subpage_origin = current_layer
 	subpage_focus = pause_page.save_button
 	current_layer = "subpage"
-	title_page.hide_page(); pause_page.hide_page()
-	save_page.open(save_service, current_snapshot)
+	pause_page.hide_page()
+	save_page.open(save_service, session_service.export_snapshot())
+
 func _on_load() -> void:
-	# 只负责记录来源并打开读取节点，列表逻辑由 LoadPage 处理。
 	subpage_origin = current_layer
 	subpage_focus = title_page.load_button if subpage_origin == "title" else pause_page.load_button
 	current_layer = "subpage"
-	title_page.hide_page(); pause_page.hide_page()
+	title_page.hide_page()
+	pause_page.hide_page()
 	load_page.open(save_service)
+
 func _on_settings() -> void:
-	# 只负责记录来源并打开设置节点，控件逻辑由 SettingsPage 处理。
 	subpage_origin = current_layer
 	subpage_focus = title_page.settings_button if subpage_origin == "title" else pause_page.settings_button
 	current_layer = "subpage"
-	title_page.hide_page(); pause_page.hide_page()
+	title_page.hide_page()
+	pause_page.hide_page()
 	settings_page.open(settings_service)
 
 func _on_start_ready(has_save: bool) -> void:
-	# 初始化服务完成后再决定标题页默认焦点。
 	title_page.apply_scan_result(has_save)
 	title_page.apply_latest_summary(save_service.latest_summary())
 
 func _on_loaded(snapshot: Dictionary) -> void:
-	# 接收读取页发出的完整快照，并交给核心模型恢复当前值。
-	current_snapshot = snapshot.duplicate(true)
-	has_progress = true
-	auto_save_initialized = true
-	# 读取完整快照后恢复演示核心状态，不能只恢复导航记录。
-	if current_snapshot.has("counter_value"):
-		model.restore_value(int(current_snapshot["counter_value"]))
-	_on_close_subpage()
-
-func _save_auto_snapshot() -> void:
-	# 在暂停或离开前保存当前会话的普通自动档。
-	if has_progress and not current_snapshot.is_empty():
-		save_service.save_auto(current_snapshot)
-
-func _open_pause() -> void:
-	if current_layer != "investigation": return
-	_save_auto_snapshot()
-	current_layer = "pause"
-	pause_page.set_save_available(has_progress)
-	pause_page.show_page()
-
-func _open_subpage(title: String, detail: String) -> void:
-	# 记录子页来源，关闭后回到标题或暂停页原按钮。
-	subpage_origin = current_layer
-	subpage_focus = title_page.load_button if title == "读取存档" and subpage_origin == "title" else (pause_page.load_button if title == "读取存档" else (title_page.settings_button if subpage_origin == "title" else pause_page.settings_button))
-	current_layer = "subpage"
-	# 通用弹出子框赋值
-	title_page.hide_page()
-	pause_page.hide_page()
-	if title == "读取存档": load_page.open(save_service)
-	elif title == "游戏设置": settings_page.open(settings_service)
+	if not session_service.restore_snapshot(snapshot): return
+	pending_leave = false
+	load_page.close_page()
+	gameplay_page.reset_page()
+	_start_investigation()
 
 func _on_close_subpage() -> void:
-	# 关闭任一子页后恢复原页面、原焦点和最新进度摘要。
-	save_page.close_page(); load_page.close_page(); settings_page.close_page()
-	title_page.apply_latest_summary(save_service.latest_summary())
+	pending_leave = false
+	for page in [save_page, load_page, settings_page]: page.close_page()
 	if subpage_origin == "title": _show_title()
-	else: current_layer = "pause"; pause_page.show_page()
+	else:
+		current_layer = "pause"
+		pause_page.show_page()
 	if is_instance_valid(subpage_focus): subpage_focus.grab_focus()
 
-func _on_return_title() -> void: _open_confirm("返回标题", "保存当前调查后返回标题？\n" + save_service.latest_summary(), "保存并返回", false)
-func _on_pause_exit() -> void: _open_confirm("退出游戏", "保存当前调查后退出游戏？\n" + save_service.latest_summary(), "保存并退出", true)
-func _on_title_exit() -> void: _open_confirm("退出游戏", "确认退出游戏？\n" + save_service.latest_summary(), "确认退出", true)
+func _on_saved() -> void:
+	if pending_leave:
+		pending_leave = false
+		_on_confirm_direct()
+	else: _on_close_subpage()
 
-func _open_confirm(title: String, detail: String, accept_text: String, exits: bool) -> void:
-	# 记录离开上下文并打开确认节点；确认按钮逻辑由 ConfirmPage 实现。
-	# 共用确认框只负责离开选择，保存业务仍交给存档系统。
+func _on_return_title() -> void:
+	_open_confirm(false, false)
+
+func _on_pause_exit() -> void:
+	_open_confirm(true, false)
+
+func _on_title_exit() -> void:
+	_open_confirm(true, true)
+
+func _open_confirm(exits: bool, from_title: bool) -> void:
 	confirm_exits = exits
 	confirm_origin = current_layer
-	confirm_focus = title_page.exit_button if confirm_origin == "title" else pause_page.exit_button
+	confirm_focus = title_page.exit_button if from_title else (pause_page.exit_button if exits else pause_page.return_title_button)
 	current_layer = "confirm"
 	title_page.hide_page()
 	pause_page.hide_page()
-	confirm_page.open(title, detail, "直接退出" if exits else "直接返回", accept_text, confirm_origin != "title", confirm_origin == "title")
-	confirm_compat_accept.disabled = confirm_origin != "title"
+	var can_save: bool = not from_title and session_service.can_save()
+	var detail: String = ("确认退出游戏？" if exits else "返回标题？") + "\n" + save_service.latest_summary()
+	if not from_title and not can_save: detail += "\n" + session_service.core.save_disabled_reason()
+	confirm_page.open("退出游戏" if exits else "返回标题", detail, "直接退出" if exits else "直接返回", "确认退出" if from_title else "选择存档并离开", not from_title, from_title or can_save)
 
 func _on_confirm_cancel() -> void:
 	confirm_page.close_page()
 	if confirm_origin == "title": _show_title()
-	else: current_layer = "pause"; pause_page.show_page()
+	else:
+		current_layer = "pause"
+		pause_page.show_page()
 	if is_instance_valid(confirm_focus): confirm_focus.grab_focus()
+
 func _on_confirm_direct() -> void:
-	_save_auto_snapshot()
+	# 直接离开不请求保存，不提交尚未收下或尚未继续的结果。
 	if confirm_exits: get_tree().quit()
-	else: _show_title()
+	else:
+		gameplay_page.reset_page()
+		_show_title()
+
 func _on_confirm_accept() -> void:
-	if not confirm_page.accept_button.visible:
-		return
-	_on_confirm_direct()
+	if not confirm_page.accept_button.visible: return
+	if confirm_origin == "title": _on_confirm_direct(); return
+	if not session_service.can_save(): return
+	confirm_page.close_page()
+	pending_leave = true
+	subpage_origin = "pause"
+	current_layer = "subpage"
+	save_page.open(save_service, session_service.export_snapshot())
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	# 只在最上层页面处理 Esc，防止输入穿透到下面的页面。
-	# Esc 只交给当前最上层页面处理，避免输入穿透到下层。
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		if current_layer == "confirm": _on_confirm_cancel()
-		elif current_layer == "subpage": _on_close_subpage()
-		elif current_layer == "pause": _on_resume()
-		elif current_layer == "investigation": _open_pause()
+	if not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_ESCAPE: return
+	if current_layer == "confirm": _on_confirm_cancel()
+	elif current_layer == "subpage": _on_close_subpage()
+	elif current_layer == "pause": _on_resume()
+	else: return
+	get_viewport().set_input_as_handled()

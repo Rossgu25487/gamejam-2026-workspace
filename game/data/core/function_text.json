@@ -1,0 +1,634 @@
+[
+  {
+    "id": "UI_TITLE_NEW",
+    "text": "新游戏"
+  },
+  {
+    "id": "UI_TITLE_CONTINUE",
+    "text": "继续"
+  },
+  {
+    "id": "UI_TITLE_LOAD",
+    "text": "读取存档"
+  },
+  {
+    "id": "UI_TITLE_SETTINGS",
+    "text": "游戏设置"
+  },
+  {
+    "id": "UI_TITLE_EXIT",
+    "text": "退出游戏"
+  },
+  {
+    "id": "UI_PAUSE_RESUME",
+    "text": "继续调查"
+  },
+  {
+    "id": "UI_PAUSE_SAVE",
+    "text": "保存游戏"
+  },
+  {
+    "id": "UI_PAUSE_TITLE",
+    "text": "返回标题"
+  },
+  {
+    "id": "UI_COMMON_BACK",
+    "text": "返回"
+  },
+  {
+    "id": "UI_CONFIRM_ACCEPT",
+    "text": "确认"
+  },
+  {
+    "id": "UI_CONFIRM_CANCEL",
+    "text": "取消"
+  },
+  {
+    "id": "UI_NEW_CONFIRM",
+    "text": "开始新游戏？当前未保存的进度将丢失。"
+  },
+  {
+    "id": "UI_LEAVE_CONFIRM",
+    "text": "返回标题？当前未保存的进度将丢失。"
+  },
+  {
+    "id": "UI_EXIT_CONFIRM",
+    "text": "退出游戏？当前未保存的进度将丢失。"
+  },
+  {
+    "id": "UI_COMMON_RETRY",
+    "text": "重试"
+  },
+  {
+    "id": "UI_TITLE_SCANNING",
+    "text": "正在读取进度…"
+  },
+  {
+    "id": "UI_PAUSE_RESUME_CAT",
+    "text": "继续摸猫"
+  },
+  {
+    "id": "UI_PAUSE_RESUME_ENDING",
+    "text": "继续播放"
+  },
+  {
+    "id": "UI_SETTINGS_MASTER",
+    "text": "总音量"
+  },
+  {
+    "id": "UI_SETTINGS_BGM",
+    "text": "背景音乐"
+  },
+  {
+    "id": "UI_SETTINGS_AMBIENT",
+    "text": "环境声音"
+  },
+  {
+    "id": "UI_SETTINGS_EFFECT",
+    "text": "效果音"
+  },
+  {
+    "id": "UI_SETTINGS_MUTE",
+    "text": "静音"
+  },
+  {
+    "id": "UI_SETTINGS_REDUCE_MOTION",
+    "text": "减弱动态"
+  },
+  {
+    "id": "UI_SETTINGS_RESET",
+    "text": "恢复默认"
+  },
+  {
+    "id": "UI_SETTINGS_RESET_CONFIRM",
+    "text": "恢复默认设置？"
+  },
+  {
+    "id": "UI_SETTINGS_WRITE_FAIL",
+    "text": "设置保存失败，请重试。"
+  },
+  {
+    "id": "UI_SETTINGS_PREVIEW",
+    "text": "试听效果音"
+  },
+  {
+    "id": "UI_SETTINGS_UNSAVED",
+    "text": "当前设置已生效，尚未保存。"
+  },
+  {
+    "id": "UI_SETTINGS_LOADING",
+    "text": "正在读取设置…"
+  },
+  {
+    "id": "UI_SETTINGS_SAVING",
+    "text": "正在保存设置…"
+  },
+  {
+    "id": "UI_SETTINGS_PREVIEW_UNREADY",
+    "text": "试听素材未就绪"
+  },
+  {
+    "id": "UI_SETTINGS_PREVIEW_MUTED",
+    "text": "关闭静音后可试听"
+  },
+  {
+    "id": "UI_SETTINGS_PREVIEW_MASTER_ZERO",
+    "text": "提高总音量后可试听"
+  },
+  {
+    "id": "UI_SETTINGS_PREVIEW_EFFECT_ZERO",
+    "text": "提高效果音量后可试听"
+  },
+  {
+    "id": "UI_SETTINGS_READ_FAIL",
+    "text": "设置读取失败，本次使用默认设置。"
+  },
+  {
+    "id": "UI_SAVE_EMPTY",
+    "text": "空栏位"
+  },
+  {
+    "id": "UI_SAVE_OVERWRITE",
+    "text": "覆盖此存档？"
+  },
+  {
+    "id": "UI_SAVE_OK",
+    "text": "保存成功"
+  },
+  {
+    "id": "UI_SAVE_FAIL",
+    "text": "保存失败，请重试。"
+  },
+  {
+    "id": "UI_LOAD_FAIL",
+    "text": "读取失败，请重试或返回。"
+  },
+  {
+    "id": "UI_LOAD_VERSION",
+    "text": "存档版本不兼容，无法读取。"
+  },
+  {
+    "id": "UI_LOAD_REPLACE",
+    "text": "读取将替换当前未保存的进度。"
+  },
+  {
+    "id": "UI_SAVE_AUTO",
+    "text": "自动存档"
+  },
+  {
+    "id": "UI_SAVE_PRE_ACCUSATION",
+    "text": "指认前存档"
+  },
+  {
+    "id": "UI_LOAD_CORRUPT",
+    "text": "存档已损坏，无法读取。"
+  },
+  {
+    "id": "UI_NEW_INITIAL_WRITE_FAIL",
+    "text": "初始存档写入失败，请重试。"
+  },
+  {
+    "id": "UI_LOAD_SAVE_FIRST",
+    "text": "先保存当前"
+  },
+  {
+    "id": "UI_SAVE_DEST_EXCLUDED",
+    "text": "此栏位是待读目标，请选择其他栏位保存。"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_DIALOGUE",
+    "text": "完成对话并返回调查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_READING",
+    "text": "关闭阅读并返回调查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_RESULT",
+    "text": "点击继续回调查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_FLOW",
+    "text": "处理完成并返回调查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_CAT",
+    "text": "返回调查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_ACCUSATION",
+    "text": "返回补查后可保存"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_ENDING",
+    "text": "结局中手动保存不可用"
+  },
+  {
+    "id": "UI_COMMON_MENU",
+    "text": "菜单"
+  },
+  {
+    "id": "UI_COMMON_ON",
+    "text": "开启"
+  },
+  {
+    "id": "UI_COMMON_OFF",
+    "text": "关闭"
+  },
+  {
+    "id": "UI_PAUSE_HEADING",
+    "text": "暂停菜单"
+  },
+  {
+    "id": "UI_PAUSE_RETAINED",
+    "text": "当前页面与选择已保留"
+  },
+  {
+    "id": "UI_SAVE_AND_LEAVE",
+    "text": "保存并离开"
+  },
+  {
+    "id": "UI_LEAVE_DIRECT",
+    "text": "直接离开"
+  },
+  {
+    "id": "UI_LOAD_DIRECT",
+    "text": "直接读取"
+  },
+  {
+    "id": "UI_SAVE_MANUAL",
+    "text": "手动存档 {slot_index}"
+  },
+  {
+    "id": "UI_SAVE_PROCESSING",
+    "text": "正在保存…"
+  },
+  {
+    "id": "UI_LOAD_PROCESSING",
+    "text": "正在读取…"
+  },
+  {
+    "id": "UI_NEW_PROCESSING",
+    "text": "正在开始新游戏…"
+  },
+  {
+    "id": "UI_SAVE_ACTION",
+    "text": "保存"
+  },
+  {
+    "id": "UI_LOAD_ACTION",
+    "text": "读取"
+  },
+  {
+    "id": "UI_RETURN_INVESTIGATION",
+    "text": "返回调查"
+  },
+  {
+    "id": "CAT_ENTRY",
+    "text": "摸摸猫"
+  },
+  {
+    "id": "CAT_TOUCH",
+    "text": "摸摸头"
+  },
+  {
+    "id": "CAT_WAITING",
+    "text": "点击猫的头部"
+  },
+  {
+    "id": "CAT_GESTURE",
+    "text": "正在摸摸头…"
+  },
+  {
+    "id": "CAT_RESPONSE",
+    "text": "猫正在回应…"
+  },
+  {
+    "id": "CAT_ENTRY_UNREADY",
+    "text": "互动素材未就绪"
+  },
+  {
+    "id": "UI_HANDBOOK_MATERIALS",
+    "text": "材料"
+  },
+  {
+    "id": "UI_HANDBOOK_RECORDS",
+    "text": "交谈记录"
+  },
+  {
+    "id": "UI_HANDBOOK_ENTRY",
+    "text": "办案手册"
+  },
+  {
+    "id": "UI_HANDBOOK_CLOSE",
+    "text": "关闭手册"
+  },
+  {
+    "id": "UI_HANDBOOK_SORT",
+    "text": "整理"
+  },
+  {
+    "id": "UI_HANDBOOK_FILTER_ALL",
+    "text": "全部"
+  },
+  {
+    "id": "UI_HANDBOOK_EVIDENCE",
+    "text": "证据"
+  },
+  {
+    "id": "UI_HANDBOOK_TESTIMONY",
+    "text": "证言"
+  },
+  {
+    "id": "UI_HANDBOOK_INFERENCE",
+    "text": "推论"
+  },
+  {
+    "id": "UI_HANDBOOK_IMPORTANT",
+    "text": "仅重点"
+  },
+  {
+    "id": "UI_HANDBOOK_ACQUIRED_ORDER",
+    "text": "获得顺序"
+  },
+  {
+    "id": "UI_HANDBOOK_NAME_ORDER",
+    "text": "名称"
+  },
+  {
+    "id": "UI_HANDBOOK_TYPE_ORDER",
+    "text": "类型"
+  },
+  {
+    "id": "UI_HANDBOOK_SORT_CLOSE",
+    "text": "关闭整理"
+  },
+  {
+    "id": "UI_HANDBOOK_FILTER_RESET",
+    "text": "重置筛选"
+  },
+  {
+    "id": "UI_HANDBOOK_NEW_INFERENCE",
+    "text": "新推论"
+  },
+  {
+    "id": "UI_HANDBOOK_NEW",
+    "text": "新"
+  },
+  {
+    "id": "UI_HANDBOOK_UPDATED",
+    "text": "更新"
+  },
+  {
+    "id": "UI_HANDBOOK_DETAIL",
+    "text": "查看详情"
+  },
+  {
+    "id": "UI_HANDBOOK_RETURN_LIST",
+    "text": "返回材料列表"
+  },
+  {
+    "id": "UI_HANDBOOK_LIST",
+    "text": "材料列表"
+  },
+  {
+    "id": "UI_HANDBOOK_HISTORY",
+    "text": "历史版本"
+  },
+  {
+    "id": "UI_HANDBOOK_PREVIOUS",
+    "text": "前一项"
+  },
+  {
+    "id": "UI_HANDBOOK_NEXT",
+    "text": "后一项"
+  },
+  {
+    "id": "UI_HANDBOOK_SOURCE",
+    "text": "查看来源"
+  },
+  {
+    "id": "UI_HANDBOOK_SOURCE_UP",
+    "text": "上一级"
+  },
+  {
+    "id": "UI_HANDBOOK_SOURCE_CLOSE",
+    "text": "关闭来源"
+  },
+  {
+    "id": "UI_HANDBOOK_PERSON_ALL",
+    "text": "全部交谈对象"
+  },
+  {
+    "id": "UI_HANDBOOK_TOPIC_ALL",
+    "text": "全部话题"
+  },
+  {
+    "id": "UI_HANDBOOK_CLEAR",
+    "text": "清除筛选"
+  },
+  {
+    "id": "UI_HANDBOOK_READ",
+    "text": "已读"
+  },
+  {
+    "id": "UI_HANDBOOK_UNREAD",
+    "text": "未读"
+  },
+  {
+    "id": "UI_HANDBOOK_ORIGINAL",
+    "text": "原话"
+  },
+  {
+    "id": "UI_HANDBOOK_SUMMARY",
+    "text": "归纳"
+  },
+  {
+    "id": "UI_HANDBOOK_CORRECTION",
+    "text": "旧话与更正"
+  },
+  {
+    "id": "UI_HANDBOOK_OLD_STATEMENT",
+    "text": "旧说法"
+  },
+  {
+    "id": "UI_HANDBOOK_EFFECTIVE_CORRECTION",
+    "text": "生效更正"
+  },
+  {
+    "id": "UI_HANDBOOK_KEEP_ORIGINAL",
+    "text": "原话保留"
+  },
+  {
+    "id": "UI_HANDBOOK_VIEW_STATEMENT",
+    "text": "查看当时说法"
+  },
+  {
+    "id": "UI_HANDBOOK_RECORD_SOURCE",
+    "text": "来源"
+  },
+  {
+    "id": "UI_HANDBOOK_BACK_ORIGINAL",
+    "text": "返回原话"
+  },
+  {
+    "id": "UI_HANDBOOK_RETURN_RECORD",
+    "text": "返回交谈记录"
+  },
+  {
+    "id": "UI_HANDBOOK_READER_CLOSE",
+    "text": "关闭阅读"
+  },
+  {
+    "id": "UI_HANDBOOK_RETURN_REVIEW",
+    "text": "返回调查回顾"
+  },
+  {
+    "id": "UI_HANDBOOK_EMPTY_MATERIALS",
+    "text": "尚无已取得条目"
+  },
+  {
+    "id": "UI_HANDBOOK_FILTER_EMPTY",
+    "text": "没有符合筛选的条目"
+  },
+  {
+    "id": "UI_HANDBOOK_EMPTY_RECORDS",
+    "text": "尚无已听交谈记录"
+  },
+  {
+    "id": "UI_HANDBOOK_RECORD_FILTER_EMPTY",
+    "text": "没有符合筛选的记录"
+  },
+  {
+    "id": "UI_HANDBOOK_SOURCE_NONE",
+    "text": "没有可查来源"
+  },
+  {
+    "id": "UI_HANDBOOK_STATEMENT_UNAVAILABLE",
+    "text": "对应的已听记录不可用"
+  },
+  {
+    "id": "UI_SAVE_LEAVE_TARGET_TITLE",
+    "text": "保存成功后：返回标题"
+  },
+  {
+    "id": "UI_SAVE_LEAVE_TARGET_EXIT",
+    "text": "保存成功后：退出游戏"
+  },
+  {
+    "id": "UI_OBJECTIVE_CURRENT",
+    "text": "当前目标"
+  },
+  {
+    "id": "UI_OBJECTIVE_REVIEW",
+    "text": "调查回顾"
+  },
+  {
+    "id": "UI_OBJECTIVE_UPDATED",
+    "text": "已更新"
+  },
+  {
+    "id": "UI_OBJECTIVE_PENDING",
+    "text": "待核问题"
+  },
+  {
+    "id": "UI_OBJECTIVE_PROGRESS",
+    "text": "已有进展"
+  },
+  {
+    "id": "UI_OBJECTIVE_INVESTIGATE",
+    "text": "前往核对"
+  },
+  {
+    "id": "UI_OBJECTIVE_READ_ORIGINAL",
+    "text": "查看原文"
+  },
+  {
+    "id": "UI_OBJECTIVE_READ_SOURCE",
+    "text": "查看来源"
+  },
+  {
+    "id": "UI_OBJECTIVE_EMPTY_PENDING",
+    "text": "当前没有待核事项。"
+  },
+  {
+    "id": "UI_OBJECTIVE_EMPTY_PROGRESS",
+    "text": "还没有已核实的事项。"
+  },
+  {
+    "id": "UI_OBJECTIVE_EMPTY_GOAL",
+    "text": "当前没有公开目标。"
+  },
+  {
+    "id": "UI_OBJECTIVE_NO_BASIS",
+    "text": "尚无可读依据。"
+  },
+  {
+    "id": "UI_OBJECTIVE_NO_ROUTE",
+    "text": "当前没有可前往的调查入口。"
+  },
+  {
+    "id": "UI_OBJECTIVE_OPEN_REVIEW_FAILED",
+    "text": "暂时无法打开调查回顾，请重试。"
+  },
+  {
+    "id": "UI_OBJECTIVE_OPEN_READ_FAILED",
+    "text": "暂时无法打开这份依据，请重试。"
+  },
+  {
+    "id": "UI_OBJECTIVE_STATUS_PENDING",
+    "text": "待核"
+  },
+  {
+    "id": "UI_OBJECTIVE_STATUS_CHECKED",
+    "text": "已核查"
+  },
+  {
+    "id": "UI_CORE_CHANCES_LABEL",
+    "text": "容错"
+  },
+  {
+    "id": "UI_CORE_ERROR_REASON_TITLE",
+    "text": "错误原因"
+  },
+  {
+    "id": "UI_CORE_FAILURE_REASON_TITLE",
+    "text": "失败原因"
+  },
+  {
+    "id": "UI_CORE_FAILURE_TITLE",
+    "text": "核对失败"
+  },
+  {
+    "id": "UI_SAVE_DISABLED_CORE_FAILURE",
+    "text": "返回可操作的调查画面后可保存"
+  },
+  {
+    "id": "UI_CORE_DEFER",
+    "text": "稍后核对"
+  },
+  {
+    "id": "UI_CORE_PRESENT",
+    "text": "出示"
+  },
+  {
+    "id": "UI_CORE_SELECT",
+    "text": "选用"
+  },
+  {
+    "id": "UI_CORE_REMOVE",
+    "text": "撤下"
+  },
+  {
+    "id": "UI_CORE_COLLECT_INFERENCE",
+    "text": "收下推论"
+  },
+  {
+    "id": "UI_CORE_RESELECT",
+    "text": "重新选材"
+  },
+  {
+    "id": "UI_CORE_REVIEW_BASIS",
+    "text": "回看依据"
+  }
+]
