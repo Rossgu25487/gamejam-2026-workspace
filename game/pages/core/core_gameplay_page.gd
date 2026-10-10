@@ -36,6 +36,8 @@ func set_active(active: bool) -> void:
 	feedback.paused = not active
 	process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
 	mouse_filter = Control.MOUSE_FILTER_STOP if active else Control.MOUSE_FILTER_IGNORE
+	# 暂停期间资格会变化；恢复时重新计算出示与结果操作，不能沿用禁用按钮。
+	if active: _queue_refresh()
 
 func reset_page() -> void:
 	reader.reset_reader()
@@ -54,7 +56,7 @@ func _queue_refresh() -> void:
 
 func _refresh() -> void:
 	refresh_queued = false
-	if service == null or service.state.is_empty(): return
+	if service == null or service.state.is_empty() or not input_enabled: return
 	var mode: String = service.state.mode
 	investigation.visible = mode in ["investigation", "dialogue"]
 	selection.visible = mode == "selection"
@@ -78,6 +80,17 @@ func handle_escape() -> void:
 		if service.state.card_ui_page == "grid": service.set_grid(false)
 		else: service.fold_card_selection()
 	else: menu_requested.emit()
+
+func handle_window_focus_loss() -> void:
+	# 下拉菜单也是 Window；先等焦点交接结束，不能在其打开途中隐藏父页面。
+	call_deferred("_check_window_focus")
+
+func _check_window_focus() -> void:
+	if not input_enabled or not is_visible_in_tree() or get_window().has_focus(): return
+	# 嵌入和原生弹窗都属于当前游戏。只有焦点离开全部游戏窗口才请求暂停。
+	for window in get_window().find_children("*", "Window", true, false):
+		if window.visible and window.has_focus(): return
+	menu_requested.emit()
 
 func _input(event: InputEvent) -> void:
 	if not visible or not input_enabled or not event is InputEventKey or not event.pressed or event.echo: return

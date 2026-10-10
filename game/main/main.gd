@@ -67,7 +67,7 @@ func _ready() -> void:
 	game_start_service.initialize(settings_service, save_service)
 	gameplay_page.set_preferences(settings_service.values)
 	get_window().min_size = Vector2i(1100, 720)
-	get_window().focus_exited.connect(_open_pause)
+	get_window().focus_exited.connect(gameplay_page.handle_window_focus_loss)
 	_show_title()
 
 func _show_title() -> void:

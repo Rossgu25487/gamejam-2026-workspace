@@ -14,6 +14,7 @@ var read_only := true
 var library_view := {"type": "all", "sort": "acquire", "important_only": false}
 var return_focus: WeakRef
 var body_text_id := ""
+var refresh_queued := false
 
 func _ready() -> void:
 	box = VBoxContainer.new()
@@ -241,15 +242,25 @@ func _tab(tab: String) -> void:
 
 func _type(index: int) -> void:
 	library_view.type = ["all", "evidence", "testimony", "inference"][index]
-	_render()
+	_queue_refresh()
 
 func _important(value: bool) -> void:
 	library_view.important_only = value
-	_render()
+	_queue_refresh()
 
 func _sort(index: int) -> void:
 	library_view.sort = "acquire" if index == 0 else "type"
-	_render()
+	_queue_refresh()
+
+func _queue_refresh() -> void:
+	# 让 PopupMenu 先完成选中及关闭，再替换筛选控件，避免销毁正在交接焦点的窗口。
+	if refresh_queued: return
+	refresh_queued = true
+	call_deferred("_refresh")
+
+func _refresh() -> void:
+	refresh_queued = false
+	if is_visible_in_tree() and not stack.is_empty(): _render()
 
 func _star(id: String) -> void:
 	service.toggle_important(id)

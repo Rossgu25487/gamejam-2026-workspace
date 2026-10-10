@@ -29,8 +29,15 @@ func render(core: Node) -> void:
 	var chances := UI.label(header, "%s %s  (%d/3)" % [core.ui("UI_CORE_CHANCES_LABEL"), "●".repeat(int(core.state.chances[core.state.question_id])) + "○".repeat(3 - int(core.state.chances[core.state.question_id])), int(core.state.chances[core.state.question_id])], 18)
 	chances.autowrap_mode = TextServer.AUTOWRAP_OFF
 	var target_text: String = core.catalog.text(d.target_ref.question_text_id) if d.target_ref.target_kind == "reasoning" else core.catalog.text(core.catalog.data.statements[d.target_ref.statement_ref.statement_id].text)
-	var target := UI.button(self, ("✓ " if d.target_selected else "点击选择目标：") + target_text, core.select_target)
-	target.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# 自主推理入口已确定目标，这里仅展示问题；实际校验始终由“出示”提交。
+	if d.target_ref.target_kind == "reasoning":
+		var target_panel := PanelContainer.new()
+		add_child(target_panel)
+		UI.label(target_panel, "推理目标（已选定）：" + target_text, 20)
+	else:
+		var target := UI.button(self, ("✓ 核对目标已选定：" if d.target_selected else "点击选择目标：") + target_text, core.select_target)
+		target.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	UI.label(self, "点击材料的「%s」放入出示槽，再点击「%s」查看结果。" % [core.ui("UI_CORE_SELECT"), core.ui("UI_CORE_PRESENT")], 16)
 	var slots := HBoxContainer.new()
 	slots.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(slots)
