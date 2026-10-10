@@ -20,7 +20,8 @@ func frames(count: int = 4) -> void:
 	for i in range(count): await process_frame
 
 func click(button: Button) -> void:
-	expect(is_instance_valid(button) and button.is_visible_in_tree(), "点击目标存在且可见")
+	var description := button.text if is_instance_valid(button) else "找不到按钮"
+	expect(is_instance_valid(button) and button.is_visible_in_tree(), "点击目标存在且可见：" + description)
 	if not is_instance_valid(button): return
 	var point := button.get_global_rect().get_center()
 	var motion := InputEventMouseMotion.new()
@@ -117,7 +118,25 @@ func _run() -> void:
 	var core: Node = scene.session_service.core
 	expect(core.state.mode == "selection", "鼠标进入说法选材")
 	var page: Control = scene.gameplay_page.selection
+	# 人物核对须先选定原话；单张材料本身合法，不能误要求填满两个槽。
+	await click(button(page, "另一对象的占位记录"))
+	await click(button(scene.gameplay_page.reader, core.ui("UI_CORE_SELECT")))
+	expect(core.draft().slots == [core.catalog.material_ref("OTHER1"), null], "只选用另一对象记录保留单张出示草稿")
+	expect(button(page, core.ui("UI_CORE_PRESENT")).disabled and not core.draft().target_selected, "未选择人物说法时出示不可用")
+	expect(label(page, core.present_disabled_reason()) != null and button(page, core.ui("UI_CORE_PRESENT")).tooltip_text == core.present_disabled_reason(), "单张入槽但目标未选时直接显示禁用原因")
+	await take("1280-single-unselected")
 	await click(button(page, "点击选择目标：这份记录始终没有变化。"))
+	expect(core.can_present() and not button(page, core.ui("UI_CORE_PRESENT")).disabled, "选定原话后单张错误材料可出示")
+	expect(core.present_disabled_reason().is_empty() and button(page, core.ui("UI_CORE_PRESENT")).tooltip_text.is_empty(), "选定目标后清除禁用原因")
+	await take("1280-single-selected")
+	await click(button(page, core.ui("UI_CORE_PRESENT")))
+	expect(core.state.current_result.get("feedback") == "incorrect" and int(core.state.chances.Q1) == 2, "鼠标单张另一对象记录出示扣一次容错")
+	await click(button(scene.gameplay_page.feedback, "跳过表现"))
+	expect(label(scene.gameplay_page.result, "%s：2 / 3" % core.ui("UI_CORE_CHANCES_LABEL")) != null, "错误回应页显示扣减后的2次容错")
+	await take("1280-single-error")
+	await click(button(scene.gameplay_page.result, core.ui("UI_CORE_RESELECT")))
+	expect(core.state.mode == "selection" and core.draft().target_selected, "重新选材保留已选择的核对目标")
+	await click(button(page, "全部撤下"))
 	await click(button(page, "占位证据甲"))
 	expect(scene.gameplay_page.reader.visible, "材料详情鼠标可点击")
 	await click(button(scene.gameplay_page.reader, core.ui("UI_CORE_SELECT")))

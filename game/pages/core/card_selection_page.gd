@@ -37,7 +37,10 @@ func render(core: Node) -> void:
 	else:
 		var target := UI.button(self, ("✓ 核对目标已选定：" if d.target_selected else "点击选择目标：") + target_text, core.select_target)
 		target.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	UI.label(self, "点击材料的「%s」放入出示槽，再点击「%s」查看结果。" % [core.ui("UI_CORE_SELECT"), core.ui("UI_CORE_PRESENT")], 16)
+	var instruction := "点击材料的「%s」放入出示槽，再点击「%s」查看结果。" % [core.ui("UI_CORE_SELECT"), core.ui("UI_CORE_PRESENT")]
+	if not d.target_selected:
+		instruction = "先点击上方人物说法选定目标，再「%s」至少一份材料，最后点击「%s」。" % [core.ui("UI_CORE_SELECT"), core.ui("UI_CORE_PRESENT")]
+	UI.label(self, instruction, 16)
 	var slots := HBoxContainer.new()
 	slots.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(slots)
@@ -58,7 +61,9 @@ func render(core: Node) -> void:
 			UI.button(box, core.ui("UI_CORE_REMOVE"), core.withdraw_material.bind(i))
 	var actions := HBoxContainer.new()
 	add_child(actions)
-	UI.button(actions, core.ui("UI_CORE_PRESENT"), core.present_materials, core.can_present())
+	var disabled_reason: String = core.present_disabled_reason()
+	var present := UI.button(actions, core.ui("UI_CORE_PRESENT"), core.present_materials, disabled_reason.is_empty())
+	present.tooltip_text = disabled_reason
 	UI.button(actions, "全部撤下", core.withdraw_material)
 	UI.button(actions, "收起对局", core.fold_card_selection)
 	if q.has("parent"):
@@ -66,6 +71,10 @@ func render(core: Node) -> void:
 			if core.catalog.data.entries[id].get("object_id", "") == q.parent:
 				UI.button(actions, "直接问话", core.activate_entry.bind(id))
 	UI.button(actions, "收起牌库" if core.state.card_ui_page == "grid" else "全部材料", core.set_grid.bind(core.state.card_ui_page != "grid"))
+	# 原因与服务的资格检查一致，避免玩家把灰色按钮误认为必须填满两个槽。
+	if not disabled_reason.is_empty():
+		var reason_label := UI.label(actions, disabled_reason, 16)
+		reason_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	var view: Dictionary = core.current_view()

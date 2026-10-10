@@ -273,9 +273,22 @@ func end_inspection() -> void:
 	changed.emit()
 
 func can_present() -> bool:
-	if not _selectable(): return false
+	return present_disabled_reason().is_empty()
+
+func present_disabled_reason() -> String:
+	# 资格与禁用提示共用同一次检查；一份材料即可出示，第二个槽允许为空。
+	if state.is_empty(): return "请先开始调查。"
+	if paused: return "请先恢复游戏。"
+	if processing or presenting: return "请等待本次反馈结束。"
+	if inspection_depth > 0: return "请先关闭阅读页面。"
+	if state.mode != "selection": return "请先进入选材页面。"
 	var d := draft()
-	return not d.is_empty() and d.target_selected and _legal_target(d.target_ref) and (d.slots[0] != null or d.slots[1] != null) and int(state.chances[state.question_id]) > 0
+	if d.is_empty(): return "请先打开待核问题。"
+	if not d.target_selected: return "请先点击上方人物说法，选定核对目标。"
+	if not _legal_target(d.target_ref): return "当前核对目标不可用，请重新进入问题。"
+	if d.slots[0] == null and d.slots[1] == null: return "请选用至少一份材料放入出示槽。"
+	if int(state.chances[state.question_id]) <= 0: return "本题容错已用完，请重试。"
+	return ""
 
 func _rank(r: Dictionary) -> int:
 	if r.feedback == "full": return 0 if r.materials.size() == 2 else 1
