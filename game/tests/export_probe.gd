@@ -1,4 +1,5 @@
 extends SceneTree
+## 导出探针：确认工程可以在无编辑器界面时加载关键资源。
 
 func _initialize() -> void:
 	call_deferred("_verify")

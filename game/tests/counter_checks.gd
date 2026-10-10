@@ -1,4 +1,5 @@
 extends RefCounted
+## 计数器合同测试：验证模型、视图和信号连接的基本行为。
 ## PREP-001 integration checks. Called with "await checks.run(tree)".
 ## Button signals are emitted programmatically; this does not verify physical input or layout.
 

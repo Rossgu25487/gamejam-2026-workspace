@@ -13,6 +13,8 @@ qa/evidence/local/
 !.env.example
 .DS_Store
 Thumbs.db
+# Office temporary lock files stay local.
+~$*
 *.translation
 # Dashboard data is rebuilt from GitHub; never commit local snapshots.
 /site/data/snapshot.json

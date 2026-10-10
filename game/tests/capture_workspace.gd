@@ -1,4 +1,5 @@
 extends SceneTree
+## 工作台截图辅助脚本：启动指定场景并保存界面证据。
 ## Render the real collaboration panel at explicit viewport sizes for layout inspection.
 const WorkspacePanel = preload("res://addons/team_workspace/workspace_panel.gd")
 

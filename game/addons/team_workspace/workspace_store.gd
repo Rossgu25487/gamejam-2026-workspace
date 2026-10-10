@@ -1,5 +1,6 @@
 @tool
 extends RefCounted
+## 协作资料存储层：负责安全读取、导入、激活策划依据和保存交接内容。
 ## All paths returned to callers are repository-relative unless explicitly named absolute_path.
 
 const BRIEF_EXTENSIONS := ["md", "txt", "docx", "pdf"]

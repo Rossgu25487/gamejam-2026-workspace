@@ -1,5 +1,6 @@
 @tool
 extends RefCounted
+## 协作空间主题工厂：集中生成颜色、字体和控件样式资源。
 
 const PAGE := Color("f1f0eb")
 const SURFACE := Color("fafaf7")

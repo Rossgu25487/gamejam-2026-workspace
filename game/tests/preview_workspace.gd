@@ -1,4 +1,5 @@
 extends SceneTree
+## 协作空间预览脚本：按命令行参数打开指定尺寸和标签页。
 
 const WorkspacePanel = preload("res://addons/team_workspace/workspace_panel.gd")
 

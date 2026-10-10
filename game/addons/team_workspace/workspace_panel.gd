@@ -1,5 +1,6 @@
 @tool
 extends PanelContainer
+## 协作空间主面板：展示岗位、策划依据、交接文档和本机同步状态。
 
 const WorkspaceStore = preload("workspace_store.gd")
 const WorkspaceTheme = preload("workspace_theme.gd")

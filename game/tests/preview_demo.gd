@@ -1,4 +1,5 @@
 extends SceneTree
+## 演示预览脚本：通过引擎输入队列模拟计数器点击。
 ## Drives real Control input dispatch; this does not claim physical desktop input testing.
 
 func _initialize() -> void:

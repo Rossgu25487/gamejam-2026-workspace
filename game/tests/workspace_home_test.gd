@@ -1,4 +1,5 @@
 extends SceneTree
+## 工作台主页测试：验证链接、Git 状态和错误提示行为。
 
 const WorkspaceHome = preload("res://addons/team_workspace/workspace_home.gd")
 
