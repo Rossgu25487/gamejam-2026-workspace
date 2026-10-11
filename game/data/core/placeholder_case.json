@@ -54,7 +54,14 @@
     "EXTRA21_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。",
     "EXTRA31_title": "无关占位记录3",
     "EXTRA31_summary": "不参与当前充分或错误关系。",
-    "EXTRA31_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。"
+    "EXTRA31_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。",
+    "obj_goal": "核对占位调查室里已知的记录，并确认后续事项。",
+    "obj_inspect": "检查占位资料，取得可用于核对的记录。",
+    "obj_talk": "与占位人物交谈，听取其说法。",
+    "obj_q1": "核对占位人物的说法是否与记录一致。",
+    "obj_q2": "核明后续占位问题。",
+    "obj_reason_q1": "需要先与占位人物交谈。",
+    "obj_reason_q2": "需要先核对占位人物的说法并收下推论。"
   },
   "materials": {
     "A": {
@@ -437,6 +444,22 @@
           "ref": "I1"
         }
       ]
+    ],
+    "OWNS_A1": [
+      [
+        {
+          "kind": "owned",
+          "ref": "A1"
+        }
+      ]
+    ],
+    "Q2_DONE": [
+      [
+        {
+          "kind": "completed",
+          "ref": "Q2"
+        }
+      ]
     ]
   },
   "entries": {
@@ -491,5 +514,93 @@
     "PERSON": {
       "name": "person_name"
     }
+  },
+  "objectives": {
+    "bases": {
+      "BASIS_A1": {
+        "kind": "material",
+        "content_id": "A1"
+      },
+      "BASIS_A2": {
+        "kind": "material",
+        "content_id": "A2"
+      },
+      "BASIS_B1": {
+        "kind": "material",
+        "content_id": "B1"
+      },
+      "BASIS_I1": {
+        "kind": "material",
+        "content_id": "I1"
+      },
+      "BASIS_S1": {
+        "kind": "statement",
+        "statement_id": "S1"
+      }
+    },
+    "goals": [
+      {
+        "id": "GOAL_PLACEHOLDER",
+        "text": "obj_goal",
+        "visible": "ALWAYS",
+        "items": [
+          {
+            "id": "OBJ_INSPECT",
+            "text": "obj_inspect",
+            "done": "OWNS_A1",
+            "go": {
+              "kind": "entry",
+              "id": "INSPECT"
+            },
+            "basis": [
+              "BASIS_A1",
+              "BASIS_B1"
+            ]
+          },
+          {
+            "id": "OBJ_TALK",
+            "text": "obj_talk",
+            "done": "HEARD",
+            "go": {
+              "kind": "entry",
+              "id": "TALK"
+            },
+            "basis": [
+              "BASIS_S1"
+            ]
+          },
+          {
+            "id": "OBJ_Q1",
+            "text": "obj_q1",
+            "done": "Q1_DONE",
+            "go": {
+              "kind": "question",
+              "id": "Q1"
+            },
+            "blocked_reason": "obj_reason_q1",
+            "basis": [
+              "BASIS_S1",
+              "BASIS_A1",
+              "BASIS_A2",
+              "BASIS_I1"
+            ]
+          },
+          {
+            "id": "OBJ_Q2",
+            "text": "obj_q2",
+            "done": "Q2_DONE",
+            "go": {
+              "kind": "question",
+              "id": "Q2"
+            },
+            "blocked_reason": "obj_reason_q2",
+            "basis": [
+              "BASIS_I1",
+              "BASIS_B1"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

@@ -1,0 +1,783 @@
+{
+  "schema": 1,
+  "note": "测试配置：独立功能数据，不导入正式剧情。",
+  "groups": {
+    "TEST00": {
+      "goal_id": "",
+      "goal_text": "",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": []
+    },
+    "TEST01": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "initial",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        }
+      ]
+    },
+    "TEST02": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        }
+      ]
+    },
+    "TEST03": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者在发现死者前后的见闻",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        },
+        {
+          "id": "TEST_STATEMENT",
+          "order": 4,
+          "text": "回看尚未核实的说法",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ]
+        },
+        {
+          "id": "TEST_COMPARE",
+          "order": 5,
+          "text": "核对两段已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01",
+            "TEST_READ_02"
+          ]
+        }
+      ]
+    },
+    "TEST04": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        },
+        {
+          "id": "TEST_STATEMENT",
+          "order": 4,
+          "text": "回看尚未核实的说法",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ]
+        },
+        {
+          "id": "TEST_COMPARE",
+          "order": 5,
+          "text": "核对两段已经取得的记录",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01",
+            "TEST_READ_02"
+          ]
+        }
+      ]
+    },
+    "TEST05": {
+      "goal_id": "TEST_GOAL_02",
+      "goal_text": "继续核对已知情况",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_RECORD",
+          "order": 1,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        }
+      ]
+    },
+    "TEST06": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者在发现死者前后的见闻",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        },
+        {
+          "id": "TEST_STATEMENT",
+          "order": 4,
+          "text": "回看尚未核实的说法",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ]
+        },
+        {
+          "id": "TEST_COMPARE",
+          "order": 5,
+          "text": "核对两段已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01",
+            "TEST_READ_02"
+          ]
+        }
+      ]
+    },
+    "TEST07": {
+      "goal_id": "TEST_GOAL_LONG",
+      "goal_text": "核对已经公开的问题与已有记录，逐一整理尚需查证的内容及其已经公开的依据，阅读已经取得的材料、当时原话与实际来源，区分已经确认的事实和仍待查明的问题，并在完成必要核查后继续调查。",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": true,
+            "reason": ""
+          }
+        }
+      ]
+    },
+    "TEST08": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者的见闻",
+          "status": "pending",
+          "reason": "对方暂时无法交谈",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": false,
+            "reason": "对方暂时无法交谈"
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        }
+      ]
+    },
+    "TEST09": {
+      "goal_id": "TEST_GOAL_INVALID",
+      "goal_text": "",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": []
+    },
+    "TEST10": {
+      "goal_id": "TEST_GOAL_01",
+      "goal_text": "查明发生了什么",
+      "origin": "result",
+      "display_allowed": true,
+      "reduce_motion": false,
+      "paused": false,
+      "items": [
+        {
+          "id": "TEST_ROOM",
+          "order": 1,
+          "text": "查看发现死者的房间",
+          "status": "checked",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_01",
+            "available": true,
+            "reason": ""
+          }
+        },
+        {
+          "id": "TEST_TALK",
+          "order": 2,
+          "text": "询问在场者在发现死者前后的见闻，并核对已经取得的记录与当时的原话，整理仍需继续调查的问题及已经公开的依据。",
+          "status": "pending",
+          "reason": "对方暂时无法交谈",
+          "basis": [
+            "TEST_READ_02"
+          ],
+          "entry": {
+            "id": "TEST_ENTRY_02",
+            "available": false,
+            "reason": "对方暂时无法交谈"
+          }
+        },
+        {
+          "id": "TEST_RECORD",
+          "order": 3,
+          "text": "核对已经取得的记录",
+          "status": "pending",
+          "reason": "",
+          "basis": [
+            "TEST_READ_01"
+          ]
+        }
+      ]
+    }
+  },
+  "bases": {
+    "TEST_READ_01": {
+      "id": "TEST_READ_01",
+      "kind": "material",
+      "object_id": "TEST_RECORD_OBJECT",
+      "version_id": "TEST_VERSION_01",
+      "version_text": "第1版",
+      "session_id": "",
+      "name": "现场记录",
+      "body": "这是一份用于阅读与返回检查的测试记录。",
+      "source_id": "TEST_READ_03"
+    },
+    "TEST_READ_02": {
+      "id": "TEST_READ_02",
+      "kind": "quote",
+      "object_id": "TEST_QUOTE_OBJECT",
+      "version_id": "TEST_QUOTE_VERSION_01",
+      "version_text": "第1版",
+      "session_id": "TEST_CALL_01",
+      "name": "测试交谈对象",
+      "body": "测试原话，仅用于检查已经呈现内容的查阅与返回。",
+      "source_id": ""
+    },
+    "TEST_READ_03": {
+      "id": "TEST_READ_03",
+      "kind": "source",
+      "object_id": "TEST_SOURCE_OBJECT",
+      "version_id": "TEST_SOURCE_VERSION_01",
+      "version_text": "第1版",
+      "session_id": "",
+      "name": "测试取得来源",
+      "body": "测试来源正文，仅用于检查来源逐层关闭。",
+      "source_id": ""
+    }
+  },
+  "operations": [
+    {
+      "id": "EX01",
+      "groups": [
+        "TEST01"
+      ],
+      "operation": "首次进入允许调查；refresh_origin=initial",
+      "expected": "默认展开，两条待核事项；没有更新提示",
+      "figures": "图1、2"
+    },
+    {
+      "id": "EX02",
+      "groups": [
+        "TEST01"
+      ],
+      "operation": "点击标题收起，再点标题展开",
+      "expected": "只改变开合；当次点击不触发下层物件",
+      "figures": "图2"
+    },
+    {
+      "id": "EX03",
+      "groups": [
+        "TEST01",
+        "TEST02"
+      ],
+      "operation": "先收起，再送入TEST02结果",
+      "expected": "保持收起，只留一个更新标记",
+      "figures": "图3"
+    },
+    {
+      "id": "EX04",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "在EX03结果上点击标题展开",
+      "expected": "显示交谈和记录两条待核；标记清除，已更新显示2000ms",
+      "figures": "图3"
+    },
+    {
+      "id": "EX05",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "打开回顾，选择TEST_ROOM，再开TEST_READ_01及其来源并逐层返回",
+      "expected": "准确第1版；关闭来源回该依据，结束单份阅读回原回顾项和位置；目标与两槽不变",
+      "figures": "图7、6"
+    },
+    {
+      "id": "EX06",
+      "groups": [
+        "TEST03"
+      ],
+      "operation": "保持展开，滚动到第四条待核事项",
+      "expected": "最多同时显示3条；全文换行；第四条通过滚动查看",
+      "figures": "图5"
+    },
+    {
+      "id": "EX07",
+      "groups": [
+        "TEST04"
+      ],
+      "operation": "送入全部事项已核查结果",
+      "expected": "HUD仅保留主目标和回顾；回顾待核为空，进展保留5项",
+      "figures": "图4、6"
+    },
+    {
+      "id": "EX08",
+      "groups": [
+        "TEST00"
+      ],
+      "operation": "从已有目标送入无目标结果",
+      "expected": "HUD隐藏，清除旧标记、计时和位置；不自行执行案件结束",
+      "figures": "图4"
+    },
+    {
+      "id": "EX09",
+      "groups": [
+        "TEST01",
+        "TEST02",
+        "TEST08"
+      ],
+      "operation": "一直展开，两次结果相隔1000ms",
+      "expected": "只显示最新内容；第二次显示重新计2000ms，同一段提示最多一次300ms提亮",
+      "figures": "图3"
+    },
+    {
+      "id": "EX10",
+      "groups": [
+        "TEST02",
+        "TEST08"
+      ],
+      "operation": "display_allowed=false时连续刷新，5秒后改true",
+      "expected": "隐藏期间不计提示过期；返回后显示最新内容并启动一次提示",
+      "figures": "图3"
+    },
+    {
+      "id": "EX11",
+      "groups": [
+        "TEST02",
+        "TEST05"
+      ],
+      "operation": "先滚动，再更换主目标编号",
+      "expected": "显示新目标，从首项开始；不保留旧标记和位置",
+      "figures": "第3节"
+    },
+    {
+      "id": "EX12",
+      "groups": [
+        "TEST03",
+        "TEST06"
+      ],
+      "operation": "TEST_TALK位于待核区首项时，收到已核查结果",
+      "expected": "HUD和回顾待核区由TEST_RECORD占原位置；进展区保留TEST_TALK",
+      "figures": "图5、6"
+    },
+    {
+      "id": "EX13",
+      "groups": [
+        "TEST07"
+      ],
+      "operation": "阅读超长主目标",
+      "expected": "HUD达到340px或紧凑320px后正文一起滚动；回顾左主目标在400px高区域独立滚动，返回固定",
+      "figures": "第4、5节"
+    },
+    {
+      "id": "EX14",
+      "groups": [
+        "TEST02",
+        "TEST01"
+      ],
+      "operation": "保持收起，读档成功；refresh_origin=restore",
+      "expected": "以TEST01重建，清旧提示和滚动；仍收起，无更新动画",
+      "figures": "第6节"
+    },
+    {
+      "id": "EX15",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "读取另一档失败，不提交新目标输入",
+      "expected": "原目标、开合、标记与位置保持；沿存读档系统失败处理",
+      "figures": "第6节"
+    },
+    {
+      "id": "EX16",
+      "groups": [
+        "TEST08"
+      ],
+      "operation": "阅读待核问题；尝试点不可用的前往核对",
+      "expected": "文字正常可读；显示对方暂时无法交谈，不发起调查入口请求",
+      "figures": "图2、6"
+    },
+    {
+      "id": "EX17",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "在2000ms提示剩1000ms时再次送达完全相同内容",
+      "expected": "剩余1000ms保持，不重新计时，不再次提亮",
+      "figures": "第3、8节"
+    },
+    {
+      "id": "EX18",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "回顾准备失败后等待5000ms，再次点击重试；另验离开当前场景",
+      "expected": "保留原场景/开合/位置/焦点/标记；error_review在5000ms后仍显示，重试开始或离开原页清除；同一准备中只发一份请求",
+      "figures": "第5节"
+    },
+    {
+      "id": "EX19",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "在回顾TEST_ROOM点击TEST_READ_01，阅读准备失败；等待5000ms，再重试或返回调查",
+      "expected": "保留同一回顾项、位置、焦点；error_read持续显示，重试开始或离开原页清除；不新增已读或案件结果",
+      "figures": "图8"
+    },
+    {
+      "id": "EX20",
+      "groups": [
+        "TEST02",
+        "TEST09"
+      ],
+      "operation": "送入有编号但缺主目标全文的无效数据",
+      "expected": "接入检查报错；隐藏该组并清旧提示，不显示测试替代文字，不记完成",
+      "figures": "第8节"
+    },
+    {
+      "id": "EX21",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "提示播放1000ms后暂停5秒，再继续；另以reduce_motion=true刷新",
+      "expected": "暂停期间剩余1000ms不减少；减弱动态刷新只留文字，不提亮",
+      "figures": "第3、6节"
+    },
+    {
+      "id": "EX22",
+      "groups": [
+        "TEST03"
+      ],
+      "operation": "将鼠标置于任一目标列表，向首尾继续滚动",
+      "expected": "列表到边界停止，不操作背后场景或另一分区；Tab选中本区后键盘只滚该区",
+      "figures": "第2、4、5节"
+    },
+    {
+      "id": "EX23",
+      "groups": [
+        "TEST02",
+        "TEST00"
+      ],
+      "operation": "回顾已打开且仍允许阅读时，目标变空",
+      "expected": "回顾显示空目标、空待核与空进展；返回调查仍可操作，HUD隐藏",
+      "figures": "第5节"
+    },
+    {
+      "id": "EX24",
+      "groups": [
+        "TEST03",
+        "TEST06"
+      ],
+      "operation": "从待核TEST_TALK打开原话，期间提供方把该项改为已核查，再返回",
+      "expected": "同一事项在进展区定位；原目标由提供方决定，阅读不发完成请求",
+      "figures": "第5节"
+    },
+    {
+      "id": "EX25",
+      "groups": [
+        "TEST10"
+      ],
+      "operation": "在回顾待核区域读取较长事项并滚动",
+      "expected": "原32px字换行；列表独立滚动，分区标题与左侧返回不动，原文未截断",
+      "figures": "图8"
+    },
+    {
+      "id": "EX26",
+      "groups": [
+        "TEST02"
+      ],
+      "operation": "点击TEST_ENTRY_02时提供方重新检查为不可用，返回公开原因：对方暂时无法交谈",
+      "expected": "回顾和当前条目保持；显示公开原因，不切换调查入口，也不改变目标完成状态",
+      "figures": "第5节"
+    }
+  ]
+}

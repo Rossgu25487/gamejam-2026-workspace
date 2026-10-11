@@ -48,6 +48,10 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_input_test.gd') 'core-input-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/navigation_checks.gd') 'navigation-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/confirmation_repeat_test.gd') 'confirmation-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/objective_navigation_test.gd') 'objective-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/objective_navigation_page_test.gd') 'objective-page-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/audio_service_test.gd') 'audio-service-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/audio_integration_test.gd') 'audio-integration-tests.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }
