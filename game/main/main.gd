@@ -40,6 +40,7 @@ var file_feedback_muted := false # 自动存档静默进行，不发文件反馈
 var media_serial := 0 # 核心表现声音的实例序号。
 @export var test_storage_path := "" # 测试注入独立目录，避免改写玩家存档与设置。
 @export var audio_demo := true # 有界面的开发运行叠加试听古典乐音景；无界面回归与导出包自动关闭。
+@export_file("*.xlsx") var story_workbook_path := "res://data/story/outputs/story-images-20261011/故事配置表.xlsx" # 场景选择内容表，故事规则仍由核心服务处理。
 
 func _ready() -> void:
 	session_service = SessionScript.new()
@@ -53,9 +54,14 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(test_storage_path))
 		save_service.storage_path = test_storage_path.path_join("saves")
 		settings_service.storage_path = test_storage_path.path_join("settings.json")
-	if not session_service.initialize():
+	if not session_service.initialize(story_workbook_path):
 		push_error("核心配置无效：" + str(session_service.core.catalog.errors))
+		gameplay_page.hide()
+		title_page.show_configuration_error(session_service.core.catalog.errors)
+		title_page.exit_requested.connect(get_tree().quit)
 		return
+	title_page.apply_story_title(session_service.story_title())
+	for page in [title_page, pause_page, save_page, load_page, settings_page, confirm_page]: page.bind_images(session_service.core)
 	_setup_audio()
 	save_service.snapshot_validator = session_service.validate_snapshot
 	session_service.autosave_requested.connect(_save_auto)

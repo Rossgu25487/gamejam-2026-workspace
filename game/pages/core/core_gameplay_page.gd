@@ -3,6 +3,7 @@ extends Control
 
 signal menu_requested
 const UI = preload("res://pages/core/page_controls.gd")
+const ImageLayer = preload("res://pages/core/story_image_layer.gd")
 const MARGIN_BASE := 24 # 调查页右侧默认边距；目标面板展开时按面板宽度加大
 @onready var margin: MarginContainer = $Margin
 @onready var investigation: VBoxContainer = $Margin/Layout/InvestigationPage
@@ -20,6 +21,16 @@ var objectives: Node # 目标导航服务；未接入时为空，页面照常工
 var review_focus: WeakRef # 打开调查回顾前的焦点控件
 var input_enabled := true
 var refresh_queued := false
+var image_layer: Control
+
+func _ready() -> void:
+	image_layer = ImageLayer.new()
+	add_child(image_layer)
+	move_child(image_layer, 0)
+	$Margin.z_index = 100
+	# 全屏布局容器不截住下层调查卡；实际按钮与正文仍接收自己的输入。
+	for container in [$Margin, $Margin/Layout, investigation, selection, result]: container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for popup in [reader, inspection_reader, feedback]: popup.z_index = 200
 
 func bind(core: Node, objective_service: Node = null) -> void:
 	service = core
@@ -93,7 +104,9 @@ func _refresh() -> void:
 	selection.visible = mode == "selection"
 	result.visible = mode in ["response", "pending", "collected", "failure"]
 	if reader.visible or inspection_reader.visible or _review_open(): return
-	if investigation.visible: investigation.render(service)
+	var page := "investigation" if mode == "investigation" else ("dialogue" if mode == "dialogue" else ("selection" if mode == "selection" else "result"))
+	image_layer.render(service, page, investigation.activate_entry)
+	if investigation.visible: investigation.render(service, image_layer.entry_buttons, image_layer.entry_bindings)
 	if selection.visible: selection.render(service)
 	if result.visible: result.render(service)
 

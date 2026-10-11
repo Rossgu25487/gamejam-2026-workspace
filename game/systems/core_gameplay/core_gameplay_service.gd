@@ -17,7 +17,7 @@ var presenting := false
 var inspection_depth := 0
 var paused := false
 
-func initialize(path: String = "res://data/core/placeholder_case.json") -> bool:
+func initialize(path: String = "res://data/story/outputs/story-images-20261011/故事配置表.xlsx") -> bool:
 	store.catalog = catalog
 	return catalog.load_files(path)
 
@@ -101,6 +101,7 @@ func activate_entry(id: String) -> bool:
 	if paused or processing or presenting or state.mode not in ["investigation", "selection"] or inspection_depth > 0: return false
 	if not catalog.data.entries.has(id): return false
 	var entry: Dictionary = catalog.data.entries[id]
+	if not _in_current_scene(entry): return _reject("该入口不在当前地点")
 	if not condition_met(entry.condition): return _reject("该入口尚未开放")
 	state.dialogue_return_ref = {"mode": state.mode, "card_ui_page": state.card_ui_page, "question_id": state.question_id}
 	for content_id in entry.get("contents", []):
@@ -151,6 +152,7 @@ func _new_draft(id: String) -> Dictionary:
 func open_card_session(id: String, caller: Dictionary = {}) -> bool:
 	if paused or processing or presenting or inspection_depth > 0 or state.mode not in ["investigation", "selection"]: return false
 	if not catalog.data.questions.has(id) or not condition_met(catalog.data.questions[id].condition): return _reject("问题尚未开放")
+	if not _in_current_scene(catalog.data.questions[id]): return _reject("该问题不在当前地点")
 	var target := target_for(id)
 	if not _legal_target(target): return _reject("尚未听到这版说法")
 	state.question_id = id
@@ -180,6 +182,21 @@ func open_card_session(id: String, caller: Dictionary = {}) -> bool:
 		state.mode = "selection"
 		state.card_ui_page = "grid" if state.last_selection_view == "grid" else "selection"
 	_changed()
+	return true
+
+func _in_current_scene(record: Dictionary) -> bool:
+	# 空地点表示全局入口；明确绑定地点的内容只在实际所在地点可调用。
+	return str(record.get("scene_id", "")).is_empty() or record.scene_id == state.current_scene_id
+
+func move_scene(link_id: String) -> bool:
+	# 地点连接由配置授权，服务更新唯一地点状态并发出已有自动保存接口。
+	if paused or processing or presenting or inspection_depth > 0 or state.get("mode") != "investigation": return false
+	if not catalog.data.get("scene_links", {}).has(link_id): return false
+	var link: Dictionary = catalog.data.scene_links[link_id]
+	if link.from_scene != state.current_scene_id or not condition_met(link.condition): return _reject("当前无法前往该地点")
+	state.current_scene_id = link.to_scene
+	_changed()
+	autosave_requested.emit()
 	return true
 
 func draft() -> Dictionary:

@@ -4,6 +4,7 @@ extends SceneTree
 
 const BenchScene = preload("res://tests/bench/objective_bench.tscn")
 const MainScene = preload("res://main/main.tscn")
+const PLACEHOLDER_CASE := "res://data/core/placeholder_case.json" # 目标段落写在占位案件模板里；默认运行的故事工作簿尚未提供 objectives
 
 var checks := 0
 var failures: Array[String] = []
@@ -474,6 +475,7 @@ func test_main() -> void:
 	root.size = Vector2i(1280, 800)
 	var scene: Control = MainScene.instantiate()
 	scene.test_storage_path = "user://objective-page/%d" % Time.get_ticks_usec()
+	scene.story_workbook_path = PLACEHOLDER_CASE
 	root.add_child(scene)
 	await frames()
 	var page: Control = scene.gameplay_page

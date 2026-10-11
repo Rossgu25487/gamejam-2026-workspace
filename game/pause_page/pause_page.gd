@@ -25,6 +25,9 @@ func _ready() -> void:
 	# 初始处于标题页，没有调查会话，因此暂时不能保存。
 	save_button.disabled = true
 	hide()
+
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "pause")
 	
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。

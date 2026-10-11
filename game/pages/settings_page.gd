@@ -1,4 +1,9 @@
 extends Control
+## 图片布局由本页面的私有图片层消费，不交给Main摆放控件。
+
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "settings")
+
 ## 设置页只负责控件创建、焦点和设置值的即时提交。
 
 signal closed # 用户请求返回来源页面。

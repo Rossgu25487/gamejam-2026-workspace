@@ -14,6 +14,9 @@ func _ready() -> void:
 	_build_page()
 	hide()
 
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "save")
+
 func _build_page() -> void:
 	# 创建三个手动栏位和关闭按钮。
 	var host := CenterContainer.new()
