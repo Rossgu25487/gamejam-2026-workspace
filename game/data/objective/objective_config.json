@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "hud": {
+    "panel_opacity": 0.5,
+    "header_opacity": 0.44,
+    "text_opacity": 1.0,
+    "header_font_px": 20,
+    "main_font_px": 24,
+    "body_font_px": 22,
+    "reason_font_px": 18,
+    "body_line_height_px": 30,
+    "main_line_height_px": 34,
+    "fold_width_px": 174,
+    "header_height_px": 36,
+    "visible_item_limit": 3,
+    "panel_max_height_px": 340,
+    "compact_max_height_px": 320,
+    "update_notice_ms": 2000,
+    "update_glow_ms": 300,
+    "text_outline_width_px": 0.0,
+    "text_outline_opacity": 0.0,
+    "main_color": "#DDC89B",
+    "body_color": "#EEE9DE",
+    "reason_color": "#D6CFC2",
+    "base_viewport": [
+      1920,
+      1080
+    ],
+    "base_panel_rect": [
+      1494,
+      136,
+      368
+    ],
+    "compact_viewport": [
+      1280,
+      800
+    ],
+    "compact_panel_rect": [
+      932,
+      100,
+      300
+    ]
+  },
+  "review": {
+    "viewport": [
+      1600,
+      900
+    ],
+    "main_rect": [
+      68,
+      245,
+      430,
+      400
+    ],
+    "pending_rect": [
+      558,
+      286,
+      945,
+      200
+    ],
+    "progress_rect": [
+      558,
+      568,
+      945,
+      246
+    ],
+    "title_font_px": 40,
+    "main_font_px": 37,
+    "item_font_px": 32,
+    "meta_font_px": 27,
+    "button_font_px": 28,
+    "main_line_height_px": 50,
+    "item_line_height_px": 42,
+    "meta_line_height_px": 36,
+    "button_height_px": 62,
+    "default_visible_each": 1
+  },
+  "texts": {
+    "label_current_goal": "UI_OBJECTIVE_CURRENT",
+    "label_review": "UI_OBJECTIVE_REVIEW",
+    "label_update": "UI_HANDBOOK_UPDATED",
+    "label_updated": "UI_OBJECTIVE_UPDATED",
+    "label_pending": "UI_OBJECTIVE_PENDING",
+    "label_progress": "UI_OBJECTIVE_PROGRESS",
+    "action_return": "UI_RETURN_INVESTIGATION",
+    "action_investigate": "UI_OBJECTIVE_INVESTIGATE",
+    "action_read": "UI_OBJECTIVE_READ_ORIGINAL",
+    "action_source": "UI_OBJECTIVE_READ_SOURCE",
+    "empty_pending": "UI_OBJECTIVE_EMPTY_PENDING",
+    "empty_progress": "UI_OBJECTIVE_EMPTY_PROGRESS",
+    "empty_goal": "UI_OBJECTIVE_EMPTY_GOAL",
+    "no_basis": "UI_OBJECTIVE_NO_BASIS",
+    "no_source": "UI_HANDBOOK_SOURCE_NONE",
+    "no_route": "UI_OBJECTIVE_NO_ROUTE",
+    "error_review": "UI_OBJECTIVE_OPEN_REVIEW_FAILED",
+    "error_read": "UI_OBJECTIVE_OPEN_READ_FAILED",
+    "status_pending": "UI_OBJECTIVE_STATUS_PENDING",
+    "status_checked": "UI_OBJECTIVE_STATUS_CHECKED",
+    "action_return_review": "UI_HANDBOOK_RETURN_REVIEW"
+  }
+}

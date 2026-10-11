@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "note": "技术测试配置：EX 行来自配置表 A 列 ##，不进入正式导出；资源路径相对测试资源根目录。",
+  "resources": [
+    {
+      "id": "EX_AUDIO_BGM_PULSE",
+      "bus": "bgm",
+      "resource_ref": "",
+      "resource_path": "design/basic/test_assets/audio/ex_bgm_pulse.wav"
+    }
+  ],
+  "soundscapes": [
+    {
+      "id": "EX_SOUNDSCAPE_TITLE",
+      "context_kind": "title",
+      "target_ref": "",
+      "phase_ref": "",
+      "bgm_key": "EX_AUDIO_BGM_PULSE",
+      "ambient_key": ""
+    },
+    {
+      "id": "EX_SOUNDSCAPE_HALL",
+      "context_kind": "scene",
+      "target_ref": "EX_SC_HALL",
+      "phase_ref": "",
+      "bgm_key": "EX_AUDIO_BGM_PULSE",
+      "ambient_key": ""
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "note": "试听用古典乐音景：仅开发运行与试听台使用，不进入正式导出；曲目来源与授权见 tests/fixtures/music/manifest.json。",
+  "resources": [
+    {"id": "DEMO_BGM_BACH", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/bach_toccata.ogg"},
+    {"id": "DEMO_BGM_MOZART", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/mozart_k525.ogg"},
+    {"id": "DEMO_BGM_WAGNER", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/wagner_valkyries.ogg"},
+    {"id": "DEMO_BGM_ODE", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/beethoven_ode_to_joy.ogg"},
+    {"id": "DEMO_BGM_JOYFUL", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/joyful_joyful_usaf.ogg"},
+    {"id": "DEMO_BGM_USSR", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/ussr_anthem_1968.ogg"},
+    {"id": "DEMO_BGM_KHACHATURIAN", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/khachaturian_armssr.ogg"},
+    {"id": "DEMO_BGM_CHANT", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/dies_irae_chant.ogg"},
+    {"id": "DEMO_BGM_REQUIEM", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/mozart_requiem_dies_irae.ogg"},
+    {"id": "DEMO_BGM_EINFESTE", "bus": "bgm", "resource_ref": "", "resource_path": "res://tests/fixtures/music/ein_feste_burg.ogg"},
+    {"id": "DEMO_AMB_CHANT", "bus": "ambient", "resource_ref": "", "resource_path": "res://tests/fixtures/music/dies_irae_chant.ogg"},
+    {"id": "DEMO_AMB_EINFESTE", "bus": "ambient", "resource_ref": "", "resource_path": "res://tests/fixtures/music/ein_feste_burg.ogg"}
+  ],
+  "soundscapes": [
+    {"id": "DEMO_TITLE", "context_kind": "title", "target_ref": "", "phase_ref": "", "bgm_key": "DEMO_BGM_BACH", "ambient_key": ""},
+    {"id": "DEMO_ROOM", "context_kind": "scene", "target_ref": "ROOM", "phase_ref": "", "bgm_key": "DEMO_BGM_MOZART", "ambient_key": "DEMO_AMB_CHANT"},
+    {"id": "DEMO_SC_BACH_A", "context_kind": "scene", "target_ref": "DEMO_SC_BACH_A", "phase_ref": "", "bgm_key": "DEMO_BGM_BACH", "ambient_key": "DEMO_AMB_CHANT"},
+    {"id": "DEMO_SC_BACH_B", "context_kind": "scene", "target_ref": "DEMO_SC_BACH_B", "phase_ref": "", "bgm_key": "DEMO_BGM_BACH", "ambient_key": ""},
+    {"id": "DEMO_SC_VALKYRIE", "context_kind": "scene", "target_ref": "DEMO_SC_VALKYRIE", "phase_ref": "", "bgm_key": "DEMO_BGM_WAGNER", "ambient_key": ""},
+    {"id": "DEMO_SC_VALKYRIE_LATE", "context_kind": "scene", "target_ref": "DEMO_SC_VALKYRIE", "phase_ref": "LATE", "bgm_key": "DEMO_BGM_CHANT", "ambient_key": ""},
+    {"id": "DEMO_SC_SOVIET", "context_kind": "scene", "target_ref": "DEMO_SC_SOVIET", "phase_ref": "", "bgm_key": "DEMO_BGM_USSR", "ambient_key": ""},
+    {"id": "DEMO_SC_KHACHATURIAN", "context_kind": "scene", "target_ref": "DEMO_SC_KHACHATURIAN", "phase_ref": "", "bgm_key": "DEMO_BGM_KHACHATURIAN", "ambient_key": ""},
+    {"id": "DEMO_SC_HYMN", "context_kind": "scene", "target_ref": "DEMO_SC_HYMN", "phase_ref": "", "bgm_key": "DEMO_BGM_EINFESTE", "ambient_key": "DEMO_AMB_CHANT"},
+    {"id": "DEMO_SC_REQUIEM", "context_kind": "scene", "target_ref": "DEMO_SC_REQUIEM", "phase_ref": "", "bgm_key": "DEMO_BGM_REQUIEM", "ambient_key": ""},
+    {"id": "DEMO_SC_JOYFUL", "context_kind": "scene", "target_ref": "DEMO_SC_JOYFUL", "phase_ref": "", "bgm_key": "DEMO_BGM_JOYFUL", "ambient_key": ""},
+    {"id": "DEMO_SC_ODE", "context_kind": "scene", "target_ref": "DEMO_SC_ODE", "phase_ref": "", "bgm_key": "DEMO_BGM_ODE", "ambient_key": "DEMO_AMB_EINFESTE"}
+  ]
+}

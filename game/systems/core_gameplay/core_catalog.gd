@@ -135,7 +135,43 @@ func configure(content: Dictionary) -> bool:
 	# 引用边不能成环；record_content 只是正文归属，不建立证明边。
 	for id in data.relations:
 		_check(not _relation_cycle(id, []), "前次证明来源形成循环：" + id)
+	if data.has("objectives"): _validate_objectives()
 	return errors.is_empty()
+
+func _validate_objectives() -> void:
+	# 目标配置是可选的显示映射：目标出现、事项完成与可前往入口都引用已有条件、材料、说法、入口和问题。
+	var objectives = data.objectives
+	if not objectives is Dictionary or not objectives.get("goals") is Array or not objectives.get("bases") is Dictionary:
+		errors.append("目标配置格式无效")
+		return
+	for id in objectives.bases:
+		var base: Dictionary = objectives.bases[id]
+		match base.get("kind", ""):
+			"material": _check(data.contents.has(base.get("content_id", "")), "目标依据材料缺失：" + id)
+			"statement": _check(data.statements.has(base.get("statement_id", "")), "目标依据说法缺失：" + id)
+			_: _check(false, "目标依据类型无效：" + id)
+	var goal_ids := {}
+	for goal in objectives.goals:
+		var goal_id: String = goal.get("id", "")
+		_check(not goal_id.is_empty() and not goal_ids.has(goal_id), "目标编号缺失或重复：" + goal_id)
+		goal_ids[goal_id] = true
+		_text_ref(goal.get("text", ""), goal_id)
+		_check(data.conditions.has(goal.get("visible", "")), "目标公开条件缺失：" + goal_id)
+		if not str(goal.get("closed", "")).is_empty(): _check(data.conditions.has(goal.closed), "目标结束条件缺失：" + goal_id)
+		var item_ids := {}
+		for item in goal.get("items", []):
+			var item_id: String = item.get("id", "")
+			_check(not item_id.is_empty() and not item_ids.has(item_id), "目标事项编号缺失或重复：" + goal_id + "/" + item_id)
+			item_ids[item_id] = true
+			_text_ref(item.get("text", ""), item_id)
+			_check(data.conditions.has(item.get("done", "")), "事项完成条件缺失：" + item_id)
+			if not str(item.get("public", "")).is_empty(): _check(data.conditions.has(item.public), "事项公开条件缺失：" + item_id)
+			if not str(item.get("blocked_reason", "")).is_empty(): _text_ref(item.blocked_reason, item_id)
+			var go: Dictionary = item.get("go", {})
+			if not go.is_empty():
+				_check(go.get("kind", "") in ["entry", "question"], "事项入口类型无效：" + item_id)
+				_check((data.entries if go.get("kind", "") == "entry" else data.questions).has(go.get("id", "")), "事项入口不存在：" + item_id)
+			for basis_id in item.get("basis", []): _check(objectives.bases.has(basis_id), "事项依据不存在：" + item_id + "/" + str(basis_id))
 
 func _relation_cycle(id: String, ancestors: Array) -> bool:
 	if id in ancestors: return true
