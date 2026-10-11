@@ -3,7 +3,7 @@ extends RefCounted
 ## 输出当前核心目录使用的数据结构，页面和 Main 不需要了解 Excel 格式。
 
 const SCHEMA_PATH := "res://data/story/schema.json"
-const DEFAULT_PATH := "res://data/story/outputs/story-config-20261011/故事配置表.xlsx"
+const DEFAULT_PATH := "res://data/story/outputs/story-images-20261011/故事配置表.xlsx"
 var errors: Array[String] = []
 var origins: Dictionary = {}
 var _zip: ZIPReader
@@ -31,6 +31,8 @@ func load_workbook(path: String) -> Dictionary:
 	for definition in schema.sheets:
 		var name: String = definition.name
 		if not paths.has(name):
+			# 图片表是兼容扩展，旧故事无需补表也能沿用文字界面。
+			if definition.get("optional", false): tables[name] = []; continue
 			_error("缺少工作表：" + name)
 			continue
 		tables[name] = _read_table(paths[name], definition)
@@ -201,8 +203,12 @@ func _read_table(path: String, definition: Dictionary) -> Array:
 				_error("%s %s：请输入实际内容，不使用公式或错误值" % [location, key])
 			if field[3] and raw.strip_edges().is_empty(): _error("%s %s：必填项为空" % [location, key])
 			var options: String = field[4]
-			if not options.is_empty() and field[2] != "bool" and raw not in options.split(","): _error("%s %s：不支持的选项 %s" % [location, key, raw])
+			if not options.is_empty() and field[2] != "bool" and (field[3] or not raw.is_empty()) and raw not in options.split(","): _error("%s %s：不支持的选项 %s" % [location, key, raw])
 			match str(field[2]):
+				"number":
+					if raw.is_empty() and not field[3]: record[key] = null
+					elif not raw.is_valid_float() or not is_finite(float(raw)): _error("%s %s：需要有限数字" % [location, key])
+					else: record[key] = float(raw)
 				"int":
 					if not raw.is_valid_int() or int(raw) < 1: _error("%s %s：需要正整数" % [location, key])
 					record[key] = int(raw)
@@ -350,5 +356,9 @@ func _compile(tables: Dictionary) -> Dictionary:
 		var value := _copy(row, ["from_scene", "to_scene", "condition"])
 		value.title = _text("scene_links", row.link_id, "title", row.title)
 		_put("scene_links", row.link_id, value, row._location)
+	if not tables.get("图片布局", []).is_empty():
+		_data["image_layouts"] = {}
+		for row in tables["图片布局"]:
+			_put("image_layouts", row.layout_id, _copy(row, ["page", "scene_id", "kind", "ref", "image", "x", "y", "width", "height", "layer", "fit", "condition"]), row._location)
 	if not errors.is_empty(): return {}
 	return _data

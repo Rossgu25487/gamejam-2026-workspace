@@ -5,7 +5,7 @@ const UI = preload("res://pages/core/page_controls.gd")
 var service: Node
 var focus_key := ""
 
-func render(core: Node) -> void:
+func render(core: Node, image_buttons: Dictionary = {}, image_bindings: Dictionary = {}) -> void:
 	service = core
 	UI.clear(self)
 	var data: Dictionary = core.catalog.data
@@ -20,15 +20,26 @@ func render(core: Node) -> void:
 		UI.button(self, core.ui("UI_RETURN_INVESTIGATION"), core.finish_dialogue)
 		return
 	var scroll := ScrollContainer.new()
+	scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(scroll)
 	var list := VBoxContainer.new()
+	list.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 12)
 	scroll.add_child(list)
+	if not image_buttons.is_empty():
+		# 给按屏幕坐标摆放的图片卡留出空间；问题和移动按钮接着排在下方。
+		var spacer := Control.new()
+		spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var bottom := 0.0
+		for b in image_buttons.values(): bottom = maxf(bottom, b.get_global_rect().end.y)
+		spacer.custom_minimum_size.y = maxf(0, bottom - get_global_rect().position.y - 65)
+		list.add_child(spacer)
 	for id in data.entries:
 		var entry: Dictionary = data.entries[id]
 		if not str(entry.get("scene_id", "")).is_empty() and entry.scene_id != state.current_scene_id: continue
+		if image_bindings.has(id): continue
 		var b := UI.button(list, core.catalog.text(entry.title), _activate.bind(id), core.condition_met(entry.condition))
 		b.set_meta("focus_key", id)
 	UI.label(list, "待核问题", 24)
@@ -46,6 +57,11 @@ func render(core: Node) -> void:
 	var completion: String = data.get("completion_condition", "")
 	if not completion.is_empty() and core.condition_met(completion): UI.label(list, core.catalog.text(data.completion_text), 22)
 	_restore_focus(list)
+	if image_buttons.has(focus_key) and not image_buttons[focus_key].disabled: image_buttons[focus_key].grab_focus()
+
+func activate_entry(id: String) -> void:
+	# 图片入口和文字入口共用同一个页面动作，业务由服务再次校验。
+	_activate(id)
 
 func _activate(id: String) -> void:
 	focus_key = id

@@ -4,6 +4,7 @@ extends PanelContainer
 signal closed
 signal inspect_requested
 const UI = preload("res://pages/core/page_controls.gd")
+const Images = preload("res://pages/core/story_image_layer.gd")
 var service: Node
 var stack: Array = []
 var box: VBoxContainer
@@ -168,6 +169,10 @@ func _library(ctx: Dictionary) -> void:
 		UI.label(card, service.store.marker(ref.material_id), 16)
 		var title := UI.button(card, service.catalog.text(service.catalog.data.contents[ref.content_id].title), _push.bind({"kind": "material", "ref": ref}))
 		title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var art := Images.material_layout(service, ref.content_id)
+		if not art.is_empty():
+			title.custom_minimum_size = Vector2(100, 150)
+			Images.attach_image(title, art)
 		UI.button(card, "★" if service.store.entities[ref.material_id].important else "☆", _star.bind(ref.material_id))
 	if refs.is_empty(): UI.label(grid, "没有符合筛选的已取得材料。", 20)
 
@@ -176,7 +181,20 @@ func _material(ctx: Dictionary) -> void:
 	var content: Dictionary = service.catalog.data.contents[ref.content_id]
 	UI.label(box, service.catalog.text(content.title) + " · v%d" % int(content.version), 24)
 	body_text_id = content.body
-	body = UI.body(box, service.catalog.text(content.body), 230)
+	var art := Images.material_layout(service, ref.content_id)
+	if art.is_empty(): body = UI.body(box, service.catalog.text(content.body), 230)
+	else:
+		# 观察图与全文并排，正文保留独立滚动和原来的字符锚点。
+		var row := HBoxContainer.new()
+		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		box.add_child(row)
+		var image_host := Control.new()
+		image_host.custom_minimum_size = Vector2(260, 230)
+		image_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(image_host)
+		Images.attach_image(image_host, art)
+		body = UI.body(row, service.catalog.text(content.body), 230)
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	service.mark_read(ref)
 	var versions := HBoxContainer.new()
 	box.add_child(versions)

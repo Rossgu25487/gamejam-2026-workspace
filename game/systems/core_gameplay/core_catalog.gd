@@ -183,7 +183,49 @@ func configure(content: Dictionary) -> bool:
 	# 引用边不能成环；record_content 只是正文归属，不建立证明边。
 	for id in data.relations:
 		_check(not _relation_cycle(id, []), "前次证明来源形成循环：" + id)
+	_check_images()
 	return errors.is_empty()
+
+func _check_images() -> void:
+	# 图片只控制显示和入口绑定，不生成材料、改变地点或替代证明关系。
+	var bindings := {}
+	for id in data.get("image_layouts", {}):
+		var row: Dictionary = data.image_layouts[id]
+		_scene_ref(row.get("scene_id", ""), id)
+		_check(row.get("page") in ["title", "pause", "save", "load", "settings", "confirm", "investigation", "dialogue", "selection", "result", "material"], "图片页面无效：" + id)
+		_check(row.get("kind") in ["decoration", "entry", "portrait", "material"], "图片用途无效：" + id)
+		_check(row.get("fit") in ["contain", "cover", "stretch"], "图片适配无效：" + id)
+		var condition: String = row.get("condition", "")
+		_check(condition.is_empty() or data.conditions.has(condition), "图片条件缺失：" + id)
+		var path: String = row.get("image", "")
+		var legal := path.begins_with("res://") and path == path.simplify_path() and path.get_extension().to_lower() == "png"
+		_check(legal, "图片路径须为工程内PNG：" + id)
+		if legal: _check(ResourceLoader.exists(path, "Texture2D"), "图片资源不存在或尚未导入：" + id)
+		var ref: String = row.get("ref", "")
+		match row.get("kind", ""):
+			"entry":
+				_check(row.page == "investigation" and data.entries.has(ref), "调查图片须绑定调查入口：" + id)
+				if data.entries.has(ref):
+					var scene: String = data.entries[ref].get("scene_id", "")
+					_check(scene.is_empty() or row.scene_id == scene, "调查图片与入口地点不一致：" + id)
+			"portrait": _check(row.page in ["dialogue", "selection", "result"] and data.characters.has(ref), "人物图片须绑定当前交谈人物：" + id)
+			"material":
+				_check(row.page == "material" and data.contents.has(ref) and str(row.get("scene_id", "")).is_empty() and condition.is_empty(), "材料卡面须绑定内容版本且不限制地点或条件：" + id)
+				for field in ["x", "y", "width", "height", "layer"]: _check(row.get(field) == null, "材料卡面位置由页面管理，请留空：" + id + "/" + field)
+			"decoration": _check(ref.is_empty() and row.page != "material", "装饰图片不绑定业务对象：" + id)
+		if row.get("kind") != "material":
+			var valid := true
+			for field in ["x", "y", "width", "height", "layer"]:
+				var value = row.get(field)
+				if not (value is float or value is int) or not is_finite(float(value)): valid = false
+			_check(valid, "固定图片需要坐标、尺寸和图层：" + id)
+			if valid:
+				_check(row.x >= 0 and row.y >= 0 and row.width > 0 and row.height > 0 and row.x + row.width <= 1280 and row.y + row.height <= 800, "图片显示框超出1280×800：" + id)
+				_check(row.layer >= 0 and row.layer <= 99 and row.layer == floor(row.layer), "图片图层须为0–99整数：" + id)
+		if row.get("kind") in ["entry", "material"]:
+			var key := JSON.stringify([row.kind, ref, row.get("scene_id", "")])
+			_check(not bindings.has(key), "图片对象重复绑定：" + id)
+			bindings[key] = true
 
 func _relation_cycle(id: String, ancestors: Array) -> bool:
 	if id in ancestors: return true

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "sheets": [
     {"name":"案件","id":"case_id","section":"case","fields":[
       ["case_id","案件ID","string",true,"",36], ["content_revision","内容版本","string",true,"",22], ["initial_scene","起始地点ID","string",true,"",22], ["placeholder","使用占位内容","bool",true,"true,false",18], ["title","案件标题","string",true,"",30], ["note","开场说明","string",false,"",60], ["completion_condition","完成条件ID","string",false,"",22], ["completion_text","完成提示","string",false,"",50]
@@ -16,6 +16,13 @@
     {"name":"结果节点","id":"node_id","section":"nodes","fields":[["node_id","节点ID","string",true,"",24],["text","完整回应正文","string",true,"",80],["timing","结果提交时点","string",true,"none,enter,continue,collect",24],["group","结果动作组ID","string",false,"",26],["next_questions","后续问题ID列表","list",false,"",36]]},
     {"name":"结果动作","id":"group_id","section":"groups","fields":[["group_id","动作组ID","string",true,"",22],["order","动作顺序","int",true,"",18],["kind","动作类型","string",true,"confirm,fact,correct",24],["ref","新增事实ID","string",false,"",26],["question_id","更正的问题ID","string",false,"",24],["statement_id","更正后的说法版本ID","string",false,"",30]]},
     {"name":"前次依据","id":"relation_id","section":"basis","fields":[["relation_id","当前关系ID","string",true,"",28],["order","依据顺序","int",true,"",18],["basis_relation_id","前次充分关系ID","string",true,"",30]]},
-    {"name":"地点连接","id":"link_id","section":"scene_links","fields":[["link_id","连接ID","string",true,"",22],["from_scene","出发地点ID","string",true,"",24],["to_scene","到达地点ID","string",true,"",24],["title","移动按钮文字","string",true,"",40],["condition","开放条件ID","string",true,"",22]]}
+    {"name":"地点连接","id":"link_id","section":"scene_links","fields":[["link_id","连接ID","string",true,"",22],["from_scene","出发地点ID","string",true,"",24],["to_scene","到达地点ID","string",true,"",24],["title","移动按钮文字","string",true,"",40],["condition","开放条件ID","string",true,"",22]]},
+    {"name":"图片布局","id":"layout_id","section":"image_layouts","optional":true,"fields":[
+      ["layout_id","图片布局ID","string",true,"",26], ["page","显示页面","string",true,"title,pause,save,load,settings,confirm,investigation,dialogue,selection,result,material",24],
+      ["scene_id","所属地点ID（空=所有）","string",false,"",28], ["kind","图片用途","string",true,"decoration,entry,portrait,material",24], ["ref","关联入口/人物/内容版本ID","string",false,"",32],
+      ["image","PNG资源路径","string",true,"",72], ["x","左上角X（1280基准）","number",false,"",26], ["y","左上角Y（800基准）","number",false,"",26],
+      ["width","显示框宽度","number",false,"",20], ["height","显示框高度","number",false,"",20], ["layer","图层0–99","number",false,"",18],
+      ["fit","图片适配","string",true,"contain,cover,stretch",24], ["condition","额外显示条件ID（空=始终）","string",false,"",34]
+    ]}
   ]
 }

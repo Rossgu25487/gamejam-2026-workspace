@@ -25,7 +25,7 @@ var confirm_exits := false
 var has_progress := false
 var pending_leave := false
 @export var test_storage_path := "" # 测试注入独立目录，避免改写玩家存档与设置。
-@export_file("*.xlsx") var story_workbook_path := "res://data/story/outputs/story-config-20261011/故事配置表.xlsx" # 场景选择内容表，故事规则仍由核心服务处理。
+@export_file("*.xlsx") var story_workbook_path := "res://data/story/outputs/story-images-20261011/故事配置表.xlsx" # 场景选择内容表，故事规则仍由核心服务处理。
 
 func _ready() -> void:
 	session_service = SessionScript.new()
@@ -44,6 +44,7 @@ func _ready() -> void:
 		title_page.exit_requested.connect(get_tree().quit)
 		return
 	title_page.apply_story_title(session_service.story_title())
+	for page in [title_page, pause_page, save_page, load_page, settings_page, confirm_page]: page.bind_images(session_service.core)
 	save_service.snapshot_validator = session_service.validate_snapshot
 	session_service.autosave_requested.connect(save_service.save_auto)
 	gameplay_page.bind(session_service.core)

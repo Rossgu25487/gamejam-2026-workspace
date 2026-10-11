@@ -59,7 +59,7 @@ func take(name: String) -> void:
 	root.get_texture().get_image().save_png(folder.path_join(name + ".png"))
 
 func investigate(title: String) -> void:
-	await click(button(scene.gameplay_page.investigation, title))
+	await click(button(scene.gameplay_page, title))
 	expect(scene.session_service.core.state.mode == "dialogue", "调查显示正文：" + title)
 	await click(button(scene.gameplay_page.investigation, scene.session_service.core.ui("UI_RETURN_INVESTIGATION")))
 

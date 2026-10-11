@@ -17,6 +17,9 @@ signal exit_requested
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false # 存档扫描是否完成。
 var has_progress := false # 是否存在可以继续的有效存档。
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "title")
+
 func apply_story_title(title: String) -> void:
 	# 标题页管理自己的文本和换行，调度层仅传入配置中的案件标题。
 	heading.text = title
