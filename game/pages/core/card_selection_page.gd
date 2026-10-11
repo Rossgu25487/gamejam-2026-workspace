@@ -68,7 +68,8 @@ func render(core: Node) -> void:
 	UI.button(actions, "收起对局", core.fold_card_selection)
 	if q.has("parent"):
 		for id in core.catalog.data.entries:
-			if core.catalog.data.entries[id].get("object_id", "") == q.parent:
+			var entry: Dictionary = core.catalog.data.entries[id]
+			if entry.get("object_id", "") == q.parent and (str(entry.get("scene_id", "")).is_empty() or entry.scene_id == core.state.current_scene_id):
 				UI.button(actions, "直接问话", core.activate_entry.bind(id))
 	UI.button(actions, "收起牌库" if core.state.card_ui_page == "grid" else "全部材料", core.set_grid.bind(core.state.card_ui_page != "grid"))
 	# 原因与服务的资格检查一致，避免玩家把灰色按钮误认为必须填满两个槽。

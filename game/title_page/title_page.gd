@@ -57,6 +57,30 @@ func apply_scan_result(has_progress: bool) -> void:
 func apply_latest_summary(summary: String) -> void:
 	# 标题页只负责显示存档服务提供的最新有效进度摘要。
 	detail.text = "最近有效进度：" + summary
+
+func show_configuration_error(messages: Array[String]) -> void:
+	# 错误页面属于标题节点自身：保留完整错误正文，阻止开始无效案件。
+	scan_complete = true
+	status.text = "故事配置错误"
+	detail.text = "请修正配置表后重新运行。"
+	for button in [continue_button, new_game_button, load_button, settings_button]:
+		button.disabled = true
+		button.hide()
+	# 错误正文占用独立滚动区，保持标题节点内居中且退出按钮始终可见。
+	panel.offset_left = -330
+	panel.offset_right = 330
+	panel.offset_top = -250
+	panel.offset_bottom = 250
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(600, 300)
+	panel.get_child(0).add_child(scroll)
+	var error_text := Label.new()
+	error_text.text = "\n".join(messages)
+	error_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	error_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(error_text)
+	show()
+	exit_button.grab_focus()
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
 	show()

@@ -38,6 +38,9 @@ func _ready() -> void:
 		settings_service.storage_path = test_storage_path.path_join("settings.json")
 	if not session_service.initialize():
 		push_error("核心配置无效：" + str(session_service.core.catalog.errors))
+		gameplay_page.hide()
+		title_page.show_configuration_error(session_service.core.catalog.errors)
+		title_page.exit_requested.connect(get_tree().quit)
 		return
 	save_service.snapshot_validator = session_service.validate_snapshot
 	session_service.autosave_requested.connect(save_service.save_auto)

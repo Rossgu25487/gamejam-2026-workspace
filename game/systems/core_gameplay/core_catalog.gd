@@ -1,13 +1,23 @@
 extends RefCounted
 ## 内容目录只解析配置与精确引用；它不授予玩家任何材料或知识。
 
+const WorkbookLoader = preload("res://systems/core_gameplay/story_workbook_loader.gd")
+
 var data: Dictionary = {}
 var rules: Dictionary = {}
 var function_texts: Dictionary = {}
 var errors: Array[String] = []
 
-func load_files(path: String = "res://data/core/placeholder_case.json") -> bool:
-	var content = _json(path)
+func load_files(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
+	var workbook: RefCounted = null
+	var content
+	if path.get_extension().to_lower() == "xlsx":
+		workbook = WorkbookLoader.new()
+		content = workbook.load_workbook(path)
+		if not workbook.errors.is_empty():
+			errors.assign(workbook.errors)
+			return false
+	else: content = _json(path)
 	var rule_data = _json("res://data/core/rules.json")
 	var texts = _json("res://data/core/function_text.json")
 	if not content is Dictionary or not rule_data is Dictionary or not texts is Array:
@@ -16,15 +26,26 @@ func load_files(path: String = "res://data/core/placeholder_case.json") -> bool:
 	for row in texts:
 		function_texts[str(row.id)] = str(row.text)
 	rules = rule_data
-	return configure(content)
+	var valid := configure(content)
+	if not valid and workbook != null: errors.assign(workbook.locate_catalog_errors(errors))
+	return valid
 
 func configure(content: Dictionary) -> bool:
 	data = content.duplicate(true)
 	errors.clear()
-	for section in ["texts", "materials", "contents", "statements", "questions", "relations", "nodes", "groups", "conditions", "entries"]:
+	for section in ["texts", "materials", "contents", "statements", "questions", "relations", "nodes", "groups", "conditions", "entries", "scenes", "characters"]:
 		if not data.get(section) is Dictionary:
 			errors.append("缺少内容表：" + section)
 	if not errors.is_empty(): return false
+	_check(not str(data.get("case_id", "")).is_empty() and not str(data.get("content_revision", "")).is_empty(), "案件ID或内容版本缺失")
+	_check(data.scenes.has(data.get("initial_scene", "")), "起始地点缺失：" + str(data.get("initial_scene", "")))
+	for section in ["scenes", "characters"]:
+		for id in data[section]: _text_ref(data[section][id].get("name", ""), id)
+	for id in data.materials:
+		_check(data.materials[id].get("type") in ["evidence", "testimony", "inference"], "材料类型无效：" + id)
+	if not str(data.get("completion_condition", "")).is_empty():
+		_check(data.conditions.has(data.completion_condition), "完成条件缺失：" + data.completion_condition)
+		_text_ref(data.get("completion_text", ""), data.case_id)
 	for id in data.contents:
 		var c: Dictionary = data.contents[id]
 		_check(data.materials.has(c.get("material_id", "")), "材料身份缺失：" + id)
@@ -37,12 +58,15 @@ func configure(content: Dictionary) -> bool:
 				_check(data.contents[previous].material_id == c.material_id and int(data.contents[previous].version) < int(c.version), "历史版本归属错误：" + id)
 	for id in data.statements:
 		var s: Dictionary = data.statements[id]
+		_check(data.characters.has(s.get("speaker", "")), "发言人物缺失：" + id)
+		_check(not str(s.get("claim_id", "")).is_empty() and int(s.get("version", 0)) > 0, "说法身份或版本无效：" + id)
 		_text_ref(s.get("text", ""), id)
 		_check(data.contents.has(s.get("record_content", "")), "原话所属材料不存在：" + id)
 		if data.contents.has(s.get("record_content", "")):
 			_check(text(data.contents[s.record_content].body).contains(text(s.text)), "记录正文未包含原话：" + id)
 	for id in data.questions:
 		var q: Dictionary = data.questions[id]
+		_scene_ref(q.get("scene_id", ""), id)
 		_text_ref(q.get("title", ""), id)
 		_check(q.get("target_kind", "statement") in ["statement", "reasoning"], "目标类型无效：" + id)
 		_check(data.conditions.has(q.get("condition", "")), "入口条件缺失：" + id)
@@ -58,6 +82,7 @@ func configure(content: Dictionary) -> bool:
 		_text_ref(node.get("text", ""), id)
 		_check(node.get("timing", "continue") in ["enter", "continue", "collect", "none"], "执行时点无效：" + id)
 		if not str(node.get("group", "")).is_empty(): _check(data.groups.has(node.group), "结果组缺失：" + id)
+		for next in node.get("next_questions", []): _check(data.questions.has(next), "后续问题不存在：" + id)
 	for id in data.groups:
 		var confirms := 0
 		_check(data.groups[id] is Array, "结果组必须为有序动作：" + id)
@@ -72,16 +97,33 @@ func configure(content: Dictionary) -> bool:
 		_check(confirms == 1, "结果组必须确认一次：" + id)
 	for id in data.entries:
 		var entry: Dictionary = data.entries[id]
+		_scene_ref(entry.get("scene_id", ""), id)
+		_check(not str(entry.get("source_id", "")).is_empty(), "取得来源缺失：" + id)
 		_text_ref(entry.get("title", ""), id)
 		_text_ref(entry.get("text", ""), id)
 		_check(data.conditions.has(entry.get("condition", "")), "调查条件缺失：" + id)
-		for content_id in entry.get("contents", []): _check(data.contents.has(content_id), "取得内容缺失：" + id)
+		for content_id in entry.get("contents", []):
+			_check(data.contents.has(content_id), "取得内容缺失：" + id)
+			if data.contents.has(content_id): _check(data.materials.get(data.contents[content_id].material_id, {}).get("type") != "inference", "调查入口不能直接授予推论：" + id)
 		for statement_id in entry.get("statements", []): _check(data.statements.has(statement_id), "问话目标缺失：" + id)
+	for id in data.get("scene_links", {}):
+		var link: Dictionary = data.scene_links[id]
+		_check(data.scenes.has(link.get("from_scene", "")) and data.scenes.has(link.get("to_scene", "")), "地点连接引用缺失：" + id)
+		_check(data.conditions.has(link.get("condition", "")), "地点连接条件缺失：" + id)
+		_text_ref(link.get("title", ""), id)
+	# 作者声明的事实必须有真实生产者，避免拼写错误让后续入口永久锁住。
+	var declared_facts: Array = []
+	for entry in data.entries.values(): declared_facts.append_array(entry.get("facts", []))
+	for actions in data.groups.values():
+		if actions is Array:
+			for action in actions:
+				if action.get("kind") == "fact": declared_facts.append(action.get("ref", ""))
 	for id in data.conditions:
 		_check(data.conditions[id] is Array and not data.conditions[id].is_empty(), "条件必须具有显式分支：" + id)
 		for branch in data.conditions[id]:
 			for term in branch:
 				_check(term.get("kind", "") in ["fact", "heard", "owned", "completed"], "未知条件：" + id)
+				if term.get("kind") == "fact": _check(term.get("ref", "") in declared_facts, "条件事实没有生产者：" + id)
 				if term.get("kind") == "heard": _check(data.statements.has(term.get("ref", "")), "条件说法缺失：" + id)
 				if term.get("kind") == "owned": _check(data.contents.has(term.get("ref", "")), "条件材料缺失：" + id)
 				if term.get("kind") == "completed": _check(data.questions.has(term.get("ref", "")), "条件问题缺失：" + id)
@@ -93,6 +135,7 @@ func configure(content: Dictionary) -> bool:
 		_check(r.get("feedback", "") in ["full", "partial", "counter", "incorrect"], "关系类别无效：" + id)
 		_check(r.get("match_scope", "contains") in ["contains", "exact_set"], "匹配范围无效：" + id)
 		_check(r.get("materials", []).size() in [1, 2], "关系必须使用一或两份材料：" + id)
+		if r.get("materials", []).size() == 2: _check(r.materials[0].get("material_id") != r.materials[1].get("material_id"), "两个出示槽不能使用同一材料身份：" + id)
 		for ref in r.get("materials", []): _check(valid_material_ref(ref), "关系材料版本无效：" + id)
 		if not data.questions.has(r.get("question_id", "")): continue
 		var q: Dictionary = data.questions[r.question_id]
@@ -102,6 +145,8 @@ func configure(content: Dictionary) -> bool:
 			_check(r.get("effect_kind", "support") in ["support", "inference", "ordinary"], "推理问题不能碎裂原话：" + id)
 		else:
 			_check(data.statements.has(r.get("statement_id", "")), "关系目标说法缺失：" + id)
+			if data.statements.has(r.get("statement_id", "")) and data.statements.has(q.get("statement_id", "")):
+				_check(data.statements[r.statement_id].claim_id == data.statements[q.statement_id].claim_id, "关系说法不属于当前问题：" + id)
 		var level: String = r.get("effect_level", "normal")
 		_check(level in ["normal", "progress", "key"], "表现等级错误：" + id)
 		if level != "normal": _check(r.get("feedback") == "full", "强表现要求充分成果：" + id)
@@ -111,13 +156,16 @@ func configure(content: Dictionary) -> bool:
 			_check(str(r.get("result_key", "")).is_empty() and str(r.get("inference", "")).is_empty(), "错误关系不能提交成果：" + id)
 		if not str(r.get("inference", "")).is_empty():
 			_check(data.contents.has(r.inference), "推论内容缺失：" + id)
-			_check(data.nodes[r.node].get("timing") == "collect", "新推论必须主动收下：" + id)
+			if data.contents.has(r.inference): _check(data.materials.get(data.contents[r.inference].material_id, {}).get("type") == "inference", "新推论的材料类型错误：" + id)
+			_check(data.nodes.get(r.get("node", ""), {}).get("timing") == "collect", "新推论必须主动收下：" + id)
 			for ref in r.materials: _check(ref.content_id != r.inference, "推论不能以自身为来源：" + id)
 		for basis in r.get("basis_results", []):
 			_check(data.relations.has(basis.get("relation_id", "")), "前次关联不存在：" + id)
 			_check(basis.get("target_ref") is Dictionary, "前次目标必须精确：" + id)
 		if r.feedback == "full" and data.nodes.has(r.get("node", "")):
 			_check(data.groups.has(data.nodes[r.node].get("group", "")), "充分关系缺少确认结果组：" + id)
+			_check(data.nodes[r.node].get("timing") in ["enter", "continue", "collect"], "充分成果没有合法提交时点：" + id)
+			_check((data.nodes[r.node].get("timing") == "collect") == (not str(r.get("inference", "")).is_empty()), "收下时点必须绑定新推论：" + id)
 		var quote: String = r.get("statement_quote", "")
 		if r.get("effect_kind") in ["limit", "exclude"] and data.statements.has(r.get("statement_id", "")):
 			var original := text(data.statements[r.statement_id].text)
@@ -161,6 +209,9 @@ func material_ref(content_id: String) -> Dictionary:
 
 func _text_ref(id: String, owner: String) -> void:
 	_check(data.texts.has(id) and not text(id).is_empty(), "文字引用缺失：" + owner + "/" + id)
+
+func _scene_ref(id: String, owner: String) -> void:
+	_check(id.is_empty() or data.scenes.has(id), "所属地点缺失：" + owner)
 
 func _check(ok: bool, message: String) -> void:
 	if not ok: errors.append(message)

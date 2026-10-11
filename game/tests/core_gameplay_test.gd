@@ -122,7 +122,7 @@ func _run() -> void:
 	expect(not core.continue_result(), "待收不能继续绕过收下")
 	var frozen: Array = core.state.current_result.used_sources.duplicate(true)
 	# 测试另一真实取得入口，旧成果递归快照保持不变。
-	core.catalog.data.entries["SECOND_PATH"] = {"condition":"ALWAYS","contents":["A1"],"source_id":"SRC_SECOND","object_id":"TABLE","text":"inspect_text"}
+	core.catalog.data.entries["SECOND_PATH"] = {"condition":"ALWAYS","contents":["A1"],"source_id":"SRC_SECOND","object_id":"TABLE","text":core.catalog.data.entries.INSPECT.text}
 	expect(core.acquire_material("A1","SECOND_PATH","SRC_SECOND"), "另一真实路径追加")
 	expect(core.store.sources(ref(core,"A1")).size() == source_count + 1, "普通材料显示新路径")
 	expect(core.state.current_result.used_sources == frozen, "形成时实际来源逐层冻结")
@@ -195,7 +195,7 @@ func _run() -> void:
 	expect(error_session.restore_snapshot(zero_snapshot) and int(error_core.state.chances.Q1) == 0, "合法调查档恢复零次及扣次记录")
 	error_core.open_card_session("Q1")
 	expect(error_core.state.mode == "failure" and int(error_core.state.chances.Q1) == 0, "重入不补次数")
-	expect(error_core.state.current_result.get("reason_text_id") == "incorrect", "失败重入保留实际原因与依据")
+	expect(error_core.state.current_result.get("reason_text_id") == error_core.catalog.data.relations.R_ERROR.reason, "失败重入保留实际原因与依据")
 	var entity_count: int = error_core.store.entities.size()
 	expect(error_core.retry_question(), "主动重试")
 	settle(error_core)
@@ -279,20 +279,21 @@ func _ui_regression() -> void:
 	expect(scene.gameplay_page.reader.visible and core.draft() == before, "结束整次检视回原详情且草稿保持")
 	scene.gameplay_page.reader.close_all()
 	await _frames()
-	var original_body: String = core.catalog.text("A1_body")
-	core.catalog.data.texts.A1_body = "甲🙂乙\n".repeat(250)
+	var body_ref: String = core.catalog.data.contents.A1.body
+	var original_body: String = core.catalog.text(body_ref)
+	core.catalog.data.texts[body_ref] = "甲🙂乙\n".repeat(250)
 	scene.gameplay_page.reader.open_material(ref(core,"A1"),true)
 	await _frames()
 	var reading: Control = scene.gameplay_page.reader
 	reading.body.get_v_scroll_bar().value = 500
 	reading._push({"kind":"sources","sources":core.store.sources(ref(core,"A1"))})
 	var anchor: Dictionary = reading.stack[0].body_anchor
-	expect(anchor.text_id == "A1_body" and int(anchor.character_index) > 0, "长正文锚点绑定准确文本与真实码点")
+	expect(anchor.text_id == body_ref and int(anchor.character_index) > 0, "长正文锚点绑定准确文本与真实码点")
 	reading.back()
 	await _frames()
 	expect(reading.body.get_v_scroll_bar().value > 0, "来源上一级恢复正文阅读位置")
 	reading.close_all()
-	core.catalog.data.texts.A1_body = original_body
+	core.catalog.data.texts[body_ref] = original_body
 	await _frames()
 	core.set_grid(true)
 	await _frames()

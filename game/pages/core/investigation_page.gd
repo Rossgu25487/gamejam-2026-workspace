@@ -28,15 +28,23 @@ func render(core: Node) -> void:
 	scroll.add_child(list)
 	for id in data.entries:
 		var entry: Dictionary = data.entries[id]
+		if not str(entry.get("scene_id", "")).is_empty() and entry.scene_id != state.current_scene_id: continue
 		var b := UI.button(list, core.catalog.text(entry.title), _activate.bind(id), core.condition_met(entry.condition))
 		b.set_meta("focus_key", id)
 	UI.label(list, "待核问题", 24)
 	for id in data.questions:
 		var q: Dictionary = data.questions[id]
+		if not str(q.get("scene_id", "")).is_empty() and q.scene_id != state.current_scene_id: continue
 		var completed: bool = id in state.completed_questions
 		var b := UI.button(list, core.catalog.text(q.title) + (" · 回看" if completed else ""), _question.bind(id), core.condition_met(q.condition))
 		b.set_meta("focus_key", id)
-	if "Q2" in state.completed_questions: UI.label(list, "占位首段已完成。正式案件内容可在同一配置接口中替换。", 22)
+	for id in data.get("scene_links", {}):
+		var link: Dictionary = data.scene_links[id]
+		if link.from_scene != state.current_scene_id: continue
+		var b := UI.button(list, core.catalog.text(link.title), core.move_scene.bind(id), core.condition_met(link.condition))
+		b.set_meta("focus_key", id)
+	var completion: String = data.get("completion_condition", "")
+	if not completion.is_empty() and core.condition_met(completion): UI.label(list, core.catalog.text(data.completion_text), 22)
 	_restore_focus(list)
 
 func _activate(id: String) -> void:

@@ -175,7 +175,7 @@ func _run() -> void:
 	await click(button(scene.gameplay_page.investigation,"核明后续占位问题"))
 	await frames()
 	expect(core.draft().target_selected, "后续推理入口自动选择目标")
-	var target_text: String = "推理目标（已选定）：" + core.catalog.text("q2_text")
+	var target_text: String = "推理目标（已选定）：" + core.catalog.text(core.catalog.data.questions.Q2.question_text_id)
 	expect(label(page, target_text) != null and button(page, target_text) == null, "自动选定的推理目标明确展示为问题文本")
 	expect(button(page, core.ui("UI_CORE_PRESENT")).disabled, "推理目标自动选定仍需选用材料才能出示")
 	await choose(page, 3)
