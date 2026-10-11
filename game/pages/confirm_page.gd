@@ -1,4 +1,9 @@
 extends Control
+## 页面自行读取装饰图片，确认动作仍由原信号通知调度层。
+
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "confirm")
+
 ## 确认页只负责确认文案、按钮状态和用户选择。
 
 signal cancelled # 用户取消离开。

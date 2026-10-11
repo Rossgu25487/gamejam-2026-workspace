@@ -2,14 +2,19 @@ extends Node
 ## 会话接口组合核心与导航快照，主入口不拼装库存、容错或结果字段。
 
 const CoreScript = preload("res://systems/core_gameplay/core_gameplay_service.gd")
+const WorkbookLoader = preload("res://systems/core_gameplay/story_workbook_loader.gd")
 signal autosave_requested(snapshot: Dictionary)
 var core: Node
 
-func initialize() -> bool:
+func initialize(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
 	core = CoreScript.new()
 	add_child(core)
 	core.autosave_requested.connect(_on_autosave)
-	return core.initialize()
+	return core.initialize(path)
+
+func story_title() -> String:
+	# 对外提供已解析的标题，Main无需了解Excel与旧JSON的文本引用差异。
+	return core.catalog.text(core.catalog.data.get("package_title", "package_title"))
 
 func start_new_game() -> Dictionary:
 	core.start_new_game()

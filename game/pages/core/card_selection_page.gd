@@ -3,6 +3,7 @@ extends VBoxContainer
 
 signal read_requested(ref: Dictionary, selection: bool)
 const UI = preload("res://pages/core/page_controls.gd")
+const Images = preload("res://pages/core/story_image_layer.gd")
 var service: Node
 var page_index := 0
 var card_buttons: Array[Button] = []
@@ -58,6 +59,7 @@ func render(core: Node) -> void:
 			read.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			read.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			read.add_theme_font_size_override("font_size", 14)
+			Images.attach_image(read, Images.material_layout(core, ref.content_id))
 			UI.button(box, core.ui("UI_CORE_REMOVE"), core.withdraw_material.bind(i))
 	var actions := HBoxContainer.new()
 	add_child(actions)
@@ -68,7 +70,8 @@ func render(core: Node) -> void:
 	UI.button(actions, "收起对局", core.fold_card_selection)
 	if q.has("parent"):
 		for id in core.catalog.data.entries:
-			if core.catalog.data.entries[id].get("object_id", "") == q.parent:
+			var entry: Dictionary = core.catalog.data.entries[id]
+			if entry.get("object_id", "") == q.parent and (str(entry.get("scene_id", "")).is_empty() or entry.scene_id == core.state.current_scene_id):
 				UI.button(actions, "直接问话", core.activate_entry.bind(id))
 	UI.button(actions, "收起牌库" if core.state.card_ui_page == "grid" else "全部材料", core.set_grid.bind(core.state.card_ui_page != "grid"))
 	# 原因与服务的资格检查一致，避免玩家把灰色按钮误认为必须填满两个槽。
@@ -144,9 +147,15 @@ func _card(parent: Node, ref: Dictionary, d: Dictionary) -> void:
 	read.add_theme_font_size_override("font_size", 14)
 	read.focus_entered.connect(_focused.bind(ref))
 	read.set_meta("material_ref", ref)
+	var art: Dictionary = Images.material_layout(service, read_ref.content_id)
+	if not art.is_empty():
+		read.custom_minimum_size.y = 60 if service.state.card_ui_page == "grid" else 110
+		read.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		Images.attach_image(read, art)
 	card_buttons.append(read)
 	var summary := UI.label(box, service.catalog.text(content.summary), 16)
 	summary.visible = service.state.card_ui_page != "grid"
+	if not art.is_empty(): summary.hide()
 	summary.max_lines_visible = 2
 	summary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	summary.size_flags_vertical = Control.SIZE_EXPAND_FILL

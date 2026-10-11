@@ -7,6 +7,7 @@ signal load_requested
 signal settings_requested
 signal exit_requested
 @onready var status: Label = $Status
+@onready var heading: Label = $PanelContainer/VBoxContainer/Heading
 @onready var panel: PanelContainer = $PanelContainer
 @onready var continue_button: Button = $PanelContainer/VBoxContainer/Continue
 @onready var new_game_button: Button = $PanelContainer/VBoxContainer/NewGame
@@ -16,6 +17,15 @@ signal exit_requested
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false # 存档扫描是否完成。
 var has_progress := false # 是否存在可以继续的有效存档。
+func bind_images(core: Node) -> void:
+	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "title")
+
+func apply_story_title(title: String) -> void:
+	# 标题页管理自己的文本和换行，调度层仅传入配置中的案件标题。
+	heading.text = title
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	heading.custom_minimum_size.x = 280
+
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
 	continue_button.pressed.connect(continue_requested.emit)
@@ -57,6 +67,30 @@ func apply_scan_result(has_progress: bool) -> void:
 func apply_latest_summary(summary: String) -> void:
 	# 标题页只负责显示存档服务提供的最新有效进度摘要。
 	detail.text = "最近有效进度：" + summary
+
+func show_configuration_error(messages: Array[String]) -> void:
+	# 错误页面属于标题节点自身：保留完整错误正文，阻止开始无效案件。
+	scan_complete = true
+	status.text = "故事配置错误"
+	detail.text = "请修正配置表后重新运行。"
+	for button in [continue_button, new_game_button, load_button, settings_button]:
+		button.disabled = true
+		button.hide()
+	# 错误正文占用独立滚动区，保持标题节点内居中且退出按钮始终可见。
+	panel.offset_left = -330
+	panel.offset_right = 330
+	panel.offset_top = -250
+	panel.offset_bottom = 250
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(600, 300)
+	panel.get_child(0).add_child(scroll)
+	var error_text := Label.new()
+	error_text.text = "\n".join(messages)
+	error_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	error_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(error_text)
+	show()
+	exit_button.grab_focus()
 func show_page() -> void:
 	# 页面恢复时由自身恢复默认焦点。
 	show()

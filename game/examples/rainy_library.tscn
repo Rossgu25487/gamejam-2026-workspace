@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://main/main.tscn" id="1"]
+
+[node name="RainyLibrary" instance=ExtResource("1")]
+story_workbook_path = "res://data/story/outputs/rainy-images-20261011/雨夜借阅单.xlsx"
+test_storage_path = "user://story-examples/rainy-library-v1"
