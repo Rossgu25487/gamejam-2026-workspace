@@ -41,6 +41,10 @@ switch ($Action) {
   'test' {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--editor','--import','--quit') 'import.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/test_suite.gd') 'tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_gameplay_test.gd') 'core-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_input_test.gd') 'core-input-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/navigation_checks.gd') 'navigation-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/confirmation_repeat_test.gd') 'confirmation-tests.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }

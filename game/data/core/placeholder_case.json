@@ -1,0 +1,495 @@
+{
+  "case_id": "PLACEHOLDER_CASE",
+  "content_revision": "placeholder-1",
+  "placeholder": true,
+  "initial_scene": "ROOM",
+  "texts": {
+    "scene_name": "占位地点 · 调查室",
+    "person_name": "占位人物甲",
+    "package_title": "占位首段 · 材料核对",
+    "package_note": "正式地点、人物与案件尚未交付。本页使用占位内容接通玩法和存读档。",
+    "inspect": "检查占位资料",
+    "inspect_text": "取得占位证据甲 v1、证据乙和其他对象记录。证据甲与证据乙共同核对人物说法。",
+    "update": "复核占位资料",
+    "update_text": "取得证据甲 v2。新版独立持有，不自动授予未取得的旧版；新版单份即可充分核对。",
+    "speak": "与占位人物交谈",
+    "speak_text": "占位人物甲说：这份记录始终没有变化。\n取得会面记录及三个不参与证明的占位记录，用于测试超过五张材料的查阅。",
+    "original": "这份记录始终没有变化。",
+    "corrected": "记录已发生变化，原先的判断需要修正。",
+    "q1": "核对占位说法",
+    "q2": "核明后续占位问题",
+    "q2_text": "现有推论与证据乙能否共同确认后续事项？",
+    "insufficient": "目前的材料尚不足以确认本问题；可以重新选材或稍后核对。",
+    "partial": "证据甲 v1只支持部分范围。请主动补入证据乙，或先取得甲的复核版。",
+    "incorrect": "该记录属于另一对象。已知两者不是同一对象，因此本次出示错置了证明范围。",
+    "response_one": "占位复核版单份充分。人物回应：原先的判断需要修正。\n形成占位推论，收下后才更正说法并开放后续问题。",
+    "response_two": "占位证据甲 v1与证据乙共同充分。收下推论后才提交更正、确认与后续开放。",
+    "response_q2": "后续占位事项已得到支持。点击继续时提交确认，并按正常返回流程自动保存。",
+    "A1_title": "占位证据甲",
+    "A1_summary": "原始记录，支持部分范围。",
+    "A1_body": "占位内容：原始记录显示了一项变化的迹象，需结合乙或复核新版核明。",
+    "A2_title": "占位证据甲 · 复核",
+    "A2_summary": "复核后的记录，单份充分。",
+    "A2_body": "占位内容：复核记录明确显示记录已经变化。它可以单份充分核对占位人物的原话。",
+    "B1_title": "占位证据乙",
+    "B1_summary": "与甲 v1一起支持完整范围。",
+    "B1_body": "占位内容：此记录补足甲 v1的证明范围。",
+    "OTHER1_title": "另一对象的占位记录",
+    "OTHER1_summary": "属于不同对象，不能对应当前目标。",
+    "OTHER1_body": "占位内容：这是另一对象的记录。玩家已知它与当前对象不同。",
+    "TALK1_title": "占位会面记录",
+    "TALK1_summary": "保留已经听到的原话。",
+    "TALK1_body": "占位人物甲：这份记录始终没有变化。",
+    "TALK2_title": "占位会面记录 · 更正",
+    "TALK2_summary": "保留更正后的原话。",
+    "TALK2_body": "占位人物甲：记录已发生变化，原先的判断需要修正。",
+    "I1_title": "占位推论",
+    "I1_summary": "用于后续核查，必须主动收下。",
+    "I1_body": "占位内容：本次实际依据共同证明记录发生变化。来源保持形成时的版本与取得路径。",
+    "EXTRA11_title": "无关占位记录1",
+    "EXTRA11_summary": "不参与当前充分或错误关系。",
+    "EXTRA11_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。",
+    "EXTRA21_title": "无关占位记录2",
+    "EXTRA21_summary": "不参与当前充分或错误关系。",
+    "EXTRA21_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。",
+    "EXTRA31_title": "无关占位记录3",
+    "EXTRA31_summary": "不参与当前充分或错误关系。",
+    "EXTRA31_body": "占位内容：独立查阅与分页测试记录；默认不足不会扣次。"
+  },
+  "materials": {
+    "A": {
+      "type": "evidence"
+    },
+    "B": {
+      "type": "evidence"
+    },
+    "OTHER": {
+      "type": "evidence"
+    },
+    "TALK": {
+      "type": "testimony"
+    },
+    "I": {
+      "type": "inference"
+    },
+    "EXTRA1": {
+      "type": "testimony"
+    },
+    "EXTRA2": {
+      "type": "testimony"
+    },
+    "EXTRA3": {
+      "type": "testimony"
+    }
+  },
+  "contents": {
+    "A1": {
+      "material_id": "A",
+      "version": 1,
+      "previous": "",
+      "title": "A1_title",
+      "summary": "A1_summary",
+      "body": "A1_body"
+    },
+    "A2": {
+      "material_id": "A",
+      "version": 2,
+      "previous": "A1",
+      "title": "A2_title",
+      "summary": "A2_summary",
+      "body": "A2_body"
+    },
+    "B1": {
+      "material_id": "B",
+      "version": 1,
+      "previous": "",
+      "title": "B1_title",
+      "summary": "B1_summary",
+      "body": "B1_body"
+    },
+    "OTHER1": {
+      "material_id": "OTHER",
+      "version": 1,
+      "previous": "",
+      "title": "OTHER1_title",
+      "summary": "OTHER1_summary",
+      "body": "OTHER1_body"
+    },
+    "TALK1": {
+      "material_id": "TALK",
+      "version": 1,
+      "previous": "",
+      "title": "TALK1_title",
+      "summary": "TALK1_summary",
+      "body": "TALK1_body"
+    },
+    "TALK2": {
+      "material_id": "TALK",
+      "version": 2,
+      "previous": "TALK1",
+      "title": "TALK2_title",
+      "summary": "TALK2_summary",
+      "body": "TALK2_body"
+    },
+    "I1": {
+      "material_id": "I",
+      "version": 1,
+      "previous": "",
+      "title": "I1_title",
+      "summary": "I1_summary",
+      "body": "I1_body"
+    },
+    "EXTRA11": {
+      "material_id": "EXTRA1",
+      "version": 1,
+      "previous": "",
+      "title": "EXTRA11_title",
+      "summary": "EXTRA11_summary",
+      "body": "EXTRA11_body"
+    },
+    "EXTRA21": {
+      "material_id": "EXTRA2",
+      "version": 1,
+      "previous": "",
+      "title": "EXTRA21_title",
+      "summary": "EXTRA21_summary",
+      "body": "EXTRA21_body"
+    },
+    "EXTRA31": {
+      "material_id": "EXTRA3",
+      "version": 1,
+      "previous": "",
+      "title": "EXTRA31_title",
+      "summary": "EXTRA31_summary",
+      "body": "EXTRA31_body"
+    }
+  },
+  "statements": {
+    "S1": {
+      "claim_id": "CLAIM",
+      "speaker": "PERSON",
+      "text": "original",
+      "record_content": "TALK1",
+      "version": 1
+    },
+    "S2": {
+      "claim_id": "CLAIM",
+      "speaker": "PERSON",
+      "text": "corrected",
+      "record_content": "TALK2",
+      "version": 2
+    }
+  },
+  "questions": {
+    "Q1": {
+      "title": "q1",
+      "target_kind": "statement",
+      "parent": "PERSON",
+      "statement_id": "S1",
+      "condition": "HEARD",
+      "insufficient_node": "N_INSUFFICIENT"
+    },
+    "Q2": {
+      "title": "q2",
+      "target_kind": "reasoning",
+      "question_text_id": "q2_text",
+      "condition": "Q1_DONE",
+      "insufficient_node": "N_INSUFFICIENT"
+    }
+  },
+  "relations": {
+    "R_ONE": {
+      "question_id": "Q1",
+      "materials": [
+        {
+          "material_id": "A",
+          "content_id": "A2"
+        }
+      ],
+      "feedback": "full",
+      "node": "N_ONE",
+      "condition": "ALWAYS",
+      "match_scope": "contains",
+      "effect_kind": "inference",
+      "effect_level": "key",
+      "statement_id": "S1",
+      "question_text_id": "",
+      "result_key": "Q1_SCOPE",
+      "confirmed_scope": "记录已发生变化",
+      "inference": "I1",
+      "climax_key": "RECORD_CHANGED"
+    },
+    "R_TWO": {
+      "question_id": "Q1",
+      "materials": [
+        {
+          "material_id": "A",
+          "content_id": "A1"
+        },
+        {
+          "material_id": "B",
+          "content_id": "B1"
+        }
+      ],
+      "feedback": "full",
+      "node": "N_TWO",
+      "condition": "ALWAYS",
+      "match_scope": "contains",
+      "effect_kind": "inference",
+      "effect_level": "key",
+      "statement_id": "S1",
+      "question_text_id": "",
+      "result_key": "Q1_SCOPE",
+      "confirmed_scope": "记录已发生变化",
+      "inference": "I1",
+      "climax_key": "RECORD_CHANGED"
+    },
+    "R_PARTIAL": {
+      "question_id": "Q1",
+      "materials": [
+        {
+          "material_id": "A",
+          "content_id": "A1"
+        }
+      ],
+      "feedback": "partial",
+      "node": "N_PARTIAL",
+      "condition": "ALWAYS",
+      "match_scope": "contains",
+      "effect_kind": "support",
+      "effect_level": "normal",
+      "statement_id": "S1",
+      "question_text_id": ""
+    },
+    "R_ERROR": {
+      "question_id": "Q1",
+      "materials": [
+        {
+          "material_id": "OTHER",
+          "content_id": "OTHER1"
+        }
+      ],
+      "feedback": "incorrect",
+      "node": "N_ERROR",
+      "condition": "KNOWN_OTHER",
+      "match_scope": "exact_set",
+      "effect_kind": "support",
+      "effect_level": "normal",
+      "statement_id": "S1",
+      "question_text_id": "",
+      "reason": "incorrect"
+    },
+    "R_Q2_R_ONE": {
+      "question_id": "Q2",
+      "materials": [
+        {
+          "material_id": "I",
+          "content_id": "I1"
+        },
+        {
+          "material_id": "B",
+          "content_id": "B1"
+        }
+      ],
+      "feedback": "full",
+      "node": "N_Q2",
+      "condition": "ALWAYS",
+      "match_scope": "contains",
+      "effect_kind": "support",
+      "effect_level": "progress",
+      "statement_id": "",
+      "question_text_id": "q2_text",
+      "result_key": "Q2_SCOPE",
+      "confirmed_scope": "后续占位事项成立",
+      "basis_results": [
+        {
+          "relation_id": "R_ONE",
+          "target_ref": {
+            "target_kind": "statement",
+            "question_id": "Q1",
+            "statement_ref": {
+              "claim_id": "CLAIM",
+              "statement_id": "S1"
+            }
+          }
+        }
+      ]
+    },
+    "R_Q2_R_TWO": {
+      "question_id": "Q2",
+      "materials": [
+        {
+          "material_id": "I",
+          "content_id": "I1"
+        },
+        {
+          "material_id": "B",
+          "content_id": "B1"
+        }
+      ],
+      "feedback": "full",
+      "node": "N_Q2",
+      "condition": "ALWAYS",
+      "match_scope": "contains",
+      "effect_kind": "support",
+      "effect_level": "progress",
+      "statement_id": "",
+      "question_text_id": "q2_text",
+      "result_key": "Q2_SCOPE",
+      "confirmed_scope": "后续占位事项成立",
+      "basis_results": [
+        {
+          "relation_id": "R_TWO",
+          "target_ref": {
+            "target_kind": "statement",
+            "question_id": "Q1",
+            "statement_ref": {
+              "claim_id": "CLAIM",
+              "statement_id": "S1"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "nodes": {
+    "N_INSUFFICIENT": {
+      "text": "insufficient",
+      "timing": "none"
+    },
+    "N_PARTIAL": {
+      "text": "partial",
+      "timing": "none"
+    },
+    "N_ERROR": {
+      "text": "incorrect",
+      "timing": "none"
+    },
+    "N_ONE": {
+      "text": "response_one",
+      "timing": "collect",
+      "group": "G_Q1"
+    },
+    "N_TWO": {
+      "text": "response_two",
+      "timing": "collect",
+      "group": "G_Q1"
+    },
+    "N_Q2": {
+      "text": "response_q2",
+      "timing": "continue",
+      "group": "G_Q2"
+    }
+  },
+  "groups": {
+    "G_Q1": [
+      {
+        "kind": "correct",
+        "question_id": "Q1",
+        "statement_id": "S2"
+      },
+      {
+        "kind": "fact",
+        "ref": "changed"
+      },
+      {
+        "kind": "confirm"
+      }
+    ],
+    "G_Q2": [
+      {
+        "kind": "fact",
+        "ref": "followup_confirmed"
+      },
+      {
+        "kind": "confirm"
+      }
+    ]
+  },
+  "conditions": {
+    "ALWAYS": [
+      []
+    ],
+    "HEARD": [
+      [
+        {
+          "kind": "heard",
+          "ref": "S1"
+        }
+      ]
+    ],
+    "KNOWN_OTHER": [
+      [
+        {
+          "kind": "fact",
+          "ref": "other_known"
+        }
+      ]
+    ],
+    "Q1_DONE": [
+      [
+        {
+          "kind": "completed",
+          "ref": "Q1"
+        },
+        {
+          "kind": "owned",
+          "ref": "I1"
+        }
+      ]
+    ]
+  },
+  "entries": {
+    "INSPECT": {
+      "title": "inspect",
+      "text": "inspect_text",
+      "condition": "ALWAYS",
+      "contents": [
+        "A1",
+        "B1",
+        "OTHER1"
+      ],
+      "source_id": "SRC_INSPECT",
+      "object_id": "TABLE",
+      "facts": [
+        "other_known"
+      ]
+    },
+    "UPDATE": {
+      "title": "update",
+      "text": "update_text",
+      "condition": "ALWAYS",
+      "contents": [
+        "A2"
+      ],
+      "source_id": "SRC_UPDATE",
+      "object_id": "TABLE"
+    },
+    "TALK": {
+      "title": "speak",
+      "text": "speak_text",
+      "condition": "ALWAYS",
+      "contents": [
+        "TALK1",
+        "EXTRA11",
+        "EXTRA21",
+        "EXTRA31"
+      ],
+      "source_id": "SRC_TALK",
+      "object_id": "PERSON",
+      "statements": [
+        "S1"
+      ]
+    }
+  },
+  "scenes": {
+    "ROOM": {
+      "name": "scene_name"
+    }
+  },
+  "characters": {
+    "PERSON": {
+      "name": "person_name"
+    }
+  }
+}

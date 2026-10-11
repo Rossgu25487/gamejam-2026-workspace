@@ -14,7 +14,3 @@ func _on_settings_initialized(_success: bool, _message: String, save_service: No
 	var records: Array = save_service.scan()
 	initialized = true
 	ready_for_title.emit(not records.is_empty())
-
-func create_new_game() -> Dictionary:
-	# 建立新调查的最小初始快照；具体玩法状态由核心模块继续补充。
-	return {"state_revision": 1, "question_id": "intro", "elapsed_seconds": 0, "navigation_snapshot": {"page_id": "investigation"}}

@@ -18,10 +18,11 @@ const DEFAULTS := { # 首次建立和恢复默认使用的设置初值。
 const VOLUME_STEP := 5 # 键盘或步进操作的音量变化幅度。
 var values: Dictionary = DEFAULTS.duplicate(true) # 当前运行中的设置值。
 var initialized_ok := false # 是否完成初始化流程。
+var storage_path := FILE_PATH # 回归测试独立设置文件，不改写玩家偏好。
 
 func initialize() -> void:
 	# 读取独立设置文件；文件不存在或版本无效时回退到默认值。
-	var file := FileAccess.open(FILE_PATH, FileAccess.READ)
+	var file := FileAccess.open(storage_path, FileAccess.READ)
 	if file == null:
 		values = DEFAULTS.duplicate(true)
 		initialized_ok = true
@@ -65,7 +66,7 @@ func restore_defaults() -> bool:
 
 func save() -> bool:
 	# 将当前偏好写入独立 JSON 文件。
-	var file := FileAccess.open(FILE_PATH, FileAccess.WRITE)
+	var file := FileAccess.open(storage_path, FileAccess.WRITE)
 	if file == null:
 		persistence_failed.emit("无法写入设置文件")
 		return false

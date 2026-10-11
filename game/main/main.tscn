@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://3hp1as08uhpw"]
 
 [ext_resource type="Script" uid="uid://blc5loj7vyerr" path="res://main/main.gd" id="1"]
-[ext_resource type="PackedScene" path="res://ui/counter_view.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://pages/core/core_gameplay_page.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://title_page/title_page.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://pause_page/pause_page.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://pages/save_page.tscn" id="5"]
@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="CounterView" parent="." unique_id=1065140378 instance=ExtResource("2")]
+[node name="CoreGameplayPage" parent="." instance=ExtResource("2")]
 layout_mode = 1
 
 [node name="TitlePage" parent="." unique_id=164870302 instance=ExtResource("3")]

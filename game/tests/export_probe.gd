@@ -14,12 +14,13 @@ func _verify() -> void:
 		failures.append("Exported main scene could not load")
 	else:
 		var scene = packed.instantiate()
+		scene.test_storage_path = "user://export-probe/%d" % Time.get_ticks_usec()
 		root.add_child(scene)
 		await process_frame
-		var view = scene.get_node("CounterView")
-		view.get_node("%IncrementButton").pressed.emit()
-		if view.get_node("%ValueLabel").text != "1":
-			failures.append("Exported live interface did not increment")
+		scene.title_page.new_game_requested.emit()
+		var core: Node = scene.session_service.core
+		if not core.activate_entry("INSPECT") or core.store.entities.size() != 3:
+			failures.append("Exported gameplay could not acquire configured materials")
 		scene.queue_free()
 		await process_frame
 	for error in failures:

@@ -1,5 +1,6 @@
 # Local editor state, credentials, generated builds and QA captures
 .local/
+game/.local/
 game/.godot/
 game/.godot/**
 game/.mono/

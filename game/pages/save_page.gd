@@ -2,6 +2,7 @@ extends Control
 ## 保存页只负责手动存档栏位的显示、焦点和点击处理。
 
 signal closed # 保存完成或用户关闭后返回来源页面。
+signal saved # 只在成功写入后通知调度层，可用于保存后离开。
 
 var save_service: Node
 var snapshot: Dictionary = {}
@@ -58,4 +59,4 @@ func close_page() -> void:
 func _save_slot(index: int) -> void:
 	# 只有服务确认写入成功后才关闭页面。
 	if is_instance_valid(save_service) and save_service.save_snapshot("manual", index, snapshot):
-		closed.emit()
+		saved.emit()

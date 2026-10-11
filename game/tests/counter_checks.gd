@@ -6,7 +6,7 @@ extends RefCounted
 const ModelScript = preload("res://features/counter_demo/counter_model.gd")
 const ConfigScript = preload("res://data/demo_config.gd")
 
-const MAIN_SCENE: String = "res://main/main.tscn"
+const MAIN_SCENE: String = "res://features/counter_demo/counter_demo.tscn"
 const VIEW_SCENE: String = "res://ui/counter_view.tscn"
 
 

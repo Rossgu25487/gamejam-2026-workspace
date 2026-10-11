@@ -11,6 +11,8 @@ const SCHEMA_VERSION := 1 # 存档容器格式版本。
 const DIR_PATH := "user://saves" # 存档文件目录，不依赖工程绝对路径。
 var records: Array = [] # 最近一次扫描得到的有效记录。
 var sequence := 0 # 全部栏位共用的成功保存序号。
+var storage_path := DIR_PATH # 测试可注入隔离目录，运行默认使用玩家目录。
+var snapshot_validator: Callable # 会话模块提供完整性验证，读取前拒绝损坏快照。
 
 func scan() -> Array:
 	# 按固定栏位读取磁盘文件，并恢复本次运行的序号基线。
@@ -22,7 +24,7 @@ func scan() -> Array:
 			if not FileAccess.file_exists(path): continue
 			var file := FileAccess.open(path, FileAccess.READ)
 			var data = JSON.parse_string(file.get_as_text()) if file else null
-			if typeof(data) == TYPE_DICTIONARY and int(data.get("schema_version", -1)) == SCHEMA_VERSION:
+			if _valid_record(data, kind, index):
 				records.append(data)
 				sequence = maxi(sequence, int(data.get("save_sequence", 0)))
 	scan_completed.emit(records.duplicate(true))
@@ -37,20 +39,29 @@ func save_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> 
 	if not _valid_slot(slot_kind, slot_index):
 		operation_completed.emit(false, "存档栏位无效")
 		return false
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DIR_PATH))
+	if snapshot_validator.is_valid() and not snapshot_validator.call(snapshot):
+		operation_completed.emit(false, "快照不完整，未覆盖存档")
+		return false
+	if sequence == 0: scan()
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(storage_path))
 	var path := _path(slot_kind, slot_index)
-	var file := FileAccess.open(path, FileAccess.WRITE)
+	var temporary := path + ".tmp"
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null:
 		operation_completed.emit(false, "存档写入失败")
 		return false
 	# 序号只在写入成功后提交；同一服务实例启动时先从磁盘最大序号继续。
-	if sequence == 0:
-		scan()
 	var next_sequence := sequence + 1
 	var record := snapshot.duplicate(true)
 	# 强制写入本次目标栏位的元数据，避免从自动档恢复后手动保存仍被标记为 auto。
 	record.merge({"schema_version": SCHEMA_VERSION, "slot_kind": slot_kind, "slot_index": slot_index, "save_sequence": next_sequence, "saved_at_utc": Time.get_datetime_string_from_system(true)}, true)
 	file.store_string(JSON.stringify(record))
+	file.flush()
+	var write_error := file.get_error()
+	file.close()
+	if write_error != OK or DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path)) != OK:
+		operation_completed.emit(false, "存档写入失败，原存档已保留")
+		return false
 	sequence = next_sequence
 	operation_completed.emit(true, "存档成功")
 	return true
@@ -69,7 +80,7 @@ func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 		operation_completed.emit(false, "读取存档失败，当前会话已保留")
 		return {}
 	var data = JSON.parse_string(file.get_as_text())
-	if typeof(data) != TYPE_DICTIONARY or int(data.get("schema_version", -1)) != SCHEMA_VERSION:
+	if not _valid_record(data, slot_kind, slot_index):
 		operation_completed.emit(false, "存档版本不受支持，当前会话已保留")
 		return {}
 	operation_completed.emit(true, "读取存档成功")
@@ -108,4 +119,9 @@ func _valid_slot(kind: String, index: int) -> bool:
 
 func _path(kind: String, index: int) -> String:
 	# 将逻辑栏位映射到 user:// 下的实际文件名。
-	return "%s/%s_%d.json" % [DIR_PATH, kind, index]
+	return "%s/%s_%d.json" % [storage_path, kind, index]
+
+func _valid_record(data, kind: String, index: int) -> bool:
+	if not data is Dictionary or int(data.get("schema_version", -1)) != SCHEMA_VERSION: return false
+	if data.get("slot_kind") != kind or int(data.get("slot_index", -1)) != index or int(data.get("save_sequence", 0)) < 1: return false
+	return not snapshot_validator.is_valid() or snapshot_validator.call(data)

@@ -1,0 +1,211 @@
+{
+  "核心总控": [
+    {
+      "id": "CORE_DEFAULT",
+      "data_scope": "runtime",
+      "slot_count": 2,
+      "bar_page_size": 5,
+      "grid_columns": 6,
+      "grid_visible_rows": 2,
+      "single_material_sufficient": true,
+      "material_consumed": false
+    }
+  ],
+  "容错策略": [
+    {
+      "id": "MISTAKE_DEFAULT",
+      "data_scope": "runtime",
+      "initial_chances": 3,
+      "error_cost": 1,
+      "failure_at": 0,
+      "retry_chances": 3,
+      "retry_text_ref": "UI_COMMON_RETRY"
+    }
+  ],
+  "判定顺序": [
+    {
+      "id": "MATCH_1",
+      "data_scope": "runtime",
+      "order": 1,
+      "stage": "two_full"
+    },
+    {
+      "id": "MATCH_2",
+      "data_scope": "runtime",
+      "order": 2,
+      "stage": "one_full"
+    },
+    {
+      "id": "MATCH_3",
+      "data_scope": "runtime",
+      "order": 3,
+      "stage": "partial_or_counter"
+    },
+    {
+      "id": "MATCH_4",
+      "data_scope": "runtime",
+      "order": 4,
+      "stage": "explicit_error"
+    },
+    {
+      "id": "MATCH_5",
+      "data_scope": "runtime",
+      "order": 5,
+      "stage": "insufficient"
+    }
+  ],
+  "普通反馈": [
+    {
+      "id": "FB_SUPPORT",
+      "data_scope": "runtime",
+      "feedback_key": "support",
+      "duration_ms": 300,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_LIMIT",
+      "data_scope": "runtime",
+      "feedback_key": "limit",
+      "duration_ms": 500,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_EXCLUDE",
+      "data_scope": "runtime",
+      "feedback_key": "exclude",
+      "duration_ms": 300,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_INFERENCE",
+      "data_scope": "runtime",
+      "feedback_key": "inference",
+      "duration_ms": 400,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_PARTIAL",
+      "data_scope": "runtime",
+      "feedback_key": "partial",
+      "duration_ms": 250,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_INSUFFICIENT",
+      "data_scope": "runtime",
+      "feedback_key": "insufficient",
+      "duration_ms": 200,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_COUNTER",
+      "data_scope": "runtime",
+      "feedback_key": "counter",
+      "duration_ms": 300,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_REPEAT",
+      "data_scope": "runtime",
+      "feedback_key": "repeat",
+      "duration_ms": 180,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_ERROR_DEDUCT",
+      "data_scope": "runtime",
+      "feedback_key": "error_deduct",
+      "duration_ms": 750,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_QUESTION_FAILED",
+      "data_scope": "runtime",
+      "feedback_key": "question_failed",
+      "duration_ms": 1500,
+      "hold_ms": 280
+    },
+    {
+      "id": "FB_QUESTION_RETRY",
+      "data_scope": "runtime",
+      "feedback_key": "question_retry",
+      "duration_ms": 850,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_INFERENCE_CARD",
+      "data_scope": "runtime",
+      "feedback_key": "inference_card",
+      "duration_ms": 1600,
+      "hold_ms": 0
+    },
+    {
+      "id": "FB_COLLECT",
+      "data_scope": "runtime",
+      "feedback_key": "collect",
+      "duration_ms": 900,
+      "hold_ms": 0
+    }
+  ],
+  "表现规则": [
+    {
+      "id": "PRESENT_NORMAL",
+      "data_scope": "runtime",
+      "effect_level": "normal",
+      "effect_kind": "",
+      "duration_ms": "",
+      "first_resolution_only": false,
+      "requires_climax_key": false,
+      "per_present_main_limit": 1,
+      "per_climax_limit": ""
+    },
+    {
+      "id": "PRESENT_PROGRESS",
+      "data_scope": "runtime",
+      "effect_level": "progress",
+      "effect_kind": "",
+      "duration_ms": 3200,
+      "first_resolution_only": true,
+      "requires_climax_key": false,
+      "per_present_main_limit": 1,
+      "per_climax_limit": ""
+    },
+    {
+      "id": "PRESENT_KEY_BREAK",
+      "data_scope": "runtime",
+      "effect_level": "key",
+      "effect_kind": "击破",
+      "duration_ms": 5600,
+      "first_resolution_only": true,
+      "requires_climax_key": true,
+      "per_present_main_limit": 1,
+      "per_climax_limit": 1
+    },
+    {
+      "id": "PRESENT_KEY_INSIGHT",
+      "data_scope": "runtime",
+      "effect_level": "key",
+      "effect_kind": "涌现",
+      "duration_ms": 6800,
+      "first_resolution_only": true,
+      "requires_climax_key": true,
+      "per_present_main_limit": 1,
+      "per_climax_limit": 1
+    }
+  ],
+  "槽位模板": [
+    {
+      "id": "SLOT_0",
+      "data_scope": "runtime",
+      "slot_index": 0,
+      "fill_order": 1
+    },
+    {
+      "id": "SLOT_1",
+      "data_scope": "runtime",
+      "slot_index": 1,
+      "fill_order": 2
+    }
+  ],
+  "错误出示": []
+}

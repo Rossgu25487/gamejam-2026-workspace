@@ -6,7 +6,7 @@ func _initialize() -> void:
 	call_deferred("_exercise")
 
 func _exercise() -> void:
-	var scene = load("res://main/main.tscn").instantiate()
+	var scene = load("res://features/counter_demo/counter_demo.tscn").instantiate()
 	root.add_child(scene)
 	await process_frame
 	await process_frame
