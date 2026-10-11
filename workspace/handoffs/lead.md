@@ -4,6 +4,6 @@
 
 本机分支：`codex/lead/local-setup`；当前提交用 `git log -1` 查询。
 
-本轮将标题页落为 `game/main/main.tscn` 的 `TitlePage` 节点；标题状态隐藏 `CounterView`，进入调查再显示。原有计数界面的布局偏移保留。导航测试覆盖启动、进入调查、返回标题的显示切换。
+本轮用户任务：制作配置表可玩示例《雨夜借阅单》。本机分支沿用上方；准确提交查`git log -1`。完成后仅本地提交，本轮未上传远端。
 
-恢复入口：`game/main/main.gd`、`game/main/main.tscn`、`game/tests/navigation_checks.gd`；日志在 `.local/`。编辑器如有未保存场景，先核对磁盘更改再重新加载。
+恢复入口：`docs/雨夜借阅单试玩说明.md`、`game/examples/rainy_library.tscn`、`game/data/story/outputs/rainy-library-20261011/雨夜借阅单.xlsx`、`game/tests/story_example_test.gd`。接口线索见`docs/接口与交接.md`；本地测试日志和截图在`.local/`。默认F5仍读原占位配置，示例按F6运行。编辑器如有未保存场景，先核对磁盘更改再重新加载。

@@ -4,6 +4,8 @@
 
 故事现在直接读取 [故事配置表.xlsx](game/data/story/outputs/story-config-20261011/故事配置表.xlsx)。在 Excel/WPS 中填写并保存后重新运行 Godot，无需改脚本或转换 JSON。表内已有占位案例，字段与限制见[故事配置表填写指南](docs/故事配置表填写指南.md)。
 
+可以用虚构短篇《雨夜借阅单》体验完整配置示例：在 Godot 打开 `game/examples/rainy_library.tscn`，按 F6 运行。包含调查、错误出示、补材、收下推论、地点切换和存读档，操作与解法见[示例试玩说明](docs/雨夜借阅单试玩说明.md)。示例内容和存档独立保存，F5 仍运行原占位案例。
+
 **[打开团队工作台 →](https://rossgu25487.github.io/gamejam-2026-workspace/)**
 
 大家日常只需看三件事：**当前工程版本、待完成与已完成任务、项目节点**。网页可以直接打开，任务统一保存在 GitHub，工程仍使用 Godot。

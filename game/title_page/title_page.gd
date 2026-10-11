@@ -7,6 +7,7 @@ signal load_requested
 signal settings_requested
 signal exit_requested
 @onready var status: Label = $Status
+@onready var heading: Label = $PanelContainer/VBoxContainer/Heading
 @onready var panel: PanelContainer = $PanelContainer
 @onready var continue_button: Button = $PanelContainer/VBoxContainer/Continue
 @onready var new_game_button: Button = $PanelContainer/VBoxContainer/NewGame
@@ -16,6 +17,12 @@ signal exit_requested
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false # 存档扫描是否完成。
 var has_progress := false # 是否存在可以继续的有效存档。
+func apply_story_title(title: String) -> void:
+	# 标题页管理自己的文本和换行，调度层仅传入配置中的案件标题。
+	heading.text = title
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	heading.custom_minimum_size.x = 280
+
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
 	continue_button.pressed.connect(continue_requested.emit)
