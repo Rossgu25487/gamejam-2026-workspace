@@ -13,6 +13,9 @@ func render(core: Node) -> void:
 	else: UI.label(self, "等待收下推论" if core.state.mode == "pending" else ("已收下推论" if core.state.mode == "collected" else "核对回应"), 28)
 	if not result.is_empty():
 		UI.body(self, core.catalog.text(core.catalog.data.nodes[result.node].text), 190)
+		if result.get("feedback", "") == "incorrect" and not str(result.get("reason_text_id", "")).is_empty():
+			UI.label(self, core.ui("UI_CORE_ERROR_REASON_TITLE"), 22)
+			UI.body(self, core.catalog.text(result.reason_text_id), 150)
 		if not str(result.get("inference_content_id", "")).is_empty():
 			var c: Dictionary = core.catalog.data.contents[result.inference_content_id]
 			UI.label(self, core.catalog.text(c.title), 24)

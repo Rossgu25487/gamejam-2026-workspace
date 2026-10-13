@@ -8,6 +8,7 @@ signal presentation_requested(display: Dictionary)
 
 const CatalogScript = preload("res://systems/core_gameplay/core_catalog.gd")
 const StoreScript = preload("res://systems/core_gameplay/core_material_store.gd")
+const TalkStore = preload("res://systems/core_gameplay/core_talk_records.gd")
 const SNAPSHOT_VERSION := 1
 var catalog: RefCounted = CatalogScript.new()
 var store: RefCounted = StoreScript.new()
@@ -118,11 +119,26 @@ func activate_entry(id: String) -> bool:
 func hear_statement(statement_id: String, entry_id: String) -> bool:
 	if not catalog.data.statements.has(statement_id): return false
 	if not catalog.data.entries.has(entry_id) or statement_id not in catalog.data.entries[entry_id].get("statements", []): return false
-	if statement_id not in state.heard_statements:
-		state.heard_statements.append(statement_id)
-		var s: Dictionary = catalog.data.statements[statement_id]
-		state.talk_records.append({"kind": "statement", "statement_id": statement_id, "claim_id": s.claim_id, "speaker": s.speaker, "text_id": s.text, "entry_id": entry_id})
+	if statement_id not in state.heard_statements: state.heard_statements.append(statement_id)
+	# 相同原话在另一真实会面入口出现时保留另一段经历；重复打开同一入口不补记。
+	for record in state.talk_records:
+		if record.get("kind") == "statement" and record.get("entry_id") == entry_id and record.get("statement_id") == statement_id: return true
+	var s: Dictionary = catalog.data.statements[statement_id]
+	state.talk_records.append({"kind": "statement", "record_id": "statement/%s/%s" % [entry_id, statement_id], "statement_id": statement_id, "claim_id": s.claim_id, "speaker": s.speaker, "text_id": s.text, "entry_id": entry_id, "read": false})
 	return true
+
+func talk_segments() -> Array:
+	# 派生展示不建立第二份剧情正文，也不向静态配置追补未听句。
+	return TalkStore.segments(state.get("talk_records", []), catalog)
+
+func mark_talk_read(record_id: String) -> void:
+	if record_id.is_empty(): return
+	for record in state.get("talk_records", []):
+		if TalkStore.record_id(record) == record_id:
+			if not record.get("read", false):
+				record.read = true
+				_changed()
+			return
 
 func finish_dialogue() -> void:
 	if paused or state.mode != "dialogue": return
@@ -155,6 +171,10 @@ func open_card_session(id: String, caller: Dictionary = {}) -> bool:
 	if not _in_current_scene(catalog.data.questions[id]): return _reject("该问题不在当前地点")
 	var target := target_for(id)
 	if not _legal_target(target): return _reject("尚未听到这版说法")
+	# 同一问题收起后可恢复；切换到另一合法问题才清除旧问题选择。
+	for previous in state.drafts.keys():
+		if previous != id: state.drafts.erase(previous)
+	if state.question_id != id: state.partial_result = {}
 	state.question_id = id
 	state.card_caller_ref = caller.duplicate(true)
 	if not state.chances.has(id): state.chances[id] = 3
@@ -468,8 +488,13 @@ func _apply_result(timing: String) -> bool:
 				state.current_statements[action.question_id] = action.statement_id
 				if action.statement_id not in state.heard_statements:
 					state.heard_statements.append(action.statement_id)
+				# 先前在别的入口听过同句，也须保留本次真实更正经历。
+				var recorded := false
+				for previous in state.talk_records:
+					if previous.get("kind") == "statement" and previous.get("entry_id") == "result" and previous.get("statement_id") == action.statement_id: recorded = true; break
+				if not recorded:
 					var statement: Dictionary = catalog.data.statements[action.statement_id]
-					state.talk_records.append({"kind": "statement", "statement_id": action.statement_id, "claim_id": statement.claim_id, "speaker": statement.speaker, "text_id": statement.text, "entry_id": "result"})
+					state.talk_records.append({"kind": "statement", "record_id": "statement/result/%s" % action.statement_id, "statement_id": action.statement_id, "claim_id": statement.claim_id, "speaker": statement.speaker, "text_id": statement.text, "entry_id": "result", "read": false})
 				state.partial_result = {}
 	state.applied_group_ids.append(execution_key)
 	if result.resolution_key not in state.resolved_result_keys: state.resolved_result_keys.append(result.resolution_key)
@@ -478,7 +503,7 @@ func _apply_result(timing: String) -> bool:
 	result.confirmed = true
 	if result.question_id not in state.completed_questions: state.completed_questions.append(result.question_id)
 	state.confirmed_results.append(result.duplicate(true))
-	state.talk_records.append({"kind": "confirmed", "result_id": result.result_id, "text_id": node.text, "record": result.duplicate(true)})
+	state.talk_records.append({"kind": "confirmed", "record_id": "confirmed/%s" % result.result_id, "result_id": result.result_id, "text_id": node.text, "record": result.duplicate(true), "read": false})
 	return true
 
 func collect_inference(result_id: String, content_id: String) -> bool:
@@ -588,13 +613,44 @@ func validate_card_state(snapshot: Dictionary) -> bool:
 		if not catalog.data.questions.has(id) or int(snapshot.chances[id]) < 0 or int(snapshot.chances[id]) > 3: return false
 	for id in snapshot.heard_statements:
 		if not catalog.data.statements.has(id): return false
+	for result in snapshot.confirmed_results:
+		if not _valid_saved_result(result) or not result.get("confirmed", false) or not result.has("completion_index"): return false
+	# 旧档可缺新增的阅读字段，但不能把未知原话或未确认结果注入手册。
+	var record_ids: Array = []
+	for record in snapshot.talk_records:
+		if not record is Dictionary or not record.get("text_id") is String or not catalog.data.texts.has(record.text_id): return false
+		if record.has("read") and not record.read is bool: return false
+		if record.has("record_id") and (not record.record_id is String or record.record_id.is_empty()): return false
+		var canonical_id := "confirmed/%s" % record.get("result_id", "") if record.get("kind") == "confirmed" else "statement/%s/%s" % [record.get("entry_id", ""), record.get("statement_id", "")]
+		if record.has("record_id") and record.record_id != canonical_id: return false
+		if canonical_id in record_ids: return false
+		record_ids.append(canonical_id)
+		if record.get("kind") == "statement":
+			var id: String = record.get("statement_id", "")
+			if id not in snapshot.heard_statements or not catalog.data.statements.has(id): return false
+			var statement: Dictionary = catalog.data.statements[id]
+			if record.get("text_id") != statement.text or record.get("speaker") != statement.speaker or record.get("claim_id") != statement.claim_id: return false
+			if not record.get("entry_id") is String: return false
+			if record.entry_id != "result" and (not catalog.data.entries.has(record.entry_id) or id not in catalog.data.entries[record.entry_id].get("statements", [])): return false
+			if record.entry_id == "result":
+				var produced := false
+				for confirmed in snapshot.confirmed_results:
+					var node: Dictionary = catalog.data.nodes[confirmed.node]
+					for action in catalog.data.groups.get(node.get("group", ""), []):
+						if action.get("kind") == "correct" and action.get("statement_id") == id: produced = true
+				if not produced: return false
+		elif record.get("kind") == "confirmed":
+			if not _valid_saved_result(record.get("record")) or not record.record.get("confirmed", false): return false
+			if record.get("result_id") != record.record.result_id or record.text_id != catalog.data.nodes[record.record.node].text: return false
+			if record.record not in snapshot.confirmed_results: return false
+		else: return false
 	for id in snapshot.completed_questions:
 		if not catalog.data.questions.has(id): return false
 	for entity in snapshot.materials.entities.values():
 		for sources in entity.sources_by_content.values():
 			if not _valid_sources(sources, []): return false
 	for view in [snapshot.bar_view, snapshot.grid_view]:
-		if view.get("type", "") not in ["all", "evidence", "testimony", "inference"] or view.get("sort", "") not in ["acquire", "type"] or not view.get("positions_by_type") is Dictionary or not view.get("focus_ref") is Dictionary: return false
+		if view.get("type", "") not in ["all", "evidence", "testimony", "inference"] or view.get("sort", "") not in ["acquire", "name", "type"] or not view.get("positions_by_type") is Dictionary or not view.get("focus_ref") is Dictionary: return false
 	for id in snapshot.current_statements:
 		if not catalog.data.questions.has(id) or not catalog.data.statements.has(snapshot.current_statements[id]): return false
 	for id in snapshot.drafts:
@@ -608,8 +664,6 @@ func validate_card_state(snapshot: Dictionary) -> bool:
 			if not ref is Dictionary or not catalog.valid_material_ref(ref): return false
 			if not snapshot.materials.entities.has(ref.material_id) or ref.content_id not in snapshot.materials.entities[ref.material_id].acquired_content_ids or ref.material_id in identities: return false
 			identities.append(ref.material_id)
-	for result in snapshot.confirmed_results:
-		if not _valid_saved_result(result) or not result.get("confirmed", false) or not result.has("completion_index"): return false
 	if not snapshot.current_result.is_empty() and not _valid_saved_result(snapshot.current_result): return false
 	if snapshot.mode in ["response", "pending", "collected"] and snapshot.current_result.is_empty(): return false
 	if snapshot.mode in ["selection", "failure", "response", "pending", "collected"] and not snapshot.chances.has(snapshot.question_id): return false

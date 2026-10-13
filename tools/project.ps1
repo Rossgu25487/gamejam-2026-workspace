@@ -45,6 +45,7 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/story_config_test.gd') 'story-config-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/story_example_test.gd','--quit-after','3600') 'story-example-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_gameplay_test.gd') 'core-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_audit_test.gd') 'core-audit-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/core_input_test.gd') 'core-input-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/navigation_checks.gd') 'navigation-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/confirmation_repeat_test.gd') 'confirmation-tests.log'

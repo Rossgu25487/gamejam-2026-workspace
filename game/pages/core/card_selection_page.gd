@@ -89,8 +89,8 @@ func render(core: Node) -> void:
 	type_select.item_selected.connect(_filter_type)
 	filters.add_child(type_select)
 	var sort_select := OptionButton.new()
-	sort_select.add_item(core.ui("UI_HANDBOOK_ACQUIRED_ORDER")); sort_select.add_item(core.ui("UI_HANDBOOK_TYPE_ORDER"))
-	sort_select.selected = 0 if view.sort == "acquire" else 1
+	sort_select.add_item(core.ui("UI_HANDBOOK_ACQUIRED_ORDER")); sort_select.add_item(core.ui("UI_HANDBOOK_NAME_ORDER")); sort_select.add_item(core.ui("UI_HANDBOOK_TYPE_ORDER"))
+	sort_select.selected = {"acquire": 0, "name": 1, "type": 2}.get(view.sort, 0)
 	sort_select.item_selected.connect(_sort)
 	filters.add_child(sort_select)
 	var important := CheckButton.new()
@@ -118,7 +118,7 @@ func render(core: Node) -> void:
 	add_child(pager)
 	if core.state.card_ui_page != "grid":
 		UI.button(pager, "上一页", _page.bind(-1), page_index > 0)
-		UI.label(pager, "%d / %d" % [page_index + 1, maxi(1, ceili(refs.size() / 5.0))], 18).autowrap_mode = TextServer.AUTOWRAP_OFF
+		UI.label(pager, "%d / %d" % [0 if refs.is_empty() else page_index + 1, ceili(refs.size() / 5.0)], 18).autowrap_mode = TextServer.AUTOWRAP_OFF
 		UI.button(pager, "下一页", _page.bind(1), (page_index + 1) * 5 < refs.size())
 	else:
 		var handle := UI.button(pager, "↓ 收起牌库（把手可向下拖动）", core.set_grid.bind(false))
@@ -177,7 +177,7 @@ func _filter_type(index: int) -> void:
 
 func _sort(index: int) -> void:
 	_save_position()
-	service.update_view({"sort": "acquire" if index == 0 else "type"})
+	service.update_view({"sort": ["acquire", "name", "type"][index]})
 
 func _important(value: bool) -> void:
 	_save_position()

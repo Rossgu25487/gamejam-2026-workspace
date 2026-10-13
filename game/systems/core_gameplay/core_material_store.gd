@@ -52,7 +52,13 @@ func marker(id: String) -> String:
 func list_refs(view: Dictionary) -> Array:
 	var sorted: Array = entities.values()
 	sorted.sort_custom(func(a: Dictionary, b: Dictionary):
-		if view.get("sort", "acquire") == "type" and a.type != b.type: return a.type < b.type
+		var sort_key: String = view.get("sort", "acquire")
+		if sort_key == "type" and a.type != b.type:
+			return ["evidence", "testimony", "inference"].find(a.type) < ["evidence", "testimony", "inference"].find(b.type)
+		if sort_key == "name":
+			var a_name: String = catalog.text(catalog.data.contents[a.current_content_id].title)
+			var b_name: String = catalog.text(catalog.data.contents[b.current_content_id].title)
+			if a_name != b_name: return a_name < b_name
 		return int(a.acquire_index) < int(b.acquire_index))
 	var refs: Array = []
 	for entity in sorted:

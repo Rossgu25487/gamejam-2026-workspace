@@ -5,6 +5,7 @@ signal closed
 signal inspect_requested
 const UI = preload("res://pages/core/page_controls.gd")
 const Images = preload("res://pages/core/story_image_layer.gd")
+const TalkPage = preload("res://pages/core/talk_records_page.gd")
 var service: Node
 var stack: Array = []
 var box: VBoxContainer
@@ -13,11 +14,20 @@ var root_kind := ""
 var selection_mode := false
 var read_only := true
 var library_view := {"type": "all", "sort": "acquire", "important_only": false}
+var library_tab := "materials"
+var talk_view := {"object_id": "", "topic_id": "", "segment_id": ""}
 var return_focus: WeakRef
 var body_text_id := ""
 var refresh_queued := false
 
 func _ready() -> void:
+	# 独立阅读层遮住下方控件文字，避免原话、归纳与选材界面相互叠印。
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = Color(0.07, 0.08, 0.09, 1.0)
+	paper.border_color = Color(0.28, 0.3, 0.32)
+	paper.set_border_width_all(1)
+	paper.set_content_margin_all(12)
+	add_theme_stylebox_override("panel", paper)
 	box = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
 	add_child(box)
@@ -30,7 +40,7 @@ func open_library() -> bool:
 	if visible and root_kind == "library": close_all(); return true
 	if not service.begin_inspection(): return false
 	return_focus = weakref(get_viewport().gui_get_focus_owner())
-	stack = [{"kind": "library", "tab": "materials"}]
+	stack = [{"kind": "library", "tab": library_tab}]
 	root_kind = "library"
 	selection_mode = false
 	show(); _render()
@@ -96,6 +106,8 @@ func reset_reader() -> void:
 	stack.clear()
 	root_kind = ""
 	library_view = {"type": "all", "sort": "acquire", "important_only": false}
+	library_tab = "materials"
+	talk_view = {"object_id": "", "topic_id": "", "segment_id": ""}
 
 func _render() -> void:
 	UI.clear(box)
@@ -123,18 +135,11 @@ func _library(ctx: Dictionary) -> void:
 	UI.button(tabs, service.ui("UI_HANDBOOK_MATERIALS"), _tab.bind("materials"))
 	UI.button(tabs, service.ui("UI_HANDBOOK_RECORDS"), _tab.bind("talk"))
 	if ctx.tab == "talk":
-		var scroll := ScrollContainer.new()
-		scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		box.add_child(scroll)
-		var list := VBoxContainer.new()
-		list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		scroll.add_child(list)
-		for record in service.state.talk_records:
-			if record.kind == "statement":
-				UI.button(list, "原话 · " + service.catalog.text(record.text_id), _push.bind({"kind": "text", "text_id": record.text_id}))
-			else:
-				UI.button(list, "已确认 · " + service.catalog.text(record.text_id), _push.bind({"kind": "record", "record": record.record}))
-		if service.state.talk_records.is_empty(): UI.label(list, "尚未听到任何会面记录。", 20)
+		var talk := TalkPage.new()
+		talk.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		box.add_child(talk)
+		talk.basis_requested.connect(_push_talk_sources)
+		talk.render(service, talk_view)
 		return
 	var filters := HBoxContainer.new()
 	box.add_child(filters)
@@ -144,8 +149,8 @@ func _library(ctx: Dictionary) -> void:
 	types.item_selected.connect(_type)
 	filters.add_child(types)
 	var sorting := OptionButton.new()
-	sorting.add_item(service.ui("UI_HANDBOOK_ACQUIRED_ORDER")); sorting.add_item(service.ui("UI_HANDBOOK_TYPE_ORDER"))
-	sorting.selected = 0 if library_view.sort == "acquire" else 1
+	sorting.add_item(service.ui("UI_HANDBOOK_ACQUIRED_ORDER")); sorting.add_item(service.ui("UI_HANDBOOK_NAME_ORDER")); sorting.add_item(service.ui("UI_HANDBOOK_TYPE_ORDER"))
+	sorting.selected = {"acquire": 0, "name": 1, "type": 2}.get(library_view.sort, 0)
 	sorting.item_selected.connect(_sort)
 	filters.add_child(sorting)
 	var important := CheckButton.new()
@@ -199,10 +204,13 @@ func _material(ctx: Dictionary) -> void:
 	var versions := HBoxContainer.new()
 	box.add_child(versions)
 	if not ctx.has("frozen_sources"):
-		for id in service.store.entities[ref.material_id].acquired_content_ids:
-			UI.button(versions, "v%d" % int(service.catalog.data.contents[id].version), _version.bind(id))
+		# 只列实际已获版本，按版本倒序；单一版本保留标识但禁用切换。
+		var known: Array = service.store.entities[ref.material_id].acquired_content_ids.duplicate()
+		known.sort_custom(func(a: String, b: String): return int(service.catalog.data.contents[a].version) > int(service.catalog.data.contents[b].version))
+		for id in known:
+			UI.button(versions, "v%d" % int(service.catalog.data.contents[id].version), _version.bind(id), known.size() > 1)
 	var sources: Array = ctx.get("frozen_sources", service.store.sources(ref))
-	UI.button(box, "回看来源", _push.bind({"kind": "sources", "sources": sources}))
+	UI.button(box, "回看来源", _push.bind({"kind": "sources", "sources": sources}), not sources.is_empty())
 	if root_kind == "detail" and selection_mode:
 		var slots: Array = service.draft().get("slots", [])
 		var slot := -1
@@ -212,7 +220,11 @@ func _material(ctx: Dictionary) -> void:
 		else: UI.button(box, service.ui("UI_CORE_SELECT"), _select.bind(ref), null in slots)
 		UI.label(box, "已入槽的材料需先撤下，才可更换所选版本。", 16)
 	if ctx.has("new_inference_refs"):
-		UI.button(box, "下一张新推论", _next_inference, int(ctx.entry_index) + 1 < ctx.new_inference_refs.size())
+		var navigation := HBoxContainer.new()
+		box.add_child(navigation)
+		UI.button(navigation, service.ui("UI_HANDBOOK_PREVIOUS"), _step_inference.bind(-1), int(ctx.entry_index) > 0)
+		UI.label(navigation, "%d / %d" % [int(ctx.entry_index) + 1, ctx.new_inference_refs.size()], 18)
+		UI.button(navigation, service.ui("UI_HANDBOOK_NEXT"), _step_inference.bind(1), int(ctx.entry_index) + 1 < ctx.new_inference_refs.size())
 
 func _sources(ctx: Dictionary) -> void:
 	var scroll := ScrollContainer.new()
@@ -255,8 +267,12 @@ func _withdraw(index: int) -> void:
 	service.withdraw_material(index)
 
 func _tab(tab: String) -> void:
+	library_tab = tab
 	stack[-1].tab = tab
 	_render()
+
+func _push_talk_sources(sources: Array) -> void:
+	_push({"kind": "sources", "sources": sources})
 
 func _type(index: int) -> void:
 	library_view.type = ["all", "evidence", "testimony", "inference"][index]
@@ -267,7 +283,7 @@ func _important(value: bool) -> void:
 	_queue_refresh()
 
 func _sort(index: int) -> void:
-	library_view.sort = "acquire" if index == 0 else "type"
+	library_view.sort = ["acquire", "name", "type"][index]
 	_queue_refresh()
 
 func _queue_refresh() -> void:
@@ -294,9 +310,12 @@ func _new_inferences() -> void:
 	var refs := _unread_inferences()
 	if not refs.is_empty(): _push({"kind": "material", "ref": refs[0], "new_inference_refs": refs, "entry_index": 0})
 
-func _next_inference() -> void:
+func _step_inference(delta: int) -> void:
 	var ctx: Dictionary = stack[-1]
-	ctx.entry_index = int(ctx.entry_index) + 1
+	var next := int(ctx.entry_index) + delta
+	if next < 0 or next >= ctx.new_inference_refs.size(): return
+	# 本次进入时冻结的名单不会随已读标记缩短，首尾停止且允许回读。
+	ctx.entry_index = next
 	ctx.ref = ctx.new_inference_refs[ctx.entry_index]
 	ctx.body_offset = 0
 	ctx.erase("body_anchor")

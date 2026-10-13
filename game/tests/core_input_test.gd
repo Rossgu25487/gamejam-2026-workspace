@@ -26,14 +26,15 @@ func click(button: Button) -> void:
 	var point := button.get_global_rect().get_center()
 	var motion := InputEventMouseMotion.new()
 	motion.position = point
-	root.push_input(motion)
+	# 控件矩形使用视口坐标；窗口缩放后仍须以本地坐标注入事件。
+	root.push_input(motion, true)
 	await process_frame
 	for down in [true, false]:
 		var event := InputEventMouseButton.new()
 		event.position = point
 		event.button_index = MOUSE_BUTTON_LEFT
 		event.pressed = down
-		root.push_input(event)
+		root.push_input(event, true)
 		await process_frame
 	await frames()
 
@@ -41,7 +42,7 @@ func key(code: Key) -> void:
 	var event := InputEventKey.new()
 	event.keycode = code
 	event.pressed = true
-	root.push_input(event)
+	root.push_input(event, true)
 	await frames()
 
 func options(parent: Node) -> Array[OptionButton]:
@@ -62,12 +63,12 @@ func choose(parent: Node, index: int, filter_index: int = 0) -> void:
 	var event := InputEventKey.new()
 	event.keycode = KEY_ENTER
 	event.pressed = true
-	root.push_input(event)
+	root.push_input(event, true)
 	await process_frame
 	event = InputEventKey.new()
 	event.keycode = KEY_ENTER
 	event.pressed = false
-	root.push_input(event)
+	root.push_input(event, true)
 	await frames()
 	expect(scene.current_layer == "investigation", "筛选不误触发暂停")
 
@@ -82,6 +83,19 @@ func label(parent: Node, text: String) -> Label:
 	for child in parent.get_children():
 		if child is Label and child.text == text: return child
 		var found := label(child, text)
+		if found != null: return found
+	return null
+
+func has_body(parent: Node, text: String) -> bool:
+	for child in parent.get_children():
+		if child is RichTextLabel and child.text.contains(text): return true
+		if has_body(child, text): return true
+	return false
+
+func talk_page(parent: Node) -> VBoxContainer:
+	for child in parent.get_children():
+		if child.get_script() == preload("res://pages/core/talk_records_page.gd"): return child
+		var found := talk_page(child)
 		if found != null: return found
 	return null
 
@@ -133,6 +147,7 @@ func _run() -> void:
 	expect(core.state.current_result.get("feedback") == "incorrect" and int(core.state.chances.Q1) == 2, "鼠标单张另一对象记录出示扣一次容错")
 	await click(button(scene.gameplay_page.feedback, "跳过表现"))
 	expect(label(scene.gameplay_page.result, "%s：2 / 3" % core.ui("UI_CORE_CHANCES_LABEL")) != null, "错误回应页显示扣减后的2次容错")
+	expect(has_body(scene.gameplay_page.result, core.catalog.text(core.catalog.data.relations.R_ERROR.reason)), "错误页展示配置的具体错置原因全文")
 	await take("1280-single-error")
 	await click(button(scene.gameplay_page.result, core.ui("UI_CORE_RESELECT")))
 	expect(core.state.mode == "selection" and core.draft().target_selected, "重新选材保留已选择的核对目标")
@@ -194,7 +209,43 @@ func _run() -> void:
 	await choose(reader, 0)
 	expect(reader.library_view.type == "all", "手册推论筛选返回全部")
 	await choose(reader, 1, 1)
+	expect(reader.library_view.sort == "name", "手册名称排序下拉菜单安全刷新")
+	await choose(reader, 2, 1)
 	expect(reader.library_view.sort == "type", "手册排序下拉菜单安全刷新")
+	var q2_draft: Dictionary = core.draft()
+	await click(button(reader, core.ui("UI_HANDBOOK_RECORDS")))
+	var talk: VBoxContainer = talk_page(reader)
+	expect(talk != null and options(talk).size() == 2, "独立交谈记录子页含人物和话题筛选")
+	await choose(talk, 1)
+	expect(reader.talk_view.object_id == "PERSON", "真实人物下拉菜单只定位已听对象")
+	await choose(talk, 1, 1)
+	expect(reader.talk_view.topic_id == "TALK", "真实话题下拉菜单只定位该对象已听话题")
+	await choose(talk, 0)
+	expect(reader.talk_view.object_id == "" and reader.talk_view.topic_id == "TALK", "全部对象保留仍适用的话题筛选")
+	await choose(talk, 0, 1)
+	expect(reader.talk_view.topic_id == "", "全部话题恢复已听段")
+	expect(talk.original.text.contains(core.catalog.text(core.catalog.data.statements.S1.text)) and talk.summary.text.contains(core.catalog.text(core.catalog.data.statements.S2.text)), "原话与生效更正分别完整可读")
+	expect(within(talk.original) and within(talk.summary), "1280交谈原话与归纳控件在屏内")
+	var statement_text: String = core.catalog.data.statements.S1.text
+	var saved_text: String = core.catalog.text(statement_text)
+	core.catalog.data.texts[statement_text] = saved_text + "\n原话滚动检查🙂".repeat(100)
+	talk.render(core, reader.talk_view)
+	await frames()
+	talk.original.get_v_scroll_bar().value = 300
+	var segment_id: String = reader.talk_view.segment_id
+	await click(button(reader, core.ui("UI_HANDBOOK_RECORD_SOURCE")))
+	expect(reader.stack[-1].kind == "sources" and reader.stack[-1].sources == core.state.confirmed_results[0].used_sources, "交谈来源打开形成时冻结依据")
+	await key(KEY_ESCAPE)
+	talk = talk_page(reader)
+	expect(reader.stack[-1].kind == "library" and reader.talk_view.segment_id == segment_id and talk.original.get_v_scroll_bar().value > 0, "Esc从来源回同一记录并恢复正文滚动")
+	core.catalog.data.texts[statement_text] = saved_text
+	await key(KEY_I)
+	await key(KEY_I)
+	talk = talk_page(reader)
+	expect(reader.library_tab == "talk" and talk != null and reader.talk_view.segment_id == segment_id, "关闭重开手册恢复本会话交谈页签与记录")
+	expect(core.draft() == q2_draft, "交谈检视不改变当前问题的目标与出示槽")
+	await take("1280-talk-records")
+	await click(button(reader, core.ui("UI_HANDBOOK_MATERIALS")))
 	await key(KEY_I)
 	expect(core.inspection_depth == 0 and not core.paused and core.can_save(), "关闭手册恢复校验资格")
 	await click(button(page, "占位推论"))
@@ -234,6 +285,12 @@ func _run() -> void:
 	await frames()
 	await take("1920-selection")
 	for b in page.card_buttons: expect(within(b), "1920底栏按钮完整在窗口内")
+	await key(KEY_I)
+	await click(button(reader, core.ui("UI_HANDBOOK_RECORDS")))
+	talk = talk_page(reader)
+	expect(talk != null and within(talk.original) and within(talk.summary), "1920交谈原话与归纳控件在屏内")
+	await take("1920-talk-records")
+	await key(KEY_I)
 	scene.queue_free()
 	await frames()
 	if failures.is_empty(): print("CORE_INPUT_PASS: %d checks; dispatched mouse/key events at 1280x800 and 1920x1080." % checks)
