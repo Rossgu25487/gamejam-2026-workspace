@@ -55,7 +55,7 @@ func _run() -> void:
 	expect(second.ok, "恢复后可以重新检查")
 	var committed: Dictionary = scene.commit_inspection(second.request_id, true)
 	expect(committed.ok and committed.committed, "提交检查事务")
-	expect(scene.hotspot_state("H_TABLE").status == "已查", "提交后显示已查")
+	expect(scene.hotspot_state("H_TABLE").status == "可补查", "提交后显示可补查")
 	expect(core.store.owns(core.catalog.material_ref("A1")), "检查提交取得材料")
 	expect(scene.available_new_observation("TABLE") == "OBS_SECOND", "已有观察解锁可补查")
 	scene.set_object_state("TABLE", false, false)
