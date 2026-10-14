@@ -28,6 +28,9 @@ func _ready() -> void:
 
 func bind(core: Node) -> void:
 	service = core
+	var session := core.get_parent()
+	if session != null and session.get("scene_interaction") != null:
+		investigation.bind_scene_service(session.scene_interaction)
 	service.changed.connect(_queue_refresh)
 	service.notice.connect(func(message: String): notice_label.text = message)
 	service.presentation_requested.connect(feedback.play)
