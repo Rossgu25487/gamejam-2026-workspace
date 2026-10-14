@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://pages/core/material_reader_page.gd" id="5"]
 [ext_resource type="Script" path="res://pages/core/feedback_page.gd" id="6"]
 [ext_resource type="Script" path="res://pages/narrative/narrative_page.gd" id="7"]
+[ext_resource type="Script" path="res://pages/map_navigation/map_navigation_page.gd" id="8"]
 
 [node name="CoreGameplayPage" type="Control"]
 layout_mode = 3
@@ -96,3 +97,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7")
 z_index = 300
+
+[node name="MapNavigationPage" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 250
+script = ExtResource("8")

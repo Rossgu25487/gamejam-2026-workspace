@@ -52,6 +52,7 @@ func render(core: Node, image_buttons: Dictionary = {}, image_bindings: Dictiona
 		for b in image_buttons.values(): bottom = maxf(bottom, b.get_global_rect().end.y)
 		spacer.custom_minimum_size.y = maxf(0, bottom - get_global_rect().position.y - 65)
 		list.add_child(spacer)
+	UI.button(list, "地图", _open_map)
 	for id in data.entries:
 		var entry: Dictionary = data.entries[id]
 		if not str(entry.get("scene_id", "")).is_empty() and entry.scene_id != state.current_scene_id: continue
@@ -213,6 +214,11 @@ func _activate(id: String) -> void:
 func _question(id: String) -> void:
 	focus_key = id
 	service.open_card_session(id, {"page": "investigation", "focus_key": id, "scene_id": service.state.current_scene_id})
+
+func _open_map() -> void:
+	if service == null: return
+	var page := get_parent().get_parent().get_parent()
+	if page != null and page.has_method("open_map"): page.open_map()
 
 func _restore_focus(list: Node) -> void:
 	for node in list.get_children():

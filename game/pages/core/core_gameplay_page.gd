@@ -11,6 +11,7 @@ const ImageLayer = preload("res://pages/core/story_image_layer.gd")
 @onready var inspection_reader: PanelContainer = $InspectionReaderPage
 @onready var feedback: PanelContainer = $FeedbackPage
 @onready var narrative_page: Control = $NarrativePage
+@onready var map_page: Control = $MapNavigationPage
 @onready var tools: HBoxContainer = $Margin/Layout/Tools
 @onready var notice_label: Label = $Margin/Layout/Notice
 var service: Node
@@ -27,6 +28,7 @@ func _ready() -> void:
 	for container in [$Margin, $Margin/Layout, investigation, selection, result]: container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for popup in [reader, inspection_reader, feedback]: popup.z_index = 200
 	narrative_page.hide()
+	map_page.hide()
 
 func bind(core: Node) -> void:
 	service = core
@@ -42,6 +44,7 @@ func bind(core: Node) -> void:
 	reader.bind(core)
 	inspection_reader.bind(core)
 	narrative_page.bind(core.get_parent().narrative)
+	map_page.bind(core.get_parent().map_navigation)
 	reader.closed.connect(_queue_refresh)
 	inspection_reader.closed.connect(_queue_refresh)
 	UI.button(tools, "办案手册 / I", toggle_inspection)
@@ -71,6 +74,7 @@ func reset_page() -> void:
 	inspection_reader.reset_reader()
 	feedback.cancel()
 	narrative_page.hide()
+	map_page.hide()
 	_queue_refresh()
 
 func set_preferences(values: Dictionary) -> void:
@@ -91,6 +95,7 @@ func _refresh() -> void:
 	result.visible = mode in ["response", "pending", "collected", "failure"]
 	if reader.visible or inspection_reader.visible: return
 	if narrative_page.visible: return
+	if map_page.visible: return
 	var page := "investigation" if mode == "investigation" else ("dialogue" if mode == "dialogue" else ("selection" if mode == "selection" else "result"))
 	image_layer.render(service, page, investigation.activate_entry)
 	if investigation.visible: investigation.render(service, image_layer.entry_buttons, image_layer.entry_bindings)
@@ -103,6 +108,10 @@ func toggle_inspection() -> void:
 	elif reader.visible and reader.root_kind == "library": reader.close_all()
 	elif reader.visible: inspection_reader.open_library()
 	else: reader.open_library()
+
+func open_map() -> void:
+	if not input_enabled or map_page.visible: return
+	map_page.open()
 
 func handle_escape() -> void:
 	if inspection_reader.visible: inspection_reader.back()
@@ -129,7 +138,8 @@ func _input(event: InputEvent) -> void:
 		toggle_inspection()
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_ESCAPE:
-		handle_escape()
+		if map_page.visible: map_page.close()
+		else: handle_escape()
 		get_viewport().set_input_as_handled()
 	elif not reader.visible and not inspection_reader.visible and selection.handle_card_key(event):
 		get_viewport().set_input_as_handled()
