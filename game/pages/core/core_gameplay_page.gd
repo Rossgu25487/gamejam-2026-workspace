@@ -10,6 +10,7 @@ const ImageLayer = preload("res://pages/core/story_image_layer.gd")
 @onready var reader: PanelContainer = $MaterialReaderPage
 @onready var inspection_reader: PanelContainer = $InspectionReaderPage
 @onready var feedback: PanelContainer = $FeedbackPage
+@onready var narrative_page: Control = $NarrativePage
 @onready var tools: HBoxContainer = $Margin/Layout/Tools
 @onready var notice_label: Label = $Margin/Layout/Notice
 var service: Node
@@ -25,6 +26,7 @@ func _ready() -> void:
 	# 全屏布局容器不截住下层调查卡；实际按钮与正文仍接收自己的输入。
 	for container in [$Margin, $Margin/Layout, investigation, selection, result]: container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for popup in [reader, inspection_reader, feedback]: popup.z_index = 200
+	narrative_page.hide()
 
 func bind(core: Node) -> void:
 	service = core
@@ -39,6 +41,7 @@ func bind(core: Node) -> void:
 	result.basis_requested.connect(reader.open_basis)
 	reader.bind(core)
 	inspection_reader.bind(core)
+	narrative_page.bind(core.get_parent().narrative)
 	reader.closed.connect(_queue_refresh)
 	inspection_reader.closed.connect(_queue_refresh)
 	UI.button(tools, "办案手册 / I", toggle_inspection)
@@ -53,10 +56,21 @@ func set_active(active: bool) -> void:
 	# 暂停期间资格会变化；恢复时重新计算出示与结果操作，不能沿用禁用按钮。
 	if active: _queue_refresh()
 
+func start_narrative(definition: Dictionary, start_text_id: String = "") -> bool:
+	if service == null or service.get_parent() == null: return false
+	var session := service.get_parent()
+	if not session.start_narrative(definition, start_text_id): return false
+	narrative_page.show()
+	investigation.hide()
+	selection.hide()
+	result.hide()
+	return true
+
 func reset_page() -> void:
 	reader.reset_reader()
 	inspection_reader.reset_reader()
 	feedback.cancel()
+	narrative_page.hide()
 	_queue_refresh()
 
 func set_preferences(values: Dictionary) -> void:
@@ -76,6 +90,7 @@ func _refresh() -> void:
 	selection.visible = mode == "selection"
 	result.visible = mode in ["response", "pending", "collected", "failure"]
 	if reader.visible or inspection_reader.visible: return
+	if narrative_page.visible: return
 	var page := "investigation" if mode == "investigation" else ("dialogue" if mode == "dialogue" else ("selection" if mode == "selection" else "result"))
 	image_layer.render(service, page, investigation.activate_entry)
 	if investigation.visible: investigation.render(service, image_layer.entry_buttons, image_layer.entry_bindings)
