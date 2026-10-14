@@ -32,7 +32,7 @@ func render(core: Node, image_buttons: Dictionary = {}, image_bindings: Dictiona
 		UI.body(self, core.catalog.text(entry.text), 240)
 		UI.button(self, core.ui("UI_RETURN_INVESTIGATION"), core.finish_dialogue)
 		return
-	if scene_service != null and not scene_service.state.is_empty():
+	if scene_service != null and not scene_service.state.is_empty() and not scene_service.compatibility_mode:
 		_render_scene_hotspots(core)
 		return
 	var scroll := ScrollContainer.new()
@@ -140,9 +140,9 @@ func _open_inspection(hotspot_id: String) -> void:
 	UI.body(overlay_box, service.catalog.text(entry.get("text", "暂无观察正文。")), 220)
 	var actions := HBoxContainer.new()
 	overlay_box.add_child(actions)
-	UI.button(actions, "确认检查结果", _commit_inspection)
+	var confirm := UI.button(actions, "确认检查结果", _commit_inspection)
 	UI.button(actions, "返回调查", _cancel_inspection)
-	if overlay_box.get_child_count() > 1: overlay_box.get_child(1).get_child(0).grab_focus()
+	call_deferred("_focus_overlay_control", confirm)
 
 func _commit_inspection() -> void:
 	if scene_service == null or overlay_request_id.is_empty(): return
@@ -178,7 +178,13 @@ func _open_topics(person_ref: String, hotspot_id: String) -> void:
 		b.tooltip_text = str(item.get("public_reason", ""))
 		shown += 1
 	var close := UI.button(overlay_box, "返回调查", _close_overlay)
-	close.grab_focus()
+	call_deferred("_focus_overlay_control", close)
+
+func _focus_overlay_control(control: Control) -> void:
+	# Popup 的子节点要等加入场景树后才能可靠获取焦点；同时防止
+	# 关闭弹层的同帧回调把按钮释放后仍继续调用 grab_focus。
+	if is_instance_valid(control) and control.is_inside_tree() and control.visible and not control.disabled:
+		control.grab_focus()
 
 func _choose_topic(item: Dictionary) -> void:
 	var entry_ref := str(item.get("entry_ref", ""))

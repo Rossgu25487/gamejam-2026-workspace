@@ -25,6 +25,7 @@ var bindings: Dictionary = {}
 var topics: Dictionary = {}
 var object_images: Dictionary = {}
 var state: Dictionary = {}
+var compatibility_mode := false
 
 func bind_core(value: Node) -> void:
 	core = value
@@ -65,6 +66,7 @@ func configure(definition: Dictionary = {}) -> bool:
 		var object_ref := str(row.get("object_ref", ""))
 		if object_ref.is_empty(): continue
 		object_images[object_ref] = row.duplicate(true)
+	compatibility_mode = false
 	return errors.is_empty()
 
 func initialize(scene_id: String = "") -> void:
@@ -81,7 +83,9 @@ func initialize(scene_id: String = "") -> void:
 		"return_context": {},
 		"topic_anchor": "",
 	}
-	if hotspots.is_empty(): _derive_story_hotspots()
+	if hotspots.is_empty():
+		compatibility_mode = true
+		_derive_story_hotspots()
 	_changed()
 
 func _derive_story_hotspots() -> void:
