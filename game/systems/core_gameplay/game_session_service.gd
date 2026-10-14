@@ -7,6 +7,7 @@ const SceneInteractionScript = preload("res://systems/scene_interaction/scene_in
 const NarrativeScript = preload("res://systems/narrative/narrative_service.gd")
 const NarrativeWorkbookLoader = preload("res://systems/narrative/narrative_workbook_loader.gd")
 const MapNavigationScript = preload("res://systems/map_navigation/map_navigation_service.gd")
+const MapWorkbookLoader = preload("res://systems/map_navigation/map_workbook_loader.gd")
 signal autosave_requested(snapshot: Dictionary)
 var core: Node
 var scene_interaction: Node
@@ -29,13 +30,31 @@ func initialize(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
 		add_child(map_navigation)
 		map_navigation.bind_core(core)
 		map_navigation.initialize(core.catalog.data.initial_scene)
+		var map_definition: Dictionary = _load_map_definition()
 		var map_transitions: Array = []
 		for id in core.catalog.data.get("scene_links", {}):
 			var link: Dictionary = core.catalog.data.scene_links[id].duplicate(true)
 			link["transition_id"] = id
 			map_transitions.append(link)
-		map_navigation.configure({"transitions": map_transitions})
+		if map_definition.is_empty():
+			map_definition = {"transitions": map_transitions}
+		else:
+			# 正式地图表只描述地图表现和资格；故事表仍是旧版本连接的兼容来源。
+			var configured: Array = map_definition.get("transitions", [])
+			if configured.is_empty(): map_definition["transitions"] = map_transitions
+			for row in map_definition.get("transitions", []):
+				if not row.has("transition_id") and row.has("link_id"): row["transition_id"] = row.link_id
+			if map_definition.get("scenes", {}).is_empty():
+				map_definition["scenes"] = core.catalog.data.get("scenes", {}).duplicate(true)
+		map_navigation.configure(map_definition)
 	return ok
+
+func _load_map_definition() -> Dictionary:
+	# 地图配置读取独立于主调度；表缺失时保留旧故事连接，确保旧存档仍可打开。
+	var loader := MapWorkbookLoader.new()
+	var definition: Dictionary = loader.load_workbook()
+	if definition.is_empty(): return {}
+	return definition
 
 func story_title() -> String:
 	# 对外提供已解析的标题，Main无需了解Excel与旧JSON的文本引用差异。

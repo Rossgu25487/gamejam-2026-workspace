@@ -32,6 +32,9 @@ func _run() -> void:
 				break
 		expect(selected, "可达地点可以选中")
 		expect(map.travel(), "选中地点可以前往")
+		if map.state.get("phase") == "moving": map.finish_movement()
+		if map.state.get("phase") == "arrival_hold": map.begin_transition()
+		if map.state.get("phase") == "transitioning": map.finish_transition()
 		expect(not map.state.open and map.current_scene_id() == session.core.state.current_scene_id, "成功前往后关闭地图并同步地点")
 	else:
 		expect(true, "当前配置没有可达地点，跳过移动")
