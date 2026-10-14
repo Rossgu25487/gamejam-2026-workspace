@@ -134,6 +134,7 @@ func hotspots_for_scene(scene_id: String = "") -> Array:
 func hotspot_state(hotspot_id: String) -> Dictionary:
 	if not hotspots.has(hotspot_id): return {}
 	var row: Dictionary = hotspots[hotspot_id]
+	if not str(row.get("scene_id", "")).is_empty() and str(row.get("scene_id", "")) != current_scene_id(): return {}
 	var object_ref := str(row.get("object_ref", ""))
 	var visible := bool(state.get("object_visibility", {}).get(object_ref, true))
 	var interactive := bool(state.get("object_interactive", {}).get(object_ref, true))
@@ -194,6 +195,7 @@ func commit_inspection(request_id: String, committed: bool = true) -> Dictionary
 	if not str(request.observation_ref).is_empty():
 		record = observations.get(request.observation_ref, {}).duplicate(true)
 		if record.is_empty(): record = {"observation_ref": request.observation_ref, "object_ref": request.object_ref, "entry_ref": request.entry_ref}
+		record["object_ref"] = request.object_ref
 		record["entry_ref"] = request.entry_ref
 		record["committed"] = true
 		state.observations[request.observation_ref] = record
@@ -230,11 +232,12 @@ func completed_observation_for(object_ref: String) -> String:
 	return ""
 
 func available_new_observation(object_ref: String) -> String:
+	if completed_observation_for(object_ref).is_empty(): return ""
 	for id in observations:
 		var row: Dictionary = observations[id]
 		if row.get("object_ref", "") == object_ref and not state.observations.has(id):
 			var previous := str(row.get("previous_observation_ref", ""))
-			if previous.is_empty() or state.observations.has(previous): return id
+			if not previous.is_empty() and state.observations.has(previous): return id
 	return ""
 
 func topics_for_person(person_ref: String) -> Array:
