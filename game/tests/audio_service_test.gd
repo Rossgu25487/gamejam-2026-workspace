@@ -79,6 +79,7 @@ func _run() -> void:
 	await test_ui_hook()
 	await test_performance()
 	test_streams_and_music()
+	await test_sfx_library()
 	await process_frame
 	# 音频服务器异步释放已停止的播放；多等一会儿再退出，避免退出时仍有占用中的资源。
 	await create_timer(0.5).timeout
@@ -476,3 +477,32 @@ func test_streams_and_music() -> void:
 	wav = null
 	original = null
 	catalog = null
+
+
+func test_sfx_library() -> void:
+	var service := make_service()
+	var summary: Dictionary = service.sfx_summary()
+	check(int(summary.get("total", 0)) == 240 and int(summary.get("ready", 0)) == 240, "备用音效库共导入 240 条音效素材且全部就绪")
+	check((summary.get("packs", []) as Array).size() == 4, "备用音效库包含 4 个来源包")
+	check((summary.get("categories", []) as Array).size() == 17, "备用音效库包含 17 个分类")
+	var all_ready := true
+	for item in service.catalog.sfx_entries:
+		var info: Dictionary = service.catalog.describe(String(item.get("id", "")))
+		if info.get("state", "") != service.catalog.STATE_READY:
+			all_ready = false
+			break
+	check(all_ready, "全部 240 条备用音效在 Godot 中均可解析且资源就绪")
+	check(service.list_sfx("available_audios", "", "").size() == 3, "按包筛选项目专属音效返回 3 条")
+	check(service.list_sfx("", "card", "").size() == 23, "按分类筛选卡牌音效返回 23 条")
+	check(service.list_sfx("", "", "重钟敲击").size() == 5, "按中文关键字搜索重钟敲击返回 5 条")
+	check(String(service.sfx_info("对白显示音效").get("id", "")) == "SFX_AVAIL_DIALOGUE_SHOW", "支持通过中文名查询备用音效元数据")
+	check(String(service.sfx_info("bookFlip1").get("id", "")) == "SFX_RPG_BOOK_FLIP1", "支持通过原文件名查询备用音效元数据")
+	check(service.preview_sfx("SFX_AVAIL_DIALOGUE_SHOW")["status"] == "played" and String(service.track_state("preview").get("path", "")).ends_with("对白显示音效.wav"), "preview_sfx 试听备用音效")
+	check(service.play_sfx("对白显示音效")["status"] == "played" and String(service.track_state("ui").get("path", "")).ends_with("对白显示音效.wav"), "play_sfx 按推荐通道播放中文名音效")
+	check(service.play_sfx("SFX_RPG_DOOR_OPEN_1", "result", "sfx/door-1")["status"] == "played" and String(service.track_state("result").get("path", "")).ends_with("doorOpen_1.ogg"), "play_sfx 指定结果通道与实例 ID 播放")
+	check(service.play_sfx("SFX_RPG_DOOR_OPEN_1", "result", "sfx/door-1")["status"] == "duplicate", "play_sfx 同一实例 ID 不重复播放")
+	check(service.play_result("sfx/card-1", "证物/证言/推论获取转卡牌音效")["status"] == "played", "play_result 直接兼容备用音效中文别名")
+	check(service.request_media({"sfx": "bookFlip1", "slot": "ui"})["status"] == "played", "request_media 支持 sfx 字段直接调用备用音效")
+	check(service.bind_resource("SFX_UI_CLICK", "SFX_CASINO_CHIP_LAY_1") and service.play_ui("click")["status"] == "played", "bind_resource 支持绑定备用音效 ID 到正式 UI 槽位")
+	await finish(service)
+

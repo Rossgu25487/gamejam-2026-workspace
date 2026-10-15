@@ -20,6 +20,7 @@ const AUDIO_DEMO_UI := { # 开发运行临时绑定的操作音；正式配置�
 @onready var save_page: Control = $SavePage
 @onready var load_page: Control = $LoadPage
 @onready var settings_page: Control = $SettingsPage
+@onready var sfx_manager_page: Control = $SfxManagerPage
 @onready var confirm_page: Control = $ConfirmPage
 var session_service: Node
 var settings_service: Node
@@ -61,7 +62,7 @@ func _ready() -> void:
 		title_page.exit_requested.connect(get_tree().quit)
 		return
 	title_page.apply_story_title(session_service.story_title())
-	for page in [title_page, pause_page, save_page, load_page, settings_page, confirm_page]: page.bind_images(session_service.core)
+	for page in [title_page, pause_page, save_page, load_page, settings_page, sfx_manager_page, confirm_page]: page.bind_images(session_service.core)
 	_setup_audio()
 	save_service.snapshot_validator = session_service.validate_snapshot
 	session_service.autosave_requested.connect(_save_auto)
@@ -77,11 +78,13 @@ func _ready() -> void:
 	title_page.new_game_requested.connect(_on_new_game)
 	title_page.load_requested.connect(_on_load)
 	title_page.settings_requested.connect(_on_settings)
+	title_page.sfx_manager_requested.connect(_on_sfx_manager)
 	title_page.exit_requested.connect(_on_title_exit)
 	pause_page.resume_requested.connect(_on_resume)
 	pause_page.save_requested.connect(_on_save)
 	pause_page.load_requested.connect(_on_load)
 	pause_page.settings_requested.connect(_on_settings)
+	pause_page.sfx_manager_requested.connect(_on_sfx_manager)
 	pause_page.return_title_requested.connect(_on_return_title)
 	pause_page.exit_requested.connect(_on_pause_exit)
 	save_page.closed.connect(_on_close_subpage)
@@ -89,6 +92,8 @@ func _ready() -> void:
 	load_page.closed.connect(_on_close_subpage)
 	load_page.loaded.connect(_on_loaded)
 	settings_page.closed.connect(_on_close_subpage)
+	settings_page.sfx_manager_requested.connect(_on_sfx_manager_from_settings)
+	sfx_manager_page.closed.connect(_on_close_subpage)
 	confirm_page.cancelled.connect(_on_confirm_cancel)
 	confirm_page.direct_requested.connect(_on_confirm_direct)
 	confirm_page.accepted.connect(_on_confirm_accept)
@@ -149,7 +154,7 @@ func _show_title() -> void:
 	audio_service.set_menu_open(false)
 	audio_service.stop_node_media()
 	audio_service.set_soundscape("title")
-	for page in [save_page, load_page, settings_page, confirm_page]: page.close_page()
+	for page in [save_page, load_page, settings_page, sfx_manager_page, confirm_page]: page.close_page()
 	pause_page.hide_page()
 	gameplay_page.set_active(false)
 	gameplay_page.hide()
@@ -221,6 +226,19 @@ func _on_settings() -> void:
 	pause_page.hide_page()
 	settings_page.open(settings_service, audio_service, Callable(session_service.core, "ui"))
 
+func _on_sfx_manager() -> void:
+	subpage_origin = current_layer
+	subpage_focus = title_page.sfx_button if subpage_origin == "title" else pause_page.sfx_button
+	current_layer = "subpage"
+	title_page.hide_page()
+	pause_page.hide_page()
+	sfx_manager_page.open(audio_service, settings_service)
+
+func _on_sfx_manager_from_settings() -> void:
+	settings_page.close_page()
+	current_layer = "subpage"
+	sfx_manager_page.open(audio_service, settings_service)
+
 func _on_start_ready(has_save: bool) -> void:
 	# 设置初始化完成后才把已生效的设置交给声音，标题音景随后在 _show_title 播放。
 	audio_service.apply_settings(settings_service.values)
@@ -238,7 +256,7 @@ func _on_loaded(snapshot: Dictionary) -> void:
 
 func _on_close_subpage() -> void:
 	pending_leave = false
-	for page in [save_page, load_page, settings_page]: page.close_page()
+	for page in [save_page, load_page, settings_page, sfx_manager_page]: page.close_page()
 	if subpage_origin == "title": _show_title()
 	else:
 		current_layer = "pause"

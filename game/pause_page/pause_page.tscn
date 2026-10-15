@@ -37,6 +37,9 @@ text = "读取存档"
 [node name="Settings" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "游戏设置"
+[node name="SfxManager" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "音效管理"
 [node name="ReturnTitle" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "返回标题"

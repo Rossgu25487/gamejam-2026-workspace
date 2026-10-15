@@ -98,11 +98,12 @@ func _exit_tree() -> void:
 
 
 func setup(config_path := DEFAULT_CONFIG, extra_paths: Array = [], asset_root := "res://", refs := {}) -> bool:
-	# 加载声音配置并确保音频总线存在；extra_paths 用于叠加 EX 测试夹具或试听配置。
+	# 加载声音配置并确保音频总线存在；extra_paths 用于叠加 EX 测试夹具或试听配置，同时自动挂载备用音效库。
 	_ensure_buses()
 	catalog = CatalogScript.new()
 	catalog.asset_root = asset_root
-	catalog.ref_table = refs
+	catalog.ref_table = refs.duplicate()
+	catalog.load_sfx_library()
 	var ok: bool = catalog.load_file(config_path)
 	for path in extra_paths:
 		ok = catalog.load_file(String(path), true) and ok
@@ -324,11 +325,110 @@ func play_voice(instance_id: String, ref: String, options := {}) -> Dictionary:
 	return request_event("SND_NODE_VOICE", instance_id, ref, options)
 
 
+func play_sfx(sfx_ref: String, slot := "", instance_id := "", options := {}) -> Dictionary:
+	# 备用音效库快捷播放：任意模块可传入标准 ID（如 SFX_AVAIL_DIALOGUE_SHOW）、中文／简写名（如 对白显示音效、bookFlip1）或路径。
+	# 未传 slot 时按条目推荐通道（ui 或 result）播放；未传 instance_id 时每次视为新请求。
+	if catalog == null:
+		return {"status": "unknown", "ref": sfx_ref}
+	var target_slot := slot.strip_edges()
+	if target_slot.is_empty():
+		var entry: Dictionary = catalog.sfx_entry(sfx_ref)
+		target_slot = String(entry.get("bus", "result"))
+	if target_slot == "preview":
+		return preview_sfx(sfx_ref)
+	var identity := instance_id
+	if identity.is_empty():
+		_serial += 1
+		identity = "sfx/%d" % _serial
+	if target_slot == "ui":
+		return _play_dynamic_ui(sfx_ref, identity, options)
+	if target_slot == "voice":
+		return request_event("SND_NODE_VOICE", identity, sfx_ref, options)
+	return request_event("SND_RESULT", identity, sfx_ref, options)
+
+
+func _play_dynamic_ui(sfx_ref: String, instance_id: String, options := {}) -> Dictionary:
+	# 界面通道动态播放一次备用音效：受失焦、静音与效果音音量约束，在暂停菜单中仍可发声。
+	var result := {"status": "unknown", "event": "SND_SFX_UI", "instance": instance_id}
+	if int(options.get("session", session_id)) != session_id:
+		result["status"] = "stale"
+		return result
+	if not instance_id.is_empty() and _handled.has(instance_id):
+		result["status"] = "duplicate"
+		return result
+	if focus_state == Focus.FROZEN or focus_state == Focus.AWAITING_INPUT:
+		result["status"] = "frozen"
+		return result
+	if sfx_ref.is_empty():
+		_mark_handled(instance_id)
+		result["status"] = "empty"
+		return result
+	var info: Dictionary = catalog.describe(sfx_ref, "", "ui")
+	if info["state"] == catalog.STATE_UNBOUND:
+		_mark_handled(instance_id)
+		result["status"] = "unbound"
+		return result
+	if info["state"] == catalog.STATE_MISSING:
+		_mark_handled(instance_id)
+		_report("声音资源缺失：SND_SFX_UI（%s）" % info["path"])
+		result["status"] = "missing"
+		return result
+	if final_multiplier(settings, "ui", 1.0, 1.0) <= 0.0:
+		_mark_handled(instance_id)
+		result["status"] = "silent"
+		return result
+	var started := _start_one_shot("ui", String(info["path"]), 1.0, instance_id)
+	_mark_handled(instance_id)
+	result["status"] = started["status"]
+	return result
+
+
+func list_sfx(pack_filter := "", category_filter := "", query := "") -> Array:
+	# 按来源包、分类和关键词查询备用音效条目列表。
+	if catalog == null:
+		return []
+	return catalog.filter_sfx(pack_filter, category_filter, query)
+
+
+func sfx_info(sfx_ref: String) -> Dictionary:
+	# 查询单条备用音效的完整元信息与当前就绪状态。
+	if catalog == null:
+		return {}
+	var entry: Dictionary = catalog.sfx_entry(sfx_ref).duplicate(true)
+	var bus := String(entry.get("bus", "result"))
+	var info: Dictionary = catalog.describe(sfx_ref, String(entry.get("path", "")), bus)
+	entry["state"] = info["state"]
+	entry["resolved_path"] = info["path"]
+	return entry
+
+
+func sfx_summary() -> Dictionary:
+	# 返回备用音效库统计摘要（总数、就绪数、来源包、分类），供管理界面与诊断使用。
+	if catalog == null:
+		return {"total": 0, "ready": 0, "packs": [], "categories": []}
+	var ready := 0
+	for entry in catalog.sfx_entries:
+		var info: Dictionary = catalog.describe("", String(entry.get("path", "")), String(entry.get("bus", "result")))
+		if info["state"] == catalog.STATE_READY:
+			ready += 1
+	return {
+		"total": catalog.sfx_entries.size(),
+		"ready": ready,
+		"packs": catalog.sfx_packs.duplicate(true),
+		"categories": catalog.sfx_categories.duplicate(true),
+	}
+
+
 func request_media(request: Dictionary) -> Dictionary:
-	# 玩法、剧情、猫互动、结局等模块的统一入口：{"event": 事件键, "instance": 实例ID, "ref": 资源引用, "session": 会话号}。
+	# 玩法、剧情、猫互动、结局等模块的统一入口：
+	# 既支持 {"event": 事件键, "instance": 实例ID, "ref": 资源引用, "session": 会话号}，
+	# 也支持 {"sfx": 备用音效ID或名称, "slot": "ui"/"result", "instance": 实例ID, "session": 会话号}。
 	var options := {}
 	if request.has("session"):
 		options["session"] = request["session"]
+	if request.has("sfx") or String(request.get("event", "")) == "SND_SFX":
+		var ref_key := String(request.get("sfx", request.get("ref", "")))
+		return play_sfx(ref_key, String(request.get("slot", "")), String(request.get("instance", "")), options)
 	return request_event(String(request.get("event", "")), String(request.get("instance", "")), String(request.get("ref", "")), options)
 
 
@@ -436,6 +536,27 @@ func preview_effect() -> Dictionary:
 	var event: Dictionary = catalog.events[PREVIEW_EVENT]
 	var info: Dictionary = catalog.resource_state(String(event["resource_key"]))
 	return _start_one_shot("preview", String(info["path"]), float(event["event_gain"]), "")
+
+
+func preview_sfx(sfx_ref: String, gain := 1.0) -> Dictionary:
+	# 音效管理界面专用试听：按总音量、效果音与静音条件检查，在 preview 通道播放指定备用音效，新试听替换旧试听。
+	if bool(settings.get("mute", false)):
+		return {"status": "disabled", "reason": "UI_SETTINGS_PREVIEW_MUTED"}
+	if int(settings.get("master_volume", 0)) <= 0:
+		return {"status": "disabled", "reason": "UI_SETTINGS_PREVIEW_MASTER_ZERO"}
+	if int(settings.get("effect_volume", 0)) <= 0:
+		return {"status": "disabled", "reason": "UI_SETTINGS_PREVIEW_EFFECT_ZERO"}
+	if catalog == null:
+		return {"status": "disabled", "reason": "UI_SETTINGS_PREVIEW_UNREADY"}
+	if focus_state == Focus.FROZEN or focus_state == Focus.AWAITING_INPUT:
+		return {"status": "frozen"}
+	var info: Dictionary = catalog.describe(sfx_ref, "", "ui")
+	if info["state"] == catalog.STATE_UNBOUND:
+		return {"status": "unbound"}
+	if info["state"] == catalog.STATE_MISSING:
+		_report("试听音效缺失：%s（%s）" % [sfx_ref, info["path"]])
+		return {"status": "missing"}
+	return _start_one_shot("preview", String(info["path"]), clampf(gain, 0.0, 1.0), sfx_ref)
 
 
 func stop_preview() -> void:
