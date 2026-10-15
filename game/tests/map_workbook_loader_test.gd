@@ -23,6 +23,9 @@ func _run() -> void:
 		expect(definition.has("nodes"), "配置包含地点节点段")
 		expect(definition.has("display"), "配置包含显示参数段")
 		expect(definition.has("transitions"), "配置包含转场段")
+		expect(definition.boards.has("EX_GROUP_A") and definition.boards.EX_GROUP_A.cols == 8 and definition.display.has("logical_width"), "正式机器表头按真实身份解析棋盘和显示参数")
+		var previous: Dictionary = loader.last_valid_definition.duplicate(true)
+		expect(loader.load_workbook("user://missing-map-audit.xlsx").is_empty() and not loader.errors.is_empty() and loader.last_valid_definition == previous, "重载失败保留上一有效定义且不偷偷读TEST表")
 	else:
 		expect(not loader.errors.is_empty(), "读取失败时保留错误信息")
 	if failures.is_empty(): print("MAP_WORKBOOK_PASS: %d checks" % checks)

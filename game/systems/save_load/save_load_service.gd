@@ -3,6 +3,7 @@ extends Node
 
 signal scan_completed(records: Array) # 扫描完成后返回有效存档列表。
 signal operation_completed(success: bool, message: String) # 保存或读取结果。
+signal processing_changed(active: bool) # 会话以此排除实际文件处理耗时。
 
 const MANUAL_SLOT_COUNT := 3 # 玩家可见的手动存档栏位。
 const AUTO_SLOT_COUNT := 1 # 普通自动档固定只有一个栏位。
@@ -13,6 +14,7 @@ var records: Array = [] # 最近一次扫描得到的有效记录。
 var sequence := 0 # 全部栏位共用的成功保存序号。
 var storage_path := DIR_PATH # 测试可注入隔离目录，运行默认使用玩家目录。
 var snapshot_validator: Callable # 会话模块提供完整性验证，读取前拒绝损坏快照。
+var busy := false # 文件事务及其完成回调期间拒绝重入，不排队。
 
 func scan() -> Array:
 	# 按固定栏位读取磁盘文件，并恢复本次运行的序号基线。
@@ -35,6 +37,15 @@ func has_valid_record() -> bool:
 	return not records.is_empty()
 
 func save_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> bool:
+	if busy: return false
+	busy = true
+	processing_changed.emit(true)
+	var success := _write_snapshot(slot_kind, slot_index, snapshot)
+	busy = false
+	processing_changed.emit(false)
+	return success
+
+func _write_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -> bool:
 	# 将完整快照写入指定栏位；只有文件写入成功才提交新序号。
 	if not _valid_slot(slot_kind, slot_index):
 		operation_completed.emit(false, "存档栏位无效")
@@ -70,7 +81,26 @@ func save_auto(snapshot: Dictionary) -> bool:
 	# 普通自动档固定写入唯一自动栏，不占用手动存档栏位。
 	return save_snapshot("auto", 0, snapshot)
 
+func clear_previous_run_protection(run_id: String) -> void:
+	# 只清理已确认属于上一调查的固定保护；手动栏永远保留。
+	var path := _path("pre_accusation", 0)
+	if not FileAccess.file_exists(path): return
+	var file := FileAccess.open(path, FileAccess.READ)
+	var record = JSON.parse_string(file.get_as_text()) if file else null
+	if file != null: file.close()
+	if record is Dictionary and record.get("card_snapshot", {}) is Dictionary and record.card_snapshot.get("run_id", run_id) != run_id:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
 func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
+	if busy: return {}
+	busy = true
+	processing_changed.emit(true)
+	var result := _read_snapshot(slot_kind, slot_index)
+	busy = false
+	processing_changed.emit(false)
+	return result
+
+func _read_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 	# 按栏位读取并校验格式；失败时不替换当前会话。
 	if not _valid_slot(slot_kind, slot_index):
 		operation_completed.emit(false, "存档栏位无效")
@@ -85,6 +115,61 @@ func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 		return {}
 	operation_completed.emit(true, "读取存档成功")
 	return data
+
+func slot_info(kind: String, index: int) -> Dictionary:
+	# 固定栏位始终显示；无效档也保留身份和实际原因，不用当前调查冒充摘要。
+	var result := {"slot_kind": kind, "slot_index": index, "exists": false, "valid": false, "summary": "空栏位", "reason": ""}
+	if not _valid_slot(kind, index): return result
+	var path := _path(kind, index)
+	if not FileAccess.file_exists(path): return result
+	result.exists = true
+	var file := FileAccess.open(path, FileAccess.READ)
+	var record = JSON.parse_string(file.get_as_text()) if file else null
+	if not _valid_record(record, kind, index):
+		result.reason = "存档损坏、版本不支持或必要内容无效"
+		result.summary = result.reason
+		return result
+	result.valid = true
+	result.merge(_record_presentation(record), true)
+	return result
+
+func _record_presentation(record: Dictionary) -> Dictionary:
+	# 只格式化档案里已冻结的数据，旧档缺值保持空；序号仍是排序唯一依据。
+	var progress: Dictionary = record.get("progress_summary", {})
+	var scene := str(progress.get("scene", ""))
+	var phase := str(progress.get("phase", ""))
+	var question := str(progress.get("question", ""))
+	var duration := ""
+	var seconds = record.get("elapsed_seconds")
+	if (seconds is int or seconds is float) and is_finite(float(seconds)) and seconds >= 0:
+		var whole := int(seconds)
+		duration = "%02d:%02d:%02d" % [whole / 3600, (whole / 60) % 60, whole % 60]
+	var saved_time := _local_saved_time(str(record.get("saved_at_utc", "")))
+	var short_parts: Array[String] = []
+	var full_parts: Array[String] = []
+	for pair in [["场景", scene, 12], ["阶段", phase, 12], ["问题", question, 14], ["累计时长", duration, 0], ["保存时间", saved_time, 0]]:
+		if str(pair[1]).is_empty(): continue
+		short_parts.append(_short_text(str(pair[1]), int(pair[2])))
+		full_parts.append("%s：%s" % [pair[0], pair[1]])
+	var sequence_text := "保存序号 %d" % int(record.save_sequence)
+	short_parts.append(sequence_text)
+	full_parts.append(sequence_text)
+	return {"summary": " · ".join(short_parts), "full_summary": "\n".join(full_parts), "scene": scene, "phase": phase, "question": question, "elapsed": duration, "saved_time": saved_time}
+
+func _short_text(value: String, limit: int) -> String:
+	if limit <= 0: return value
+	var breaks := TextServerManager.get_primary_interface().string_get_character_breaks(value)
+	return value if breaks.size() <= limit else value.substr(0, breaks[limit - 2]) + "…"
+
+func _local_saved_time(value: String) -> String:
+	if value.length() < 19: return ""
+	var utc := Time.get_unix_time_from_datetime_string(value)
+	if utc <= 0: return ""
+	var local := Time.get_datetime_dict_from_unix_time(utc + int(Time.get_time_zone_from_system().bias) * 60)
+	return "%04d.%02d.%02d %02d:%02d" % [local.year, local.month, local.day, local.hour, local.minute]
+
+func slot_label(kind: String, index: int) -> String:
+	return "手动存档 %d" % (index + 1) if kind == "manual" else ("自动存档" if kind == "auto" else "指认前")
 
 func latest_record() -> Dictionary:
 	# 从所有有效栏位中查找保存序号最大的记录。
@@ -122,6 +207,11 @@ func _path(kind: String, index: int) -> String:
 	return "%s/%s_%d.json" % [storage_path, kind, index]
 
 func _valid_record(data, kind: String, index: int) -> bool:
-	if not data is Dictionary or int(data.get("schema_version", -1)) != SCHEMA_VERSION: return false
+	if not data is Dictionary: return false
+	# JSON 数字读取为浮点；拒绝数组、字符串、小数及非有限值后再转换。
+	for key in ["schema_version", "slot_index", "save_sequence"]:
+		var number = data.get(key)
+		if not (number is int or number is float) or not is_finite(float(number)) or float(number) != floor(float(number)): return false
+	if int(data.get("schema_version", -1)) != SCHEMA_VERSION: return false
 	if data.get("slot_kind") != kind or int(data.get("slot_index", -1)) != index or int(data.get("save_sequence", 0)) < 1: return false
 	return not snapshot_validator.is_valid() or snapshot_validator.call(data)

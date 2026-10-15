@@ -28,6 +28,14 @@ var controls_box: VBoxContainer
 var close_button: Button
 var rebuild_queued := false
 var developer_tools_enabled := false
+var reset_button: Button
+var retry_button: Button
+var status_label: Label
+var reset_confirmation: Control
+var sliders := {}
+var volume_numbers := {}
+var adjusting := false
+var adjustment_key := ""
 
 func set_developer_tools_enabled(enabled: bool) -> void:
 	developer_tools_enabled = enabled
@@ -66,12 +74,18 @@ func _build_page() -> void:
 	box.add_child(controls_box)
 	close_button = Button.new()
 	close_button.text = "关闭设置"
-	close_button.pressed.connect(closed.emit)
+	close_button.pressed.connect(_request_close)
 	box.add_child(close_button)
+	# 共用确认组件作为设置页自己的子节点；取消默认聚焦且遮住下层输入。
+	reset_confirmation = preload("res://pages/confirm_page.tscn").instantiate()
+	add_child(reset_confirmation)
+	reset_confirmation.cancelled.connect(_cancel_reset)
+	reset_confirmation.accepted.connect(_confirm_reset)
 
 func open(service: Node, audio: Node = null, texts: Callable = Callable()) -> void:
 	# 每次打开都按当前服务值重建显示控件。
 	settings_service = service
+	if not service.persistence_changed.is_connected(_refresh_status): service.persistence_changed.connect(_refresh_status)
 	audio_service = audio
 	text_of = texts
 	_rebuild_controls()
@@ -83,6 +97,8 @@ func open(service: Node, audio: Node = null, texts: Callable = Callable()) -> vo
 func close_page() -> void:
 	# 隐藏设置页，设置值已在操作时即时保存；离开设置时停止试听。
 	if is_instance_valid(audio_service): audio_service.stop_preview()
+	reset_confirmation.close_page()
+	adjusting = false
 	hide()
 
 func _text(key: String, fallback: String) -> String:
@@ -94,7 +110,10 @@ func _text(key: String, fallback: String) -> String:
 
 func _rebuild_controls() -> void:
 	# 先移除旧控件，再根据服务中的当前值创建滑条和开关。
+	var restore_reset_focus := rebuild_queued
 	rebuild_queued = false
+	sliders.clear()
+	volume_numbers.clear()
 	# 先从父容器移除旧控件，再延迟释放它们，避免在 pressed/toggled 信号回调
 	# 仍持有控件锁时直接 free()。
 	while controls_box.get_child_count() > 0:
@@ -113,10 +132,19 @@ func _rebuild_controls() -> void:
 		slider.mouse_filter = Control.MOUSE_FILTER_STOP
 		slider.min_value = 0
 		slider.max_value = 100
-		slider.step = 5
+		slider.step = 1 # 鼠标精确到整数；键盘按独立配置步长调整。
 		slider.value = settings_service.get_value(key, 0)
 		slider.value_changed.connect(_set_value.bind(key))
+		slider.drag_started.connect(_begin_adjustment.bind(key))
+		slider.drag_ended.connect(_end_drag)
+		slider.gui_input.connect(_slider_input.bind(key))
+		slider.focus_exited.connect(_commit_adjustment)
 		row.add_child(slider)
+		sliders[key] = slider
+		var number := Label.new()
+		number.custom_minimum_size.x = 54
+		row.add_child(number)
+		volume_numbers[key] = number
 		controls_box.add_child(row)
 	for key in ["mute", "reduce_motion"]:
 		var check := CheckButton.new()
@@ -139,21 +167,67 @@ func _rebuild_controls() -> void:
 	sfx_manager_button.pressed.connect(sfx_manager_requested.emit)
 	sfx_manager_button.visible = developer_tools_enabled
 	controls_box.add_child(sfx_manager_button)
-	var reset := Button.new()
-	reset.text = _text("UI_SETTINGS_RESET", "恢复默认")
-	reset.pressed.connect(_restore_defaults)
-	controls_box.add_child(reset)
+	reset_button = Button.new()
+	reset_button.text = _text("UI_SETTINGS_RESET", "恢复默认")
+	reset_button.pressed.connect(_restore_defaults)
+	controls_box.add_child(reset_button)
+	status_label = Label.new()
+	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	controls_box.add_child(status_label)
+	retry_button = Button.new()
+	retry_button.text = "重试"
+	retry_button.pressed.connect(settings_service.save)
+	controls_box.add_child(retry_button)
+	_refresh_status()
+	if restore_reset_focus and is_visible_in_tree(): reset_button.grab_focus()
 
 func _set_value(value, key: String) -> void:
 	# 控件变化立即交给设置服务校验、应用并保存。
-	if is_instance_valid(settings_service): settings_service.set_value(key, value if key in ["mute", "reduce_motion"] else int(value))
+	if is_instance_valid(settings_service): settings_service.set_value(key, value if key in ["mute", "reduce_motion"] else int(value), not adjusting)
+	_refresh_preview()
+	_refresh_status()
+
+func _begin_adjustment(key: String) -> void:
+	adjusting = true
+	adjustment_key = key
+
+func _end_drag(_changed: bool) -> void:
+	_commit_adjustment()
+
+func _commit_adjustment() -> void:
+	if not adjusting: return
+	adjusting = false
+	adjustment_key = ""
+	if settings_service.unsaved and not settings_service.busy: settings_service.save()
+
+func _slider_input(event: InputEvent, key: String) -> void:
+	if not event is InputEventKey or event.keycode not in [KEY_LEFT, KEY_RIGHT]: return
+	if event.pressed and not settings_service.busy:
+		_begin_adjustment(key)
+		var direction := -1 if event.keycode == KEY_LEFT else 1
+		sliders[key].value = clampi(int(sliders[key].value) + direction * settings_service.VOLUME_STEP, 0, 100)
+	elif not event.pressed:
+		_commit_adjustment()
+	get_viewport().set_input_as_handled()
+
+func _refresh_status() -> void:
+	if not is_instance_valid(settings_service) or not is_instance_valid(status_label): return
+	var locked: bool = settings_service.busy or reset_confirmation.visible
+	for button in controls_box.find_children("*", "BaseButton", true, false): button.disabled = locked
+	for key in sliders:
+		sliders[key].editable = not locked
+		volume_numbers[key].text = "%d%%" % int(settings_service.get_value(key))
+	close_button.disabled = locked
+	status_label.text = "写入中" if settings_service.busy else (("未保存：" + settings_service.last_error) if not settings_service.last_error.is_empty() else ("未保存" if settings_service.unsaved else ""))
+	status_label.tooltip_text = status_label.text
+	retry_button.visible = settings_service.unsaved and not settings_service.last_error.is_empty()
 	_refresh_preview()
 
 func _refresh_preview() -> void:
 	# 按音频服务给出的资格刷新试听按钮；没有音频服务时按素材未就绪处理。
 	if not is_instance_valid(preview_button): return
 	var state: Dictionary = audio_service.preview_state() if is_instance_valid(audio_service) else {"enabled": false, "reason": "UI_SETTINGS_PREVIEW_UNREADY"}
-	preview_button.disabled = not state["enabled"]
+	preview_button.disabled = not state["enabled"] or settings_service.busy or reset_confirmation.visible
 	preview_reason.text = "" if state["enabled"] else _text(String(state["reason"]), "试听素材未就绪")
 	preview_reason.visible = not state["enabled"]
 
@@ -161,9 +235,37 @@ func _preview() -> void:
 	if is_instance_valid(audio_service): audio_service.preview_effect()
 
 func _restore_defaults() -> void:
-	# 恢复默认需要延迟重建，避开 pressed 信号分发期间的节点锁定。
-	if is_instance_valid(settings_service): settings_service.restore_defaults()
-	# Button.pressed 仍在分发期间，延迟到本帧信号处理结束后重建控件。
+	if settings_service.busy or reset_confirmation.visible: return
+	_commit_adjustment()
+	reset_confirmation.open("恢复默认", "总音量100%／背景音乐70%／环境60%／效果80%\n静音关闭，减弱动态关闭。", "", "确认", false, true)
+	_refresh_status()
+
+func _cancel_reset() -> void:
+	reset_confirmation.close_page()
+	_refresh_status()
+	reset_button.grab_focus()
+
+func _confirm_reset() -> void:
+	if not reset_confirmation.visible or settings_service.busy: return
+	reset_confirmation.close_page()
+	settings_service.restore_defaults()
+	# 信号处理结束后才更换控件，避免释放正在发射 pressed 的对象。
 	if not rebuild_queued:
 		rebuild_queued = true
 		call_deferred("_rebuild_controls")
+
+func _request_close() -> void:
+	if settings_service.busy or reset_confirmation.visible: return
+	if adjusting:
+		_commit_adjustment()
+		return
+	closed.emit()
+
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree() or not event is InputEventKey or not event.pressed or event.echo or event.keycode != KEY_ESCAPE: return
+	if reset_confirmation.visible: _cancel_reset()
+	else: _request_close()
+	get_viewport().set_input_as_handled()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_visible_in_tree(): _commit_adjustment()

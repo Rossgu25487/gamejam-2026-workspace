@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://pages/core/core_gameplay_page.gd" id="1"]
 [ext_resource type="Script" path="res://pages/core/investigation_page.gd" id="2"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://pages/map_navigation/map_navigation_page.gd" id="8"]
 [ext_resource type="Script" path="res://pages/objective/objective_hud_page.gd" id="9"]
 [ext_resource type="Script" path="res://pages/objective/objective_review_page.gd" id="10"]
+[ext_resource type="Script" path="res://pages/cat/cat_page.gd" id="11"]
 
 [node name="CoreGameplayPage" type="Control"]
 layout_mode = 3
@@ -129,3 +130,14 @@ grow_horizontal = 2
 grow_vertical = 2
 z_index = 250
 script = ExtResource("8")
+
+[node name="CatPage" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 300
+script = ExtResource("11")

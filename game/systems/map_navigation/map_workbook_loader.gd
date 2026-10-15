@@ -3,9 +3,9 @@ extends RefCounted
 ## 输出统一结构，页面和会话服务不需要了解 XLSX 的压缩 XML 细节。
 
 const DEFAULT_PATH := "res://代码开发需求/地图切换系统/地图切换系统配置表.xlsx"
-const FALLBACK_PATH := "res://代码开发需求/测试用资源/配置表/地图切换系统配置表.xlsx"
 
 var errors: Array[String] = []
+var last_valid_definition: Dictionary = {}
 var _zip: ZIPReader
 var _shared: Array[String] = []
 
@@ -14,11 +14,8 @@ func load_workbook(path: String = DEFAULT_PATH) -> Dictionary:
 	_shared.clear()
 	_zip = ZIPReader.new()
 	if _zip.open(path) != OK:
-		if path == DEFAULT_PATH and _zip.open(FALLBACK_PATH) == OK:
-			path = FALLBACK_PATH
-		else:
-			errors.append("无法打开地图配置表：" + path)
-			return {}
+		errors.append("无法打开地图配置表：" + path)
+		return {}
 	if _zip.file_exists("xl/sharedStrings.xml"):
 		_read_shared_strings()
 	var sheets := _sheet_paths()
@@ -32,14 +29,19 @@ func load_workbook(path: String = DEFAULT_PATH) -> Dictionary:
 			result.transitions.append_array(records)
 		elif key != "":
 			for record in records:
-				var id := str(record.get(_id_field(key), record.get("id", "")))
+				var id := str(record.get(_id_field(key), record.get("id", record.get("group_id", ""))))
 				if id.is_empty():
+					continue
+				if result[key].has(id):
+					errors.append("地图配置ID重复：%s / %s" % [sheet_name, id])
 					continue
 				result[key][id] = record
 	_zip.close()
 	_zip = null
+	errors.append_array(preload("res://systems/map_navigation/map_config_validator.gd").new().validate(result))
 	if not errors.is_empty():
 		return {}
+	last_valid_definition = result.duplicate(true)
 	return result
 
 func _section_for(name: String) -> String:

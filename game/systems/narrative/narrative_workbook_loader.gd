@@ -180,6 +180,7 @@ func _compile(raw: Dictionary) -> Dictionary:
 		"enabled":["enabled", "启用"], "transition_id":["跳转ID", "transition_id"], "source_text_id":["源文本ID", "source_text_id"],
 		"source_event_id":["源事件ID", "source_event_id"], "source_chapter_id":["源章节ID", "source_chapter_id"], "order":["顺序", "order"],
 		"transition_type":["跳转类型", "transition_type"], "choice_text":["选项文本", "选项条件", "choice_text"], "condition":["跳转条件", "condition"],
+		"enabled_condition":["启用条件", "enabled_condition"], "return_state_id":["返回目标状态ID", "return_state_id"],
 		"target_text_id":["目标文本ID", "target_text_id"], "target_event_id":["目标事件ID", "target_event_id"], "dynamic_state_id":["动态目标状态ID", "dynamic_state_id"],
 		"fixed_state_id":["固定目标状态ID", "fixed_state_id"], "ends":["结束", "ends"]})
 	var chapters := _dict(_table(_sheet(raw, ["章节字典", "章节", "Chapters"]), {"chapter_id":["章节id", "章节ID", "chapter_id"], "name":["章节名称", "名称", "name"], "description":["章节描述", "description"]}), "chapter_id")
@@ -205,6 +206,7 @@ func _compile(raw: Dictionary) -> Dictionary:
 		var id := str(row.get("transition_id", ""))
 		if id.is_empty(): id = "transition_%d" % data.transitions.size()
 		row["order"] = int(str(row.get("order", "0")) if str(row.get("order", "0")).is_valid_int() else "0")
+		row["ends"] = str(row.get("ends", "")).to_lower() in ["true", "1", "是", "yes"]
 		data.transitions[id] = row
 	for row in performance:
 		var id := str(row.get("performance_id", ""))

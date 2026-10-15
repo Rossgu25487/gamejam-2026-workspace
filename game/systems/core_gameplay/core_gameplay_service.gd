@@ -5,6 +5,7 @@ signal changed
 signal notice(message: String)
 signal autosave_requested
 signal presentation_requested(display: Dictionary)
+signal material_acquired(message: String)
 
 const CatalogScript = preload("res://systems/core_gameplay/core_catalog.gd")
 const StoreScript = preload("res://systems/core_gameplay/core_material_store.gd")
@@ -70,7 +71,7 @@ func _reject(message: String) -> bool:
 	notice.emit(message)
 	return false
 
-func condition_met(id: String) -> bool:
+func condition_met(id: String, selected: Array = []) -> bool:
 	if not catalog.data.conditions.has(id): return false
 	# 分支之间为或，分支内为与；空分支只能由作者显式配置。
 	for branch in catalog.data.conditions[id]:
@@ -84,6 +85,10 @@ func condition_met(id: String) -> bool:
 				"heard": ok = ref in state.heard_statements
 				"owned": ok = store.owns(catalog.material_ref(ref))
 				"completed": ok = ref in state.completed_questions
+				"observation":
+					# 只读本次所选精确版，不从牌库当前最高版补观察。
+					for material in selected:
+						if ref in catalog.data.contents.get(material.content_id, {}).get("observations", []): ok = true
 			if not ok: matched = false; break
 		if matched: return true
 	return false
@@ -94,9 +99,27 @@ func acquire_material(content_id: String, entry_id: String, source_id: String) -
 	var entry: Dictionary = catalog.data.entries[entry_id]
 	if content_id not in entry.get("contents", []) or source_id != entry.get("source_id", "") or not condition_met(entry.condition): return _reject("材料取得条件未满足")
 	if catalog.data.materials[catalog.data.contents[content_id].material_id].type == "inference": return _reject("推论需要主动收下")
+	var ref: Dictionary = catalog.material_ref(content_id)
+	var previously_owned: bool = store.owns(ref)
+	var previous_sources: Array = store.sources(ref)
 	var ok: bool = store.acquire(content_id, {"entry_id": entry_id, "source_id": source_id, "object_id": entry.get("object_id", ""), "text_id": entry.text})
-	if ok: _changed()
+	if ok:
+		_changed()
+		if not previously_owned or previous_sources != store.sources(ref):
+			material_acquired.emit(("更新：" if previously_owned else "取得：") + catalog.text(catalog.data.contents[content_id].title) + " · " + catalog.text(entry.get("title", entry.text)))
 	return ok
+
+func validate_entry_commit(id: String) -> bool:
+	# 先核对整批输出，再改材料、原话和事实，避免中途遇坏引用只提交前半批。
+	if paused or processing or presenting or state.is_empty() or not catalog.data.entries.has(id): return false
+	var entry: Dictionary = catalog.data.entries[id]
+	if not _in_current_scene(entry) or not condition_met(str(entry.get("condition", ""))) or str(entry.get("source_id", "")).is_empty(): return false
+	for content_id in entry.get("contents", []):
+		var ref: Dictionary = catalog.material_ref(content_id)
+		if not catalog.valid_material_ref(ref) or catalog.data.materials.get(ref.material_id, {}).get("type") == "inference": return false
+	for statement_id in entry.get("statements", []):
+		if not catalog.data.statements.has(statement_id): return false
+	return true
 
 func activate_entry(id: String) -> bool:
 	if paused or processing or presenting or state.mode not in ["investigation", "selection"] or inspection_depth > 0: return false
@@ -104,6 +127,7 @@ func activate_entry(id: String) -> bool:
 	var entry: Dictionary = catalog.data.entries[id]
 	if not _in_current_scene(entry): return _reject("该入口不在当前地点")
 	if not condition_met(entry.condition): return _reject("该入口尚未开放")
+	if not validate_entry_commit(id): return _reject("入口内容尚未就绪，当前调查保持。")
 	state.dialogue_return_ref = {"mode": state.mode, "card_ui_page": state.card_ui_page, "question_id": state.question_id}
 	for content_id in entry.get("contents", []):
 		if not acquire_material(content_id, id, entry.source_id): return false
@@ -209,14 +233,13 @@ func _in_current_scene(record: Dictionary) -> bool:
 	return str(record.get("scene_id", "")).is_empty() or record.scene_id == state.current_scene_id
 
 func move_scene(link_id: String) -> bool:
-	# 地点连接由配置授权，服务更新唯一地点状态并发出已有自动保存接口。
+	# 普通移动只改变地点；地图策划4.2规定不取得、不推进、不自动保存。
 	if paused or processing or presenting or inspection_depth > 0 or state.get("mode") != "investigation": return false
 	if not catalog.data.get("scene_links", {}).has(link_id): return false
 	var link: Dictionary = catalog.data.scene_links[link_id]
 	if link.from_scene != state.current_scene_id or not condition_met(link.condition): return _reject("当前无法前往该地点")
 	state.current_scene_id = link.to_scene
 	_changed()
-	autosave_requested.emit()
 	return true
 
 func draft() -> Dictionary:
@@ -332,7 +355,7 @@ func _rank(r: Dictionary) -> int:
 	return 2 if r.feedback in ["partial", "counter"] else 3
 
 func _match(r: Dictionary, d: Dictionary, selected: Array) -> bool:
-	if r.question_id != state.question_id or not condition_met(r.condition): return false
+	if r.question_id != state.question_id or not condition_met(r.condition, selected): return false
 	if d.target_ref.target_kind == "statement":
 		if r.get("statement_id", "") != d.target_ref.statement_ref.statement_id: return false
 	elif r.get("question_text_id", "") != d.target_ref.question_text_id: return false
@@ -387,6 +410,10 @@ func present_materials(attempt_id: String = "") -> Dictionary:
 		"feedback": r.feedback, "node": r.node, "inference_content_id": r.get("inference", ""), "collected": false, "confirmed": false,
 		"confirmed_scope": r.get("confirmed_scope", ""), "resolution_key": key, "first_resolution": key not in state.resolved_result_keys,
 		"effect_kind": r.get("effect_kind", "ordinary"), "effect_level": r.get("effect_level", "normal"), "climax_key": r.get("climax_key", ""), "reason_text_id": r.get("reason", "")}
+	result["comparison"] = {"statement_quote": r.get("statement_quote", ""), "quotes": [], "confirmed_scope": r.get("confirmed_scope", "")}
+	for index in range(r.materials.size()):
+		var quote: String = r.get("a_quote" if index == 0 else "b_quote", "")
+		if not quote.is_empty(): result.comparison.quotes.append({"ref": r.materials[index].duplicate(true), "quote": quote})
 	# 重复成果复用原证明，不能让后来取得的来源扩大原结论。
 	if r.feedback == "full" and not result.first_resolution:
 		for old in state.confirmed_results:

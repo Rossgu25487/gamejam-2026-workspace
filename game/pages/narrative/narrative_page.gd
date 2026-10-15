@@ -2,6 +2,9 @@ extends Control
 ## 文案页面私有逻辑：逐字显示、继续/快进、跳转选择和输入焦点。
 
 const UI = preload("res://pages/core/page_controls.gd")
+const StageScript = preload("res://pages/narrative/narrative_stage.gd")
+signal menu_requested
+var stage: Control
 var service: Node
 var text_label: RichTextLabel
 var name_label: Label
@@ -10,61 +13,207 @@ var choices: VBoxContainer
 var title_label: Label
 var background: TextureRect
 var actor: TextureRect
+var render_queued := false
+var fast_button: Button
+var skip_button: Button
+var pagination_ready := false
+var layout_canvas: Control
+var status_message := ""
 
 func bind(value: Node) -> void:
 	service = value
 	if not service.changed.is_connected(_queue_render): service.changed.connect(_queue_render)
 	if not service.progressed.is_connected(_on_progressed): service.progressed.connect(_on_progressed)
 	if not service.text_started.is_connected(_on_text_started): service.text_started.connect(_on_text_started)
+	if not service.notice.is_connected(_on_notice): service.notice.connect(_on_notice)
 	_queue_render()
 
 func _ready() -> void:
+	stage = StageScript.new()
+	stage.name = "NarrativeStage"
+	stage.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(stage)
+	resized.connect(_queue_render)
 	set_process(true)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _process(delta: float) -> void:
-	if is_visible_in_tree() and service != null and not service.state.is_empty() and service.is_typing(): service.tick(delta)
+	# 页末等待也需要时钟；只在逐字期间 tick 会让快读永远停在第一页。
+	if pagination_ready and is_visible_in_tree() and service != null and not service.state.is_empty() and (service.is_typing() or not service.fast_mode.is_empty()): service.tick(delta)
 
 func _queue_render(_unused = null) -> void:
-	if not is_inside_tree(): return
+	if not is_inside_tree() or render_queued: return
+	render_queued = true
 	call_deferred("_render")
 
 func _render() -> void:
+	render_queued = false
 	if service == null or service.state.is_empty(): return
-	for child in get_children(): child.queue_free()
-	var root_box := VBoxContainer.new()
-	root_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root_box.offset_left = 96
-	root_box.offset_top = 120
-	root_box.offset_right = -96
-	root_box.offset_bottom = -36
-	add_child(root_box)
-	title_label = UI.label(root_box, "第 " + str(service.state.get("chapter_id", "")), 26)
-	title_label.visible = not str(service.state.get("chapter_id", "")).is_empty()
-	var spacer := Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root_box.add_child(spacer)
-	var dialog := PanelContainer.new()
-	dialog.custom_minimum_size.y = 278
-	root_box.add_child(dialog)
-	var box := VBoxContainer.new()
-	dialog.add_child(box)
-	name_label = UI.label(box, str(service.current_record().get("speaker_name", service.current_record().get("character_name", ""))), 28)
-	text_label = UI.body(box, service.visible_text(), 100)
+	stage.visible = not service.reading_log
+	for child in get_children():
+		if child == stage: continue
+		remove_child(child)
+		child.queue_free()
+	if service.hidden:
+		var restore := UI.button(self, "显示对白 H", service.set_hidden.bind(false))
+		restore.z_index = 20
+		restore.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+		restore.position = Vector2(24, size.y - 64)
+		restore.grab_focus()
+		return
+	if service.reading_log:
+		_render_log()
+		return
+	# 全部阅读组件共用 1600×900 逻辑画布，窗口留边与舞台保持一致。
+	layout_canvas = Control.new()
+	layout_canvas.size = Vector2(1600, 900)
+	var factor := minf(size.x / 1600.0, size.y / 900.0)
+	layout_canvas.scale = Vector2.ONE * factor
+	layout_canvas.position = (size - layout_canvas.size * factor) / 2
+	layout_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layout_canvas.z_index = 20
+	add_child(layout_canvas)
+	var row: Dictionary = service.current_record()
+	var kind := str(row.get("text_type", ""))
+	var subtitle := kind in ["章节字幕", "时间字幕", "字幕"]
+	var avatar := _avatar_for(row) if not subtitle and kind not in ["旁白", "narration"] else null
+	var left := 224.0 if avatar != null else 96.0
+	if not subtitle:
+		var band := TextureRect.new()
+		var gradient := Gradient.new()
+		gradient.offsets = PackedFloat32Array([0, 0.32, 1])
+		gradient.colors = PackedColorArray([Color(0.063, 0.106, 0.145, 0), Color(0.063, 0.106, 0.145, 0.82), Color(0.063, 0.106, 0.145, 0.9)])
+		var texture := GradientTexture2D.new()
+		texture.gradient = gradient
+		texture.fill_from = Vector2(0, 0)
+		texture.fill_to = Vector2(0, 1)
+		band.texture = texture
+		_place(band, Rect2(0, 622, 1600, 278))
+		band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if avatar != null:
+			var portrait := TextureRect.new()
+			portrait.texture = avatar
+			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_place(portrait, Rect2(80, 694, 112, 112))
+	name_label = UI.label(layout_canvas, str(row.get("speaker_name", row.get("character_name", ""))) + (" · 内心" if kind in ["内心", "inner"] else ""), 32)
+	_place(name_label, Rect2(left, 658, 600, 40))
+	name_label.visible = kind not in ["旁白", "narration", "章节字幕", "时间字幕", "字幕"]
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	name_label.tooltip_text = name_label.text
+	text_label = UI.body(layout_canvas, service.visible_text(), 0)
+	_place(text_label, Rect2(left, 710, 1416 - left, 96))
 	text_label.bbcode_enabled = false
-	var footer := HBoxContainer.new()
-	box.add_child(footer)
-	var hint := UI.label(footer, "Enter / Space 继续", 16)
-	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	continue_button = UI.button(footer, "继续", _advance)
+	text_label.scroll_active = false
+	text_label.add_theme_font_size_override("normal_font_size", 32)
+	text_label.add_theme_color_override("default_color", Color("f0ede5"))
+	if kind in ["内心", "inner"]: text_label.add_theme_color_override("default_color", Color("b8cdd8"))
+	elif kind in ["旁白", "narration"]: text_label.add_theme_color_override("default_color", Color("d7dfe3"))
+	if subtitle:
+		_place(text_label, Rect2(200, 220, 1200, 160))
+		text_label.add_theme_font_size_override("normal_font_size", 44 if kind == "章节字幕" else 32)
+	# 按实际字体的字形宽度计算两行分页；正文区不滚动、不截断长句。
+	call_deferred("_paginate", text_label)
+	continue_button = UI.button(layout_canvas, "继续", _advance)
+	_place(continue_button, Rect2(1432, 784, 96, 48) if not subtitle else Rect2(1300, 820, 116, 48))
+	continue_button.disabled = service.is_typing() or service.state.get("waiting_for_choice", false)
 	if is_instance_valid(continue_button) and continue_button.is_visible_in_tree() and not continue_button.disabled: continue_button.grab_focus()
 	choices = VBoxContainer.new()
 	choices.visible = false
-	box.add_child(choices)
+	_place(choices, Rect2(600, 340, 720, 200))
+	var footer := HBoxContainer.new()
+	_place(footer, Rect2(900, 850, 676, 36))
+	footer.add_theme_constant_override("separation", 12)
+	UI.button(footer, "记录", service.set_log_open.bind(true))
+	UI.button(footer, "隐藏 H", service.set_hidden.bind(true), not service.state.get("waiting_for_choice", false))
+	UI.button(footer, "菜单 Esc", menu_requested.emit)
+	fast_button = UI.button(footer, "加速 Ctrl", func(): pass, service.fast_read_available())
+	fast_button.button_down.connect(service.begin_fast_read.bind("accelerate"))
+	fast_button.button_up.connect(service.stop_fast_read)
+	skip_button = UI.button(footer, "停止跳过" if service.fast_mode == "skip" else "跳过 Tab", _toggle_skip, service.fast_read_available())
+	for control in [fast_button, skip_button]: control.tooltip_text = "仅可用于已看过的对话"
 	_render_choices()
+	if not status_message.is_empty():
+		var status := UI.label(layout_canvas, status_message, 22)
+		_place(status, Rect2(96, 580, 1320, 40))
+
+func _on_notice(message: String) -> void:
+	status_message = message
+	_queue_render()
+
+func _place(control: Control, rect: Rect2) -> void:
+	if control.get_parent() == null: layout_canvas.add_child(control)
+	control.position = rect.position
+	control.size = rect.size
+
+func _avatar_for(row: Dictionary) -> Texture2D:
+	# 头像是独立身份，空值不继承立绘；缺少映射只省略头像。
+	var id := str(row.get("avatar_id", ""))
+	if id.is_empty(): return null
+	var record: Dictionary = service.catalog.data.get("avatars", {}).get(id, {})
+	var path := str(record.get("image", record.get("path", "")))
+	if path.is_empty() or not ResourceLoader.exists(path): return null
+	return load(path) as Texture2D
+
+func _paginate(label: RichTextLabel) -> void:
+	# 等容器完成布局后再按实际宽度分页；首帧不得先把整句打进正文。
+	await get_tree().process_frame
+	if not is_instance_valid(label) or service == null: return
+	var font := label.get_theme_font("normal_font")
+	var font_size := label.get_theme_font_size("normal_font_size")
+	var width := maxf(80.0, label.size.x - 24)
+	var text: String = service.current_text()
+	var ends: Array[int] = []
+	var line := ""
+	var lines := 1
+	var breaks := TextServerManager.get_primary_interface().string_get_character_breaks(text)
+	var start := 0
+	for end in breaks:
+		var glyph := text.substr(start, end - start)
+		if glyph == "\n" or (not line.is_empty() and font.get_string_size(line + glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > width and not glyph in ["，", "。", "！", "？", "；", "、", "：", "”", "）"]):
+			lines += 1
+			line = ""
+			if lines > 2:
+				if start > 0: ends.append(start)
+				lines = 1
+		line += glyph
+		start = end
+	if ends.is_empty() or ends[-1] != text.length(): ends.append(text.length())
+	service.set_page_ends(ends)
+	pagination_ready = true
+
+func _render_log() -> void:
+	var panel := VBoxContainer.new()
+	panel.z_index = 20
+	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel.offset_left = 96
+	panel.offset_top = 64
+	panel.offset_right = -96
+	panel.offset_bottom = -40
+	add_child(panel)
+	UI.label(panel, "交谈记录", 28)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel.add_child(scroll)
+	var records := VBoxContainer.new()
+	records.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(records)
+	for item in service.visible_history():
+		if str(item.get("text", "")).is_empty(): continue
+		UI.label(records, str(item.get("speaker_name", "")), 22)
+		var body := UI.label(records, str(item.text), 22)
+		body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var close := UI.button(panel, "返回对白", service.set_log_open.bind(false))
+	close.grab_focus()
+
+func _toggle_skip() -> void:
+	if service.fast_mode == "skip": service.stop_fast_read()
+	else: service.begin_fast_read("skip")
+	if is_instance_valid(skip_button): skip_button.text = "停止跳过" if service.fast_mode == "skip" else "跳过 Tab"
 
 func _render_choices() -> void:
-	if service == null or service.is_typing(): return
+	if service == null or service.is_typing() or not service.state.get("waiting_for_choice", false): return
 	var transitions: Array = service.catalog.choices_from_text(str(service.state.get("current_text_id", "")))
 	if transitions.is_empty(): return
 	choices.visible = true
@@ -79,13 +228,54 @@ func _advance() -> void:
 	if service != null: service.advance()
 
 func _on_text_started(_record: Dictionary) -> void:
+	pagination_ready = false
+	status_message = ""
+	if is_instance_valid(stage): stage.apply_record(_record, service.catalog)
 	_queue_render()
+
+func reset_stage() -> void:
+	if is_instance_valid(stage): stage.reset_stage()
 
 func _on_progressed(value: String, _typing: bool) -> void:
 	if is_instance_valid(text_label): text_label.text = value
+	if is_instance_valid(continue_button): continue_button.disabled = _typing or service.state.get("waiting_for_choice", false)
+	if is_instance_valid(skip_button): skip_button.text = "停止跳过" if service.fast_mode == "skip" else "跳过 Tab"
+
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree() or service == null or not event is InputEventKey: return
+	# Ctrl 松开即结束按住加速，即使焦点控件消费按键也不会继续快读。
+	if event.keycode == KEY_CTRL and not event.pressed and service.fast_mode == "accelerate": service.stop_fast_read()
+	# 普通阅读的Tab先于Control默认焦点导航处理；选项和记录仍使用自己的导航。
+	if event.pressed and not event.echo and event.keycode == KEY_TAB and not service.hidden and not service.reading_log and not service.state.get("waiting_for_choice", false):
+		_toggle_skip()
+		get_viewport().set_input_as_handled()
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if service.hidden: service.set_hidden(false)
+		elif not service.reading_log and not service.state.get("waiting_for_choice", false): _advance()
+		accept_event()
+
+func handle_escape() -> bool:
+	# Esc只关闭当前阅读层或停止快读；调用者据返回值决定是否打开暂停。
+	if service.hidden: service.set_hidden(false); return true
+	if service.reading_log: service.set_log_open(false); return true
+	if not service.fast_mode.is_empty(): service.stop_fast_read(); return true
+	return false
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not is_visible_in_tree(): return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_ENTER, KEY_SPACE]:
-		_advance()
-		get_viewport().set_input_as_handled()
+	if not event is InputEventKey or event.echo: return
+	# 记录层只接收自己的操作，不能用H修改被覆盖的正文。
+	if service.reading_log: return
+	if event.keycode == KEY_CTRL:
+		if event.pressed: service.begin_fast_read("accelerate")
+		else: service.stop_fast_read()
+	elif not event.pressed: return
+	elif service.hidden:
+		if event.keycode not in [KEY_H, KEY_ENTER, KEY_SPACE]: return
+		service.set_hidden(false)
+	elif event.keycode == KEY_H: service.set_hidden(true)
+	elif event.keycode in [KEY_ENTER, KEY_SPACE]: _advance()
+	else: return
+	get_viewport().set_input_as_handled()

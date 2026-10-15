@@ -164,8 +164,11 @@ func begin_inspection(hotspot_id: String, return_context: Dictionary = {}) -> Di
 	if state.is_empty() or not hotspots.has(hotspot_id): return _fail("调查对象不存在")
 	if not state.active_request.is_empty(): return _fail("当前检查尚未结束")
 	var item := hotspot_state(hotspot_id)
+	if item.is_empty(): return _fail("该对象不在当前地点")
 	if not item.visible or not item.interactive: return _fail(item.public_reason)
 	var entry_ref := str(item.inspect_entry_ref)
+	var extra_observation := available_new_observation(item.object_ref)
+	if not extra_observation.is_empty(): entry_ref = str(observations[extra_observation].get("entry_ref", entry_ref))
 	if entry_ref.is_empty(): return _fail("该对象没有检查入口")
 	if core != null and (not core.catalog.data.entries.has(entry_ref) or not core.condition_met(core.catalog.data.entries[entry_ref].condition)):
 		return _fail("当前无法调查")
@@ -187,6 +190,10 @@ func commit_inspection(request_id: String, committed: bool = true) -> Dictionary
 		return {"ok": true, "committed": false, "return_action": "return", "request_id": request_id}
 	var acquired: Array = []
 	var record: Dictionary = {}
+	# 提交前再次复核入口和位置；失败保留已有记录、材料及当前请求供重试。
+	if core != null:
+		var hotspot := hotspot_state(str(request.hotspot_id))
+		if hotspot.is_empty() or not hotspot.interactive or not core.validate_entry_commit(request.entry_ref): return _fail("当前检查条件或内容已变化，请返回后重试")
 	if core != null and core.catalog.data.entries.has(request.entry_ref):
 		var entry: Dictionary = core.catalog.data.entries[request.entry_ref]
 		for content_id in entry.get("contents", []):
@@ -204,6 +211,7 @@ func commit_inspection(request_id: String, committed: bool = true) -> Dictionary
 		record["committed"] = true
 		state.observations[request.observation_ref] = record
 		completed.append(request.observation_ref)
+		if bool(record.get("transfer", false)): set_object_state(str(request.object_ref), false, false)
 	state.active_request = {}
 	_changed()
 	return {"ok": true, "committed": true, "request_id": request_id, "completed_observation_refs": completed,
@@ -241,7 +249,8 @@ func available_new_observation(object_ref: String) -> String:
 		var row: Dictionary = observations[id]
 		if row.get("object_ref", "") == object_ref and not state.observations.has(id):
 			var previous := str(row.get("previous_observation_ref", ""))
-			if not previous.is_empty() and state.observations.has(previous): return id
+			var entry: Dictionary = core.catalog.data.entries.get(row.get("entry_ref", ""), {}) if core != null else {}
+			if not previous.is_empty() and state.observations.has(previous) and (core == null or (not entry.is_empty() and core.condition_met(str(entry.get("condition", ""))))): return id
 	return ""
 
 func topics_for_person(person_ref: String) -> Array:
@@ -249,9 +258,11 @@ func topics_for_person(person_ref: String) -> Array:
 	for id in topics:
 		var row: Dictionary = topics[id]
 		if row.get("person_ref", "") != person_ref: continue
+		if not bool(row.get("visible", true)): continue
 		var item := row.duplicate(true)
 		item["topic_ref"] = id
 		item["interactive"] = bool(row.get("interactive", true))
+		if core != null and not str(row.get("condition", "")).is_empty(): item.interactive = item.interactive and core.condition_met(str(row.condition))
 		if item.interactive and str(item.get("entry_ref", "")).is_empty(): item.interactive = false
 		if not item.interactive and str(item.get("public_reason", "")).is_empty(): item.public_reason = "当前无法回答"
 		result.append(item)
@@ -261,7 +272,11 @@ func topics_for_person(person_ref: String) -> Array:
 func open_topic(topic_ref: String, return_context: Dictionary = {}) -> Dictionary:
 	if not topics.has(topic_ref): return _fail("话题不存在")
 	var item: Dictionary = topics[topic_ref]
-	if not bool(item.get("interactive", true)) or str(item.get("entry_ref", "")).is_empty(): return _fail(str(item.get("public_reason", "当前无法回答")))
+	if not bool(item.get("visible", true)) or not bool(item.get("interactive", true)) or str(item.get("entry_ref", "")).is_empty(): return _fail(str(item.get("public_reason", "当前无法回答")))
+	if core != null:
+		var entry: Dictionary = core.catalog.data.entries.get(item.entry_ref, {})
+		var condition := str(item.get("condition", ""))
+		if entry.is_empty() or not core._in_current_scene(entry) or (not condition.is_empty() and not core.condition_met(condition)) or not core.condition_met(str(entry.get("condition", ""))): return _fail("当前话题条件已变化")
 	state.return_context = return_context.duplicate(true)
 	state.topic_anchor = topic_ref
 	_changed()
@@ -285,11 +300,20 @@ func export_snapshot() -> Dictionary:
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
 	if not snapshot is Dictionary or int(snapshot.get("snapshot_version", -1)) != SNAPSHOT_VERSION: return false
-	var incoming: Dictionary = snapshot.get("state", {})
+	var incoming = snapshot.get("state", {})
 	if not incoming is Dictionary: return false
 	for key in ["current_scene_id", "observations", "object_visibility", "object_interactive", "active_request", "return_context"]:
 		if not incoming.has(key): return false
-	return incoming.observations is Dictionary and incoming.active_request is Dictionary and incoming.active_request.is_empty()
+	for key in ["observations", "object_visibility", "object_interactive", "active_request", "return_context"]:
+		if not incoming[key] is Dictionary: return false
+	if not snapshot.get("display", {}) is Dictionary or not incoming.current_scene_id is String: return false
+	if core != null and not core.catalog.data.scenes.has(incoming.current_scene_id): return false
+	for key in ["object_visibility", "object_interactive"]:
+		for value in incoming[key].values():
+			if not value is bool: return false
+	for record in incoming.observations.values():
+		if not record is Dictionary or record.get("committed") != true: return false
+	return incoming.active_request.is_empty()
 
 func restore_snapshot(snapshot: Dictionary) -> bool:
 	if not validate_snapshot(snapshot): return false

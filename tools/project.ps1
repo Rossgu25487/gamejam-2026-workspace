@@ -60,6 +60,7 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/map_input_test.gd','--quit-after','1200') 'map-input-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/cat_service_test.gd') 'cat-service-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/handbook_talk_records_test.gd') 'handbook-talk-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_audit_test.gd','--quit-after','2400') 'system-audit-tests.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }

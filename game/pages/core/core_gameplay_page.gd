@@ -2,6 +2,7 @@ extends Control
 ## 核心页面容器只连接自己的私有子页；Main 无需访问任何卡牌或阅读控件。
 
 signal menu_requested
+signal initial_save_retry_requested
 const UI = preload("res://pages/core/page_controls.gd")
 const ImageLayer = preload("res://pages/core/story_image_layer.gd")
 const MARGIN_BASE := 24 # 调查页右侧默认边距；目标面板展开时按面板宽度加大
@@ -16,6 +17,7 @@ const MARGIN_BASE := 24 # 调查页右侧默认边距；目标面板展开时按
 @onready var map_page: Control = $MapNavigationPage
 @onready var objective_hud: Control = $ObjectiveHudPage
 @onready var objective_review: Control = $ObjectiveReviewPage
+@onready var cat_page: Control = $CatPage
 @onready var tools: HBoxContainer = $Margin/Layout/Tools
 @onready var notice_label: Label = $Margin/Layout/Notice
 var service: Node
@@ -24,8 +26,14 @@ var review_focus: WeakRef # 打开调查回顾前的焦点控件
 var input_enabled := true
 var refresh_queued := false
 var image_layer: Control
+var notice_timer: Timer
+var initial_save_retry: Button
 
 func _ready() -> void:
+	notice_timer = Timer.new()
+	notice_timer.one_shot = true
+	add_child(notice_timer)
+	notice_timer.timeout.connect(func(): notice_label.text = "")
 	image_layer = ImageLayer.new()
 	add_child(image_layer)
 	move_child(image_layer, 0)
@@ -38,11 +46,13 @@ func _ready() -> void:
 
 func bind(core: Node, objective_service: Node = null) -> void:
 	service = core
+	investigation.refresh_requested.connect(_queue_refresh)
 	var session := core.get_parent()
 	if session != null and session.get("scene_interaction") != null:
 		investigation.bind_scene_service(session.scene_interaction)
 	service.changed.connect(_queue_refresh)
-	service.notice.connect(func(message: String): notice_label.text = message)
+	service.notice.connect(show_notice)
+	service.material_acquired.connect(show_feedback)
 	service.presentation_requested.connect(feedback.play)
 	feedback.completed.connect(core.finish_presentation)
 	selection.read_requested.connect(reader.open_material)
@@ -50,14 +60,20 @@ func bind(core: Node, objective_service: Node = null) -> void:
 	reader.bind(core)
 	inspection_reader.bind(core)
 	narrative_page.bind(core.get_parent().narrative)
+	narrative_page.menu_requested.connect(menu_requested.emit)
+	cat_page.bind(core.get_parent())
+	cat_page.menu_requested.connect(menu_requested.emit)
+	cat_page.closed.connect(_queue_refresh)
 	core.get_parent().narrative.changed.connect(_on_narrative_state)
 	map_page.bind(core.get_parent().map_navigation)
-	for cover in [narrative_page, map_page]: cover.visibility_changed.connect(_sync_modal_visibility)
+	for cover in [narrative_page, map_page, cat_page]: cover.visibility_changed.connect(_sync_modal_visibility)
 	map_page.closed.connect(_queue_refresh)
 	reader.closed.connect(_queue_refresh)
 	inspection_reader.closed.connect(_queue_refresh)
 	UI.button(tools, "办案手册 / I", toggle_inspection)
 	UI.button(tools, "菜单 / Esc", menu_requested.emit)
+	initial_save_retry = UI.button(tools, "重试初次保存", initial_save_retry_requested.emit)
+	initial_save_retry.hide()
 	if objective_service != null: _bind_objectives(objective_service)
 
 func _bind_objectives(objective_service: Node) -> void:
@@ -73,12 +89,16 @@ func _bind_objectives(objective_service: Node) -> void:
 	objectives.review_state_changed.connect(_on_review_state)
 	get_viewport().size_changed.connect(_update_reserve)
 	# 阅读、结果反馈等覆盖界面出现或消失时重新判断目标是否显示，避免相互叠放。
-	for cover in [reader, inspection_reader, feedback, narrative_page, map_page]:
+	for cover in [reader, inspection_reader, feedback, narrative_page, map_page, cat_page]:
 		cover.visibility_changed.connect(_sync_objective)
 
 func set_active(active: bool) -> void:
 	input_enabled = active
+	service.get_parent().set_activity_enabled(active)
 	service.set_paused(not active)
+	if not active: service.get_parent().narrative.stop_fast_read()
+	notice_timer.paused = not active
+	cat_page.set_paused(not active)
 	feedback.paused = not active
 	process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
 	mouse_filter = Control.MOUSE_FILTER_STOP if active else Control.MOUSE_FILTER_IGNORE
@@ -87,6 +107,21 @@ func set_active(active: bool) -> void:
 		_sync_objective()
 	# 暂停期间资格会变化；恢复时重新计算出示与结果操作，不能沿用禁用按钮。
 	if active: _queue_refresh()
+
+func show_feedback(message: String, duration_ms: int = 2000) -> void:
+	# 取得／更新反馈只改变显示，不代替收下或触发存档；暂停期间冻结剩余时长。
+	notice_label.text = message
+	notice_timer.start(float(duration_ms) / 1000.0)
+
+func show_notice(message: String) -> void:
+	# 错误与资格原因持续显示，不能被上一条取得提示的计时器清掉。
+	notice_timer.stop()
+	notice_label.text = message
+
+func set_initial_save_failed(failed: bool) -> void:
+	initial_save_retry.visible = failed
+	if failed: show_notice("初次保存失败，当前调查和原存档已保留。返回可操作调查后可重试。")
+	elif notice_label.text.begins_with("初次保存失败"): show_notice("")
 
 func start_narrative(definition: Dictionary, start_text_id: String = "") -> bool:
 	if service == null or service.get_parent() == null: return false
@@ -100,7 +135,7 @@ func start_narrative(definition: Dictionary, start_text_id: String = "") -> bool
 
 func _sync_modal_visibility() -> void:
 	# 全屏子页期间底层热点、工具按钮和图片卡不参与 Tab 与快捷键。
-	var covered: bool = narrative_page.visible or map_page.visible or _review_open()
+	var covered: bool = narrative_page.visible or map_page.visible or cat_page.visible or _review_open()
 	margin.visible = not covered
 	image_layer.visible = not covered
 
@@ -111,11 +146,17 @@ func _on_narrative_state() -> void:
 		_queue_refresh()
 
 func reset_page() -> void:
+	investigation.reset_overlay()
+	notice_timer.stop()
+	notice_label.text = ""
+	if is_instance_valid(initial_save_retry): initial_save_retry.hide()
 	reader.reset_reader()
 	inspection_reader.reset_reader()
 	feedback.cancel()
 	narrative_page.hide()
+	narrative_page.reset_stage()
 	map_page.hide()
+	cat_page.reset_page()
 	if objectives != null:
 		objectives.reset()
 		margin.show()
@@ -123,6 +164,8 @@ func reset_page() -> void:
 
 func set_preferences(values: Dictionary) -> void:
 	feedback.reduce_motion = values.get("reduce_motion", false)
+	cat_page.set_preferences(values)
+	map_page.set_preferences(values)
 	if objectives != null: objectives.set_reduce_motion(feedback.reduce_motion)
 
 func _queue_refresh() -> void:
@@ -139,7 +182,7 @@ func _refresh() -> void:
 	investigation.visible = mode in ["investigation", "dialogue"]
 	selection.visible = mode == "selection"
 	result.visible = mode in ["response", "pending", "collected", "failure"]
-	if reader.visible or inspection_reader.visible or _review_open() or narrative_page.visible or map_page.visible: return
+	if reader.visible or inspection_reader.visible or _review_open() or narrative_page.visible or map_page.visible or cat_page.visible: return
 	var page := "investigation" if mode == "investigation" else ("dialogue" if mode == "dialogue" else ("selection" if mode == "selection" else "result"))
 	image_layer.render(service, page, investigation.activate_entry)
 	if investigation.visible: investigation.render(service, image_layer.entry_buttons, image_layer.entry_bindings)
@@ -147,14 +190,14 @@ func _refresh() -> void:
 	if result.visible: result.render(service)
 
 func toggle_inspection() -> void:
-	if not input_enabled or map_page.visible or _review_open() or narrative_page.visible: return
+	if not input_enabled or map_page.visible or _review_open() or narrative_page.visible or cat_page.visible: return
 	if inspection_reader.visible: inspection_reader.close_all()
 	elif reader.visible and reader.root_kind == "library": reader.close_all()
 	elif reader.visible: inspection_reader.open_library()
 	else: reader.open_library()
 
 func open_map() -> void:
-	if not input_enabled or map_page.visible or reader.visible or inspection_reader.visible or narrative_page.visible or _review_open(): return
+	if not input_enabled or map_page.visible or reader.visible or inspection_reader.visible or narrative_page.visible or cat_page.visible or _review_open(): return
 	map_page.open()
 
 func handle_escape() -> void:
@@ -180,13 +223,17 @@ func _check_window_focus() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not visible or not input_enabled or not event is InputEventKey or not event.pressed or event.echo: return
+	if cat_page.visible:
+		if event.keycode == KEY_ESCAPE: menu_requested.emit()
+		if event.keycode in [KEY_ESCAPE, KEY_I]: get_viewport().set_input_as_handled()
+		return
 	# 地图打开时只把 Esc 交给地图；I 和选材快捷键不能操作被覆盖的调查页。
 	if map_page.visible:
 		if event.keycode == KEY_ESCAPE: map_page.close()
 		if event.keycode in [KEY_ESCAPE, KEY_I]: get_viewport().set_input_as_handled()
 		return
 	if narrative_page.visible:
-		if event.keycode == KEY_ESCAPE: menu_requested.emit()
+		if event.keycode == KEY_ESCAPE and not narrative_page.handle_escape(): menu_requested.emit()
 		if event.keycode in [KEY_ESCAPE, KEY_I]: get_viewport().set_input_as_handled()
 		return
 	if event.keycode == KEY_I:
@@ -207,7 +254,7 @@ func _objective_allowed() -> bool:
 	# 目标只在调查画面上显示；阅读、选材、结果反馈、暂停与回顾期间都不显示，也不计时。
 	return objectives != null and input_enabled and not service.state.is_empty() and service.state.mode == "investigation" \
 		and not service.presenting and not service.processing and not reader.visible and not inspection_reader.visible \
-		and not feedback.visible and not _review_open() and not map_page.visible and not narrative_page.visible
+		and not feedback.visible and not _review_open() and not map_page.visible and not narrative_page.visible and not cat_page.visible
 
 func _sync_objective() -> void:
 	if objectives == null: return

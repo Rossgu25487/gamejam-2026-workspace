@@ -424,6 +424,10 @@ func request_media(request: Dictionary) -> Dictionary:
 	# 既支持 {"event": 事件键, "instance": 实例ID, "ref": 资源引用, "session": 会话号}，
 	# 也支持 {"sfx": 备用音效ID或名称, "slot": "ui"/"result", "instance": 实例ID, "session": 会话号}。
 	var options := {}
+	if request.has("gain"):
+		var request_gain = request.gain
+		if not (request_gain is int or request_gain is float) or not is_finite(float(request_gain)) or request_gain < 0.0 or request_gain > 1.0: return {"status": "invalid_gain"}
+		options["gain"] = float(request_gain)
 	if request.has("session"):
 		options["session"] = request["session"]
 	if request.has("sfx") or String(request.get("event", "")) == "SND_SFX":
@@ -471,7 +475,7 @@ func request_event(event_key: String, instance_id := "", ref := "", options := {
 		_report("声音资源缺失：%s（%s）" % [event_key, info["path"]])
 		result["status"] = "missing"
 		return result
-	var gain := float(event["event_gain"])
+	var gain := float(event["event_gain"]) * float(options.get("gain", 1.0))
 	if final_multiplier(settings, slot, gain, 1.0) <= 0.0:
 		_mark_handled(instance_id)
 		result["status"] = "silent" # 静音或分项为 0：不播放，也不在恢复后补播。

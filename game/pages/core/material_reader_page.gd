@@ -159,6 +159,7 @@ func _library(ctx: Dictionary) -> void:
 	important.toggled.connect(_important)
 	filters.add_child(important)
 	UI.button(filters, service.ui("UI_HANDBOOK_NEW_INFERENCE"), _new_inferences, not _unread_inferences().is_empty())
+	UI.button(filters, service.ui("UI_HANDBOOK_CLEAR"), _clear_filters)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(scroll)
@@ -276,6 +277,10 @@ func _push_talk_sources(sources: Array) -> void:
 
 func _type(index: int) -> void:
 	library_view.type = ["all", "evidence", "testimony", "inference"][index]
+	_queue_refresh()
+
+func _clear_filters() -> void:
+	library_view = {"type": "all", "sort": "acquire", "important_only": false}
 	_queue_refresh()
 
 func _important(value: bool) -> void:

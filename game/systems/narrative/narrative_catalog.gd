@@ -64,6 +64,6 @@ func choices_from_text(text_id: String) -> Array:
 	var choices: Array = []
 	for row in result:
 		var transition_type := str(row.get("transition_type", "")).to_lower()
-		if transition_type in ["choice", "branch", "选项", "分支"] or result.size() > 1:
+		if transition_type in ["choice", "选项", "按钮", "button"]:
 			choices.append(row)
 	return choices

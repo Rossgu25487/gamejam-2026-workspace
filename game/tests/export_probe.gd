@@ -18,6 +18,7 @@ func _verify() -> void:
 		root.add_child(scene)
 		await process_frame
 		scene.title_page.new_game_requested.emit()
+		scene.confirm_page.accepted.emit()
 		var core: Node = scene.session_service.core
 		if not core.activate_entry("INSPECT") or core.store.entities.size() != 3:
 			failures.append("Exported gameplay could not acquire configured materials")

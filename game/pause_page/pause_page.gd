@@ -43,7 +43,10 @@ func show_page() -> void:
 		resume_button.grab_focus()
 func hide_page() -> void: 
 	hide()
-func set_save_available(enabled: bool, reason: String = "") -> void: 
+func set_save_available(enabled: bool, reason: String = "") -> void:
 	# 主程序根据当前调查资格开启或禁用手动保存。
 	save_button.disabled = not enabled
 	save_button.tooltip_text = reason
+
+func set_resume_context(title: String) -> void:
+	resume_button.text = title

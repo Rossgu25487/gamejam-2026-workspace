@@ -51,6 +51,7 @@ func configure(content: Dictionary) -> bool:
 		_check(data.materials.has(c.get("material_id", "")), "材料身份缺失：" + id)
 		_check(int(c.get("version", 0)) > 0, "版本无效：" + id)
 		for key in ["title", "summary", "body"]: _text_ref(c.get(key, ""), id)
+		_check(c.get("observations", []) is Array, "版本观察必须为列表：" + id)
 		var previous: String = c.get("previous", "")
 		if not previous.is_empty():
 			_check(data.contents.has(previous), "历史版本不存在：" + id)
@@ -122,7 +123,12 @@ func configure(content: Dictionary) -> bool:
 		_check(data.conditions[id] is Array and not data.conditions[id].is_empty(), "条件必须具有显式分支：" + id)
 		for branch in data.conditions[id]:
 			for term in branch:
-				_check(term.get("kind", "") in ["fact", "heard", "owned", "completed"], "未知条件：" + id)
+				_check(term.get("kind", "") in ["fact", "heard", "owned", "completed", "observation"], "未知条件：" + id)
+				if term.get("kind") == "observation":
+					var declared := false
+					for c in data.contents.values():
+						if term.get("ref", "") in c.get("observations", []): declared = true
+					_check(declared, "观察条件没有版本生产者：" + id)
 				if term.get("kind") == "fact": _check(term.get("ref", "") in declared_facts, "条件事实没有生产者：" + id)
 				if term.get("kind") == "heard": _check(data.statements.has(term.get("ref", "")), "条件说法缺失：" + id)
 				if term.get("kind") == "owned": _check(data.contents.has(term.get("ref", "")), "条件材料缺失：" + id)
@@ -137,6 +143,11 @@ func configure(content: Dictionary) -> bool:
 		_check(r.get("materials", []).size() in [1, 2], "关系必须使用一或两份材料：" + id)
 		if r.get("materials", []).size() == 2: _check(r.materials[0].get("material_id") != r.materials[1].get("material_id"), "两个出示槽不能使用同一材料身份：" + id)
 		for ref in r.get("materials", []): _check(valid_material_ref(ref), "关系材料版本无效：" + id)
+		for index in range(r.get("materials", []).size()):
+			var quote: String = r.get("a_quote" if index == 0 else "b_quote", "")
+			if quote.is_empty(): continue
+			var material: Dictionary = r.materials[index]
+			if valid_material_ref(material): _check(text(data.contents[material.content_id].body).count(quote) == 1, "依据原句必须在精确内容版中唯一：" + id)
 		if not data.questions.has(r.get("question_id", "")): continue
 		var q: Dictionary = data.questions[r.question_id]
 		if q.get("target_kind", "statement") == "reasoning":
@@ -183,9 +194,51 @@ func configure(content: Dictionary) -> bool:
 	# 引用边不能成环；record_content 只是正文归属，不建立证明边。
 	for id in data.relations:
 		_check(not _relation_cycle(id, []), "前次证明来源形成循环：" + id)
+	_validate_relation_overlap()
 	if data.has("objectives"): _validate_objectives()
 	_check_images()
 	return errors.is_empty()
+
+func _validate_relation_overlap() -> void:
+	# 正向知识条件可以共存；所选版本的观察则必须由同一组出示材料提供。
+	# 只报告确实能同时命中的同级关系，避免互斥观察被误报为冲突。
+	var ids: Array = data.relations.keys()
+	for i in range(ids.size()):
+		var a: Dictionary = data.relations[ids[i]]
+		for j in range(i + 1, ids.size()):
+			var b: Dictionary = data.relations[ids[j]]
+			if a.get("question_id") != b.get("question_id") or a.get("statement_id", "") != b.get("statement_id", "") or _relation_rank(a) != _relation_rank(b): continue
+			var a_outcome := str(a.get("result_key", "")) if a.get("feedback") == "full" else str(a.get("node", ""))
+			var b_outcome := str(b.get("result_key", "")) if b.get("feedback") == "full" else str(b.get("node", ""))
+			if a_outcome == b_outcome and a.get("feedback") == b.get("feedback"): continue
+			var union: Array = a.get("materials", []).duplicate(true)
+			for ref in b.get("materials", []):
+				if ref not in union: union.append(ref)
+			if union.size() > 2: continue
+			var identities: Array = []
+			var possible := true
+			for ref in union:
+				if ref.get("material_id") in identities: possible = false
+				identities.append(ref.get("material_id"))
+			if a.get("match_scope") == "exact_set" and a.get("materials", []).size() != union.size(): possible = false
+			if b.get("match_scope") == "exact_set" and b.get("materials", []).size() != union.size(): possible = false
+			if possible and _condition_possible(a.get("condition", ""), union) and _condition_possible(b.get("condition", ""), union): _check(false, "同优先级关系可能重叠且成果冲突：%s / %s" % [ids[i], ids[j]])
+
+func _condition_possible(id: String, selected: Array) -> bool:
+	for branch in data.conditions.get(id, []):
+		var possible := true
+		for term in branch:
+			if term.get("kind") != "observation": continue
+			var supplied := false
+			for ref in selected:
+				if term.get("ref") in data.contents.get(ref.get("content_id", ""), {}).get("observations", []): supplied = true
+			if not supplied: possible = false
+		if possible: return true
+	return false
+
+func _relation_rank(relation: Dictionary) -> int:
+	if relation.get("feedback") == "full": return 0 if relation.get("materials", []).size() == 2 else 1
+	return 2 if relation.get("feedback") in ["partial", "counter"] else 3
 
 func _validate_objectives() -> void:
 	# 目标配置是可选的显示映射：目标出现、事项完成与可前往入口都引用已有条件、材料、说法、入口和问题。

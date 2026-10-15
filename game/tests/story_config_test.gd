@@ -35,6 +35,12 @@ func _fixtures(current: RefCounted) -> void:
 		var converted := Catalog.new()
 		expect(converted.load_files(_fixture(name)), "支持 XLSX 文本格式 " + name + "：" + str(converted.errors))
 		expect(converted.data == current.data, "不同 XLSX 文本编码保持相同故事数据：" + name)
+	var extended := Catalog.new()
+	expect(extended.load_files(_fixture("optional_columns")), "新增可选观察与依据原句列可直接读取：" + str(extended.errors))
+	if extended.errors.is_empty():
+		expect(extended.data.contents.A1.observations == ["OBS_A"], "可选观察列绑定精确内容版")
+		var first_relation: Dictionary = extended.data.relations.R_ONE
+		expect(first_relation.a_quote == extended.text(extended.data.contents[first_relation.materials[0].content_id].body), "依据原句列对应关系实际材料正文")
 	for pair in [["duplicate", "材料 第20行"], ["missing_ref", "问题 第5行"], ["formula", "材料版本 第5行"], ["bad_header", "缺少列"], ["broken_inference", "出示关系 第5行"], ["bad_collect", "出示关系 第5行"], ["basis_cycle", "循环"]]:
 		var invalid := Catalog.new()
 		expect(not invalid.load_files(_fixture(pair[0])), "拒绝无效故事配置：" + pair[0])
@@ -57,7 +63,7 @@ func _fixtures(current: RefCounted) -> void:
 	expect(not core.move_scene("LINK_LOCKED"), "移动真实检查开放条件")
 	var autos := [0]
 	core.autosave_requested.connect(func(): autos[0] += 1)
-	expect(core.move_scene("LINK_OUT") and core.state.current_scene_id == "ROOM2" and autos[0] == 1, "配置地点切换提交一次自动保存请求")
+	expect(core.move_scene("LINK_OUT") and core.state.current_scene_id == "ROOM2" and autos[0] == 0, "普通地点切换不提交自动保存请求")
 	expect(not core.activate_entry("INSPECT") and not core.open_card_session("Q1"), "异地调查和问题不能绕过页面直接调用")
 	expect(core.activate_entry("ROOM2_ENTRY"), "新地点调查入口有效")
 	core.finish_dialogue()

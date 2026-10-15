@@ -121,6 +121,7 @@ func _run() -> void:
 	await click(button(scene.settings_page, "关闭设置"))
 	expect(scene.current_layer == "title", "鼠标关闭设置返回标题")
 	await click(scene.title_page.new_game_button)
+	await click(scene.confirm_page.accept_button)
 	expect(scene.current_layer == "investigation", "鼠标开始新游戏")
 	await take("1280-investigation")
 	await click(button(scene.gameplay_page.investigation, "检查占位资料"))

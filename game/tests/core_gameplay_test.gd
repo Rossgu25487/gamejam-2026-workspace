@@ -246,6 +246,7 @@ func _ui_regression() -> void:
 	await _frames()
 	expect(scene.title_page.visible and not scene.gameplay_page.visible, "标题隐藏玩法节点")
 	scene.title_page.new_game_requested.emit()
+	scene.confirm_page.accepted.emit()
 	await _frames()
 	var core: Node = scene.session_service.core
 	expect(core.state.mode == "investigation" and scene.gameplay_page.visible, "新游戏显示占位调查")
@@ -317,7 +318,7 @@ func _ui_regression() -> void:
 	await _frames()
 	expect(core.state.mode == "pending" and not core.store.owns(ref(core,"I1")), "跳过只结束表现不收卡")
 	scene._open_pause(); scene._on_return_title()
-	expect(not scene.confirm_page.accept_button.visible, "禁存离开只能直接离开或取消")
+	expect(scene.confirm_page.accept_button.visible and scene.confirm_page.accept_button.disabled, "禁存离开保留灰色保存项，直接离开与取消可用")
 	scene._on_confirm_cancel(); scene._on_resume()
 	expect(core.state.mode == "pending", "取消离开保留待收")
 	var result: Dictionary = core.state.current_result
@@ -328,7 +329,9 @@ func _ui_regression() -> void:
 	expect(scene.save_service.sequence == seq+1, "正常返回只新增一份自动档")
 	scene._open_pause(); scene._on_save()
 	scene.save_page._save_slot(0)
-	expect(scene.current_layer == "pause", "手动保存成功回暂停")
+	scene.save_page._submit()
+	expect(scene.current_layer == "subpage" and scene.save_page.visible, "手动保存成功停留原栏")
+	scene._on_close_subpage()
 	scene._on_return_title(); scene._on_confirm_direct()
 	expect(scene.current_layer == "title" and not scene.gameplay_page.visible, "返回标题隐藏玩法")
 	scene._on_continue()

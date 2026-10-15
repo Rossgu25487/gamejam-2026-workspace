@@ -485,6 +485,7 @@ func test_main() -> void:
 	var panel_review: Control = page.objective_review
 	check(not panel_hud.visible and not panel_review.visible, "标题页不显示目标")
 	await click(scene.title_page.new_game_button)
+	await click(scene.confirm_page.accept_button)
 	await frames(5)
 	check(scene.current_layer == "investigation" and panel_hud.visible, "新游戏后显示当前目标")
 	var view: Dictionary = objectives.hud_view()
@@ -639,6 +640,7 @@ func test_main() -> void:
 	check(scene.current_layer == "title" and objectives.review_state == "closed" and core.inspection_depth == 0, "返回标题时清除回顾占用")
 	check(not panel_hud.visible and not panel_review.visible and page.margin.visible, "标题页没有残留的目标界面")
 	await click(scene.title_page.new_game_button)
+	await click(scene.confirm_page.accept_button)
 	await frames(5)
 	view = objectives.hud_view()
 	check(panel_hud.visible and (view["items"] as Array).size() == 4 and not bool(view["notice"]), "再次新游戏回到初始目标且不提示更新")

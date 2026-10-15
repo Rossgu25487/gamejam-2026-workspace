@@ -172,7 +172,7 @@ func _read_table(path: String, definition: Dictionary) -> Array:
 		if not key.is_empty(): keys[key] = column
 	for field in definition.fields:
 		if not keys.has(field[0]):
-			_error("%s 缺少列：%s" % [definition.name, field[0]])
+			if field.size() < 7 or not field[6]: _error("%s 缺少列：%s" % [definition.name, field[0]])
 		elif _value(cells.get(3, {}), keys[field[0]]) != field[2]:
 			_error("%s 第3行字段类型不符：%s" % [definition.name, field[0]])
 	if not errors.is_empty(): return []
@@ -197,7 +197,7 @@ func _read_table(path: String, definition: Dictionary) -> Array:
 		var record := {"_location": location}
 		for field in definition.fields:
 			var key: String = field[0]
-			var column: String = keys[key]
+			var column: String = keys.get(key, "")
 			var raw := _value(row, column)
 			if row.get(column, {}).get("formula", false) or row.get(column, {}).get("error", false):
 				_error("%s %s：请输入实际内容，不使用公式或错误值" % [location, key])
@@ -279,7 +279,7 @@ func _compile(tables: Dictionary) -> Dictionary:
 			_put(spec[1], row[spec[2]], {"name": _text(spec[1], row[spec[2]], "name", row.name)}, row._location)
 	for row in tables["材料"]: _put("materials", row.material_id, {"type": row.type}, row._location)
 	for row in tables["材料版本"]:
-		var value := _copy(row, ["material_id", "version", "previous"])
+		var value := _copy(row, ["material_id", "version", "previous", "observations"])
 		for field in ["title", "summary", "body"]: value[field] = _text("contents", row.content_id, field, row[field])
 		_put("contents", row.content_id, value, row._location)
 	for row in tables["人物说法"]:
@@ -330,7 +330,7 @@ func _compile(tables: Dictionary) -> Dictionary:
 		value.text = _text("nodes", row.node_id, "text", row.text)
 		_put("nodes", row.node_id, value, row._location)
 	for row in tables["出示关系"]:
-		var value := _copy(row, ["question_id", "statement_id", "feedback", "node", "condition", "match_scope", "result_key", "confirmed_scope", "inference", "effect_kind", "effect_level", "climax_key", "statement_quote"])
+		var value := _copy(row, ["question_id", "statement_id", "feedback", "node", "condition", "match_scope", "result_key", "confirmed_scope", "inference", "effect_kind", "effect_level", "climax_key", "statement_quote", "a_quote", "b_quote"])
 		value.question_text_id = _data.questions.get(row.question_id, {}).get("question_text_id", "")
 		value.materials = []
 		for content_id in [row.content_a, row.content_b]:

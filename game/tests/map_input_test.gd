@@ -66,6 +66,7 @@ func start_scene(path: String) -> void:
 	root.add_child(scene)
 	await frames()
 	await click(scene.title_page.new_game_button)
+	await click(scene.confirm_page.accept_button)
 
 func check_layout(page: Control) -> void:
 	var rect: Rect2 = page.panel.get_global_rect()
@@ -125,6 +126,9 @@ func _run() -> void:
 	expect(service.state.selected_scene_id == "ARCHIVE" and not button(page, "前往").disabled, "点击可达地点列表启用前往")
 	expect(core.state.current_scene_id == "DESK" and not scene.session_service.can_save(), "预览不移动且地图期间禁止保存")
 	await click(button(page, "前往"))
+	for i in range(450):
+		if not page.visible: break
+		await create_timer(0.01).timeout
 	expect(core.state.current_scene_id == "ARCHIVE" and not page.visible and not service.state.open, "实际鼠标前往成功并关闭地图")
 	expect(scene.audio_service.current_soundscape.get("target") == "ARCHIVE", "地图实际到达后同步目标地点音景")
 	expect(core.state.drafts == before.drafts and core.state.facts == before.facts, "普通前往保留核心草稿和事实")
@@ -135,6 +139,9 @@ func _run() -> void:
 	await click(button(scene.gameplay_page.investigation, "地图"))
 	await click(location_button(page, "DESK"))
 	await click(button(page, "前往"))
+	for i in range(450):
+		if not page.visible: break
+		await create_timer(0.01).timeout
 	expect(core.state.current_scene_id == "DESK" and not page.visible, "再次打开地图可返回原地点")
 	expect(scene.audio_service.current_soundscape.get("target") == "DESK", "返回原地点同步原音景")
 	scene.queue_free()

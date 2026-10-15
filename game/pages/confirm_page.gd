@@ -23,12 +23,21 @@ func _ready() -> void:
 
 func _build_page() -> void:
 	# 所有确认页控件由本节点创建，避免 Main 持有私有界面逻辑。
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.0, 0.0, 0.0, 0.64)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(shade)
 	var host := CenterContainer.new()
 	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(host)
 	panel = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(400, 0)
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = Color("101b25")
+	paper.set_content_margin_all(16)
+	panel.add_theme_stylebox_override("panel", paper)
 	host.add_child(panel)
 	box = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
@@ -59,9 +68,25 @@ func open(title: String, detail: String, direct_text: String, accept_text: Strin
 	direct_button.visible = show_direct
 	accept_button.text = accept_text
 	accept_button.visible = show_accept
+	accept_button.disabled = false
 	show()
 	cancel_button.grab_focus()
 
 func close_page() -> void:
 	# 隐藏页面，保留控件供下次复用。
 	hide()
+
+func show_error(message: String) -> void:
+	(box.get_child(1) as Label).text = message
+	cancel_button.grab_focus()
+
+func _input(event: InputEvent) -> void:
+	# 确认期间 Tab 只在本框操作间循环，不能走到底层栏位或设置。
+	if not is_visible_in_tree() or not event is InputEventKey or not event.pressed or event.keycode != KEY_TAB: return
+	var buttons: Array[Button] = []
+	for button in [cancel_button, direct_button, accept_button]:
+		if button.is_visible_in_tree() and not button.disabled: buttons.append(button)
+	if buttons.is_empty(): return
+	var index := buttons.find(get_viewport().gui_get_focus_owner())
+	buttons[posmod(index + (-1 if event.shift_pressed else 1), buttons.size())].grab_focus()
+	get_viewport().set_input_as_handled()

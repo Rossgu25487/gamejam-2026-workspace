@@ -103,6 +103,10 @@ func _unready_reason(it: Dictionary, view: Dictionary, acts: Dictionary) -> Stri
 		if not (view.get(key) is float): return "猫展示几何未就绪"
 	for kind in ["waiting", "gesture", "response_first", "response_repeat", "stable_first", "stable_repeat"]:
 		if not acts.has(kind) or str(acts[kind].get("visual_ref", "")).is_empty(): return "猫动作未就绪：" + kind
+		var path: String = acts[kind].visual_ref
+		if not ResourceLoader.exists(path): return "猫动作资源缺失：" + kind
+		var resource = load(path)
+		if not resource is Texture2D and not resource is PackedScene: return "猫动作格式不支持：" + kind
 	return ""
 
 func _formal(row: Dictionary) -> bool:

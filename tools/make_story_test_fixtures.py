@@ -4,7 +4,7 @@ import zipfile
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / 'game/data/story/outputs/story-config-20261011/故事配置表.xlsx'
+SOURCE = ROOT / 'game/data/story/outputs/story-images-20261011/故事配置表.xlsx'
 DEST = ROOT / '.local/story-workbook/fixtures'
 NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'
 Q = lambda name: f'{{{NS}}}{name}'
@@ -77,6 +77,32 @@ def inline_strings(s):
             ET.SubElement(container, Q('t'), {'{http://www.w3.org/XML/1998/namespace}space': 'preserve'}).text = text
 
 
+def optional_columns(s):
+    # 依据原句取自关系实际引用的精确材料，避免样例正文改动造成夹具失真。
+    def value(sheet, address):
+        cell = next(c for c in sheet.iter(Q('c')) if c.get('r') == address)
+        return ''.join(cell.itertext())
+    content_id = value(s[11], 'F5')
+    row_number = next(r.get('r') for r in s[6].find(Q('sheetData'))
+                      if any(c.get('r') == 'C' + r.get('r') and ''.join(c.itertext()) == content_id for c in r))
+    quote = value(s[6], 'I' + row_number)
+    for sheet, key, kind, item in [
+        (6, 'observations', 'list', 'OBS_A'),
+        (11, 'a_quote', 'string', quote),
+    ]:
+        # 原表末尾已有作者备注列；在它后面追加，保持所有原单元格内容。
+        headers = next(r for r in s[sheet].find(Q('sheetData')) if r.get('r') == '2')
+        width = max(sum((ord(ch) - 64) * 26 ** index for index, ch in enumerate(reversed(''.join(filter(str.isalpha, c.get('r')))))) for c in headers)
+        number = width + 1
+        column = ''
+        while number:
+            number, digit = divmod(number - 1, 26)
+            column = chr(65 + digit) + column
+        set_cell(s[sheet], column + '2', key)
+        set_cell(s[sheet], column + '3', kind)
+        set_cell(s[sheet], column + '5', item)
+
+
 def make_shared():
     with zipfile.ZipFile(SOURCE) as archive:
         files = {p: archive.read(p) for p in archive.namelist()}
@@ -120,7 +146,8 @@ def main():
     create('broken_inference', lambda s: set_cell(s[11], 'I5', 'MISSING_NODE'))
     create('bad_collect', lambda s: set_cell(s[11], 'N5', ''))
     create('basis_cycle', lambda s: row(s[14], 7, ['', 'true', 'R_ONE', 1, 'R_Q2_R_ONE']))
-    print('Created 10 local XLSX input fixtures.')
+    create('optional_columns', optional_columns)
+    print('Created 11 local XLSX input fixtures.')
 
 
 if __name__ == '__main__':

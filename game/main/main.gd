@@ -38,6 +38,7 @@ var confirm_focus: Button
 var confirm_exits := false
 var has_progress := false
 var pending_leave := false
+var pending_load := false
 var file_feedback_muted := false # 自动存档静默进行，不发文件反馈音。
 var media_serial := 0 # 核心表现声音的实例序号。
 @export var test_storage_path := "" # 测试注入独立目录，避免改写玩家存档与设置。
@@ -57,6 +58,7 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(test_storage_path))
 		save_service.storage_path = test_storage_path.path_join("saves")
 		settings_service.storage_path = test_storage_path.path_join("settings.json")
+		session_service.seen_storage_path = test_storage_path.path_join("narrative_seen.json")
 	if not session_service.initialize(story_workbook_path):
 		push_error("核心配置无效：" + str(session_service.core.catalog.errors))
 		gameplay_page.hide()
@@ -74,12 +76,15 @@ func _ready() -> void:
 	_setup_objectives()
 	gameplay_page.bind(session_service.core, objective_service)
 	gameplay_page.menu_requested.connect(_open_pause)
+	gameplay_page.initial_save_retry_requested.connect(_retry_initial_save)
 	session_service.core.presentation_requested.connect(_on_presentation)
 	_wire_media(session_service.core)
+	_wire_media(session_service)
+	session_service.node_media_stopped.connect(audio_service.stop_node_media)
 	settings_service.changed.connect(gameplay_page.set_preferences)
 	settings_service.changed.connect(audio_service.apply_settings)
 	title_page.continue_requested.connect(_on_continue)
-	title_page.new_game_requested.connect(_on_new_game)
+	title_page.new_game_requested.connect(_request_new_game)
 	title_page.load_requested.connect(_on_load)
 	title_page.settings_requested.connect(_on_settings)
 	title_page.sfx_manager_requested.connect(_on_sfx_manager)
@@ -93,8 +98,10 @@ func _ready() -> void:
 	pause_page.exit_requested.connect(_on_pause_exit)
 	save_page.closed.connect(_on_close_subpage)
 	save_page.saved.connect(_on_saved)
+	save_page.bind_session(session_service)
 	load_page.closed.connect(_on_close_subpage)
 	load_page.loaded.connect(_on_loaded)
+	load_page.save_first_requested.connect(_save_before_load)
 	settings_page.closed.connect(_on_close_subpage)
 	settings_page.sfx_manager_requested.connect(_on_sfx_manager_from_settings)
 	sfx_manager_page.closed.connect(_on_close_sfx_manager)
@@ -108,9 +115,28 @@ func _ready() -> void:
 	# 先通知声音冻结，再由玩法页请求暂停菜单。
 	get_window().focus_exited.connect(audio_service.notify_window_focus.bind(false))
 	get_window().focus_entered.connect(audio_service.notify_window_focus.bind(true))
+	get_window().focus_exited.connect(session_service.set_window_focused.bind(false))
+	get_window().focus_entered.connect(session_service.set_window_focused.bind(true))
+	save_service.processing_changed.connect(session_service.set_file_processing)
 	get_window().focus_exited.connect(gameplay_page.handle_window_focus_loss)
 	confirm_page.accept_button.set_meta("ui_sound", "confirm")
+	get_tree().auto_accept_quit = false
+	get_window().close_requested.connect(_request_window_close)
 	_show_title()
+
+func _request_window_close() -> void:
+	if save_service.busy or settings_service.busy: return
+	if current_layer == "title": _on_title_exit()
+	elif current_layer == "investigation":
+		_open_pause()
+		if current_layer == "pause": _on_pause_exit()
+	elif current_layer == "pause": _on_pause_exit()
+
+func _request_new_game() -> void:
+	confirm_origin = "new_game"
+	current_layer = "confirm"
+	title_page.hide_page()
+	confirm_page.open("新游戏", "开始新调查？手动存档保留，首次保存成功后更新自动档。", "", "开始", false, true)
 
 func _setup_audio() -> void:
 	# 读取正式声音配置；有界面的开发运行叠加试听古典乐音景，无界面回归与导出包不读取它。
@@ -183,12 +209,27 @@ func _sync_scene_audio() -> void:
 		audio_service.set_soundscape("scene", String(session_service.core.state.get("current_scene_id", "")))
 
 func _on_new_game() -> void:
+	var preparation: Dictionary = session_service.prepare_new_game()
+	if not preparation.ok:
+		confirm_page.show_error(str(preparation.reason))
+		return
+	confirm_page.close_page()
 	gameplay_page.reset_page()
 	var snapshot: Dictionary = session_service.start_new_game()
 	objective_service.refresh("initial") # 新调查按初始目标建立，不弹更新提示
 	audio_service.begin_session()
 	_start_investigation()
-	_save_auto(snapshot)
+	file_feedback_muted = true
+	game_start_service.save_initial(snapshot, save_service)
+	file_feedback_muted = false
+	gameplay_page.set_initial_save_failed(game_start_service.initial_save_failed)
+
+func _retry_initial_save() -> void:
+	if not game_start_service.initial_save_failed or not session_service.can_save() or save_service.busy: return
+	file_feedback_muted = true
+	game_start_service.save_initial(session_service.export_snapshot(), save_service)
+	file_feedback_muted = false
+	gameplay_page.set_initial_save_failed(game_start_service.initial_save_failed)
 
 func _on_continue() -> void:
 	var snapshot: Dictionary = save_service.load_latest()
@@ -206,6 +247,7 @@ func _open_pause() -> void:
 	gameplay_page.set_active(false)
 	gameplay_page.hide()
 	pause_page.set_save_available(session_service.can_save(), session_service.save_disabled_reason())
+	pause_page.set_resume_context("继续摸猫" if session_service.cat.is_active() else "继续调查")
 	pause_page.show_page()
 
 func _on_resume() -> void:
@@ -225,7 +267,13 @@ func _on_load() -> void:
 	current_layer = "subpage"
 	title_page.hide_page()
 	pause_page.hide_page()
-	load_page.open(save_service)
+	load_page.open(save_service, subpage_origin != "title", subpage_origin != "title" and session_service.can_save())
+
+func _save_before_load(target: Dictionary) -> void:
+	if not session_service.can_save(): return
+	pending_load = true
+	load_page.hide()
+	save_page.open(save_service, session_service.export_snapshot(), int(target.slot_index) if target.slot_kind == "manual" else -1)
 
 func _on_settings() -> void:
 	subpage_origin = current_layer
@@ -269,7 +317,9 @@ func _on_start_ready(has_save: bool) -> void:
 	title_page.apply_latest_summary(save_service.latest_summary())
 
 func _on_loaded(snapshot: Dictionary) -> void:
-	if not session_service.restore_snapshot(snapshot): return
+	if not session_service.restore_snapshot(snapshot):
+		load_page.show_restore_failure()
+		return
 	pending_leave = false
 	load_page.close_page()
 	gameplay_page.reset_page()
@@ -278,6 +328,18 @@ func _on_loaded(snapshot: Dictionary) -> void:
 	_start_investigation(true)
 
 func _on_close_subpage() -> void:
+	if pending_load:
+		pending_load = false
+		save_page.close_page()
+		load_page.resume_confirmation()
+		return
+	if pending_leave:
+		pending_leave = false
+		save_page.close_page()
+		current_layer = "confirm"
+		confirm_page.show()
+		confirm_page.accept_button.grab_focus()
+		return
 	pending_leave = false
 	for page in [save_page, load_page, settings_page, sfx_manager_page]: page.close_page()
 	if subpage_origin == "title": _show_title()
@@ -287,10 +349,14 @@ func _on_close_subpage() -> void:
 	if is_instance_valid(subpage_focus): subpage_focus.grab_focus()
 
 func _on_saved() -> void:
-	if pending_leave:
+	if pending_load:
+		pending_load = false
+		save_page.close_page()
+		load_page.complete_save_first()
+	elif pending_leave:
 		pending_leave = false
 		_on_confirm_direct()
-	else: _on_close_subpage()
+	# 普通保存停留所选栏位，由保存页显示两秒完成反馈。
 
 func _on_return_title() -> void:
 	_open_confirm(false, false)
@@ -312,10 +378,15 @@ func _open_confirm(exits: bool, from_title: bool) -> void:
 	var detail: String = ("确认退出游戏？" if exits else "返回标题？") + "\n" + save_service.latest_summary()
 	if not from_title and not can_save: detail += "\n" + session_service.save_disabled_reason()
 	confirm_page.open("退出游戏" if exits else "返回标题", detail, "直接退出" if exits else "直接返回", "确认退出" if from_title else "选择存档并离开", not from_title, from_title or can_save)
+	if not from_title:
+		confirm_page.accept_button.show()
+		confirm_page.accept_button.disabled = not can_save
 
 func _on_confirm_cancel() -> void:
 	confirm_page.close_page()
-	if confirm_origin == "title": _show_title()
+	if confirm_origin in ["title", "new_game"]:
+		_show_title()
+		if confirm_origin == "new_game": title_page.new_game_button.grab_focus()
 	else:
 		current_layer = "pause"
 		pause_page.show_page()
@@ -330,6 +401,9 @@ func _on_confirm_direct() -> void:
 
 func _on_confirm_accept() -> void:
 	if not confirm_page.accept_button.visible: return
+	if confirm_origin == "new_game":
+		_on_new_game()
+		return
 	if confirm_origin == "title": _on_confirm_direct(); return
 	if not session_service.can_save(): return
 	confirm_page.close_page()

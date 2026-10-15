@@ -7,6 +7,7 @@ signal notice(message: String)
 signal transition_started(from_scene: String, to_scene: String)
 signal transition_completed(scene_id: String)
 signal phase_changed(phase: String)
+signal media_requested(request: Dictionary)
 
 const SNAPSHOT_VERSION := 2
 const PHASE_CLOSED := "closed"
@@ -21,6 +22,7 @@ var state: Dictionary = {}
 var transitions: Dictionary = {}
 var locations: Dictionary = {}
 var map_definition: Dictionary = {}
+var configuration_errors: Array[String] = []
 ## 页面绑定后由页面驱动阶段动画；未绑定时保留旧版同步调用兼容性。
 var visual_controller_bound := false
 
@@ -32,6 +34,9 @@ func bind_visual_controller() -> void:
 	visual_controller_bound = true
 
 func configure(definition: Dictionary = {}) -> bool:
+	# 全部检查通过后才替换；失败保留上一份有效配置与当前地图选择。
+	configuration_errors = preload("res://systems/map_navigation/map_config_validator.gd").new().validate(definition)
+	if not configuration_errors.is_empty(): return false
 	map_definition = definition.duplicate(true)
 	transitions.clear()
 	locations.clear()
@@ -74,7 +79,9 @@ func scene_name(scene_id: String) -> String:
 	var scene: Dictionary = locations.get(scene_id, {})
 	if core != null:
 		scene = core.catalog.data.get("scenes", {}).get(scene_id, scene)
-		return core.catalog.text(str(scene.get("name", scene.get("name_text_id", scene_id))))
+		var name_ref := str(scene.get("name", scene.get("name_text_id", scene_id)))
+		var translated: String = core.catalog.text(name_ref)
+		return translated if not translated.is_empty() else name_ref
 	return str(scene.get("name", scene.get("name_text_id", scene_id)))
 
 func location_records() -> Array:
@@ -115,7 +122,10 @@ func travel_disabled_reason() -> String:
 	return "该地点已不可用，请重新选择"
 
 func close() -> void:
-	if state.get("phase", PHASE_CLOSED) in [PHASE_PREPARING, PHASE_MOVING, PHASE_ARRIVAL_HOLD, PHASE_TRANSITIONING]: return
+	if state.get("phase") == PHASE_PREPARING:
+		cancel_preparation()
+		return
+	if state.get("phase", PHASE_CLOSED) in [PHASE_MOVING, PHASE_ARRIVAL_HOLD, PHASE_TRANSITIONING]: return
 	state.open = false
 	state.phase = PHASE_CLOSED
 	state.selected_scene_id = ""
@@ -171,7 +181,6 @@ func travel() -> bool:
 	if row.is_empty(): return false
 	var from_scene := current_scene_id()
 	var to_scene := str(row.get("to_scene", row.get("to_scene_id", "")))
-	if not _validate_prepare(row, from_scene, to_scene): return false
 	var link_id := str(row.get("core_link_id", row.get("link_id", id)))
 	state.request_serial = int(state.request_serial) + 1
 	state.active_request = {"request_id":"map-%d" % state.request_serial, "transition_id":id, "from_scene":from_scene, "to_scene":to_scene, "link_id":link_id}
@@ -180,6 +189,31 @@ func travel() -> bool:
 	transition_started.emit(from_scene, to_scene)
 	# 准备阶段只锁定请求；核心地点在移动表现完成后才提交，失败可完整回到原位。
 	state.pending_scene_id = to_scene
+	if visual_controller_bound:
+		call_deferred("complete_preparation", str(state.active_request.request_id))
+	else: complete_preparation(str(state.active_request.request_id))
+	return true
+
+func cancel_preparation() -> bool:
+	if state.get("phase") != PHASE_PREPARING or (core != null and core.paused): return false
+	state.request_serial = int(state.request_serial) + 1
+	state.active_request = {}
+	state.pending_scene_id = ""
+	state.phase = PHASE_BROWSING
+	state.failure_reason = ""
+	_changed()
+	return true
+
+func complete_preparation(request_id: String) -> bool:
+	# 取消或新请求后的迟到结果不准提交；失焦时保留请求，继续后再调用。
+	if state.get("phase") != PHASE_PREPARING or state.get("active_request", {}).get("request_id") != request_id: return false
+	if core == null or core.paused: return false
+	var request: Dictionary = state.active_request
+	var row: Dictionary = transitions.get(request.transition_id, {})
+	if row.is_empty() or current_scene_id() != request.from_scene:
+		_fail("目的地状态已变化，已保留原地点")
+		return false
+	if not _validate_prepare(row, request.from_scene, request.to_scene): return false
 	state.phase = PHASE_MOVING
 	state.arrival_progress = 0.0
 	_changed()
@@ -195,6 +229,14 @@ func finish_movement(success: bool = true) -> bool:
 		_fail("地点切换表现未完成，已返回原地点")
 		return false
 	var request: Dictionary = state.get("active_request", {})
+	# 准备后的公开／可达资格可能变化；提交前复核原目的地，不替换成其他项。
+	var row: Dictionary = transitions.get(request.get("transition_id", ""), {})
+	var still_available := false
+	for item in available_transitions():
+		if item.transition_id == request.get("transition_id") and item.available: still_available = true
+	if row.is_empty() or not still_available or current_scene_id() != request.get("from_scene"):
+		_fail("目的地状态已变化，已保留原地点")
+		return false
 	var link_id := str(request.get("link_id", ""))
 	if core == null or link_id.is_empty() or not core.move_scene(link_id):
 		_fail("当前无法前往该地点")
@@ -235,12 +277,31 @@ func _validate_prepare(row: Dictionary, from_scene: String, to_scene: String) ->
 	if not str(row.get("condition", "")).is_empty() and not core.condition_met(str(row.condition)):
 		_fail(str(row.get("locked_reason", "当前无法前往")))
 		return false
+	var preparation := prepare_scene(to_scene)
+	if not preparation.ok:
+		_fail(preparation.reason)
+		return false
 	return true
+
+func prepare_scene(scene_id: String) -> Dictionary:
+	# 五种调用共用必需引用检查；只有显式配置的资源才成为硬性依赖。
+	var scene: Dictionary = locations.get(scene_id, {})
+	if scene.is_empty(): return {"ok": false, "reason": "目标地点尚未配置。"}
+	for field in ["background_ref", "scene_resource_ref"]:
+		var ref := str(scene.get(field, ""))
+		if ref.is_empty(): continue
+		var resource: Dictionary = map_definition.get("resources", {}).get(ref, {})
+		var path := str(resource.get("path", ""))
+		if resource.is_empty() or (resource.get("required", true) and (path.is_empty() or not ResourceLoader.exists(path))):
+			push_warning("地图必需资源未就绪：%s / %s / %s" % [scene_id, ref, path])
+			return {"ok": false, "reason": "目的地必需内容尚未就绪，请稍后重试。"}
+	return {"ok": true, "scene_id": scene_id, "view_id": scene.get("default_view_id", ""), "focus_ref": scene.get("default_focus_ref", "")}
 
 func _fail(message: String) -> void:
 	state.phase = PHASE_FAILURE
 	state.failure_reason = message
 	state.active_request = {}
+	state.pending_scene_id = ""
 	notice.emit(message)
 	_changed()
 
@@ -255,8 +316,8 @@ func export_snapshot() -> Dictionary:
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
 	if not snapshot is Dictionary or int(snapshot.get("snapshot_version", -1)) not in [1, SNAPSHOT_VERSION]: return false
-	var incoming: Dictionary = snapshot.get("state", {})
-	return incoming is Dictionary and incoming.has("current_scene_id") and incoming.has("open") and incoming.get("active_request", {}) is Dictionary and incoming.active_request.is_empty() and str(incoming.get("phase", PHASE_CLOSED)) in [PHASE_CLOSED, PHASE_BROWSING, PHASE_FAILURE]
+	var incoming = snapshot.get("state", {})
+	return incoming is Dictionary and incoming.get("current_scene_id") is String and incoming.get("open") is bool and incoming.get("active_request", {}) is Dictionary and incoming.get("active_request", {}).is_empty() and str(incoming.get("phase", PHASE_CLOSED)) in [PHASE_CLOSED, PHASE_BROWSING, PHASE_FAILURE]
 
 func restore_snapshot(snapshot: Dictionary) -> bool:
 	if not validate_snapshot(snapshot): return false
@@ -273,7 +334,46 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 func _on_core_changed() -> void:
 	if state.is_empty() or core == null: return
 	state.current_scene_id = str(core.state.get("current_scene_id", state.current_scene_id))
+	# 公开性变化时选择同组首个已知项，不保留已经消失的预览。
+	if state.get("open", false) and state.get("phase") in [PHASE_BROWSING, PHASE_FAILURE]:
+		var records := location_records()
+		var selected_known := false
+		for item in records:
+			if item.to_scene == state.get("selected_scene_id"): selected_known = true
+		if not selected_known:
+			state.selected_scene_id = records[0].to_scene if not records.is_empty() else ""
+			state.selected_transition_id = records[0].transition_id if not records.is_empty() else ""
 	_changed()
+
+func display_value(key: String, fallback: float) -> float:
+	var row = map_definition.get("display", {}).get(key, {})
+	return float(row.get("value", fallback)) if row is Dictionary else fallback
+
+func movement_path() -> Array[Vector2]:
+	var request: Dictionary = state.get("active_request", {})
+	var from_node: Dictionary = locations.get(request.get("from_scene", current_scene_id()), {}).get("node", {})
+	var to_node: Dictionary = locations.get(request.get("to_scene", ""), {}).get("node", {})
+	if from_node.is_empty() or to_node.is_empty(): return []
+	var start := Vector2(int(from_node.get("grid_col", 0)), int(from_node.get("grid_row", 0)))
+	var end := Vector2(int(to_node.get("grid_col", 0)), int(to_node.get("grid_row", 0)))
+	var path: Array[Vector2] = [start]
+	if from_node.get("group_id", "") != to_node.get("group_id", ""): return [start, end]
+	var cursor := start
+	while cursor.x != end.x:
+		cursor.x += signf(end.x - cursor.x)
+		path.append(cursor)
+	while cursor.y != end.y:
+		cursor.y += signf(end.y - cursor.y)
+		path.append(cursor)
+	return path
+
+func cross_group() -> bool:
+	var request: Dictionary = state.get("active_request", {})
+	return locations.get(request.get("from_scene", ""), {}).get("node", {}).get("group_id", "") != locations.get(request.get("to_scene", ""), {}).get("node", {}).get("group_id", "")
+
+func pawn_sound(kind: String) -> void:
+	var event := str(map_definition.get("pawn", {}).get("default", {}).get(kind + "_event_id", ""))
+	if not event.is_empty(): media_requested.emit({"event": event, "instance": "%s/%s" % [state.get("active_request", {}).get("request_id", ""), kind]})
 
 func _changed() -> void:
 	changed.emit()

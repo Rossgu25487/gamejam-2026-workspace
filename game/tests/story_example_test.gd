@@ -34,6 +34,13 @@ func has_label(parent: Node, text: String) -> bool:
 		if has_label(child, text): return true
 	return false
 
+func load_slot(parent: Node, kind: String, index: int) -> Button:
+	for child in parent.get_children():
+		if child is Button and child.get_meta("slot_kind", "") == kind and child.get_meta("slot_index", -1) == index: return child
+		var found := load_slot(child, kind, index)
+		if found != null: return found
+	return null
+
 func click(control: Button) -> void:
 	expect(is_instance_valid(control) and control.is_visible_in_tree() and not control.disabled, "按钮可点击：" + (control.text if is_instance_valid(control) else "缺失"))
 	if not is_instance_valid(control) or control.disabled: return
@@ -74,7 +81,9 @@ func skip_effect() -> void:
 func load_manual() -> void:
 	await click(button(scene.gameplay_page, "菜单 / Esc"))
 	await click(scene.pause_page.load_button)
-	await click(button(scene.load_page, "manual 1", true))
+	await click(load_slot(scene.load_page, "manual", 0))
+	await click(scene.load_page.load_button)
+	await click(scene.load_page.confirmation.direct_button)
 
 func _run() -> void:
 	root.size = Vector2i(1280, 800)
@@ -88,6 +97,7 @@ func _run() -> void:
 	expect(scene.title_page.heading.text == "雨夜借阅单", "标题来自示例配置")
 	expect(scene.save_service.scan().is_empty(), "测试存档目录隔离")
 	await click(scene.title_page.new_game_button)
+	await click(scene.confirm_page.accept_button)
 	expect(scene.current_layer == "investigation" and core.state.current_scene_id == "DESK", "新游戏进入柜台")
 	expect(scene.save_service.load_latest().card_snapshot.current_scene_id == "DESK" and scene.save_service.sequence == 1, "第一次新游戏生成初始自动档")
 	expect(button(scene.gameplay_page.investigation, "进入档案室").disabled, "档案室尚未开放")
@@ -120,7 +130,7 @@ func _run() -> void:
 	await click(button(scene.gameplay_page.result, core.ui("UI_TITLE_CONTINUE")))
 	expect(core.state.mode == "investigation" and core.condition_met("LENDING_DONE"), "正常返回后开放档案室")
 	await click(button(scene.gameplay_page.investigation, "进入档案室"))
-	expect(core.state.current_scene_id == "ARCHIVE" and scene.save_service.load_latest().card_snapshot.current_scene_id == "ARCHIVE", "移动后自动档记录新地点")
+	expect(core.state.current_scene_id == "ARCHIVE" and scene.save_service.load_latest().card_snapshot.current_scene_id == "DESK", "普通移动不产生自动存档")
 	expect(button(scene.gameplay_page.investigation, "检查柜台借阅簿") == null, "异地入口不显示")
 	await take("04-archive")
 	await investigate("检查归还凭条")
@@ -140,9 +150,11 @@ func _run() -> void:
 	# 通过页面写入手动档，开新局后两次读回，验证来源快照可递归恢复。
 	await click(button(scene.gameplay_page, "菜单 / Esc"))
 	await click(scene.pause_page.save_button)
-	await click(button(scene.save_page, "手动存档 1"))
+	await click(scene.save_page.slot_buttons[0])
+	await click(scene.save_page.submit_button)
 	var saved: Dictionary = scene.save_service.load_snapshot("manual", 0)
 	expect(not saved.is_empty() and saved.card_snapshot.completed_questions.size() == 2, "手动档写入两题完成和真实材料来源")
+	await click(button(scene.save_page, "关闭保存"))
 	await click(scene.pause_page.resume_button)
 	core.start_new_game()
 	await frames()
