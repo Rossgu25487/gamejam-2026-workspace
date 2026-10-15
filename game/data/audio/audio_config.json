@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "control": {
+    "id": "default",
+    "bgm_crossfade_ms": 800,
+    "ambient_fade_ms": 300,
+    "menu_bgm_factor": 0.5
+  },
+  "resources": [
+    {
+      "id": "SFX_UI_CLICK",
+      "bus": "ui",
+      "resource_ref": "",
+      "resource_path": ""
+    },
+    {
+      "id": "SFX_UI_CONFIRM",
+      "bus": "ui",
+      "resource_ref": "",
+      "resource_path": ""
+    },
+    {
+      "id": "SFX_UI_FEEDBACK",
+      "bus": "ui",
+      "resource_ref": "",
+      "resource_path": ""
+    }
+  ],
+  "events": [
+    {
+      "id": "SND_SCENE_BGM",
+      "bus": "bgm",
+      "source_kind": "scene_bgm",
+      "resource_key": "",
+      "loop": true,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_SCENE_AMBIENT",
+      "bus": "ambient",
+      "source_kind": "scene_ambient",
+      "resource_key": "",
+      "loop": true,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_UI_CLICK",
+      "bus": "ui",
+      "source_kind": "fixed",
+      "resource_key": "SFX_UI_CLICK",
+      "loop": false,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_UI_CONFIRM",
+      "bus": "ui",
+      "source_kind": "fixed",
+      "resource_key": "SFX_UI_CONFIRM",
+      "loop": false,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_UI_FEEDBACK",
+      "bus": "ui",
+      "source_kind": "fixed",
+      "resource_key": "SFX_UI_FEEDBACK",
+      "loop": false,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_RESULT",
+      "bus": "result",
+      "source_kind": "node_sound",
+      "resource_key": "",
+      "loop": false,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_NODE_SOUND",
+      "bus": "result",
+      "source_kind": "node_sound",
+      "resource_key": "",
+      "loop": false,
+      "event_gain": 1.0
+    },
+    {
+      "id": "SND_NODE_VOICE",
+      "bus": "voice",
+      "source_kind": "node_voice",
+      "resource_key": "",
+      "loop": false,
+      "event_gain": 1.0
+    }
+  ],
+  "soundscapes": []
+}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://pages/core/core_gameplay_page.gd" id="1"]
 [ext_resource type="Script" path="res://pages/core/investigation_page.gd" id="2"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://pages/core/feedback_page.gd" id="6"]
 [ext_resource type="Script" path="res://pages/narrative/narrative_page.gd" id="7"]
 [ext_resource type="Script" path="res://pages/map_navigation/map_navigation_page.gd" id="8"]
+[ext_resource type="Script" path="res://pages/objective/objective_hud_page.gd" id="9"]
+[ext_resource type="Script" path="res://pages/objective/objective_review_page.gd" id="10"]
 
 [node name="CoreGameplayPage" type="Control"]
 layout_mode = 3
@@ -58,6 +60,16 @@ size_flags_vertical = 3
 theme_override_constants/separation = 8
 script = ExtResource("4")
 
+[node name="ObjectiveHudPage" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("9")
+
 [node name="MaterialReaderPage" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -79,6 +91,16 @@ offset_top = 40.0
 offset_right = -40.0
 offset_bottom = -40.0
 script = ExtResource("5")
+
+[node name="ObjectiveReviewPage" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("10")
 
 [node name="FeedbackPage" type="PanelContainer" parent="."]
 layout_mode = 1

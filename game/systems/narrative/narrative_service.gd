@@ -161,8 +161,8 @@ func set_state_value(state_id: String, value) -> void:
 	_changed()
 
 func can_save() -> bool:
-	# 文案尚未启动时不参与当前调查存档；启动后只能在稳定文本或等待选择节点保存。
-	return state.is_empty() or not bool(state.get("typing", false))
+	# 文案对白和选择期间均禁止调查存档，结束并归还调查后再按调查资格判断。
+	return state.is_empty() or bool(state.get("finished", false))
 
 func export_snapshot() -> Dictionary:
 	return {"snapshot_version": SNAPSHOT_VERSION, "state": state.duplicate(true), "typewriter_speed": typewriter_speed}

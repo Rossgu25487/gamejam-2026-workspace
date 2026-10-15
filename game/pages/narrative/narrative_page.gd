@@ -23,7 +23,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _process(delta: float) -> void:
-	if service != null and not service.state.is_empty() and service.is_typing(): service.tick(delta)
+	if is_visible_in_tree() and service != null and not service.state.is_empty() and service.is_typing(): service.tick(delta)
 
 func _queue_render(_unused = null) -> void:
 	if not is_inside_tree(): return
@@ -57,7 +57,7 @@ func _render() -> void:
 	var hint := UI.label(footer, "Enter / Space 继续", 16)
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	continue_button = UI.button(footer, "继续", _advance)
-	if is_instance_valid(continue_button) and continue_button.visible and not continue_button.disabled: continue_button.grab_focus()
+	if is_instance_valid(continue_button) and continue_button.is_visible_in_tree() and not continue_button.disabled: continue_button.grab_focus()
 	choices = VBoxContainer.new()
 	choices.visible = false
 	box.add_child(choices)
@@ -73,7 +73,7 @@ func _render_choices() -> void:
 		var label := str(row.get("choice_text", row.get("target_text_id", "继续")))
 		UI.button(choices, label, service.choose_transition.bind(index))
 	continue_button.visible = false
-	if choices.get_child_count() > 0 and is_instance_valid(choices.get_child(0)): choices.get_child(0).grab_focus()
+	if choices.is_visible_in_tree() and choices.get_child_count() > 0 and is_instance_valid(choices.get_child(0)): choices.get_child(0).grab_focus()
 
 func _advance() -> void:
 	if service != null: service.advance()
@@ -85,6 +85,7 @@ func _on_progressed(value: String, _typing: bool) -> void:
 	if is_instance_valid(text_label): text_label.text = value
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if not is_visible_in_tree(): return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_ENTER, KEY_SPACE]:
 		_advance()
 		get_viewport().set_input_as_handled()

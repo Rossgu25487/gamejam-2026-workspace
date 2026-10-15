@@ -133,5 +133,11 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 func can_save() -> bool:
 	return core.can_save() and (scene_interaction == null or scene_interaction.can_save()) and (narrative == null or narrative.can_save()) and (map_navigation == null or map_navigation.can_save())
 
+func save_disabled_reason() -> String:
+	# 原因与联合资格来自同一会话；不能用核心的可存状态掩盖文案、地图的禁存边界。
+	if narrative != null and not narrative.can_save(): return core.ui("UI_SAVE_DISABLED_DIALOGUE")
+	if map_navigation != null and not map_navigation.can_save(): return core.ui("UI_SAVE_DISABLED_READING")
+	return core.save_disabled_reason()
+
 func _on_autosave() -> void:
 	if can_save(): autosave_requested.emit(export_snapshot())

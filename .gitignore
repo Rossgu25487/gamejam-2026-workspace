@@ -9,6 +9,8 @@ qa/evidence/local/
 *.tmp
 *.tmp-*
 *.log
+__pycache__/
+*.pyc
 .env
 .env.*
 !.env.example
@@ -25,3 +27,8 @@ Thumbs.db
 # Verified local extraction of the already tracked v2 distribution archive.
 /分发包/八人岗位工作流_v2/
 # Source .uid and resource-side .import files ARE tracked.
+.vscode/*
+# Raw zip archives and shortcut files in game/music are ignored; extracted audio and licenses are tracked.
+game/music/*.zip
+game/music/**/*.zip
+game/music/**/*.url

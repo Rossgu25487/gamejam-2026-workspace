@@ -5,6 +5,7 @@ signal continue_requested
 signal new_game_requested
 signal load_requested
 signal settings_requested
+signal sfx_manager_requested
 signal exit_requested
 @onready var status: Label = $Status
 @onready var heading: Label = $PanelContainer/VBoxContainer/Heading
@@ -13,6 +14,7 @@ signal exit_requested
 @onready var new_game_button: Button = $PanelContainer/VBoxContainer/NewGame
 @onready var load_button: Button = $PanelContainer/VBoxContainer/Load
 @onready var settings_button: Button = $PanelContainer/VBoxContainer/Settings
+@onready var sfx_button: Button = $PanelContainer/VBoxContainer/SfxManager
 @onready var exit_button: Button = $PanelContainer/VBoxContainer/Exit
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false # 存档扫描是否完成。
@@ -26,12 +28,17 @@ func apply_story_title(title: String) -> void:
 	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.custom_minimum_size.x = 280
 
+func set_developer_tools_enabled(enabled: bool) -> void:
+	# 工具入口与正式五项导航分开；隐藏的入口不参与焦点顺序。
+	sfx_button.visible = enabled
+
 func _ready() -> void:
 	# 按钮只发出动作请求，由 Main 决定页面跳转。
 	continue_button.pressed.connect(continue_requested.emit)
 	new_game_button.pressed.connect(new_game_requested.emit)
 	load_button.pressed.connect(load_requested.emit) 
 	settings_button.pressed.connect(settings_requested.emit)
+	sfx_button.pressed.connect(sfx_manager_requested.emit)
 	exit_button.pressed.connect(exit_requested.emit)
 	begin_scan()
 func begin_scan() -> void:
@@ -73,7 +80,7 @@ func show_configuration_error(messages: Array[String]) -> void:
 	scan_complete = true
 	status.text = "故事配置错误"
 	detail.text = "请修正配置表后重新运行。"
-	for button in [continue_button, new_game_button, load_button, settings_button]:
+	for button in [continue_button, new_game_button, load_button, settings_button, sfx_button]:
 		button.disabled = true
 		button.hide()
 	# 错误正文占用独立滚动区，保持标题节点内居中且退出按钮始终可见。
