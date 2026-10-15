@@ -29,7 +29,18 @@ func _render() -> void:
 	if not is_inside_tree() or service == null or not visible: return
 	for child in get_children(): child.queue_free()
 	var panel := PanelContainer.new()
-	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	# 地图页覆盖整个 CoreGameplayPage；面板使用明确的中心锚点和对称偏移，
+	# 避免仅调用 PRESET_CENTER 时继承旧布局偏移而落到右下角。
+	panel.anchor_left = 0.5
+	panel.anchor_top = 0.5
+	panel.anchor_right = 0.5
+	panel.anchor_bottom = 0.5
+	panel.offset_left = -360.0
+	panel.offset_top = -280.0
+	panel.offset_right = 360.0
+	panel.offset_bottom = 280.0
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	panel.custom_minimum_size = Vector2(720, 560)
 	add_child(panel)
 	var box := VBoxContainer.new()
