@@ -74,6 +74,7 @@ func _run() -> void:
 	await test_session_and_media()
 	await test_feedback_and_hook()
 	await test_settings_preview()
+	await test_sfx_manager()
 	scene.queue_free()
 	scene = null
 	audio = null
@@ -306,3 +307,49 @@ func test_settings_preview() -> void:
 	scene._on_close_subpage()
 	check(audio.track_state("preview").is_empty(), "离开设置页停止试听")
 	check(scene.current_layer == "title", "设置页返回标题")
+
+
+func test_sfx_manager() -> void:
+	# 1. 从标题页打开音效库管理界面
+	await click(scene.title_page.sfx_button)
+	var page = scene.sfx_manager_page
+	check(scene.current_layer == "subpage" and page.visible, "从标题页点击音效管理打开音效库界面")
+	check(page.visible_entries.size() == 240, "音效库管理界面默认展示全部 240 条备用音效")
+	# 2. 按来源包、分类、搜索词筛选
+	page._on_pack_selected(1) # available_audios
+	await frames()
+	check(page.visible_entries.size() == 3 and page.selected_id == "SFX_AVAIL_DIALOGUE_SHOW", "切换来源包为项目专属音效后显示 3 条并选中首条")
+	page._on_pack_selected(0) # 全部来源包
+	page._on_search_changed("卡牌")
+	await frames()
+	check(page.visible_entries.size() >= 24, "搜索“卡牌”筛选出对应音效")
+	page.reset_filters()
+	await frames()
+	check(page.visible_entries.size() == 240, "重置筛选恢复 240 条")
+	# 3. 试听与通道测试
+	var preview_before: int = audio.start_counts["preview"]
+	await click(page.preview_selected_button)
+	check(audio.start_counts["preview"] == preview_before + 1 and not audio.track_state("preview").is_empty(), "音效库管理界面试听按钮触发 preview 通道播放")
+	var result_before: int = audio.start_counts["result"]
+	await click(page.play_result_button)
+	check(audio.start_counts["result"] == result_before + 1, "音效库管理界面结果通道测试按钮触发 result 播放")
+	var ui_before: int = audio.start_counts["ui"]
+	await click(page.play_ui_button)
+	check(audio.start_counts["ui"] == ui_before + 1, "音效库管理界面 UI 通道测试按钮触发 ui 播放")
+	# 4. 临时绑定 UI 音效与恢复
+	await click(page.bind_click_button)
+	var expected_path := String(audio.sfx_info(page.selected_id).get("path", ""))
+	check(String(audio.catalog.resources["SFX_UI_CLICK"].get("resource_path", "")) == expected_path, "绑定当前音效到 SFX_UI_CLICK 立即生效")
+	await click(page.reset_binding_button)
+	check(String(audio.catalog.resources["SFX_UI_CLICK"].get("resource_path", "")) == String(page.DEFAULT_UI_BINDINGS["SFX_UI_CLICK"]), "恢复默认试听操作音生效")
+	# 5. 关闭返回标题页，且试听自动停止
+	await click(page.close_button)
+	check(scene.current_layer == "title" and not page.visible and audio.track_state("preview").is_empty(), "关闭音效库管理界面停止试听并返回标题页")
+	# 6. 从设置页打开音效库管理界面
+	await click(scene.title_page.settings_button)
+	check(scene.settings_page.visible, "进入设置页")
+	await click(scene.settings_page.sfx_manager_button)
+	check(page.visible and not scene.settings_page.visible, "从设置页可跳转到音效库管理界面")
+	await click(page.close_button)
+	check(scene.current_layer == "title" and scene.title_page.visible, "从设置页进入的音效库关闭后返回原层级")
+

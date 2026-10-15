@@ -7,6 +7,7 @@ func bind_images(core: Node) -> void:
 ## 设置页只负责控件创建、焦点和设置值的即时提交。
 
 signal closed # 用户请求返回来源页面。
+signal sfx_manager_requested # 用户请求打开音效库管理界面。
 
 const VOLUME_LABELS := { # 设置键 -> [功能文字 ID, 后备文字]
 	"master_volume": ["UI_SETTINGS_MASTER", "总音量"],
@@ -20,6 +21,7 @@ var audio_service: Node # 提供试听资格与试听播放；可为空。
 var text_of: Callable # 功能文字查询，参数为功能文字 ID。
 var preview_button: Button
 var preview_reason: Label
+var sfx_manager_button: Button
 var panel: PanelContainer
 var box: VBoxContainer
 var controls_box: VBoxContainer
@@ -124,6 +126,10 @@ func _rebuild_controls() -> void:
 	preview_reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	controls_box.add_child(preview_reason)
 	_refresh_preview()
+	sfx_manager_button = Button.new()
+	sfx_manager_button.text = _text("UI_SETTINGS_SFX_MANAGER", "音效库管理")
+	sfx_manager_button.pressed.connect(sfx_manager_requested.emit)
+	controls_box.add_child(sfx_manager_button)
 	var reset := Button.new()
 	reset.text = _text("UI_SETTINGS_RESET", "恢复默认")
 	reset.pressed.connect(_restore_defaults)

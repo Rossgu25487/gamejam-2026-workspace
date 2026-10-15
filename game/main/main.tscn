@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://pages/load_page.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://pages/settings_page.tscn" id="7"]
 [ext_resource type="PackedScene" path="res://pages/confirm_page.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://pages/audio/sfx_manager_page.tscn" id="9"]
 
 [node name="Main" type="Control" unique_id=253744139]
 layout_mode = 3
@@ -35,6 +36,9 @@ layout_mode = 1
 layout_mode = 1
 
 [node name="SettingsPage" parent="." instance=ExtResource("7")]
+layout_mode = 1
+
+[node name="SfxManagerPage" parent="." instance=ExtResource("9")]
 layout_mode = 1
 
 [node name="ConfirmPage" parent="." instance=ExtResource("8")]

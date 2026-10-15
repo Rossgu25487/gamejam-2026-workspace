@@ -4,6 +4,7 @@ extends Control
 ## 它使用正式的 AudioService 与试听配置，不属于正式游戏流程，也不会进入正式导出。
 
 const AudioScript = preload("res://systems/audio/audio_service.gd")
+const SfxManagerScene = preload("res://pages/audio/sfx_manager_page.tscn")
 const DEMO_CONFIG := "res://tests/fixtures/audio/audio_demo_config.json"
 const MANIFEST := "res://tests/fixtures/music/manifest.json"
 const PULSE := "res://tests/fixtures/design/basic/test_assets/audio/ex_bgm_pulse.wav"
@@ -21,6 +22,7 @@ const VOLUMES := [["master_volume", "总音量"], ["bgm_volume", "BGM 音量"], 
 @onready var last: Label = $Info/Column/Last
 
 var service: Node
+var sfx_manager: Control
 var settings := {"master_volume": 100, "bgm_volume": 70, "ambient_volume": 60, "effect_volume": 80, "mute": false}
 var manifest: Dictionary = {} # 音频文件名 -> 曲目清单条目
 var scapes: Array = [] # 试听配置里的音景行
@@ -45,6 +47,9 @@ func _ready() -> void:
 	get_window().focus_exited.connect(service.notify_window_focus.bind(false))
 	get_window().focus_entered.connect(service.notify_window_focus.bind(true))
 	session_at_start = service.session_id
+	sfx_manager = SfxManagerScene.instantiate()
+	add_child(sfx_manager)
+	sfx_manager.closed.connect(sfx_manager.close_page)
 	_build()
 	_refresh_status()
 
@@ -103,6 +108,7 @@ func _bind_ui(on: bool) -> void:
 func _build() -> void:
 	_title("声音试玩台")
 	_note("右侧显示当前曲目的来源与授权，以及实时状态；所有按钮都会走正式的 AudioService。")
+	_button("打开音效库管理界面（浏览与试听 240 条备用音效）", func(): sfx_manager.open(service))
 	_title("音景（点击即切换，同曲的场景之间不会重启）")
 	for row in scapes:
 		var label: String = "%s\n  BGM：%s" % [row["id"], _title_of(_manifest_row(String(row["bgm_key"])))]

@@ -8,6 +8,7 @@ const CONTEXT_KINDS := ["title", "scene", "ending"]
 const STATE_UNBOUND := "unbound" # 用途已定、素材尚未采用：不发声，也不算制作错误。
 const STATE_READY := "ready" # 引用有效且资源可读取。
 const STATE_MISSING := "missing" # 引用非空但资源不存在：属于制作错误。
+const DEFAULT_SFX_LIBRARY := "res://data/audio/sfx_library.json" # 备用音效库目录（由 tools/import_sfx_library.py 生成）。
 const MIN_FADE_MS := 0
 const MAX_FADE_MS := 5000
 
@@ -16,11 +17,16 @@ var resources := {} # id -> {id, bus, resource_ref, resource_path}
 var events := {} # id -> {id, bus, source_kind, resource_key, loop, event_gain}
 var soundscapes: Array = [] # 保持配置顺序的音景记录。
 var ref_table := {} # 程序声音来源的“资源编号 -> 相对路径”映射，可为空。
+var sfx_entries: Array = [] # 备用音效条目列表（保持来源包与分类顺序）。
+var sfx_by_id := {} # 备用音效 ID -> 条目字典。
+var sfx_packs: Array = [] # 备用音效来源包列表。
+var sfx_categories: Array = [] # 备用音效分类列表。
 var asset_root := "res://" # resource_path 与相对引用的根目录；测试可指向夹具目录。
 var errors: Array[String] = [] # 最近一次加载的校验错误。
 
 var _scape_index := {} # "类型|目标|阶段" -> 音景记录，匹配只做两次字典查找。
 var _streams := {} # "路径" 或 "路径:loop" -> AudioStream。
+var _sfx_alias_to_id := {} # 别名／文件名／路径 -> 备用音效标准 ID。
 
 
 func load_file(path: String, merge := false) -> bool:
@@ -94,11 +100,92 @@ func resource_state(resource_id: String) -> Dictionary:
 
 
 func bind_resource(resource_id: String, resource_path: String) -> bool:
-	# 为用途已定、素材尚未采用的资源临时指定文件（开发试听与试玩台使用）；资源键必须已存在。
+	# 为用途已定、素材尚未采用的资源临时指定文件或备用音效键（开发试听、音效管理与试玩台使用）；资源键必须已存在。
 	if not resources.has(resource_id):
 		return false
-	resources[resource_id]["resource_path"] = resource_path
+	if not resource_path.is_empty() and ref_table.has(resource_path):
+		resources[resource_id]["resource_path"] = String(ref_table[resource_path])
+	else:
+		resources[resource_id]["resource_path"] = resource_path
 	return true
+
+
+func load_sfx_library(path := DEFAULT_SFX_LIBRARY) -> bool:
+	# 读取备用音效库目录（sfx_library.json），把全部备用音效的标准 ID、文件名与别名登记到映射表，供任意模块随时调用。
+	if not FileAccess.file_exists(path):
+		return false
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return false
+	var parsed = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return false
+	sfx_entries = parsed.get("entries", []).duplicate(true)
+	sfx_packs = parsed.get("packs", []).duplicate(true)
+	sfx_categories = parsed.get("categories", []).duplicate(true)
+	sfx_by_id.clear()
+	_sfx_alias_to_id.clear()
+	for entry in sfx_entries:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var sfx_id := String(entry.get("id", ""))
+		var sfx_path := String(entry.get("path", ""))
+		if sfx_id.is_empty() or sfx_path.is_empty():
+			continue
+		sfx_by_id[sfx_id] = entry
+		_register_sfx_key(sfx_id, sfx_id, sfx_path)
+		_register_sfx_key(sfx_path, sfx_id, sfx_path)
+		_register_sfx_key(sfx_path.trim_prefix("res://"), sfx_id, sfx_path)
+		for alias in entry.get("aliases", []):
+			_register_sfx_key(String(alias), sfx_id, sfx_path)
+	return true
+
+
+func _register_sfx_key(key: String, sfx_id: String, sfx_path: String) -> void:
+	if key.is_empty():
+		return
+	if not _sfx_alias_to_id.has(key):
+		_sfx_alias_to_id[key] = sfx_id
+	if not ref_table.has(key):
+		ref_table[key] = sfx_path
+
+
+func sfx_entry(key_or_ref: String) -> Dictionary:
+	# 按备用音效标准 ID、简写文件名、中文别名或路径查询条目元信息。
+	if key_or_ref.is_empty():
+		return {}
+	if sfx_by_id.has(key_or_ref):
+		return sfx_by_id[key_or_ref]
+	if _sfx_alias_to_id.has(key_or_ref):
+		return sfx_by_id.get(String(_sfx_alias_to_id[key_or_ref]), {})
+	return {}
+
+
+func filter_sfx(pack_filter := "", category_filter := "", query := "") -> Array:
+	# 按来源包、分类与关键词筛选备用音效条目；空串或 all 表示不限。
+	var pack_key := "" if pack_filter == "all" else pack_filter.strip_edges()
+	var cat_key := "" if category_filter == "all" else category_filter.strip_edges()
+	var keyword := query.strip_edges().to_lower()
+	var matched: Array = []
+	for entry in sfx_entries:
+		if not pack_key.is_empty() and String(entry.get("pack", "")) != pack_key:
+			continue
+		if not cat_key.is_empty() and String(entry.get("category", "")) != cat_key:
+			continue
+		if not keyword.is_empty() and not _sfx_matches_query(entry, keyword):
+			continue
+		matched.append(entry)
+	return matched
+
+
+func _sfx_matches_query(entry: Dictionary, keyword: String) -> bool:
+	for field in ["id", "name", "stem", "pack", "pack_label", "category", "category_label", "usage", "path"]:
+		if String(entry.get(field, "")).to_lower().contains(keyword):
+			return true
+	for alias in entry.get("aliases", []):
+		if String(alias).to_lower().contains(keyword):
+			return true
+	return false
 
 
 func match_soundscape(kind: String, target_ref := "", phase_ref := "") -> Dictionary:
