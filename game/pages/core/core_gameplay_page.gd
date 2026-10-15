@@ -45,6 +45,7 @@ func bind(core: Node) -> void:
 	inspection_reader.bind(core)
 	narrative_page.bind(core.get_parent().narrative)
 	map_page.bind(core.get_parent().map_navigation)
+	map_page.closed.connect(_queue_refresh)
 	reader.closed.connect(_queue_refresh)
 	inspection_reader.closed.connect(_queue_refresh)
 	UI.button(tools, "办案手册 / I", toggle_inspection)
@@ -103,18 +104,19 @@ func _refresh() -> void:
 	if result.visible: result.render(service)
 
 func toggle_inspection() -> void:
-	if not input_enabled: return
+	if not input_enabled or map_page.visible: return
 	if inspection_reader.visible: inspection_reader.close_all()
 	elif reader.visible and reader.root_kind == "library": reader.close_all()
 	elif reader.visible: inspection_reader.open_library()
 	else: reader.open_library()
 
 func open_map() -> void:
-	if not input_enabled or map_page.visible: return
+	if not input_enabled or map_page.visible or reader.visible or inspection_reader.visible or narrative_page.visible: return
 	map_page.open()
 
 func handle_escape() -> void:
-	if inspection_reader.visible: inspection_reader.back()
+	if map_page.visible: map_page.close()
+	elif inspection_reader.visible: inspection_reader.back()
 	elif reader.visible: reader.back()
 	elif service.state.mode == "selection" and not service.presenting:
 		if service.state.card_ui_page == "grid": service.set_grid(false)
@@ -134,12 +136,16 @@ func _check_window_focus() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not visible or not input_enabled or not event is InputEventKey or not event.pressed or event.echo: return
+	# 地图打开时只把 Esc 交给地图；I 和选材快捷键不能操作被覆盖的调查页。
+	if map_page.visible:
+		if event.keycode == KEY_ESCAPE: map_page.close()
+		if event.keycode in [KEY_ESCAPE, KEY_I]: get_viewport().set_input_as_handled()
+		return
 	if event.keycode == KEY_I:
 		toggle_inspection()
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_ESCAPE:
-		if map_page.visible: map_page.close()
-		else: handle_escape()
+		handle_escape()
 		get_viewport().set_input_as_handled()
 	elif not reader.visible and not inspection_reader.visible and selection.handle_card_key(event):
 		get_viewport().set_input_as_handled()

@@ -44,8 +44,14 @@ func initialize(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
 			if configured.is_empty(): map_definition["transitions"] = map_transitions
 			for row in map_definition.get("transitions", []):
 				if not row.has("transition_id") and row.has("link_id"): row["transition_id"] = row.link_id
-			if map_definition.get("scenes", {}).is_empty():
-				map_definition["scenes"] = core.catalog.data.get("scenes", {}).duplicate(true)
+		# 故事地点始终参与地图；独立策划表中的示例 ID 不能覆盖当前案件地点。
+		# 同 ID 时保留地图坐标、背景等配置，并由故事提供实际显示名称。
+		var map_scenes: Dictionary = map_definition.get("scenes", {}).duplicate(true)
+		for scene_id in core.catalog.data.get("scenes", {}):
+			var scene_definition: Dictionary = map_scenes.get(scene_id, {}).duplicate(true)
+			scene_definition.merge(core.catalog.data.scenes[scene_id], true)
+			map_scenes[scene_id] = scene_definition
+		map_definition["scenes"] = map_scenes
 		map_navigation.configure(map_definition)
 	return ok
 

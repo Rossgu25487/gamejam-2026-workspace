@@ -65,10 +65,54 @@ func open() -> bool:
 
 func preview_scene(scene_id: String) -> Dictionary:
 	# 选择地点只更新预览，不改变核心地点；页面可用此接口显示背景、原因和节点信息。
-	for item in available_transitions():
+	for item in location_records():
 		if str(item.get("to_scene", "")) == scene_id:
 			return item.duplicate(true)
 	return {"scene_id": scene_id, "available": false, "reason": "该地点尚未公开"}
+
+func scene_name(scene_id: String) -> String:
+	var scene: Dictionary = locations.get(scene_id, {})
+	if core != null:
+		scene = core.catalog.data.get("scenes", {}).get(scene_id, scene)
+		return core.catalog.text(str(scene.get("name", scene.get("name_text_id", scene_id))))
+	return str(scene.get("name", scene.get("name_text_id", scene_id)))
+
+func location_records() -> Array:
+	# 节点和列表共用这一份运行时记录；只展示当前地点与已公开的出发连接。
+	var current := current_scene_id()
+	var result: Array = [{"transition_id": "", "to_scene": current, "title": scene_name(current),
+		"available": false, "current": true, "selected": state.get("selected_scene_id", "") == current,
+		"reason": "已在当前地点", "node": locations.get(current, {}).get("node", {})}]
+	var seen := {current: true}
+	for item in available_transitions():
+		if seen.has(item.to_scene): continue
+		seen[item.to_scene] = true
+		item["current"] = false
+		item["title"] = scene_name(str(item.to_scene))
+		result.append(item)
+	return result
+
+func select_scene(scene_id: String) -> bool:
+	if not state.get("open", false) or state.get("phase") not in [PHASE_BROWSING, PHASE_FAILURE]: return false
+	for item in location_records():
+		if str(item.to_scene) != scene_id: continue
+		state.selected_scene_id = scene_id
+		state.selected_transition_id = str(item.transition_id)
+		state.failure_reason = ""
+		state.phase = PHASE_BROWSING
+		_changed()
+		return true
+	return false
+
+func travel_disabled_reason() -> String:
+	if state.get("phase") in [PHASE_PREPARING, PHASE_MOVING, PHASE_ARRIVAL_HOLD, PHASE_TRANSITIONING]: return "正在切换地点，请稍候"
+	if not state.get("open", false): return "请先打开地图"
+	if str(state.get("selected_transition_id", "")).is_empty():
+		return "当前没有可前往的其他地点" if available_transitions().is_empty() else "请先选择其他地点"
+	for item in available_transitions():
+		if item.transition_id == state.selected_transition_id:
+			return "" if item.available else str(item.reason)
+	return "该地点已不可用，请重新选择"
 
 func close() -> void:
 	if state.get("phase", PHASE_CLOSED) in [PHASE_PREPARING, PHASE_MOVING, PHASE_ARRIVAL_HOLD, PHASE_TRANSITIONING]: return
@@ -91,6 +135,8 @@ func available_transitions() -> Array:
 		var row: Dictionary = transitions[id]
 		if str(row.get("from_scene", row.get("from_scene_id", ""))) != current_scene_id(): continue
 		var to_scene := str(row.get("to_scene", row.get("to_scene_id", "")))
+		var reveal_condition := str(row.get("reveal_condition", ""))
+		if not reveal_condition.is_empty() and (core == null or not core.condition_met(reveal_condition)): continue
 		var allowed := true
 		if core != null and not str(row.get("condition", "")).is_empty(): allowed = core.condition_met(str(row.condition))
 		var item := row.duplicate(true)
@@ -107,21 +153,15 @@ func available_transitions() -> Array:
 	return result
 
 func select_transition(transition_id: String) -> bool:
-	if not state.get("open", false): return false
 	for item in available_transitions():
 		if item.transition_id != transition_id: continue
-		if not item.available:
-			notice.emit(item.reason)
-			return false
-		state.selected_transition_id = transition_id
-		state.selected_scene_id = item.to_scene
-		_changed()
-		return true
+		return select_scene(str(item.to_scene))
 	return false
 
 func travel() -> bool:
-	if not state.get("open", false) or str(state.get("selected_transition_id", "")).is_empty():
-		notice.emit("请先选择要前往的地点")
+	var disabled_reason := travel_disabled_reason()
+	if not disabled_reason.is_empty():
+		notice.emit(disabled_reason)
 		return false
 	if core == null or not core.can_save():
 		notice.emit("当前无法前往；请先结束当前操作")
