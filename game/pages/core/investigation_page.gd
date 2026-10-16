@@ -29,7 +29,7 @@ func render(core: Node, image_buttons: Dictionary = {}, image_bindings: Dictiona
 	var data: Dictionary = core.catalog.data
 	var state: Dictionary = core.state
 	UI.label(self, core.catalog.text(data.scenes[state.current_scene_id].name), 28)
-	UI.label(self, core.catalog.text("package_note"), 16)
+	if core.get_parent().configuration == null: UI.label(self, core.catalog.text("package_note"), 16)
 	if state.mode == "dialogue":
 		var entry: Dictionary = data.entries[state.current_node_id]
 		var character_id: String = entry.get("object_id", "")
@@ -80,6 +80,100 @@ func render(core: Node, image_buttons: Dictionary = {}, image_bindings: Dictiona
 	_restore_focus(list)
 	if image_buttons.has(focus_key) and not image_buttons[focus_key].disabled: image_buttons[focus_key].grab_focus()
 
+func _render_questions(list: Node, core: Node) -> void:
+	UI.label(list, "待核问题", 24)
+	for id in core.catalog.data.questions:
+		var q: Dictionary = core.catalog.data.questions[id]
+		if not str(q.get("scene_id", "")).is_empty() and q.scene_id != core.state.current_scene_id: continue
+		UI.button(list, core.catalog.text(q.title) + (" · 回看" if id in core.state.completed_questions else ""), _question.bind(id), core.condition_met(q.condition))
+	var condition := str(core.catalog.data.get("completion_condition", ""))
+	if not condition.is_empty() and core.condition_met(condition):
+		UI.label(list, core.catalog.text(core.catalog.data.completion_text), 22)
+		if core.get_parent().configuration != null: UI.button(list, "确认结束交接演练", core.get_parent().start_closing)
+
+func _render_configured_canvas(list: Node) -> void:
+	# 图片与命中区分别来自调查表，同处1600×900逻辑坐标；页面只负责绘制。
+	var frame := Control.new()
+	frame.custom_minimum_size.y = 390
+	frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	list.add_child(frame)
+	var session := service.get_parent()
+	var scene: Dictionary = session.map_navigation.locations.get(service.state.current_scene_id, {})
+	var host: Dictionary = session.map_navigation.map_definition.get("resources", {}).get(scene.get("scene_resource_ref", ""), {})
+	var canvas := Control.new()
+	if not str(host.get("path", "")).is_empty():
+		var packed = load(str(host.path))
+		if packed is PackedScene:
+			var instance: Node = packed.instantiate()
+			if instance is Control:
+				canvas.free()
+				canvas = instance
+			else: instance.free()
+	canvas.size = Vector2(float(scene_service.display.canvas_width), float(scene_service.display.canvas_height))
+	canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(canvas)
+	frame.resized.connect(_resize_canvas.bind(frame, canvas))
+	call_deferred("_resize_canvas", frame, canvas)
+	var resource: Dictionary = session.map_navigation.map_definition.get("resources", {}).get(scene.get("background_ref", ""), {})
+	_canvas_image(canvas, str(resource.get("path", "")), Rect2(Vector2.ZERO, canvas.size), 0)
+	for row in scene_service.object_images.values():
+		if row.scene_id != service.state.current_scene_id or not scene_service.state.object_visibility.get(row.object_ref, true): continue
+		_canvas_image(canvas, str(row.image_path), Rect2(float(row.image_x), float(row.image_y), float(row.image_w), float(row.image_h)), int(row.draw_layer))
+	for item in scene_service.hotspots_for_scene():
+		var button := Button.new()
+		button.flat = true
+		button.position = Vector2(item.x, item.y)
+		button.size = Vector2(item.w, item.h)
+		button.z_index = 20 + int(item.hit_priority)
+		button.tooltip_text = str(item.public_name) + " · " + str(item.status)
+		button.disabled = not item.interactive
+		button.set_meta("hotspot_id", item.hotspot_id)
+		canvas.add_child(button)
+		button.pressed.connect(_activate_hotspot.bind(str(item.hotspot_id)))
+		if item.hotspot_id == focus_key: _focus_overlay_control.call_deferred(button)
+	if session.configuration != null:
+		for binding in session.configuration.definition.get("canvas_objects", []):
+			if binding.scene_id != service.state.current_scene_id: continue
+			var rect := Rect2(float(binding.x), float(binding.y), float(binding.w), float(binding.h))
+			var path: String = session.configuration.resource_path(str(binding.image_path))
+			if binding.kind == "character":
+				_canvas_image(canvas, path, rect, 10)
+				continue
+			if binding.kind != "cat": continue
+			var entry := {}
+			for candidate in session.cat_entries():
+				if candidate.id == binding.target_ref: entry = candidate
+			if entry.is_empty(): continue
+			var cat_button := TextureButton.new()
+			cat_button.texture_normal = load(path)
+			cat_button.ignore_texture_size = true
+			cat_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			cat_button.position = rect.position
+			cat_button.size = rect.size
+			cat_button.tooltip_text = str(entry.title)
+			cat_button.disabled = not entry.enabled
+			canvas.add_child(cat_button)
+			cat_button.pressed.connect(session.enter_cat.bind(str(entry.id)))
+
+func _canvas_image(canvas: Control, path: String, rect: Rect2, layer: int) -> void:
+	if path.is_empty() or not ResourceLoader.exists(path): return
+	var image := TextureRect.new()
+	image.texture = load(path)
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	image.position = rect.position
+	image.size = rect.size
+	image.z_index = layer
+	canvas.add_child(image)
+
+func _resize_canvas(frame: Control, canvas: Control) -> void:
+	if not is_instance_valid(frame) or not is_instance_valid(canvas): return
+	var factor := minf(frame.size.x / canvas.size.x, frame.size.y / canvas.size.y)
+	canvas.scale = Vector2.ONE * factor
+	canvas.position = (frame.size - canvas.size * factor) / 2
+
 func _reserve_image_space(spacer: Control, buttons: Array) -> void:
 	# Container 恢复显示后才有最终坐标；旧页的延迟回调不得影响新页。
 	await get_tree().process_frame
@@ -90,11 +184,19 @@ func _reserve_image_space(spacer: Control, buttons: Array) -> void:
 	spacer.custom_minimum_size.y = maxf(0, bottom - spacer.get_global_rect().position.y + 12)
 
 func _render_scene_hotspots(core: Node) -> void:
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
 	var list := VBoxContainer.new()
-	list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 10)
-	add_child(list)
+	scroll.add_child(list)
 	UI.button(list, "地图", _open_map)
+	if not scene_service.object_images.is_empty():
+		_render_configured_canvas(list)
+		_render_questions(list, core)
+		return
 	_cat_entries(list)
 	var hotspots: Array = scene_service.hotspots_for_scene(str(core.state.get("current_scene_id", "")))
 	if hotspots.is_empty():
@@ -198,7 +300,7 @@ func _open_topics(person_ref: String, hotspot_id: String) -> void:
 			if entry.get("object_id", "") != person_ref: continue
 			items.append({"topic_ref": entry_id, "public_name": service.catalog.text(entry.title), "entry_ref": entry_id, "interactive": service.condition_met(entry.condition), "public_reason": "当前无法回答"})
 	for item in items:
-		var enabled := bool(item.get("interactive", false)) and not str(item.get("entry_ref", "")).is_empty()
+		var enabled := bool(item.get("interactive", false)) and (not str(item.get("entry_ref", "")).is_empty() or not str(item.get("question_ref", "")).is_empty())
 		var b := UI.button(list, str(item.get("public_name", "话题")) + ("（" + str(item.get("public_reason", "")) + "）" if not enabled else ""), _choose_topic.bind(item), enabled)
 		b.tooltip_text = str(item.get("public_reason", ""))
 		b.set_meta("topic_ref", str(item.get("topic_ref", "")))
@@ -212,13 +314,17 @@ func _focus_overlay_control(control: Control) -> void:
 		control.grab_focus()
 
 func _choose_topic(item: Dictionary) -> void:
+	var question_ref := str(item.get("question_ref", ""))
+	if not question_ref.is_empty():
+		if service.open_card_session(question_ref, {"page": "investigation", "scene_id": service.state.current_scene_id}): _close_overlay()
+		return
 	var entry_ref := str(item.get("entry_ref", ""))
 	if entry_ref.is_empty(): return
 	var context := {"person_ref": overlay_person_ref, "hotspot_id": overlay_hotspot_id, "topic_ref": str(item.get("topic_ref", ""))}
 	if scene_service.topics.has(context.topic_ref):
 		if not scene_service.open_topic(context.topic_ref, context).get("ok", false): return
 	# 准备和资格失败留在原话题页；成功后才关闭列表。
-	if not service.activate_entry(entry_ref): return
+	if not service.get_parent().activate_entry(entry_ref): return
 	topic_return = context
 	_close_overlay()
 
@@ -248,6 +354,13 @@ func _close_overlay() -> void:
 func activate_entry(id: String) -> void:
 	# 图片入口和文字入口共用同一个页面动作，业务由服务再次校验。
 	_activate(id)
+
+func open_inspection_entry(id: String) -> void:
+	if scene_service == null: return
+	for row in scene_service.hotspots.values():
+		if row.get("inspect_entry_ref", "") == id:
+			_activate_hotspot(str(row.hotspot_id))
+			return
 
 func reset_overlay() -> void:
 	topic_return = {}

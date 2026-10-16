@@ -111,6 +111,16 @@ func setup(config_path := DEFAULT_CONFIG, extra_paths: Array = [], asset_root :=
 	return ok
 
 
+func setup_package(package: RefCounted) -> bool:
+	# 包内声音仍走同一目录校验、通道和播放器，数据直接来自声音工作簿。
+	_ensure_buses()
+	catalog = CatalogScript.new()
+	catalog.asset_root = str(package.definition.root)
+	for key in package.definition.get("resources", {}): catalog.ref_table[key] = package.resource_path(str(key))
+	var ok: bool = catalog.configure(package.audio_definition())
+	config_errors = catalog.errors.duplicate()
+	return ok
+
 func shutdown() -> void:
 	# 停止全部声音并释放缓存；退出场景树和测试收尾时调用。
 	for slot in _slots.keys():
@@ -197,6 +207,14 @@ func stop_soundscape() -> void:
 	_set_loop("bgm", "", false)
 	_set_loop("ambient", "", false)
 	current_soundscape = {}
+
+func set_narrative_soundscape(bgm_key: String) -> void:
+	# 章场已在配置层解析；相同曲目沿现有轨道延续，空引用明确停曲。
+	if catalog == null or not settings_ready: return
+	_wanted = {}
+	_set_loop("bgm", bgm_key, false)
+	_set_loop("ambient", "", false)
+	current_soundscape = {"kind": "narrative", "bgm": _active_path("bgm"), "ambient": ""}
 
 
 func _apply_soundscape(rebuild: bool) -> Dictionary:

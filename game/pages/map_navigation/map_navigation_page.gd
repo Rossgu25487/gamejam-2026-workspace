@@ -82,7 +82,10 @@ func _render() -> void:
 		var group := str(item.node.get("group_id", ""))
 		if not group.is_empty() and group not in known_groups: known_groups.append(group)
 	for group in known_groups:
-		var title := str(service.map_definition.get("groups", {}).get(group, {}).get("name", group))
+		var record: Dictionary = service.map_definition.get("groups", {}).get(group, {})
+		var region: String = service.core.ui(str(record.get("region_name_text_id", "")))
+		var floor_name: String = service.core.ui(str(record.get("floor_name_text_id", "")))
+		var title := str(record.get("name", group)) if region.is_empty() else region + (" / " + floor_name if not floor_name.is_empty() else "")
 		UI.button(groups, title, _select_group.bind(group), not busy)
 	var content := HBoxContainer.new()
 	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -102,6 +105,7 @@ func _render() -> void:
 		board_view = BoardScript.new()
 		board_view.custom_minimum_size = Vector2(420, 300)
 		board_view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		board_view.configure_art(service.map_definition, group_id)
 		board_view.setup(records, service.map_definition.boards[group_id], group_id)
 		board_view.set_pawn(Vector2(int(current_node.grid_col), int(current_node.grid_row)), 0)
 		board_view.pawn_visible = group_id == str(current_node.get("group_id", "")) or not animation_phase.is_empty()
@@ -141,6 +145,10 @@ func _render() -> void:
 				button.set_meta("cell", Vector2(int(item.node.grid_col), int(item.node.grid_row)))
 				button.set_meta("logical_hit_size", Vector2(float(item.node.w), float(item.node.h)) if item.node.has("w") and item.node.has("h") else Vector2.ZERO)
 				button.clip_text = true
+				button.flat = true
+				for color_key in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]: button.add_theme_color_override(color_key, Color("21180f"))
+				button.add_theme_color_override("font_outline_color", Color("f7ead3"))
+				button.add_theme_constant_override("outline_size", 3)
 				button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			button.autowrap_mode = TextServer.AUTOWRAP_OFF if target == nodes and has_board else TextServer.AUTOWRAP_WORD_SMART
 			button.tooltip_text = str(item.title) + "\n" + (str(item.reason) if not item.available else "点击预览，再点击前往")
@@ -192,6 +200,9 @@ func _process(delta: float) -> void:
 		return
 	if animation_phase.is_empty(): return
 	animation_ms += delta * 1000
+	if animation_phase == "final_land" and animation_ms >= service.display_value("pawn_contact_ms", 50) and not cross_switched:
+		cross_switched = true
+		service.pawn_sound("land")
 	var lift_ms: float = service.display_value("pawn_lift_ms", 60)
 	var move_ms: float = service.display_value("pawn_move_ms", 200)
 	var land_ms: float = service.display_value("pawn_land_ms", 90)
@@ -219,13 +230,13 @@ func _process(delta: float) -> void:
 		"move", "cross":
 			if animation_phase == "cross" or route.size() < 2 or animation_step >= route.size() - 1:
 				# 终点上方先提交；失败回原位，成功后只续最后落子与淡出。
-				if service.finish_movement(): animation_phase = "final_land"
+				if service.finish_movement(): animation_phase = "final_land"; cross_switched = false
 				else:
 					animation_phase = ""
 					_queue_render(true)
 			else: animation_phase = "land"
 		"land": animation_step += 1; animation_phase = "lift"
-		"final_land": service.pawn_sound("land"); animation_phase = "hold"
+		"final_land": animation_phase = "hold"
 		"hold": service.begin_transition(); animation_phase = "fade"
 		"fade": animation_phase = ""; service.finish_transition()
 

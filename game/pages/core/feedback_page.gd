@@ -2,6 +2,7 @@ extends PanelContainer
 ## 可暂停的纸面白模。只播放显示时钟，业务提交由玩法服务执行。
 
 signal completed
+signal media_requested(request: Dictionary)
 const UI = preload("res://pages/core/page_controls.gd")
 var elapsed := 0.0
 var duration := 1.0
@@ -10,6 +11,9 @@ var paused := false
 var reduce_motion := false
 var bar: ProgressBar
 var sheet: VBoxContainer
+var sound_timings: Array = []
+var pending_sounds: Array = []
+var serial := 0
 
 func _ready() -> void:
 	sheet = VBoxContainer.new()
@@ -22,6 +26,15 @@ func play(display: Dictionary) -> void:
 	elapsed = 0
 	duration = maxf(0.01, float(display.duration_ms) / 1000.0)
 	active = true
+	serial += 1
+	pending_sounds.clear()
+	var effect := str(display.get("kind", ""))
+	if effect not in ["collect", "retry"]:
+		var result: Dictionary = get_parent().service.state.get("current_result", {})
+		effect = "break" if effect == "key_break" else "insight" if effect in ["key_inference", "key_insight_fact"] else "failure" if get_parent().service.state.get("mode") == "failure" else "error" if result.get("feedback") == "incorrect" else "partial" if result.get("feedback") == "partial" else "support" if result.get("feedback") == "full" else ""
+	for row in sound_timings:
+		if row.effect == effect: pending_sounds.append(row.duplicate(true))
+	_emit_due_sounds()
 	UI.label(sheet, {"key_break": "击破", "key_inference": "涌现", "key_insight_fact": "新确认", "progress": "递进核明", "collect": "收卡", "retry": "重新起稿"}.get(display.kind, "核对反馈"), 34)
 	UI.label(sheet, "纸面白模 · 演出完成后显示完整内容", 18)
 	bar = ProgressBar.new()
@@ -33,6 +46,7 @@ func play(display: Dictionary) -> void:
 func _process(delta: float) -> void:
 	if not active or paused: return
 	elapsed += delta
+	_emit_due_sounds()
 	bar.value = 100 * elapsed / duration
 	if not reduce_motion:
 		var pulse := 1.0 + sin(elapsed / duration * PI) * 0.04
@@ -49,5 +63,12 @@ func finish() -> void:
 
 func cancel() -> void:
 	active = false
+	pending_sounds.clear()
 	set_process(false)
 	hide()
+
+func _emit_due_sounds() -> void:
+	for row in pending_sounds.duplicate():
+		if elapsed * 1000.0 >= int(row.at_ms):
+			pending_sounds.erase(row)
+			media_requested.emit({"event": str(row.event_id), "instance": "core-action/%d/%s" % [serial, row.id]})

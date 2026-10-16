@@ -55,6 +55,9 @@ func bind(core: Node, objective_service: Node = null) -> void:
 	service.material_acquired.connect(show_feedback)
 	service.presentation_requested.connect(feedback.play)
 	feedback.completed.connect(core.finish_presentation)
+	if core.get_parent().configuration != null:
+		feedback.sound_timings = core.get_parent().configuration.definition.get("sound_timings", [])
+		feedback.media_requested.connect(core.get_parent().media_requested.emit)
 	selection.read_requested.connect(reader.open_material)
 	result.basis_requested.connect(reader.open_basis)
 	reader.bind(core)
@@ -65,6 +68,8 @@ func bind(core: Node, objective_service: Node = null) -> void:
 	cat_page.menu_requested.connect(menu_requested.emit)
 	cat_page.closed.connect(_queue_refresh)
 	core.get_parent().narrative.changed.connect(_on_narrative_state)
+	core.get_parent().ending_configuration_required.connect(_show_ending_configuration)
+	core.get_parent().investigation_entry_requested.connect(investigation.open_inspection_entry, CONNECT_DEFERRED)
 	map_page.bind(core.get_parent().map_navigation)
 	for cover in [narrative_page, map_page, cat_page]: cover.visibility_changed.connect(_sync_modal_visibility)
 	map_page.closed.connect(_queue_refresh)
@@ -111,7 +116,8 @@ func set_active(active: bool) -> void:
 func show_feedback(message: String, duration_ms: int = 2000) -> void:
 	# 取得／更新反馈只改变显示，不代替收下或触发存档；暂停期间冻结剩余时长。
 	notice_label.text = message
-	notice_timer.start(float(duration_ms) / 1000.0)
+	var control: Dictionary = service.catalog.get_meta("navigation_control", {})
+	notice_timer.start(float(control.get("ui_feedback_ms", duration_ms)) / 1000.0)
 
 func show_notice(message: String) -> void:
 	# 错误与资格原因持续显示，不能被上一条取得提示的计时器清掉。
@@ -140,10 +146,18 @@ func _sync_modal_visibility() -> void:
 	image_layer.visible = not covered
 
 func _on_narrative_state() -> void:
+	var state: Dictionary = service.get_parent().narrative.state
+	if not state.is_empty() and not state.get("finished", false): narrative_page.show()
 	# 文案明确结束才归还调查输入；等待本句与选择期间持续保留模态层。
 	if narrative_page.visible and bool(service.get_parent().narrative.state.get("finished", false)):
 		narrative_page.hide()
 		_queue_refresh()
+
+func _show_ending_configuration() -> void:
+	# 当前测试包未交付片尾步骤，留在独立页面，阻止回落调查后反复提交结束。
+	narrative_page.show_pending_ending()
+	margin.hide()
+	image_layer.hide()
 
 func reset_page() -> void:
 	investigation.reset_overlay()
@@ -163,6 +177,7 @@ func reset_page() -> void:
 	_queue_refresh()
 
 func set_preferences(values: Dictionary) -> void:
+	if is_instance_valid(narrative_page.stage): narrative_page.stage.reduced = bool(values.get("reduce_motion", false))
 	feedback.reduce_motion = values.get("reduce_motion", false)
 	cat_page.set_preferences(values)
 	map_page.set_preferences(values)
@@ -184,7 +199,8 @@ func _refresh() -> void:
 	result.visible = mode in ["response", "pending", "collected", "failure"]
 	if reader.visible or inspection_reader.visible or _review_open() or narrative_page.visible or map_page.visible or cat_page.visible: return
 	var page := "investigation" if mode == "investigation" else ("dialogue" if mode == "dialogue" else ("selection" if mode == "selection" else "result"))
-	image_layer.render(service, page, investigation.activate_entry)
+	if investigation.scene_service != null and not investigation.scene_service.compatibility_mode and page == "investigation": image_layer.hide()
+	else: image_layer.show(); image_layer.render(service, page, investigation.activate_entry)
 	if investigation.visible: investigation.render(service, image_layer.entry_buttons, image_layer.entry_bindings)
 	if selection.visible: selection.render(service)
 	if result.visible: result.render(service)

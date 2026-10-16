@@ -40,6 +40,10 @@ func setup(path := DEFAULT_CONFIG) -> bool:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if not parsed is Dictionary:
 		return false
+	return configure(parsed)
+
+func configure(parsed: Dictionary) -> bool:
+	# 工作簿与原JSON共用标准运行结构，页面不区分来源。
 	config = parsed
 	texts = parsed.get("texts", {})
 	model.configure(parsed.get("hud", {}))

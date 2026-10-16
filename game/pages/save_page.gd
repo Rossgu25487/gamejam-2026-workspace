@@ -81,6 +81,15 @@ func _button(title: String, callback: Callable) -> Button:
 func open(service: Node, current_snapshot: Dictionary, excluded_slot: int = -1) -> void:
 	# 保存打开瞬间复制快照，避免页面操作期间引用被外部修改。
 	save_service = service
+	if slot_buttons.size() != service.manual_slot_count:
+		for button in slot_buttons: box.remove_child(button); button.queue_free()
+		slot_buttons.clear()
+		for index in range(service.manual_slot_count):
+			var button := Button.new()
+			button.pressed.connect(_save_slot.bind(index))
+			box.add_child(button)
+			box.move_child(button, 2 + index)
+			slot_buttons.append(button)
 	snapshot = current_snapshot.duplicate(true)
 	exclusion = excluded_slot
 	success_timer.stop()

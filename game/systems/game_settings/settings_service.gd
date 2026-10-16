@@ -23,27 +23,44 @@ var storage_path := FILE_PATH # 回归测试独立设置文件，不改写玩家
 var busy := false
 var unsaved := false
 var last_error := ""
+var defaults: Dictionary = DEFAULTS.duplicate(true)
+var volume_step := VOLUME_STEP
+
+func configure_defaults(row: Dictionary) -> bool:
+	if initialized_ok: return false
+	for key in DEFAULTS:
+		if not row.has(key): return false
+		if DEFAULTS[key] is bool:
+			if not row[key] is bool: return false
+		elif not (row[key] is int or row[key] is float) or not is_finite(float(row[key])) or row[key] < 0 or row[key] > 100 or floor(float(row[key])) != float(row[key]): return false
+	var step_value = row.get("volume_step", VOLUME_STEP)
+	if not (step_value is int or step_value is float) or not is_finite(float(step_value)) or step_value < 1 or step_value > 100 or floor(float(step_value)) != float(step_value): return false
+	defaults = DEFAULTS.duplicate(true)
+	for key in DEFAULTS: defaults[key] = row[key]
+	volume_step = int(step_value)
+	values = defaults.duplicate(true)
+	return true
 
 func initialize() -> void:
 	# 读取独立设置文件；文件不存在或版本无效时回退到默认值。
 	if initialized_ok or busy: return
 	var file := FileAccess.open(storage_path, FileAccess.READ)
 	if file == null:
-		values = DEFAULTS.duplicate(true)
+		values = defaults.duplicate(true)
 		initialized_ok = true
 		_apply_audio()
 		initialized.emit(true, "已建立默认设置")
 		return
 	var parsed = JSON.parse_string(file.get_as_text())
 	if not _valid_file(parsed):
-		values = DEFAULTS.duplicate(true)
+		values = defaults.duplicate(true)
 		initialized_ok = true
 		last_error = "设置文件无效，已使用默认设置；重新提交前保留原文件"
 		unsaved = true
 		_apply_audio()
 		initialized.emit(false, "设置文件无效，已使用默认设置")
 		return
-	values = DEFAULTS.duplicate(true)
+	values = defaults.duplicate(true)
 	for key in DEFAULTS.keys():
 		if parsed.has(key): values[key] = parsed[key]
 	_sanitize()
@@ -72,7 +89,7 @@ func set_value(key: String, value, persist: bool = true) -> bool:
 func restore_defaults() -> bool:
 	# 恢复设置初值，但不改变配置中的音量步长。
 	if busy or not initialized_ok: return false
-	values = DEFAULTS.duplicate(true)
+	values = defaults.duplicate(true)
 	unsaved = true
 	_apply_audio()
 	changed.emit(values.duplicate(true))

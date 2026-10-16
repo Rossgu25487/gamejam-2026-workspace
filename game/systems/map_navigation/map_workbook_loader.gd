@@ -8,8 +8,11 @@ var errors: Array[String] = []
 var last_valid_definition: Dictionary = {}
 var _zip: ZIPReader
 var _shared: Array[String] = []
+var _scope := "runtime"
 
 func load_workbook(path: String = DEFAULT_PATH) -> Dictionary:
+	# 旧地图工作簿把可运行演示行标成##且无data_scope；仅旧入口保持该已用约定。
+	_scope = "legacy_map" if path == DEFAULT_PATH else "runtime"
 	errors.clear()
 	_shared.clear()
 	_zip = ZIPReader.new()
@@ -113,64 +116,18 @@ func _read_shared_strings() -> void:
 					"si": _shared.append(current)
 
 func _read_records(path: String) -> Array:
-	var parser := _xml(path)
-	if parser == null: return []
-	var rows := {}
-	var cell := ""
-	var cell_type := ""
-	var value := ""
-	var reading := false
-	while parser.read() == OK:
-		match parser.get_node_type():
-			XMLParser.NODE_ELEMENT:
-				match _name(parser):
-					"c":
-						var attrs := _attrs(parser)
-						cell = attrs.get("r", "")
-						cell_type = attrs.get("t", "")
-						value = ""
-					"v", "t": reading = not parser.is_empty() and not cell.is_empty()
-			XMLParser.NODE_TEXT:
-				if reading: value += parser.get_node_data()
-			XMLParser.NODE_ELEMENT_END:
-				match _name(parser):
-					"v", "t": reading = false
-					"c":
-						if cell.is_empty(): continue
-						var column := ""
-						var number := ""
-						for ch in cell:
-							if ch >= "0" and ch <= "9": number += ch
-							else: column += ch
-						if not number.is_valid_int(): cell = ""; continue
-						if cell_type == "s" and value.is_valid_int() and int(value) >= 0 and int(value) < _shared.size(): value = _shared[int(value)]
-						if not rows.has(int(number)): rows[int(number)] = {}
-						rows[int(number)][column] = value
-						cell = ""
-	var row_numbers: Array = rows.keys()
-	row_numbers.sort()
-	if row_numbers.size() < 2: return []
-	var header_row := int(row_numbers[0])
-	var data_start := header_row + 1
-	var headers: Dictionary = rows[header_row]
-	# 正式表沿用项目四行表头；兼容普通首行表头，便于测试夹具使用。
-	if rows.has(2) and rows[2].has("A") and str(rows[2]["A"]).begins_with("##"):
-		header_row = 2
-		headers = rows[2]
-		data_start = 5
-	var result: Array = []
-	for number in row_numbers:
-		if int(number) < data_start: continue
-		var source: Dictionary = rows[number]
-		var record := {}
-		for column in headers:
-			var field := str(headers[column]).strip_edges()
-			if field.is_empty() or field.begins_with("#"): continue
-			var raw := str(source.get(column, "")).strip_edges()
-			if field in ["enabled", "启用"] and raw.to_lower() in ["false", "0", "否"]: record = {}; break
-			record[_normalize_field(field)] = _coerce(raw)
-		if not record.is_empty(): result.append(record)
-	return result
+	# 和调查、包配置共用类型声明规则，保留字符串ID；XML仅在启动读取一次。
+	var raw := preload("res://features/cat_interaction/cat_workbook_loader.gd").new()
+	raw._zip = _zip
+	raw._shared = _shared
+	var reader := preload("res://systems/config/workbook_reader.gd").new()
+	var records: Array = reader.read_records(raw._sheet_cells(path), path, _scope)
+	errors.append_array(reader.errors)
+	for i in range(records.size()):
+		var normalized := {}
+		for field in records[i]: normalized[_normalize_field(field)] = records[i][field]
+		records[i] = normalized
+	return records
 
 func _normalize_field(field: String) -> String:
 	var aliases := {"键": "key", "参数": "key", "值": "value", "参数值": "value", "场景ID": "scene_id", "地点ID": "scene_id", "节点ID": "node_id", "分组ID": "group_id", "资源ID": "resource_id", "棋盘ID": "board_id", "文字ID": "text_id", "图片路径": "path", "PNG资源路径": "path"}

@@ -1,0 +1,559 @@
+{
+  "scene_assets": {
+    "owner": "副策划6场景工作稿",
+    "source_manifest": "E:\\gamejam\\副策划6场景工作稿\\scene-art\\资源清单.json",
+    "source_manifest_sha256": "fed0ae7cbbde190b6cf4b84e7e0624ee49b2965335874c4bd6bb47fcfe20866d",
+    "received_at": "2026-10-14T03:53:19.028162+08:00",
+    "records": [
+      {
+        "path": "assets/objects/paper.png",
+        "sha256": "6f6c62fdf855915109a98d60b1584bee00ab6df736955385e18e352ee5745c5e",
+        "size": [
+          1536,
+          1024
+        ],
+        "mode": "RGBA",
+        "source_kind": "复用既有无字纸件",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\objects\\paper.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "path": "assets/objects/bluebox.png",
+        "sha256": "340977bab4c8bf19b632b24ab11c1fe3b9a6603c4893b9087bd3e21a28471ae5",
+        "size": [
+          1254,
+          1254
+        ],
+        "mode": "RGBA",
+        "source_kind": "内置image_gen",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\objects\\bluebox.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "path": "assets/backgrounds/6000003.png",
+        "sha256": "664c3f9a9c34dfb2a5efc2a8ceb5be298443ac23cfa32083976d02bfd38b00a6",
+        "size": [
+          1672,
+          941
+        ],
+        "mode": "RGB",
+        "source_kind": "内置image_gen",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\backgrounds\\6000003.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "path": "assets/backgrounds/6000001.png",
+        "sha256": "518f4c540570f873544407ae7f32361eeefaf77e655899b58ed312d1bdcc30c3",
+        "size": [
+          1672,
+          941
+        ],
+        "mode": "RGB",
+        "source_kind": "内置image_gen",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\backgrounds\\6000001.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "path": "assets/backgrounds/6000005.png",
+        "sha256": "7d57f679d2be975d15589dccc14a8d2e5388754675df20d22ac363b4931d7511",
+        "size": [
+          1672,
+          941
+        ],
+        "mode": "RGB",
+        "source_kind": "内置image_gen",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\backgrounds\\6000005.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "path": "assets/backgrounds/6000002.png",
+        "sha256": "01c73ef8a097cfa6ab734997e707e1ff24a43a394b32bb813979ef1c79bac784",
+        "size": [
+          1672,
+          941
+        ],
+        "mode": "RGB",
+        "source_kind": "内置image_gen",
+        "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\backgrounds\\6000002.png",
+        "status": "已接收本轮画风修订测试候选，单图已查看；非最终美术",
+        "accepted_for_final_test_zip": true,
+        "visually_seen": true,
+        "game_tested": false
+      }
+    ],
+    "remaining": [],
+    "formal_final_art": false,
+    "owner_directory_modified": false,
+    "superseded_assets": [
+      {
+        "path": "assets/objects/bluebox.png",
+        "old_sha256": "e7fab03adf646a04a0d65deb2b88acbff715aea19a2265b64737cdfa83504a20",
+        "new_sha256": "340977bab4c8bf19b632b24ab11c1fe3b9a6603c4893b9087bd3e21a28471ae5"
+      },
+      {
+        "path": "assets/backgrounds/6000003.png",
+        "old_sha256": "62e4c525d4c436b8eaf28316eb496d354e117cc094d5249c493b0abe1658dc16",
+        "new_sha256": "664c3f9a9c34dfb2a5efc2a8ceb5be298443ac23cfa32083976d02bfd38b00a6"
+      },
+      {
+        "path": "assets/backgrounds/6000001.png",
+        "old_sha256": "df508476afc877189a308ee2ab1b56f9db2ea1f9712340d76300a90946577d11",
+        "new_sha256": "518f4c540570f873544407ae7f32361eeefaf77e655899b58ed312d1bdcc30c3"
+      },
+      {
+        "path": "assets/backgrounds/6000005.png",
+        "old_sha256": "cd22866b4a6d6384eefcda4e5134f11b05187c46cf18d6ef6516f64d6e3a60d2",
+        "new_sha256": "7d57f679d2be975d15589dccc14a8d2e5388754675df20d22ac363b4931d7511"
+      },
+      {
+        "path": "assets/backgrounds/6000002.png",
+        "old_sha256": "3ae4425a914fc3c0870d7108fe2734d7dbb0d27ac28e0c5c9ac3fbdcacf74bf4",
+        "new_sha256": "01c73ef8a097cfa6ab734997e707e1ff24a43a394b32bb813979ef1c79bac784"
+      }
+    ],
+    "overlay_rectangles": {
+      "6000003": {
+        "交接单": [
+          380,
+          500,
+          178,
+          98
+        ],
+        "开门记录": [
+          735,
+          215,
+          135,
+          105
+        ],
+        "红盒附页": [
+          590,
+          505,
+          100,
+          90
+        ]
+      },
+      "6000005": {
+        "流转记录": [
+          470,
+          390,
+          210,
+          75
+        ],
+        "蓝盒": [
+          738,
+          330,
+          230,
+          157
+        ]
+      }
+    },
+    "placement_notes": {
+      "6000003": "原纸张坐标未落在台面；两张纸改挂贴柜台前板，开门记录位于现有墙板。此为匿名测试显示建议，不改正式证物摆放。",
+      "6000005": "流转记录向上移8逻辑像素、蓝盒向上移10逻辑像素，使纸件与盒底落在修订图桌面；显示矩形按原比例居中，正文应由阅读层呈现。"
+    },
+    "fit": "contain（已读取owner实际网页placement img规则）",
+    "placement_runtime_tested": false,
+    "pending_style_replacement": [],
+    "style_remaining": [
+      "木构件的重复线仍偏完整",
+      "雪地和部分木面仍有较密碎纹，施色疏密尚未完全达到基准"
+    ],
+    "style_final_accepted": false,
+    "revision_result": "已按既定画风修订四背景和蓝盒，极光场景窗内疑似人影已清除；局部重复纹理作为现有美术差异保留，本轮不扩大返工。",
+    "applied_test_overlay_rectangles": {
+      "6000003": {
+        "交接单": [
+          380,
+          500,
+          178,
+          98
+        ],
+        "开门记录": [
+          735,
+          215,
+          135,
+          105
+        ],
+        "红盒附页": [
+          590,
+          505,
+          100,
+          90
+        ]
+      },
+      "6000005": {
+        "流转记录": [
+          470,
+          398,
+          210,
+          75
+        ],
+        "蓝盒": [
+          738,
+          340,
+          230,
+          157
+        ]
+      }
+    },
+    "static_composite_review": "root及reference_docs查看按当前配置生成的前厅、后室与取走蓝盒后画面；人物/猫热点无重叠，物件落面可用。未采纳8/10px微调，保持当前表。",
+    "test_package_adopted": true
+  },
+  "preserved_test_placeholders": [
+    {
+      "path": "assets/backgrounds/6000004.png",
+      "sha256": "5bbd4262e4ea1de3afa99c66b7b9591ca4842bde681e63b15b3fd711a926259c",
+      "size": [
+        1600,
+        900
+      ],
+      "mode": "RGBA",
+      "source": "E:\\gamejam\\策划工作稿\\.local\\delivery\\10.13五场测试\\assets\\backgrounds\\6000004.png",
+      "source_kind": "原五场功能灰模原字节复用",
+      "status": "现行表仍引用；明确测试占位",
+      "formal_final_art": false,
+      "visually_seen": true,
+      "game_tested": false
+    },
+    {
+      "path": "assets/actors/npc_neutral.png",
+      "sha256": "5dfe04da5eb671d99892638b56f86c5d27dafd153191e977dc5937f4f60a21db",
+      "size": [
+        768,
+        1024
+      ],
+      "mode": "RGBA",
+      "source": "E:\\gamejam\\策划工作稿\\.local\\delivery\\10.13五场测试\\assets\\actors\\npc_neutral.png",
+      "source_kind": "原五场功能灰模原字节复用",
+      "status": "现行表仍引用；明确测试占位",
+      "formal_final_art": false,
+      "visually_seen": true,
+      "game_tested": false
+    }
+  ],
+  "source_policy": "本测试包只交运行所需资源与来源说明，不交生成脚本、概念整板、参考音视频、FreeSFX原音或含其成分的独立混音。",
+  "reused_groups": [
+    {
+      "paths": [
+        "assets/system_test/cat_idle.png",
+        "assets/system_test/cat_gesture.png",
+        "assets/system_test/cat_touched.png"
+      ],
+      "source_root": "E:/gamejam/策划工作稿/design/functional_test/resources",
+      "kind": "既有原生矢量猫姿态灰模导出PNG，匿名功能测试"
+    },
+    {
+      "paths": [
+        "assets/system_test/map/货运站棋盘底图.png",
+        "assets/system_test/map/棋盘双色格面.png",
+        "assets/system_test/map/棋盘格边材质.png",
+        "assets/system_test/map/站厅建筑示意.svg",
+        "assets/system_test/map/办公室建筑示意.svg",
+        "assets/system_test/map/棋子占位.svg"
+      ],
+      "source_root": "E:/gamejam/副策划4工作稿/design/map",
+      "kind": "地图系统原交付测试素材，使用图与透明边框、原生SVG图层；仍按测试占位说明使用"
+    },
+    {
+      "paths": [
+        "assets/system_test/audio/test_tick.wav",
+        "assets/system_test/audio/test_ambient_loop.wav"
+      ],
+      "source_root": "E:/gamejam/策划工作稿/design/functional_test/resources/audio",
+      "kind": "本地合成技术音：660Hz短提示与110Hz环境测试轨，无第三方采样"
+    },
+    {
+      "paths": [
+        "assets/system_test/map/pawn_lift.wav",
+        "assets/system_test/map/pawn_land.wav"
+      ],
+      "source_root": "E:/gamejam/副策划4工作稿/design/map/assets/audio",
+      "kind": "el_boss棋盘实录的原交付剪辑",
+      "license": "CC0 1.0",
+      "source_urls": [
+        "https://freesound.org/people/el_boss/sounds/546118/",
+        "https://freesound.org/people/el_boss/sounds/546119/"
+      ],
+      "details": "随包声音资源映射.md"
+    },
+    {
+      "paths": [
+        "assets/system_test/audio/core/test_glass.wav",
+        "assets/system_test/audio/core/test_pencil.wav",
+        "assets/system_test/audio/core/test_clip.wav",
+        "assets/system_test/audio/core/test_impact.wav"
+      ],
+      "kind": "已采用CC0原素材的本轮单层测试片段",
+      "license": "CC0 1.0",
+      "details": "随包assets/system_test/audio/core/sources.json"
+    }
+  ],
+  "original_music": {
+    "source_root": "E:/gamejam/编曲工作区/deliverables/five_scene_test",
+    "adoption": "主笔确认原创五场选曲，可随本测试包使用；三首按原字节复制",
+    "files": [
+      {
+        "path": "audio/bgm/loop/refuge.wav",
+        "sha256": "5ef814e5a5769d46726b209d0015e2d00ce6882b000a7a449a70f8121e9fe597"
+      },
+      {
+        "path": "audio/bgm/loop/archives.wav",
+        "sha256": "08567386e35245823bcaa5a642f7b1ac094df7bb397431c02ebd38854b5999f4"
+      },
+      {
+        "path": "audio/bgm/finale_credits_entry.wav",
+        "sha256": "02531c62522334e41690a2d31e4c48fb0cdf8ec5edd0a4e999a38503b3430135"
+      }
+    ]
+  },
+  "runtime_notes": "本文件是来源记录，程序无需读取。其本机源路径仅用于核对来源，游戏运行只引用测试包内相对路径。",
+  "character_assets": {
+    "received_at": "2026-10-14T03:08:09.827981+08:00",
+    "source_manifest": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\manifest.json",
+    "source_manifest_sha256": "80ab72604b19172084f60fc7e70484c39f2748b235727883caaacbe83d758d7d",
+    "records": [
+      {
+        "character_id": 1000001,
+        "character_name": "艾琳",
+        "kind": "sprite",
+        "planned_avatar_id": null,
+        "path": "assets/actors/1000001.png",
+        "sha256": "4da964302155f0099f2fe0edfb1e7b5fc8ba6cc4ee84d6b58fe2fcce4d04b069",
+        "size": [
+          1024,
+          1536
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          254
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\艾琳_测试立绘.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "character_id": 1000001,
+        "character_name": "艾琳",
+        "kind": "avatar",
+        "planned_avatar_id": 3,
+        "path": "assets/avatars/1000001.png",
+        "sha256": "9ec7d922bc777f42fdd3d6a17896fce20ecac11906b986757c0ad8dcd04046dd",
+        "size": [
+          1254,
+          1254
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\艾琳_测试头像.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "character_id": 1000002,
+        "character_name": "洛恩",
+        "kind": "sprite",
+        "planned_avatar_id": null,
+        "path": "assets/actors/1000002.png",
+        "sha256": "3d3929e84d236058a33eacf0c0965e26777e62fdfdbb440c49173d023b1c4a8a",
+        "size": [
+          1024,
+          1536
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          254
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\洛恩_测试立绘.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "character_id": 1000002,
+        "character_name": "洛恩",
+        "kind": "avatar",
+        "planned_avatar_id": 4,
+        "path": "assets/avatars/1000002.png",
+        "sha256": "09d7f738098fce26807cf0a7fb6303613fb0bb0cf588999d1e1fee49650a6d15",
+        "size": [
+          1254,
+          1254
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\洛恩_测试头像.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "character_id": 1000003,
+        "character_name": "尼娜",
+        "kind": "sprite",
+        "planned_avatar_id": null,
+        "path": "assets/actors/1000003.png",
+        "sha256": "5eb9fc63ebdab2a98e3934e9f8803f4ac14df6bbc3eabaf08d05d4885e132db0",
+        "size": [
+          1024,
+          1536
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          254
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\尼娜_测试立绘.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      },
+      {
+        "character_id": 1000003,
+        "character_name": "尼娜",
+        "kind": "avatar",
+        "planned_avatar_id": 5,
+        "path": "assets/avatars/1000003.png",
+        "sha256": "ac7ec704c4de84bbc519a93fc485c43bb062f75a2dc65a666d1be84ada5bc025",
+        "size": [
+          1254,
+          1254
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          255
+        ],
+        "source": "E:\\gamejam\\副策划6工作稿\\art-direction\\test-characters\\尼娜_测试头像.png",
+        "source_kind": "原副6已制作独立测试PNG；内置image_gen编辑输出，原字节接收",
+        "expression_variants": 0,
+        "status": "用户明确采用的现成独立测试图，原字节接收",
+        "visually_seen": true,
+        "game_tested": false
+      }
+    ],
+    "scope": "三名角色独立测试立绘与基础头像已接，功能演练改用这三名角色；洛恩已有4态头像差分。原五场其他角色仍保留通用灰模。",
+    "source_note": "原副6已撤回工具预览光晕判断；本轮沿用户认可原PNG接入，不以此要求返修。"
+  },
+  "lorne_expression_assets": {
+    "method": "原设定板矩形提取；未重绘、未缩放、未改像素颜色、未去纸底",
+    "source": "E:/gamejam/副策划6工作稿/art-direction/independent-cast-20261013/lorne/洛恩_独立人设_线色选择版.png",
+    "source_sha256": "628acd3f1834c72b5c77d615bf2657bec610886aa5de646183bd8bb55b9b1029",
+    "assets": [
+      {
+        "label": "温和",
+        "path": "assets/avatars/lorne_warm.png",
+        "source_rect": {
+          "left": 24,
+          "top": 632,
+          "width": 266,
+          "height": 257
+        },
+        "sha256": "906eb219b132bd72f5cabacbead6ac1c39edb2392c5a672c52b4e7445b5b317b",
+        "size": [
+          266,
+          257
+        ],
+        "mode": "RGB",
+        "character_id": 1000002,
+        "pixel_identical_to_source_crop": true,
+        "status": "主笔按用户要求提取原板表情；未重绘，纸底保持",
+        "game_tested": false
+      },
+      {
+        "label": "倾听",
+        "path": "assets/avatars/lorne_listening.png",
+        "source_rect": {
+          "left": 295,
+          "top": 631,
+          "width": 250,
+          "height": 258
+        },
+        "sha256": "a2e5d033744164d6b614a1d0f556d4d19f5acf00f1126ff6a430ca144ffef4d4",
+        "size": [
+          250,
+          258
+        ],
+        "mode": "RGB",
+        "character_id": 1000002,
+        "pixel_identical_to_source_crop": true,
+        "status": "主笔按用户要求提取原板表情；未重绘，纸底保持",
+        "game_tested": false
+      },
+      {
+        "label": "回避",
+        "path": "assets/avatars/lorne_avoidant.png",
+        "source_rect": {
+          "left": 548,
+          "top": 632,
+          "width": 260,
+          "height": 257
+        },
+        "sha256": "dd8e543db38170c2aad1af22b5cf6b4a73c70db15bab93aa6ebda7281e77a34c",
+        "size": [
+          260,
+          257
+        ],
+        "mode": "RGB",
+        "character_id": 1000002,
+        "pixel_identical_to_source_crop": true,
+        "status": "主笔按用户要求提取原板表情；未重绘，纸底保持",
+        "game_tested": false
+      },
+      {
+        "label": "担忧",
+        "path": "assets/avatars/lorne_worried.png",
+        "source_rect": {
+          "left": 810,
+          "top": 632,
+          "width": 262,
+          "height": 257
+        },
+        "sha256": "d90b6da2aceb5c008f332a78b7462238f65dae8c5f131dfc2e22cd29760c0425",
+        "size": [
+          262,
+          257
+        ],
+        "mode": "RGB",
+        "character_id": 1000002,
+        "pixel_identical_to_source_crop": true,
+        "status": "主笔按用户要求提取原板表情；未重绘，纸底保持",
+        "game_tested": false
+      }
+    ]
+  }
+}

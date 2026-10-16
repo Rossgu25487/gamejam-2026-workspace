@@ -205,7 +205,7 @@ func _slider_input(event: InputEvent, key: String) -> void:
 	if event.pressed and not settings_service.busy:
 		_begin_adjustment(key)
 		var direction := -1 if event.keycode == KEY_LEFT else 1
-		sliders[key].value = clampi(int(sliders[key].value) + direction * settings_service.VOLUME_STEP, 0, 100)
+		sliders[key].value = clampi(int(sliders[key].value) + direction * settings_service.volume_step, 0, 100)
 	elif not event.pressed:
 		_commit_adjustment()
 	get_viewport().set_input_as_handled()
@@ -237,7 +237,8 @@ func _preview() -> void:
 func _restore_defaults() -> void:
 	if settings_service.busy or reset_confirmation.visible: return
 	_commit_adjustment()
-	reset_confirmation.open("恢复默认", "总音量100%／背景音乐70%／环境60%／效果80%\n静音关闭，减弱动态关闭。", "", "确认", false, true)
+	var values: Dictionary = settings_service.defaults
+	reset_confirmation.open("恢复默认", "总音量%d%%／背景音乐%d%%／环境%d%%／效果%d%%\n静音%s，减弱动态%s。" % [values.master_volume, values.bgm_volume, values.ambient_volume, values.effect_volume, "开启" if values.mute else "关闭", "开启" if values.reduce_motion else "关闭"], "", "确认", false, true)
 	_refresh_status()
 
 func _cancel_reset() -> void:

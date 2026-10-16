@@ -1,0 +1,5 @@
+[gd_scene format=3]
+
+[node name="TestBack" type="Control"]
+mouse_filter = 2
+metadata/view_id = "TEST_1014_VIEW_BACK"

@@ -295,6 +295,13 @@ func prepare_scene(scene_id: String) -> Dictionary:
 		if resource.is_empty() or (resource.get("required", true) and (path.is_empty() or not ResourceLoader.exists(path))):
 			push_warning("地图必需资源未就绪：%s / %s / %s" % [scene_id, ref, path])
 			return {"ok": false, "reason": "目的地必需内容尚未就绪，请稍后重试。"}
+		if field == "scene_resource_ref" and resource.get("resource_kind") == "scene_host":
+			var packed = load(path)
+			if not packed is PackedScene: return {"ok": false, "reason": "目的地载体必须是场景资源。"}
+			var instance: Node = packed.instantiate()
+			var valid := instance is Control and str(instance.get_meta("view_id", "")) == str(scene.get("default_view_id", ""))
+			instance.free()
+			if not valid: return {"ok": false, "reason": "目的地载体类型或视图身份不匹配。"}
 	return {"ok": true, "scene_id": scene_id, "view_id": scene.get("default_view_id", ""), "focus_ref": scene.get("default_focus_ref", "")}
 
 func _fail(message: String) -> void:

@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "source": "game/代码开发需求/测试用资源",
+  "files": [
+    {
+      "path": "assets/actors/1000001.png",
+      "sha256": "4da964302155f0099f2fe0edfb1e7b5fc8ba6cc4ee84d6b58fe2fcce4d04b069"
+    },
+    {
+      "path": "assets/actors/1000002.png",
+      "sha256": "3d3929e84d236058a33eacf0c0965e26777e62fdfdbb440c49173d023b1c4a8a"
+    },
+    {
+      "path": "assets/actors/1000003.png",
+      "sha256": "5eb9fc63ebdab2a98e3934e9f8803f4ac14df6bbc3eabaf08d05d4885e132db0"
+    },
+    {
+      "path": "assets/actors/npc_neutral.png",
+      "sha256": "5dfe04da5eb671d99892638b56f86c5d27dafd153191e977dc5937f4f60a21db"
+    },
+    {
+      "path": "assets/avatars/1000001.png",
+      "sha256": "9ec7d922bc777f42fdd3d6a17896fce20ecac11906b986757c0ad8dcd04046dd"
+    },
+    {
+      "path": "assets/avatars/1000002.png",
+      "sha256": "09d7f738098fce26807cf0a7fb6303613fb0bb0cf588999d1e1fee49650a6d15"
+    },
+    {
+      "path": "assets/avatars/1000003.png",
+      "sha256": "ac7ec704c4de84bbc519a93fc485c43bb062f75a2dc65a666d1be84ada5bc025"
+    },
+    {
+      "path": "assets/avatars/lorne_avoidant.png",
+      "sha256": "dd8e543db38170c2aad1af22b5cf6b4a73c70db15bab93aa6ebda7281e77a34c"
+    },
+    {
+      "path": "assets/avatars/lorne_listening.png",
+      "sha256": "a2e5d033744164d6b614a1d0f556d4d19f5acf00f1126ff6a430ca144ffef4d4"
+    },
+    {
+      "path": "assets/avatars/lorne_warm.png",
+      "sha256": "906eb219b132bd72f5cabacbead6ac1c39edb2392c5a672c52b4e7445b5b317b"
+    },
+    {
+      "path": "assets/avatars/lorne_worried.png",
+      "sha256": "d90b6da2aceb5c008f332a78b7462238f65dae8c5f131dfc2e22cd29760c0425"
+    },
+    {
+      "path": "assets/backgrounds/6000001.png",
+      "sha256": "518f4c540570f873544407ae7f32361eeefaf77e655899b58ed312d1bdcc30c3"
+    },
+    {
+      "path": "assets/backgrounds/6000002.png",
+      "sha256": "01c73ef8a097cfa6ab734997e707e1ff24a43a394b32bb813979ef1c79bac784"
+    },
+    {
+      "path": "assets/backgrounds/6000003.png",
+      "sha256": "664c3f9a9c34dfb2a5efc2a8ceb5be298443ac23cfa32083976d02bfd38b00a6"
+    },
+    {
+      "path": "assets/backgrounds/6000004.png",
+      "sha256": "5bbd4262e4ea1de3afa99c66b7b9591ca4842bde681e63b15b3fd711a926259c"
+    },
+    {
+      "path": "assets/backgrounds/6000005.png",
+      "sha256": "7d57f679d2be975d15589dccc14a8d2e5388754675df20d22ac363b4931d7511"
+    },
+    {
+      "path": "assets/objects/bluebox.png",
+      "sha256": "340977bab4c8bf19b632b24ab11c1fe3b9a6603c4893b9087bd3e21a28471ae5"
+    },
+    {
+      "path": "assets/objects/paper.png",
+      "sha256": "6f6c62fdf855915109a98d60b1584bee00ab6df736955385e18e352ee5745c5e"
+    },
+    {
+      "path": "assets/system_test/audio/core/sources.json",
+      "sha256": "b809c325d253f2635e9b9f21875043c4420063b227f2566ce19d6fa514053c45"
+    },
+    {
+      "path": "assets/system_test/audio/core/test_clip.wav",
+      "sha256": "858afc7448a57a79bb763a85f2b55824438c6a27a4b36bcd4e95fb6e4d9eff5e"
+    },
+    {
+      "path": "assets/system_test/audio/core/test_glass.wav",
+      "sha256": "3883bbd0c50c3a5246f6be23b101e4425706d42f313990af87a45cc484afec86"
+    },
+    {
+      "path": "assets/system_test/audio/core/test_impact.wav",
+      "sha256": "ef134f5e0efe7be9eb73e55bbd93236d77a6e1bf3625233a9f311f799b0e5e04"
+    },
+    {
+      "path": "assets/system_test/audio/core/test_pencil.wav",
+      "sha256": "dd706151d11caed6b219c4de0b0eb7a7b1e3e27ac4075dc3f3618d2141335ad6"
+    },
+    {
+      "path": "assets/system_test/audio/test_ambient_loop.wav",
+      "sha256": "a4a142691fdf7c6c80b0098100d13647dbbe26a2355e105ff37843d34ef6146c"
+    },
+    {
+      "path": "assets/system_test/audio/test_tick.wav",
+      "sha256": "090f43ee884bc60922c5271ec4350df657d888c156a1fab90c7822e93ca9347a"
+    },
+    {
+      "path": "assets/system_test/cat_gesture.png",
+      "sha256": "f2a539ceb761d38f3f937a6cdd981b3f2f5e2c47aae0e6c32aacd86aed875f9e"
+    },
+    {
+      "path": "assets/system_test/cat_idle.png",
+      "sha256": "99036f924c380a8017e9276c86235da8c37e8df83cf0430f84c35de2c4c20716"
+    },
+    {
+      "path": "assets/system_test/cat_touched.png",
+      "sha256": "43eedf464adb7b4793342b29586bf48abedf162571b3d9739c7b6376919dfeca"
+    },
+    {
+      "path": "assets/system_test/map/pawn_land.wav",
+      "sha256": "f6807519446f7f93618120c6af3aae881ddeedc1b373dd92fda064b015beab27"
+    },
+    {
+      "path": "assets/system_test/map/pawn_lift.wav",
+      "sha256": "daa7f56de3e795b553b6f7cf9aca8c72ea108da5413310889fc8464233948441"
+    },
+    {
+      "path": "assets/system_test/map/办公室建筑示意.svg",
+      "sha256": "64909367b1d1efa28754edeae100f07c10cfef736cad0f237eea683b91070cb1"
+    },
+    {
+      "path": "assets/system_test/map/棋子占位.svg",
+      "sha256": "593e40a6da734fd9827c9476d1276c17f1c7104fa70984990a7fd4b9a5ea85ae"
+    },
+    {
+      "path": "assets/system_test/map/棋盘双色格面.png",
+      "sha256": "468a51de147ff2fa3075179103798f73119399b3629a6afb2bd2fee06f86436e"
+    },
+    {
+      "path": "assets/system_test/map/棋盘格边材质.png",
+      "sha256": "2a27e4140833e7b98cfca84513db26f587df59cd047b67ea45515feb8eae05b5"
+    },
+    {
+      "path": "assets/system_test/map/站厅建筑示意.svg",
+      "sha256": "71d928712ff4f5b98dcb051c6f574cbbae731af5524a8361470bb9b12a71007e"
+    },
+    {
+      "path": "assets/system_test/map/货运站棋盘底图.png",
+      "sha256": "b8c133b013afe80e78015bee068758ccf6b4054352e1c57e04b8f8efcfdcff8c"
+    },
+    {
+      "path": "assets/来源说明.json",
+      "sha256": "5623382fe665a7157634b3bfa6c3d4ff4577edd5f9df082ca7018eb1ecf1b526"
+    },
+    {
+      "path": "audio/bgm/finale_credits_entry.wav",
+      "sha256": "02531c62522334e41690a2d31e4c48fb0cdf8ec5edd0a4e999a38503b3430135"
+    },
+    {
+      "path": "audio/bgm/loop/archives.wav",
+      "sha256": "08567386e35245823bcaa5a642f7b1ac094df7bb397431c02ebd38854b5999f4"
+    },
+    {
+      "path": "audio/bgm/loop/refuge.wav",
+      "sha256": "5ef814e5a5769d46726b209d0015e2d00ce6882b000a7a449a70f8121e9fe597"
+    },
+    {
+      "path": "十一系统贯通测试用例.md",
+      "sha256": "9e15f49d918ea3c4f81b23b47d0cdc8ebdf3f64cc7cb942008d813ec41829cf5"
+    },
+    {
+      "path": "声音资源映射.md",
+      "sha256": "978bb6e45ebe7f43d7075752a011c534eaf92f2a4d9d1951107d42aaf0e754a0"
+    },
+    {
+      "path": "测试资源清单.md",
+      "sha256": "0a31961390a1cab4238cfbf17483b30d345331d220395e9430979a763eff50e7"
+    },
+    {
+      "path": "配置表/关卡内容_程序读取表.xlsx",
+      "sha256": "81e595acd4076ab5814e8e5350def53396e900489bd2e15793c8e56baa426402"
+    },
+    {
+      "path": "配置表/办案手册系统配置表.xlsx",
+      "sha256": "2657064ffd9f087163216fed5472da07bda221040457910ca17706ece5c222ab"
+    },
+    {
+      "path": "配置表/地图切换系统配置表.xlsx",
+      "sha256": "b4bc8e52d1eb78cbde71751cd8aa536b01b6601e8636834bbb588a866df4b894"
+    },
+    {
+      "path": "配置表/声音播放系统配置表.xlsx",
+      "sha256": "00ded57924fa2df5b40059a74f76a19e45207370d34da7f72f458897ecf17465"
+    },
+    {
+      "path": "配置表/存读档系统配置表.xlsx",
+      "sha256": "b99caafff8fb1220b55bc9f2b45997f7eeb6ae59db74f6bb19c36042d4bb9a26"
+    },
+    {
+      "path": "配置表/撸猫系统配置表.xlsx",
+      "sha256": "5029661145c4696272ed08315be61447c7983b183514445d7384b002a242fe32"
+    },
+    {
+      "path": "配置表/文案测试演出与资源.xlsx",
+      "sha256": "a86f5435e017b87b520e267809289036760f2e0224d1348a7e3567c18a7ff3ce"
+    },
+    {
+      "path": "配置表/文案系统_测试配置表.xlsx",
+      "sha256": "1f273862661839437b8f0a06a259791acf7c3adaff2662d689e330033e164576"
+    },
+    {
+      "path": "配置表/核心玩法系统_测试配置表.xlsx",
+      "sha256": "3f82f8851e064f317a5c4a67616f333567d67b8ca7935b950d198325d1d85588"
+    },
+    {
+      "path": "配置表/游戏初始化与开始系统配置表.xlsx",
+      "sha256": "17fa5a85c3ff1af5a9aed572dab0cd5253b50b09b2fda846e35d96775bc1fe4e"
+    },
+    {
+      "path": "配置表/游戏设置系统配置表.xlsx",
+      "sha256": "ccf89f6c84590671054faeb90ad242d55938df5bcfebfba3b0fb0d24f44144df"
+    },
+    {
+      "path": "配置表/目标导航系统配置表.xlsx",
+      "sha256": "efe0483fb2453d43d5d7785361a8a3b0aeb371008fae1e5684df1a083974e5db"
+    },
+    {
+      "path": "配置表/调查与场景交互系统配置表.xlsx",
+      "sha256": "df3bd5f77b1093b20fe85a193ed8f02e175974109e6dfcbff6c1ae89d1863889"
+    }
+  ],
+  "generated": [
+    {
+      "source": "assets/system_test/map/办公室建筑示意.svg",
+      "path": "generated/assets/system_test/map/办公室建筑示意.png",
+      "sha256": "afa0aa6c3d211901a758dfec72d311d981e6242137880669b58a651873d4d55f"
+    },
+    {
+      "source": "assets/system_test/map/棋子占位.svg",
+      "path": "generated/assets/system_test/map/棋子占位.png",
+      "sha256": "d6dfe39650ba1592804d1057846205cf61f610369cc3228f5637bca92d069aa8"
+    },
+    {
+      "source": "assets/system_test/map/站厅建筑示意.svg",
+      "path": "generated/assets/system_test/map/站厅建筑示意.png",
+      "sha256": "7f7a14ab79811e7eca679595202713f231ecca25408321394f8c1f9f64143e4f"
+    }
+  ]
+}

@@ -170,7 +170,7 @@ func _aliases(keys: Array[String]) -> Dictionary:
 func _compile(raw: Dictionary) -> Dictionary:
 	var text_rows := _table(_sheet(raw, ["脚本文本", "文本", "Script", "脚本"]), {
 		"enabled":["enabled", "启用"], "text_id":["文本ID", "text_id", "文本id"], "text":["文本内容", "正文", "文本", "text"],
-		"speaker_name":["人物名", "角色名", "speaker_name"], "character_id":["人物ID", "角色ID", "character_id"],
+		"speaker_name":["人物名", "角色名", "speaker_name"], "character_id":["人物id", "人物ID", "角色ID", "character_id"],
 		"avatar_path":["人物美术资源路径", "立绘路径", "avatar_path"], "position":["人物位置", "位置", "position"], "avatar_id":["头像ID", "avatar_id"],
 		"text_type":["文本类型", "类型", "text_type"], "read_version":["已读判定", "已读版本", "read_version"],
 		"chapter_id":["章节id", "章节ID", "chapter_id"], "chapter_name":["章节名称", "chapter_name"], "scene_id":["场景id", "场景ID", "scene_id"],
@@ -190,7 +190,7 @@ func _compile(raw: Dictionary) -> Dictionary:
 	var backgrounds := _dict(_table(_sheet(raw, ["背景字典", "背景", "Backgrounds"]), {"background_id":["背景id", "背景ID", "background_id"], "name":["背景名称", "名称", "name"], "image":["资源路径", "PNG资源路径", "image"]}), "background_id")
 	var state_rows := _table(_sheet(raw, ["状态字典", "状态", "States"]), {"state_id":["状态id", "状态ID", "state_id"], "name":["状态名称", "名称", "name"], "default_value":["默认值", "default_value"]})
 	var state_values := _dict(_table(_sheet(raw, ["状态取值", "状态值", "StateValues"]), {"value_id":["取值id", "取值ID", "value_id"], "state_id":["状态id", "状态ID", "state_id"], "value":["取值", "value"], "name":["取值名称", "名称", "name"]}), "value_id")
-	var events := _dict(_table(_sheet(raw, ["事件字典", "事件", "Events"]), {"event_id":["事件id", "事件ID", "event_id"], "name":["事件名称", "名称", "name"], "event_type":["事件类型", "event_type"], "chapter_id":["章节id", "章节ID", "chapter_id"], "content":["事件内容", "内容", "content"]}), "event_id")
+	var events := _dict(_table(_sheet(raw, ["事件字典", "事件", "Events"]), {"event_id":["id", "事件id", "事件ID", "event_id"], "name":["事件名称", "名称", "name"], "event_type":["事件类型", "event_type"], "chapter_id":["章节id", "章节ID", "chapter_id"], "content":["事件内容", "内容", "content"]}), "event_id")
 	var performance := _table(_sheet(raw, ["跳转演出关联", "演出关联", "Performances"]), {"performance_id":["关联ID", "演出ID", "performance_id"], "transition_id":["跳转ID", "transition_id"], "order":["演出顺序", "顺序", "order"], "event_id":["事件id", "事件ID", "event_id"]})
 	var data := {"texts":{}, "chapters":chapters, "characters":characters, "scenes":scenes, "locations":locations, "backgrounds":backgrounds,
 		"scene_links":{}, "scene_background_links":{}, "states":_dict(state_rows, "state_id"), "state_values":state_values, "events":events, "performance_events":{}, "transitions":{}}
@@ -206,7 +206,7 @@ func _compile(raw: Dictionary) -> Dictionary:
 		var id := str(row.get("transition_id", ""))
 		if id.is_empty(): id = "transition_%d" % data.transitions.size()
 		row["order"] = int(str(row.get("order", "0")) if str(row.get("order", "0")).is_valid_int() else "0")
-		row["ends"] = str(row.get("ends", "")).to_lower() in ["true", "1", "是", "yes"]
+		row["ends"] = str(row.get("ends", "")).to_lower() in ["true", "1", "是", "yes"] or row.get("transition_type") in ["当前事件结束", "终局结束"]
 		data.transitions[id] = row
 	for row in performance:
 		var id := str(row.get("performance_id", ""))

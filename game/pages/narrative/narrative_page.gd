@@ -19,6 +19,7 @@ var skip_button: Button
 var pagination_ready := false
 var layout_canvas: Control
 var status_message := ""
+var pending_ending := false
 
 func bind(value: Node) -> void:
 	service = value
@@ -48,6 +49,7 @@ func _queue_render(_unused = null) -> void:
 
 func _render() -> void:
 	render_queued = false
+	if pending_ending: return
 	if service == null or service.state.is_empty(): return
 	stage.visible = not service.reading_log
 	for child in get_children():
@@ -228,13 +230,35 @@ func _advance() -> void:
 	if service != null: service.advance()
 
 func _on_text_started(_record: Dictionary) -> void:
+	pending_ending = false
 	pagination_ready = false
 	status_message = ""
 	if is_instance_valid(stage): stage.apply_record(_record, service.catalog)
 	_queue_render()
 
 func reset_stage() -> void:
+	pending_ending = false
 	if is_instance_valid(stage): stage.reset_stage()
+
+func show_pending_ending() -> void:
+	pending_ending = true
+	for child in get_children():
+		if child == stage: continue
+		remove_child(child)
+		child.queue_free()
+	stage.reset_stage()
+	stage.hide()
+	var center := CenterContainer.new()
+	add_child(center)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var panel := PanelContainer.new()
+	center.add_child(panel)
+	var box := VBoxContainer.new()
+	panel.add_child(box)
+	UI.label(box, "测试正文已结束", 32)
+	UI.label(box, "已到达原片尾入口9000488。\n片尾片段、字幕、名单及续播步骤仍待配置。", 22)
+	UI.button(box, "打开菜单 / 返回标题", menu_requested.emit)
+	show()
 
 func _on_progressed(value: String, _typing: bool) -> void:
 	if is_instance_valid(text_label): text_label.text = value

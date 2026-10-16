@@ -8,7 +8,7 @@ var rules: Dictionary = {}
 var function_texts: Dictionary = {}
 var errors: Array[String] = []
 
-func load_files(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
+func load_files(path: String = WorkbookLoader.DEFAULT_PATH, asset_root: String = "") -> bool:
 	var workbook: RefCounted = null
 	var content
 	if path.get_extension().to_lower() == "xlsx":
@@ -18,6 +18,10 @@ func load_files(path: String = WorkbookLoader.DEFAULT_PATH) -> bool:
 			errors.assign(workbook.errors)
 			return false
 	else: content = _json(path)
+	if content is Dictionary and not asset_root.is_empty():
+		for row in content.get("image_layouts", {}).values():
+			# 包中的旧 res://assets 路径明确重定位到该包根，不依赖个人磁盘路径。
+			row.image = asset_root.path_join(str(row.image).trim_prefix("res://"))
 	var rule_data = _json("res://data/core/rules.json")
 	var texts = _json("res://data/core/function_text.json")
 	if not content is Dictionary or not rule_data is Dictionary or not texts is Array:

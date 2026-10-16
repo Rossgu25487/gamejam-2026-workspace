@@ -31,6 +31,14 @@ func _ready() -> void:
 
 func bind_images(core: Node) -> void:
 	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "pause")
+	var buttons := {"resume": resume_button, "save": save_button, "load": load_button, "settings": settings_button, "return_title": return_title_button, "exit": exit_button}
+	var index := 1
+	for row in core.catalog.get_meta("navigation_buttons", []):
+		if row.page != "pause" or not buttons.has(row.action) or str(row.id) in ["NAV_PAUSE_RESUME_CAT", "NAV_PAUSE_RESUME_ENDING"]: continue
+		var button: Button = buttons[row.action]
+		button.text = core.ui(str(row.label_key))
+		button.get_parent().move_child(button, index)
+		index += 1
 
 func set_developer_tools_enabled(enabled: bool) -> void:
 	# 正式暂停菜单固定六项；制作工具需显式开启。

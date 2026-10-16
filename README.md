@@ -2,6 +2,8 @@
 
 本机主工程已接入核心玩法占位首段，运行方式和当前范围见[核心玩法接入](docs/核心玩法接入.md)。正式案件与美术资源可通过配置替换。
 
+10.14测试资源已接成独立[蓝盒交接Demo](docs/测试资源Demo试玩说明.md)：打开`game/examples/system_test_demo.tscn`按F6，或使用`tools/project.ps1 -Action system-test`。运行表统一采用原13份Excel加[程序接入配置表](game/data/system_test/程序接入配置表.xlsx)，最终维护位置、字段与待配项见[配置表统一填写规范](docs/配置表统一填写规范.md)。
+
 故事现在直接读取 [故事配置表.xlsx](game/data/story/outputs/story-images-20261011/故事配置表.xlsx)。在 Excel/WPS 中填写并保存后重新运行 Godot，无需改脚本或转换 JSON。表内已有占位案例和“图片布局”页；字段与限制见[故事配置表填写指南](docs/配置表/故事配置表填写指南.md)。
 
 可以用虚构短篇《雨夜借阅单》体验完整配置示例：在 Godot 打开 `game/examples/rainy_library.tscn`，按 F6 运行。包含调查、错误出示、补材、收下推论、地点切换和存读档，操作与解法见[示例试玩说明](docs/配置表/雨夜借阅单试玩说明.md)。示例内容和存档独立保存，F5 仍运行原占位案例。

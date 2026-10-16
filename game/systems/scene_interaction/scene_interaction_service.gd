@@ -26,6 +26,7 @@ var topics: Dictionary = {}
 var object_images: Dictionary = {}
 var state: Dictionary = {}
 var compatibility_mode := false
+var configuration_errors: Array[String] = []
 
 func bind_core(value: Node) -> void:
 	core = value
@@ -67,6 +68,7 @@ func configure(definition: Dictionary = {}) -> bool:
 		if object_ref.is_empty(): continue
 		object_images[object_ref] = row.duplicate(true)
 	compatibility_mode = false
+	configuration_errors = errors
 	return errors.is_empty()
 
 func initialize(scene_id: String = "") -> void:
@@ -263,7 +265,15 @@ func topics_for_person(person_ref: String) -> Array:
 		item["topic_ref"] = id
 		item["interactive"] = bool(row.get("interactive", true))
 		if core != null and not str(row.get("condition", "")).is_empty(): item.interactive = item.interactive and core.condition_met(str(row.condition))
-		if item.interactive and str(item.get("entry_ref", "")).is_empty(): item.interactive = false
+		if core != null:
+			var question: Dictionary = core.catalog.data.questions.get(str(row.get("question_ref", "")), {})
+			var entry: Dictionary = core.catalog.data.entries.get(str(row.get("entry_ref", "")), {})
+			var actual: Dictionary = question if not question.is_empty() else entry
+			if not actual.is_empty() and not core.condition_met(str(actual.get("condition", ""))):
+				# 测试内容明确要求条件满足才公开；通用列表保留显式不可用话题与原因。
+				if str(row.get("public_reason", "")).is_empty() and bool(row.get("interactive", true)): continue
+				item.interactive = false
+		if item.interactive and str(item.get("entry_ref", "")).is_empty() and str(item.get("question_ref", "")).is_empty(): item.interactive = false
 		if not item.interactive and str(item.get("public_reason", "")).is_empty(): item.public_reason = "当前无法回答"
 		result.append(item)
 	result.sort_custom(func(a: Dictionary, b: Dictionary): return int(a.get("focus_order", 0)) < int(b.get("focus_order", 0)))

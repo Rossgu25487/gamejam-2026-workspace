@@ -20,6 +20,18 @@ func render(core: Node) -> void:
 	content.add_theme_constant_override("separation", 8)
 	scroll.add_child(content)
 	if not result.is_empty():
+		var package = core.get_parent().get("configuration")
+		var portrait: String = str(package.definition.get("response_portraits", {}).get(str(result.get("node", "")), "")) if package != null else ""
+		if not portrait.is_empty():
+			var path: String = package.resource_path(portrait)
+			if ResourceLoader.exists(path):
+				var image := TextureRect.new()
+				image.texture = load(path)
+				image.custom_minimum_size = Vector2(112, 112)
+				image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				content.add_child(image)
 		var comparison: Dictionary = result.get("comparison", {})
 		var target: Dictionary = result.get("target_ref", {})
 		var target_text := ""

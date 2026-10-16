@@ -15,12 +15,22 @@ var sequence := 0 # 全部栏位共用的成功保存序号。
 var storage_path := DIR_PATH # 测试可注入隔离目录，运行默认使用玩家目录。
 var snapshot_validator: Callable # 会话模块提供完整性验证，读取前拒绝损坏快照。
 var busy := false # 文件事务及其完成回调期间拒绝重入，不排队。
+var manual_slot_count := MANUAL_SLOT_COUNT
+
+func configure(row: Dictionary) -> bool:
+	# 格式与保护记录数量是存档协议；手动栏数量允许策划在1—10内调整。
+	for key in ["auto_slot_count", "pre_accusation_slot_count", "ending_resume_record_count", "save_schema_version"]:
+		if int(row.get(key, -1)) != 1: return false
+	var count = row.get("manual_slot_count", 0)
+	if not (count is int or count is float) or count < 1 or count > 10 or floor(float(count)) != float(count): return false
+	manual_slot_count = int(count)
+	return true
 
 func scan() -> Array:
 	# 按固定栏位读取磁盘文件，并恢复本次运行的序号基线。
 	records.clear()
 	for kind in ["manual", "auto", "pre_accusation"]:
-		var count := MANUAL_SLOT_COUNT if kind == "manual" else (AUTO_SLOT_COUNT if kind == "auto" else PRE_ACCUSATION_SLOT_COUNT)
+		var count := manual_slot_count if kind == "manual" else (AUTO_SLOT_COUNT if kind == "auto" else PRE_ACCUSATION_SLOT_COUNT)
 		for index in range(count):
 			var path := _path(kind, index)
 			if not FileAccess.file_exists(path): continue
@@ -200,7 +210,7 @@ func latest_summary() -> String:
 
 func _valid_slot(kind: String, index: int) -> bool:
 	# 约束栏位类型和编号，防止写入未知位置。
-	return (kind == "manual" and index >= 0 and index < MANUAL_SLOT_COUNT) or (kind == "auto" and index == 0) or (kind == "pre_accusation" and index == 0)
+	return (kind == "manual" and index >= 0 and index < manual_slot_count) or (kind == "auto" and index == 0) or (kind == "pre_accusation" and index == 0)
 
 func _path(kind: String, index: int) -> String:
 	# 将逻辑栏位映射到 user:// 下的实际文件名。

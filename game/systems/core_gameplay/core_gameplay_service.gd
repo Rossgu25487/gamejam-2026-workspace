@@ -19,9 +19,9 @@ var presenting := false
 var inspection_depth := 0
 var paused := false
 
-func initialize(path: String = "res://data/story/outputs/story-images-20261011/故事配置表.xlsx") -> bool:
+func initialize(path: String = "res://data/story/outputs/story-images-20261011/故事配置表.xlsx", asset_root: String = "") -> bool:
 	store.catalog = catalog
-	return catalog.load_files(path)
+	return catalog.load_files(path, asset_root)
 
 func start_new_game() -> void:
 	store.entities.clear()

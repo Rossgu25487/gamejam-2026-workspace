@@ -63,7 +63,7 @@ func open(service: Node, replacing: bool = false, can_save_current: bool = false
 	selected = {"slot_kind": "manual", "slot_index": 0}
 	if not records.is_empty(): selected = {"slot_kind": records[0].slot_kind, "slot_index": records[0].slot_index}
 	for kind in ["manual", "auto", "pre_accusation"]:
-		for index in range(3 if kind == "manual" else 1): _add_record_button({"slot_kind": kind, "slot_index": index})
+		for index in range(service.manual_slot_count if kind == "manual" else 1): _add_record_button({"slot_kind": kind, "slot_index": index})
 	status_label = Label.new()
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(status_label)

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "root": "res://data/system_test/package",
+  "generated_root": "res://data/system_test/generated",
+  "scope": "test",
+  "workbooks": {
+    "story": "关卡内容_程序读取表.xlsx",
+    "core": "核心玩法系统_测试配置表.xlsx",
+    "start": "游戏初始化与开始系统配置表.xlsx",
+    "save": "存读档系统配置表.xlsx",
+    "settings": "游戏设置系统配置表.xlsx",
+    "audio": "声音播放系统配置表.xlsx",
+    "handbook": "办案手册系统配置表.xlsx",
+    "cat": "撸猫系统配置表.xlsx",
+    "investigation": "调查与场景交互系统配置表.xlsx",
+    "map": "地图切换系统配置表.xlsx",
+    "objective": "目标导航系统配置表.xlsx",
+    "narrative": "文案系统_测试配置表.xlsx",
+    "performance": "文案测试演出与资源.xlsx",
+    "bindings": "res://data/system_test/程序接入配置表.xlsx"
+  }
+}

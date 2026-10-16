@@ -21,6 +21,14 @@ var scan_complete := false # 存档扫描是否完成。
 var has_progress := false # 是否存在可以继续的有效存档。
 func bind_images(core: Node) -> void:
 	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "title")
+	var buttons := {"new_game": new_game_button, "continue": continue_button, "load": load_button, "settings": settings_button, "exit": exit_button}
+	var index := 1
+	for row in core.catalog.get_meta("navigation_buttons", []):
+		if row.page != "title" or not buttons.has(row.action): continue
+		var button: Button = buttons[row.action]
+		button.text = core.ui(str(row.label_key))
+		button.get_parent().move_child(button, index)
+		index += 1
 
 func apply_story_title(title: String) -> void:
 	# 标题页管理自己的文本和换行，调度层仅传入配置中的案件标题。

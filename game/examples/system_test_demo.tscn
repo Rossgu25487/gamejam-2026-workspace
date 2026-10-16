@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://main/main.tscn" id="1"]
+
+[node name="SystemTestDemo" instance=ExtResource("1")]
+configuration_profile_path = "res://data/system_test/profile.json"
+test_storage_path = "user://system-test-bluebox-v1"
+audio_demo = false

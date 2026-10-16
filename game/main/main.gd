@@ -45,6 +45,7 @@ var media_serial := 0 # 核心表现声音的实例序号。
 @export var audio_demo := true # 有界面的开发运行叠加试听古典乐音景；无界面回归与导出包自动关闭。
 @export var developer_tools := false # 音效库管理属于制作工具；正式标题五项、暂停六项保持策划顺序。
 @export_file("*.xlsx") var story_workbook_path := "res://data/story/outputs/story-images-20261011/故事配置表.xlsx" # 场景选择内容表，故事规则仍由核心服务处理。
+@export_file("*.json") var configuration_profile_path := "" # 独立配置包由会话服务读取，Main仅传递入口。
 
 func _ready() -> void:
 	session_service = SessionScript.new()
@@ -59,15 +60,26 @@ func _ready() -> void:
 		save_service.storage_path = test_storage_path.path_join("saves")
 		settings_service.storage_path = test_storage_path.path_join("settings.json")
 		session_service.seen_storage_path = test_storage_path.path_join("narrative_seen.json")
-	if not session_service.initialize(story_workbook_path):
+	var initialized: bool = session_service.initialize_profile(configuration_profile_path) if not configuration_profile_path.is_empty() else session_service.initialize(story_workbook_path)
+	if not initialized:
 		push_error("核心配置无效：" + str(session_service.core.catalog.errors))
 		gameplay_page.hide()
 		title_page.show_configuration_error(session_service.core.catalog.errors)
 		title_page.exit_requested.connect(get_tree().quit)
 		return
 	title_page.apply_story_title(session_service.story_title())
+	if session_service.configuration != null:
+		var settings_rows: Array = session_service.configuration.rows("settings", "设置初值")
+		var save_rows: Array = session_service.configuration.rows("save", "存档总控")
+		if settings_rows.size() != 1 or save_rows.size() != 1:
+			_configuration_failed(["设置初值和存档总控都必须各有一条有效记录"])
+			return
+		if not settings_service.configure_defaults(settings_rows[0]) or not save_service.configure(save_rows[0]):
+			_configuration_failed(["设置初值或存档总控不符合运行范围，请检查配置表"])
+			return
 	for page in [title_page, pause_page, save_page, load_page, settings_page, sfx_manager_page, confirm_page]: page.bind_images(session_service.core)
-	_setup_audio()
+	if not _setup_audio(): return
+	session_service.narrative_soundscape_requested.connect(audio_service.set_narrative_soundscape)
 	session_service.core.changed.connect(_sync_scene_audio, CONNECT_DEFERRED)
 	for page in [title_page, pause_page, settings_page]: page.set_developer_tools_enabled(developer_tools)
 	save_service.snapshot_validator = session_service.validate_snapshot
@@ -138,7 +150,13 @@ func _request_new_game() -> void:
 	title_page.hide_page()
 	confirm_page.open("新游戏", "开始新调查？手动存档保留，首次保存成功后更新自动档。", "", "开始", false, true)
 
-func _setup_audio() -> void:
+func _setup_audio() -> bool:
+	if session_service.configuration != null:
+		if not audio_service.setup_package(session_service.configuration):
+			_configuration_failed(audio_service.config_errors)
+			return false
+		audio_service.attach_ui_hook(get_tree())
+		return true
 	# 读取正式声音配置；有界面的开发运行叠加试听古典乐音景，无界面回归与导出包不读取它。
 	var extra: Array = []
 	var demo: bool = audio_demo and DisplayServer.get_name() != "headless" and FileAccess.file_exists(AUDIO_DEMO_CONFIG)
@@ -150,10 +168,18 @@ func _setup_audio() -> void:
 		for key in AUDIO_DEMO_UI: # 点击、确认、文件反馈与设置页试听在开发运行中也能听到
 			audio_service.bind_resource(key, String(AUDIO_DEMO_UI[key]))
 	audio_service.attach_ui_hook(get_tree())
+	return true
+
+func _configuration_failed(messages: Array) -> void:
+	# 页面自行显示错误，Main只停止本次初始化流程并转交退出入口。
+	gameplay_page.hide()
+	title_page.show_configuration_error(messages)
+	if not title_page.exit_requested.is_connected(get_tree().quit): title_page.exit_requested.connect(get_tree().quit)
 
 func _setup_objectives() -> void:
 	# 目标导航只通过提供方读取案件目标；后续案件模块替换提供方即可，导航与页面无需改动。
-	if not objective_service.setup():
+	var configured: bool = objective_service.configure(session_service.configuration.objective_definition()) if session_service.configuration != null else objective_service.setup()
+	if not configured:
 		push_warning("目标导航配置缺失，目标显示不可用")
 	objective_service.text_source = Callable(session_service.core, "ui")
 	objective_provider = CaseObjectiveScript.new()
@@ -197,7 +223,8 @@ func _start_investigation(rebuild_audio := false) -> void:
 	current_layer = "investigation"
 	# 继续原调查移除菜单倍率；读取调查档成功时按目标音景从头重建循环。
 	audio_service.set_menu_open(false)
-	audio_service.set_soundscape("scene", String(session_service.core.state.get("current_scene_id", "")), "", rebuild_audio)
+	if not session_service.narrative.can_save(): session_service.resume_narrative_audio()
+	elif not session_service.ending_pending: audio_service.set_soundscape("scene", String(session_service.core.state.get("current_scene_id", "")), "", rebuild_audio)
 	title_page.hide_page()
 	pause_page.hide_page()
 	gameplay_page.show()
@@ -205,7 +232,7 @@ func _start_investigation(rebuild_audio := false) -> void:
 
 func _sync_scene_audio() -> void:
 	# 地图和旧故事入口都提交到同一核心地点；地点真正改变后才同步音景。
-	if current_layer == "investigation":
+	if current_layer == "investigation" and session_service.narrative.can_save() and not session_service.ending_pending:
 		audio_service.set_soundscape("scene", String(session_service.core.state.get("current_scene_id", "")))
 
 func _on_new_game() -> void:
@@ -223,6 +250,7 @@ func _on_new_game() -> void:
 	game_start_service.save_initial(snapshot, save_service)
 	file_feedback_muted = false
 	gameplay_page.set_initial_save_failed(game_start_service.initial_save_failed)
+	session_service.begin_opening()
 
 func _retry_initial_save() -> void:
 	if not game_start_service.initial_save_failed or not session_service.can_save() or save_service.busy: return

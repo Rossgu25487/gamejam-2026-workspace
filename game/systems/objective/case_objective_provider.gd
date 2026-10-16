@@ -230,7 +230,8 @@ func go_entry(entry_id: String) -> Dictionary:
 	core.end_inspection()
 	var entered := false
 	if go["kind"] == "entry":
-		entered = core.activate_entry(String(go["id"]))
+		var session := core.get_parent()
+		entered = session.route_entry(String(go["id"])) if session != null and session.has_method("route_entry") else core.activate_entry(String(go["id"]))
 	else:
 		entered = core.open_card_session(String(go["id"]), {"page": "investigation", "focus_key": go["id"], "scene_id": core.state.get("current_scene_id", "")})
 	if not entered:

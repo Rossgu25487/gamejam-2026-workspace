@@ -35,6 +35,8 @@ func _ready() -> void:
 
 func bind(core: Node) -> void:
 	service = core
+	var control: Dictionary = core.catalog.get_meta("handbook_control", {})
+	if not control.is_empty(): library_tab = "materials" if int(control.defaultTabId) == 10 else "talk"
 
 func open_library() -> bool:
 	if visible and root_kind == "library": close_all(); return true
@@ -106,7 +108,8 @@ func reset_reader() -> void:
 	stack.clear()
 	root_kind = ""
 	library_view = {"type": "all", "sort": "acquire", "important_only": false}
-	library_tab = "materials"
+	var control: Dictionary = service.catalog.get_meta("handbook_control", {}) if service != null else {}
+	library_tab = "materials" if int(control.get("defaultTabId", 10)) == 10 else "talk"
 	talk_view = {"object_id": "", "topic_id": "", "segment_id": ""}
 
 func _render() -> void:
@@ -132,8 +135,9 @@ func _render() -> void:
 func _library(ctx: Dictionary) -> void:
 	var tabs := HBoxContainer.new()
 	box.add_child(tabs)
-	UI.button(tabs, service.ui("UI_HANDBOOK_MATERIALS"), _tab.bind("materials"))
-	UI.button(tabs, service.ui("UI_HANDBOOK_RECORDS"), _tab.bind("talk"))
+	var definitions: Array = service.catalog.get_meta("handbook_tabs", [{"viewType":1,"displayOrder":1,"textId":"UI_HANDBOOK_MATERIALS"},{"viewType":2,"displayOrder":2,"textId":"UI_HANDBOOK_RECORDS"}]).duplicate(true)
+	definitions.sort_custom(func(a: Dictionary, b: Dictionary): return int(a.displayOrder) < int(b.displayOrder))
+	for tab in definitions: UI.button(tabs, service.ui(str(tab.textId)), _tab.bind("materials" if int(tab.viewType) == 1 else "talk"))
 	if ctx.tab == "talk":
 		var talk := TalkPage.new()
 		talk.size_flags_vertical = Control.SIZE_EXPAND_FILL

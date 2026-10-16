@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 param(
-  [ValidateSet('editor','run','example','check','test','export')][string]$Action = 'editor',
+  [ValidateSet('editor','run','example','system-test','check','test','export')][string]$Action = 'editor',
   [string]$Godot = $env:GODOT_BIN,
   [string]$Preset = 'Windows Desktop'
 )
@@ -38,6 +38,7 @@ switch ($Action) {
   'editor' { & $Godot --path $projectRoot --editor }
   'run' { & $Godot --path $projectRoot }
   'example' { & $Godot --path $projectRoot 'res://examples/rainy_library.tscn' }
+  'system-test' { & $Godot --path $projectRoot 'res://examples/system_test_demo.tscn' }
   'check' { Invoke-EngineCheck @('--headless','--path',$projectRoot,'--editor','--import','--quit') 'import.log' }
   'test' {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--editor','--import','--quit') 'import.log'
@@ -61,6 +62,8 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/cat_service_test.gd') 'cat-service-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/handbook_talk_records_test.gd') 'handbook-talk-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_audit_test.gd','--quit-after','2400') 'system-audit-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_test_package_test.gd','--quit-after','2400') 'system-test-package.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_test_demo_input_test.gd','--quit-after','2400') 'system-test-input.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }

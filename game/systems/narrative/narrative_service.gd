@@ -25,6 +25,7 @@ var _fast_visited: Array[String] = []
 var _page_ends: Array[int] = []
 var seen_storage_path := "" # 独立已看文件；空路径用于纯内存测试。
 var seen_versions := {}
+var stage_wait_left := 0.0 # 明确演出时长；隐藏、记录和暂停时不推进。
 
 func load_seen_registry(path: String) -> bool:
 	seen_storage_path = path
@@ -106,6 +107,7 @@ func _begin_text(id: String) -> void:
 	_page_ends = [current_text().length()]
 	_elapsed = 0.0
 	_page_wait = 0.0
+	stage_wait_left = maxf(0, float(row.get("stage_duration_ms", 0)) / 1000.0)
 	if not state.seen_at_start or not catalog.choices_from_text(id).is_empty(): stop_fast_read()
 	text_started.emit(row.duplicate(true))
 	_changed()
@@ -162,6 +164,11 @@ func advance() -> bool:
 
 func tick(delta: float) -> void:
 	if state.is_empty() or hidden or reading_log or not is_finite(delta) or delta <= 0: return
+	if stage_wait_left > 0:
+		var remaining := maxf(0, delta - stage_wait_left)
+		stage_wait_left = maxf(0, stage_wait_left - delta)
+		if remaining <= 0: return
+		delta = remaining
 	if fast_mode == "skip":
 		state.visible_characters = page_end()
 		state.typing = false
@@ -287,7 +294,7 @@ func _apply_transition(row: Dictionary) -> bool:
 	# 不把条件分支、并列控件和动态返回冒充普通下一句。
 	# 完整执行器接入前保留原调用位置，并向玩家说明待配状态。
 	var kind := str(row.get("transition_type", "single")).to_lower()
-	if kind not in ["", "single", "单路", "choice", "选项", "按钮", "button"]: return _reject("此接续类型尚未接入：" + kind)
+	if kind not in ["", "single", "单路", "choice", "选项", "按钮", "button", "当前事件结束"]: return _reject("此接续类型尚未接入：" + kind)
 	for key in ["condition", "enabled_condition"]:
 		if str(row.get(key, "")).strip_edges().to_lower() not in ["", "1 == 1", "true"]: return _reject("此接续需要状态条件执行器，当前文本保持。")
 	if not str(row.get("dynamic_state_id", "")).is_empty() or not str(row.get("return_state_id", "")).is_empty(): return _reject("此接续需要明确的动态返回位置，当前文本保持。")
@@ -307,6 +314,12 @@ func _apply_transition(row: Dictionary) -> bool:
 
 func start_event(event_id: String) -> bool:
 	if not catalog.data.events.has(event_id): return _reject("演出事件不存在")
+	# 仅采用调用者明确登记的接续，不执行事件内容中的自然语言制作说明。
+	if catalog.data.get("event_bindings", {}).has(event_id):
+		var binding: Dictionary = catalog.data.event_bindings[event_id]
+		state.active_event_id = ""
+		state["return_action"] = binding.get("return_action", "")
+		return _apply_transition(binding)
 	var row: Dictionary = catalog.data.events[event_id]
 	state.active_event_id = event_id
 	state.chapter_id = row.get("chapter_id", state.chapter_id)
