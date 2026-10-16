@@ -1,5 +1,5 @@
 extends Control
-## 文案页面私有逻辑：逐字显示、继续/快进、跳转选择和输入焦点。
+## 文案页面私有逻辑：逐字显示、点击继续、跳转选择和输入焦点。
 
 const UI = preload("res://pages/core/page_controls.gd")
 const StageScript = preload("res://pages/narrative/narrative_stage.gd")
@@ -8,7 +8,6 @@ var stage: Control
 var service: Node
 var text_label: RichTextLabel
 var name_label: Label
-var continue_button: Button
 var choices: VBoxContainer
 var title_label: Label
 var background: TextureRect
@@ -101,11 +100,15 @@ func _render() -> void:
 			_place(portrait, Rect2(80, 694, 112, 112))
 	name_label = UI.label(layout_canvas, str(row.get("speaker_name", row.get("character_name", ""))) + (" · 内心" if kind in ["内心", "inner"] else ""), 32)
 	_place(name_label, Rect2(left, 658, 600, 40))
+	# 姓名和正文是阅读画布的装饰/文本层；点击它们也要交给本页继续阅读，
+	# 不能让 RichTextLabel 把鼠标事件截在自己内部。
+	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.visible = kind not in ["旁白", "narration", "章节字幕", "时间字幕", "字幕"]
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name_label.tooltip_text = name_label.text
 	text_label = UI.body(layout_canvas, service.visible_text(), 0)
 	_place(text_label, Rect2(left, 710, 1416 - left, 96))
+	text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	text_label.bbcode_enabled = false
 	text_label.scroll_active = false
 	text_label.add_theme_font_size_override("normal_font_size", 32)
@@ -117,10 +120,6 @@ func _render() -> void:
 		text_label.add_theme_font_size_override("normal_font_size", 44 if kind == "章节字幕" else 32)
 	# 按实际字体的字形宽度计算两行分页；正文区不滚动、不截断长句。
 	call_deferred("_paginate", text_label)
-	continue_button = UI.button(layout_canvas, "继续", _advance)
-	_place(continue_button, Rect2(1432, 784, 96, 48) if not subtitle else Rect2(1300, 820, 116, 48))
-	continue_button.disabled = service.is_typing() or service.state.get("waiting_for_choice", false)
-	if is_instance_valid(continue_button) and continue_button.is_visible_in_tree() and not continue_button.disabled: continue_button.grab_focus()
 	choices = VBoxContainer.new()
 	choices.visible = false
 	_place(choices, Rect2(600, 340, 720, 200))
@@ -223,7 +222,6 @@ func _render_choices() -> void:
 		var row: Dictionary = transitions[index]
 		var label := str(row.get("choice_text", row.get("target_text_id", "继续")))
 		UI.button(choices, label, service.choose_transition.bind(index))
-	continue_button.visible = false
 	if choices.is_visible_in_tree() and choices.get_child_count() > 0 and is_instance_valid(choices.get_child(0)): choices.get_child(0).grab_focus()
 
 func _advance() -> void:
@@ -262,7 +260,6 @@ func show_pending_ending() -> void:
 
 func _on_progressed(value: String, _typing: bool) -> void:
 	if is_instance_valid(text_label): text_label.text = value
-	if is_instance_valid(continue_button): continue_button.disabled = _typing or service.state.get("waiting_for_choice", false)
 	if is_instance_valid(skip_button): skip_button.text = "停止跳过" if service.fast_mode == "skip" else "跳过 Tab"
 
 func _input(event: InputEvent) -> void:

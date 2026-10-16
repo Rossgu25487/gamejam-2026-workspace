@@ -13,6 +13,17 @@ var overlay_request_id := ""
 var overlay_hotspot_id := ""
 var overlay_person_ref := ""
 var topic_return := {}
+var scene_frame: Control
+var scene_canvas: Control
+
+func _ready() -> void:
+	# 场景坐标跟随整个窗口，工具栏、提示和目标面板改变布局时也要保持原位。
+	item_rect_changed.connect(_layout_scene_canvas)
+	get_viewport().size_changed.connect(_layout_scene_canvas)
+
+func _layout_scene_canvas() -> void:
+	if is_instance_valid(scene_frame) and scene_frame.is_inside_tree() and is_instance_valid(scene_canvas):
+		_resize_canvas(scene_frame, scene_canvas)
 
 func bind_scene_service(value: Node) -> void:
 	scene_service = value
@@ -91,13 +102,18 @@ func _render_questions(list: Node, core: Node) -> void:
 		UI.label(list, core.catalog.text(core.catalog.data.completion_text), 22)
 		if core.get_parent().configuration != null: UI.button(list, "确认结束交接演练", core.get_parent().start_closing)
 
-func _render_configured_canvas(list: Node) -> void:
+func _render_configured_canvas() -> void:
 	# 图片与命中区分别来自调查表，同处1600×900逻辑坐标；页面只负责绘制。
+	# Node2D不参与VBox排版，且随调查页一起隐藏。场景用完整窗口缩放，
+	# 不让问题列表或目标面板把背景、人物和热点挤成中间的缩略图。
+	var scene_layer := Node2D.new()
+	scene_layer.z_as_relative = false
+	scene_layer.z_index = -128 # 整组场景在共用UI之后，组内保留图片与热点的前后顺序。
+	add_child(scene_layer)
 	var frame := Control.new()
-	frame.custom_minimum_size.y = 390
-	frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	list.add_child(frame)
+	scene_layer.add_child(frame)
+	scene_frame = frame
 	var session := service.get_parent()
 	var scene: Dictionary = session.map_navigation.locations.get(service.state.current_scene_id, {})
 	var host: Dictionary = session.map_navigation.map_definition.get("resources", {}).get(scene.get("scene_resource_ref", ""), {})
@@ -113,8 +129,8 @@ func _render_configured_canvas(list: Node) -> void:
 	canvas.size = Vector2(float(scene_service.display.canvas_width), float(scene_service.display.canvas_height))
 	canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(canvas)
-	frame.resized.connect(_resize_canvas.bind(frame, canvas))
-	call_deferred("_resize_canvas", frame, canvas)
+	scene_canvas = canvas
+	call_deferred("_layout_scene_canvas")
 	var resource: Dictionary = session.map_navigation.map_definition.get("resources", {}).get(scene.get("background_ref", ""), {})
 	_canvas_image(canvas, str(resource.get("path", "")), Rect2(Vector2.ZERO, canvas.size), 0)
 	for row in scene_service.object_images.values():
@@ -170,6 +186,9 @@ func _canvas_image(canvas: Control, path: String, rect: Rect2, layer: int) -> vo
 
 func _resize_canvas(frame: Control, canvas: Control) -> void:
 	if not is_instance_valid(frame) or not is_instance_valid(canvas): return
+	# 与文案舞台采用相同的contain规则；非16:9窗口只在外缘留边。
+	frame.size = get_viewport_rect().size
+	frame.global_position = get_viewport_rect().position
 	var factor := minf(frame.size.x / canvas.size.x, frame.size.y / canvas.size.y)
 	canvas.scale = Vector2.ONE * factor
 	canvas.position = (frame.size - canvas.size * factor) / 2
@@ -184,6 +203,30 @@ func _reserve_image_space(spacer: Control, buttons: Array) -> void:
 	spacer.custom_minimum_size.y = maxf(0, bottom - spacer.get_global_rect().position.y + 12)
 
 func _render_scene_hotspots(core: Node) -> void:
+	if not scene_service.object_images.is_empty():
+		_render_configured_canvas()
+		var map_button := UI.button(self, "地图", _open_map)
+		map_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		map_button.custom_minimum_size.x = 160
+		# 问题只占左侧独立面板；长列表在面板内滚动，不移动调查画布。
+		var panel := PanelContainer.new()
+		panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		panel.custom_minimum_size.x = minf(480.0, size.x)
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.063, 0.106, 0.145, 0.9)
+		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]: style.set_content_margin(side, 12)
+		panel.add_theme_stylebox_override("panel", style)
+		add_child(panel)
+		var question_scroll := ScrollContainer.new()
+		question_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		panel.add_child(question_scroll)
+		var questions := VBoxContainer.new()
+		questions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		questions.add_theme_constant_override("separation", 10)
+		question_scroll.add_child(questions)
+		_render_questions(questions, core)
+		call_deferred("_fit_questions", question_scroll, questions)
+		return
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -193,10 +236,6 @@ func _render_scene_hotspots(core: Node) -> void:
 	list.add_theme_constant_override("separation", 10)
 	scroll.add_child(list)
 	UI.button(list, "地图", _open_map)
-	if not scene_service.object_images.is_empty():
-		_render_configured_canvas(list)
-		_render_questions(list, core)
-		return
 	_cat_entries(list)
 	var hotspots: Array = scene_service.hotspots_for_scene(str(core.state.get("current_scene_id", "")))
 	if hotspots.is_empty():
@@ -223,6 +262,12 @@ func _render_scene_hotspots(core: Node) -> void:
 		if link.from_scene != core.state.current_scene_id: continue
 		UI.button(list, core.catalog.text(link.title), core.move_scene.bind(id), core.condition_met(link.condition))
 	_restore_focus(list)
+
+func _fit_questions(scroll: ScrollContainer, questions: VBoxContainer) -> void:
+	# 先取得面板实际宽度再量换行高度，避免把尚未排版的文字算成长列表。
+	await get_tree().process_frame
+	if is_instance_valid(scroll) and scroll.is_inside_tree() and is_instance_valid(questions):
+		scroll.custom_minimum_size.y = minf(220.0, questions.get_combined_minimum_size().y)
 
 func _cat_entries(list: Node) -> void:
 	var session := service.get_parent()
