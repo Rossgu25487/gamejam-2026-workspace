@@ -75,6 +75,40 @@ func finish_reading() -> void:
 		service.advance()
 		await frames(2)
 
+func select_card(content_id: String) -> void:
+	# 按实际卡面打开详情，再用详情里的选用按钮；不能绕过阅读页直接写槽。
+	var page: Control = scene.gameplay_page
+	var core: Node = scene.session_service.core
+	var wanted: Dictionary = core.catalog.material_ref(content_id)
+	var card: Button
+	for candidate in page.selection.card_buttons:
+		if candidate.get_meta("material_ref", {}).get("material_id", "") == wanted.material_id: card = candidate; break
+	await click(card)
+	expect(page.reader.visible and page.reader.stack[-1].ref == wanted, "材料详情显示预期准确版本：" + content_id)
+	await click(button(page.reader, core.ui("UI_CORE_SELECT")))
+	expect(wanted in core.draft().slots, "实际选用材料入槽：" + content_id)
+
+func travel_to(scene_id: String) -> void:
+	var page: Control = scene.gameplay_page
+	await click(button(page.investigation, "地图"))
+	var destination: Button
+	for candidate in page.map_page.find_children("*", "Button", true, false):
+		if candidate.get_meta("scene_id", "") == scene_id and candidate.get_meta("map_role", "") == "node": destination = candidate
+	await click(destination)
+	await click(button(page.map_page, "前往"))
+	for i in range(600):
+		if not page.map_page.visible: break
+		page.map_page._process(0.1)
+		await process_frame
+	expect(scene.session_service.core.state.current_scene_id == scene_id and not page.map_page.visible, "实际地图往返：" + scene_id)
+	await frames()
+
+func finish_feedback() -> void:
+	# 快速跳到表现终态；选材、结果和收下仍通过真实控件提交。
+	scene.gameplay_page.feedback.cancel()
+	scene.session_service.core.finish_presentation()
+	await frames()
+
 func run() -> void:
 	root.size = Vector2i(1280, 800)
 	if DisplayServer.get_name() != "headless": root.grab_focus()
@@ -211,7 +245,37 @@ func run() -> void:
 	expect(core.open_card_session("TEST_1014_Q03"), "第三问打开自主推理")
 	await frames()
 	await take("09-q03-selection")
-	core.fold_card_selection()
+	expect(not core.store.owns(core.catalog.material_ref("TEST_1014_C_HANDOFF_2")), "本路线尚未补查交接单背面")
+	await select_card("TEST_1014_C_HANDOFF_1")
+	await select_card("TEST_1014_C_ROUTE_1")
+	await click(button(page.selection, core.ui("UI_CORE_PRESENT")))
+	await finish_feedback()
+	expect(core.state.current_result.get("feedback") == "partial" and core.state.mode == "response", "交接单初版和流转记录仅局部成立")
+	expect(core.state.chances.TEST_1014_Q03 == 3 and "TEST_1014_Q03" not in core.state.completed_questions, "缺少上车依据不扣次数也不完成")
+	await click(button(page.result, core.ui("UI_CORE_RESELECT")))
+	await click(button(page.selection, "全部撤下"))
+	await click(button(page.selection, "收起对局"))
+	await travel_to("TEST_1014_FRONT")
+	var receipt: Button
+	for candidate in page.investigation.find_children("*", "Button", true, false):
+		if candidate.get_meta("hotspot_id", "") == "TEST_1014_HOT_RECEIPT": receipt = candidate
+	await click(receipt)
+	expect(page.investigation.overlay_request_id != "" and session.scene_interaction.state.active_request.get("entry_ref") == "TEST_1014_ENTRY_RECEIPT_BACK", "原物可补查入口实际打开背面")
+	await click(button(page.investigation.overlay, "确认检查结果"))
+	expect(core.store.owns(core.catalog.material_ref("TEST_1014_C_HANDOFF_2")), "实际补查取得交接单背面版")
+	await travel_to("TEST_1014_BACK")
+	await click(button(page.investigation, core.catalog.text(core.catalog.data.questions.TEST_1014_Q03.title)))
+	await select_card("TEST_1014_C_HANDOFF_2")
+	await select_card("TEST_1014_C_ROUTE_1")
+	await click(button(page.selection, core.ui("UI_CORE_PRESENT")))
+	await finish_feedback()
+	expect(core.state.current_result.get("feedback") == "full" and core.state.mode == "pending", "背面版和流转记录实际出示进入待收推论")
+	await take("11-q03-correct-pair")
+	await click(button(page.result, core.ui("UI_CORE_COLLECT_INFERENCE")))
+	await finish_feedback()
+	expect(core.store.owns(core.catalog.material_ref("TEST_1014_C_INFERENCE_1")), "第三题实际收下推论入库")
+	await click(button(page.result, core.ui("UI_TITLE_CONTINUE")))
+	expect(core.state.mode == "investigation" and "TEST_1014_Q03" in core.state.completed_questions, "第三题实际继续后完成并回调查")
 	await frames()
 	# 第二分辨率沿同一布局重建，命中区与图片同时缩放。
 	root.size = Vector2i(1920, 1080)
