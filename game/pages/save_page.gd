@@ -5,6 +5,7 @@ signal closed # 保存完成或用户关闭后返回来源页面。
 signal saved # 只在成功写入后通知调度层，可用于保存后离开。
 
 var save_service: Node
+var eligibility: Callable
 var snapshot: Dictionary = {}
 var panel: PanelContainer
 var box: VBoxContainer
@@ -141,7 +142,7 @@ func _write() -> void:
 	confirmation.close_page()
 	# 每次提交和重试取同一公开会话的新快照，并复核原页资格。
 	if session != null:
-		if not session.can_save():
+		if not session.can_save() or (eligibility.is_valid() and not eligibility.call()):
 			status_label.text = session.save_disabled_reason()
 			return
 		snapshot = session.export_snapshot()

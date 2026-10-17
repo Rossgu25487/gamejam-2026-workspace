@@ -1,0 +1,1138 @@
+{
+  "name": "银灰长毛猫_抚摸回应",
+  "format": "transparent_png_sequence",
+  "canvas_px": [
+    768,
+    512
+  ],
+  "source_reference_canvas_px": [
+    1536,
+    1024
+  ],
+  "source_to_export_scale": 0.5,
+  "frame_count": 56,
+  "frame_duration_ms": 50,
+  "total_duration_ms": 2800,
+  "playback_loop": false,
+  "preview_loops": true,
+  "anchor": {
+    "type": "canvas_top_left",
+    "px": [
+      0,
+      0
+    ],
+    "same_for_all_frames_and_layers": true
+  },
+  "optional_center_anchor_px": [
+    384,
+    256
+  ],
+  "idle_alpha_bbox": [
+    15,
+    21,
+    757,
+    498
+  ],
+  "bindings": {
+    "cat_first": "cat_response",
+    "cat_repeat": "cat_response",
+    "cat_pet": "pet_hand"
+  },
+  "clips": {
+    "cat_response": {
+      "layer": "cat",
+      "frames": [
+        "cat_frames/cat_000.png",
+        "cat_frames/cat_001.png",
+        "cat_frames/cat_002.png",
+        "cat_frames/cat_003.png",
+        "cat_frames/cat_004.png",
+        "cat_frames/cat_005.png",
+        "cat_frames/cat_006.png",
+        "cat_frames/cat_007.png",
+        "cat_frames/cat_008.png",
+        "cat_frames/cat_009.png",
+        "cat_frames/cat_010.png",
+        "cat_frames/cat_011.png",
+        "cat_frames/cat_012.png",
+        "cat_frames/cat_013.png",
+        "cat_frames/cat_014.png",
+        "cat_frames/cat_015.png",
+        "cat_frames/cat_016.png",
+        "cat_frames/cat_017.png",
+        "cat_frames/cat_018.png",
+        "cat_frames/cat_019.png",
+        "cat_frames/cat_020.png",
+        "cat_frames/cat_021.png",
+        "cat_frames/cat_022.png",
+        "cat_frames/cat_023.png",
+        "cat_frames/cat_024.png",
+        "cat_frames/cat_025.png",
+        "cat_frames/cat_026.png",
+        "cat_frames/cat_027.png",
+        "cat_frames/cat_028.png",
+        "cat_frames/cat_029.png",
+        "cat_frames/cat_030.png",
+        "cat_frames/cat_031.png",
+        "cat_frames/cat_032.png",
+        "cat_frames/cat_033.png",
+        "cat_frames/cat_034.png",
+        "cat_frames/cat_035.png",
+        "cat_frames/cat_036.png",
+        "cat_frames/cat_037.png",
+        "cat_frames/cat_038.png",
+        "cat_frames/cat_039.png",
+        "cat_frames/cat_040.png",
+        "cat_frames/cat_041.png",
+        "cat_frames/cat_042.png",
+        "cat_frames/cat_043.png",
+        "cat_frames/cat_044.png",
+        "cat_frames/cat_045.png",
+        "cat_frames/cat_046.png",
+        "cat_frames/cat_047.png",
+        "cat_frames/cat_048.png",
+        "cat_frames/cat_049.png",
+        "cat_frames/cat_050.png",
+        "cat_frames/cat_051.png",
+        "cat_frames/cat_052.png",
+        "cat_frames/cat_053.png",
+        "cat_frames/cat_054.png",
+        "cat_frames/cat_055.png"
+      ]
+    },
+    "pet_hand": {
+      "layer": "hand",
+      "frames": [
+        "hand_frames/hand_000.png",
+        "hand_frames/hand_001.png",
+        "hand_frames/hand_002.png",
+        "hand_frames/hand_003.png",
+        "hand_frames/hand_004.png",
+        "hand_frames/hand_005.png",
+        "hand_frames/hand_006.png",
+        "hand_frames/hand_007.png",
+        "hand_frames/hand_008.png",
+        "hand_frames/hand_009.png",
+        "hand_frames/hand_010.png",
+        "hand_frames/hand_011.png",
+        "hand_frames/hand_012.png",
+        "hand_frames/hand_013.png",
+        "hand_frames/hand_014.png",
+        "hand_frames/hand_015.png",
+        "hand_frames/hand_016.png",
+        "hand_frames/hand_017.png",
+        "hand_frames/hand_018.png",
+        "hand_frames/hand_019.png",
+        "hand_frames/hand_020.png",
+        "hand_frames/hand_021.png",
+        "hand_frames/hand_022.png",
+        "hand_frames/hand_023.png",
+        "hand_frames/hand_024.png",
+        "hand_frames/hand_025.png",
+        "hand_frames/hand_026.png",
+        "hand_frames/hand_027.png",
+        "hand_frames/hand_028.png",
+        "hand_frames/hand_029.png",
+        "hand_frames/hand_030.png",
+        "hand_frames/hand_031.png",
+        "hand_frames/hand_032.png",
+        "hand_frames/hand_033.png",
+        "hand_frames/hand_034.png",
+        "hand_frames/hand_035.png",
+        "hand_frames/hand_036.png",
+        "hand_frames/hand_037.png",
+        "hand_frames/hand_038.png",
+        "hand_frames/hand_039.png",
+        "hand_frames/hand_040.png",
+        "hand_frames/hand_041.png",
+        "hand_frames/hand_042.png",
+        "hand_frames/hand_043.png",
+        "hand_frames/hand_044.png",
+        "hand_frames/hand_045.png",
+        "hand_frames/hand_046.png",
+        "hand_frames/hand_047.png",
+        "hand_frames/hand_048.png",
+        "hand_frames/hand_049.png",
+        "hand_frames/hand_050.png",
+        "hand_frames/hand_051.png",
+        "hand_frames/hand_052.png",
+        "hand_frames/hand_053.png",
+        "hand_frames/hand_054.png",
+        "hand_frames/hand_055.png"
+      ]
+    }
+  },
+  "frames": [
+    {
+      "index": 0,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_000.png",
+      "hand": "hand_frames/hand_000.png"
+    },
+    {
+      "index": 1,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_001.png",
+      "hand": "hand_frames/hand_001.png"
+    },
+    {
+      "index": 2,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_002.png",
+      "hand": "hand_frames/hand_002.png"
+    },
+    {
+      "index": 3,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_003.png",
+      "hand": "hand_frames/hand_003.png"
+    },
+    {
+      "index": 4,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_004.png",
+      "hand": "hand_frames/hand_004.png"
+    },
+    {
+      "index": 5,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_005.png",
+      "hand": "hand_frames/hand_005.png"
+    },
+    {
+      "index": 6,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_006.png",
+      "hand": "hand_frames/hand_006.png"
+    },
+    {
+      "index": 7,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_007.png",
+      "hand": "hand_frames/hand_007.png"
+    },
+    {
+      "index": 8,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_008.png",
+      "hand": "hand_frames/hand_008.png"
+    },
+    {
+      "index": 9,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_009.png",
+      "hand": "hand_frames/hand_009.png"
+    },
+    {
+      "index": 10,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_010.png",
+      "hand": "hand_frames/hand_010.png"
+    },
+    {
+      "index": 11,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_011.png",
+      "hand": "hand_frames/hand_011.png"
+    },
+    {
+      "index": 12,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_012.png",
+      "hand": "hand_frames/hand_012.png"
+    },
+    {
+      "index": 13,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_013.png",
+      "hand": "hand_frames/hand_013.png"
+    },
+    {
+      "index": 14,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_014.png",
+      "hand": "hand_frames/hand_014.png"
+    },
+    {
+      "index": 15,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_015.png",
+      "hand": "hand_frames/hand_015.png"
+    },
+    {
+      "index": 16,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_016.png",
+      "hand": "hand_frames/hand_016.png"
+    },
+    {
+      "index": 17,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_017.png",
+      "hand": "hand_frames/hand_017.png"
+    },
+    {
+      "index": 18,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_018.png",
+      "hand": "hand_frames/hand_018.png"
+    },
+    {
+      "index": 19,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_019.png",
+      "hand": "hand_frames/hand_019.png"
+    },
+    {
+      "index": 20,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_020.png",
+      "hand": "hand_frames/hand_020.png"
+    },
+    {
+      "index": 21,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_021.png",
+      "hand": "hand_frames/hand_021.png"
+    },
+    {
+      "index": 22,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_022.png",
+      "hand": "hand_frames/hand_022.png"
+    },
+    {
+      "index": 23,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_023.png",
+      "hand": "hand_frames/hand_023.png"
+    },
+    {
+      "index": 24,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_024.png",
+      "hand": "hand_frames/hand_024.png"
+    },
+    {
+      "index": 25,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_025.png",
+      "hand": "hand_frames/hand_025.png"
+    },
+    {
+      "index": 26,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_026.png",
+      "hand": "hand_frames/hand_026.png"
+    },
+    {
+      "index": 27,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_027.png",
+      "hand": "hand_frames/hand_027.png"
+    },
+    {
+      "index": 28,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_028.png",
+      "hand": "hand_frames/hand_028.png"
+    },
+    {
+      "index": 29,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_029.png",
+      "hand": "hand_frames/hand_029.png"
+    },
+    {
+      "index": 30,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_030.png",
+      "hand": "hand_frames/hand_030.png"
+    },
+    {
+      "index": 31,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_031.png",
+      "hand": "hand_frames/hand_031.png"
+    },
+    {
+      "index": 32,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_032.png",
+      "hand": "hand_frames/hand_032.png"
+    },
+    {
+      "index": 33,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_033.png",
+      "hand": "hand_frames/hand_033.png"
+    },
+    {
+      "index": 34,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_034.png",
+      "hand": "hand_frames/hand_034.png"
+    },
+    {
+      "index": 35,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_035.png",
+      "hand": "hand_frames/hand_035.png"
+    },
+    {
+      "index": 36,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_036.png",
+      "hand": "hand_frames/hand_036.png"
+    },
+    {
+      "index": 37,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_037.png",
+      "hand": "hand_frames/hand_037.png"
+    },
+    {
+      "index": 38,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_038.png",
+      "hand": "hand_frames/hand_038.png"
+    },
+    {
+      "index": 39,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_039.png",
+      "hand": "hand_frames/hand_039.png"
+    },
+    {
+      "index": 40,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_040.png",
+      "hand": "hand_frames/hand_040.png"
+    },
+    {
+      "index": 41,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_041.png",
+      "hand": "hand_frames/hand_041.png"
+    },
+    {
+      "index": 42,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_042.png",
+      "hand": "hand_frames/hand_042.png"
+    },
+    {
+      "index": 43,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_043.png",
+      "hand": "hand_frames/hand_043.png"
+    },
+    {
+      "index": 44,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_044.png",
+      "hand": "hand_frames/hand_044.png"
+    },
+    {
+      "index": 45,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_045.png",
+      "hand": "hand_frames/hand_045.png"
+    },
+    {
+      "index": 46,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_046.png",
+      "hand": "hand_frames/hand_046.png"
+    },
+    {
+      "index": 47,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_047.png",
+      "hand": "hand_frames/hand_047.png"
+    },
+    {
+      "index": 48,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_048.png",
+      "hand": "hand_frames/hand_048.png"
+    },
+    {
+      "index": 49,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_049.png",
+      "hand": "hand_frames/hand_049.png"
+    },
+    {
+      "index": 50,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_050.png",
+      "hand": "hand_frames/hand_050.png"
+    },
+    {
+      "index": 51,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_051.png",
+      "hand": "hand_frames/hand_051.png"
+    },
+    {
+      "index": 52,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_052.png",
+      "hand": "hand_frames/hand_052.png"
+    },
+    {
+      "index": 53,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_053.png",
+      "hand": "hand_frames/hand_053.png"
+    },
+    {
+      "index": 54,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_054.png",
+      "hand": "hand_frames/hand_054.png"
+    },
+    {
+      "index": 55,
+      "duration_ms": 50,
+      "cat": "cat_frames/cat_055.png",
+      "hand": "hand_frames/hand_055.png"
+    }
+  ],
+  "timing_curves": [
+    {
+      "index": 0,
+      "time_ms": 0,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 1,
+      "time_ms": 50,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 2,
+      "time_ms": 100,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 3,
+      "time_ms": 150,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 4,
+      "time_ms": 200,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        104.4218,
+        -164.0914
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 5,
+      "time_ms": 250,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        98.4456,
+        -154.7002
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 6,
+      "time_ms": 300,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        87.2914,
+        -137.1723
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 7,
+      "time_ms": 350,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        72.5775,
+        -114.0503
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 8,
+      "time_ms": 400,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        55.9218,
+        -87.877
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 9,
+      "time_ms": 450,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        38.9424,
+        -61.1952
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 10,
+      "time_ms": 500,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        23.2576,
+        -36.5476
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 11,
+      "time_ms": 550,
+      "blink": 0.0,
+      "head_response": 0.00085,
+      "hand_translation_px": [
+        10.4853,
+        -16.4769
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 12,
+      "time_ms": 600,
+      "blink": 0.0,
+      "head_response": 0.02892,
+      "hand_translation_px": [
+        2.2438,
+        -3.5259
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 13,
+      "time_ms": 650,
+      "blink": 0.00118,
+      "head_response": 0.09132,
+      "hand_translation_px": [
+        -0.0234,
+        -0.0089
+      ],
+      "hand_rotation_deg": -0.0007
+    },
+    {
+      "index": 14,
+      "time_ms": 700,
+      "blink": 0.03974,
+      "head_response": 0.18074,
+      "hand_translation_px": [
+        -0.8046,
+        -0.3065
+      ],
+      "hand_rotation_deg": -0.0249
+    },
+    {
+      "index": 15,
+      "time_ms": 750,
+      "blink": 0.1239,
+      "head_response": 0.28988,
+      "hand_translation_px": [
+        -2.5735,
+        -0.9804
+      ],
+      "hand_rotation_deg": -0.0797
+    },
+    {
+      "index": 16,
+      "time_ms": 800,
+      "blink": 0.24166,
+      "head_response": 0.41143,
+      "hand_translation_px": [
+        -5.1685,
+        -1.9689
+      ],
+      "hand_rotation_deg": -0.16
+    },
+    {
+      "index": 17,
+      "time_ms": 850,
+      "blink": 0.38102,
+      "head_response": 0.5381,
+      "hand_translation_px": [
+        -8.4274,
+        -3.2104
+      ],
+      "hand_rotation_deg": -0.2608
+    },
+    {
+      "index": 18,
+      "time_ms": 900,
+      "blink": 0.52998,
+      "head_response": 0.66258,
+      "hand_translation_px": [
+        -12.1883,
+        -4.6432
+      ],
+      "hand_rotation_deg": -0.3773
+    },
+    {
+      "index": 19,
+      "time_ms": 950,
+      "blink": 0.67654,
+      "head_response": 0.77756,
+      "hand_translation_px": [
+        -16.2894,
+        -6.2055
+      ],
+      "hand_rotation_deg": -0.5042
+    },
+    {
+      "index": 20,
+      "time_ms": 1000,
+      "blink": 0.8087,
+      "head_response": 0.87575,
+      "hand_translation_px": [
+        -20.5685,
+        -7.8356
+      ],
+      "hand_rotation_deg": -0.6366
+    },
+    {
+      "index": 21,
+      "time_ms": 1050,
+      "blink": 0.91446,
+      "head_response": 0.94983,
+      "hand_translation_px": [
+        -24.8639,
+        -9.472
+      ],
+      "hand_rotation_deg": -0.7696
+    },
+    {
+      "index": 22,
+      "time_ms": 1100,
+      "blink": 0.98182,
+      "head_response": 0.99251,
+      "hand_translation_px": [
+        -29.0135,
+        -11.0528
+      ],
+      "hand_rotation_deg": -0.898
+    },
+    {
+      "index": 23,
+      "time_ms": 1150,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -32.8554,
+        -12.5163
+      ],
+      "hand_rotation_deg": -1.017
+    },
+    {
+      "index": 24,
+      "time_ms": 1200,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -36.2277,
+        -13.801
+      ],
+      "hand_rotation_deg": -1.1213
+    },
+    {
+      "index": 25,
+      "time_ms": 1250,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -38.9684,
+        -14.8451
+      ],
+      "hand_rotation_deg": -1.2062
+    },
+    {
+      "index": 26,
+      "time_ms": 1300,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -40.9155,
+        -15.5869
+      ],
+      "hand_rotation_deg": -1.2664
+    },
+    {
+      "index": 27,
+      "time_ms": 1350,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -41.9072,
+        -15.9646
+      ],
+      "hand_rotation_deg": -1.2971
+    },
+    {
+      "index": 28,
+      "time_ms": 1400,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -40.9125,
+        -17.2325
+      ],
+      "hand_rotation_deg": -1.2906
+    },
+    {
+      "index": 29,
+      "time_ms": 1450,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -34.7111,
+        -24.2607
+      ],
+      "hand_rotation_deg": -1.2368
+    },
+    {
+      "index": 30,
+      "time_ms": 1500,
+      "blink": 1.0,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -23.9264,
+        -36.4834
+      ],
+      "hand_rotation_deg": -1.1434
+    },
+    {
+      "index": 31,
+      "time_ms": 1550,
+      "blink": 0.9932,
+      "head_response": 1.0,
+      "hand_translation_px": [
+        -9.6,
+        -52.72
+      ],
+      "hand_rotation_deg": -1.0192
+    },
+    {
+      "index": 32,
+      "time_ms": 1600,
+      "blink": 0.95435,
+      "head_response": 0.98657,
+      "hand_translation_px": [
+        7.2264,
+        -71.7899
+      ],
+      "hand_rotation_deg": -0.8734
+    },
+    {
+      "index": 33,
+      "time_ms": 1650,
+      "blink": 0.88654,
+      "head_response": 0.94885,
+      "hand_translation_px": [
+        25.5111,
+        -92.5126
+      ],
+      "hand_rotation_deg": -0.7149
+    },
+    {
+      "index": 34,
+      "time_ms": 1700,
+      "blink": 0.79608,
+      "head_response": 0.89069,
+      "hand_translation_px": [
+        44.2125,
+        -113.7075
+      ],
+      "hand_rotation_deg": -0.5528
+    },
+    {
+      "index": 35,
+      "time_ms": 1750,
+      "blink": 0.68925,
+      "head_response": 0.81595,
+      "hand_translation_px": [
+        62.2889,
+        -134.1941
+      ],
+      "hand_rotation_deg": -0.3962
+    },
+    {
+      "index": 36,
+      "time_ms": 1800,
+      "blink": 0.57235,
+      "head_response": 0.72848,
+      "hand_translation_px": [
+        78.6986,
+        -152.7918
+      ],
+      "hand_rotation_deg": -0.2539
+    },
+    {
+      "index": 37,
+      "time_ms": 1850,
+      "blink": 0.45168,
+      "head_response": 0.63215,
+      "hand_translation_px": [
+        92.4,
+        -168.32
+      ],
+      "hand_rotation_deg": -0.1352
+    },
+    {
+      "index": 38,
+      "time_ms": 1900,
+      "blink": 0.33352,
+      "head_response": 0.5308,
+      "hand_translation_px": [
+        102.3514,
+        -179.5982
+      ],
+      "hand_rotation_deg": -0.049
+    },
+    {
+      "index": 39,
+      "time_ms": 1950,
+      "blink": 0.22418,
+      "head_response": 0.4283,
+      "hand_translation_px": [
+        107.5111,
+        -185.4459
+      ],
+      "hand_rotation_deg": -0.0042
+    },
+    {
+      "index": 40,
+      "time_ms": 2000,
+      "blink": 0.12994,
+      "head_response": 0.3285,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 41,
+      "time_ms": 2050,
+      "blink": 0.0571,
+      "head_response": 0.23525,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 42,
+      "time_ms": 2100,
+      "blink": 0.01195,
+      "head_response": 0.15241,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 43,
+      "time_ms": 2150,
+      "blink": 0.0,
+      "head_response": 0.08384,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 44,
+      "time_ms": 2200,
+      "blink": 0.0,
+      "head_response": 0.0334,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 45,
+      "time_ms": 2250,
+      "blink": 0.0,
+      "head_response": 0.00493,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 46,
+      "time_ms": 2300,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 47,
+      "time_ms": 2350,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 48,
+      "time_ms": 2400,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 49,
+      "time_ms": 2450,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 50,
+      "time_ms": 2500,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 51,
+      "time_ms": 2550,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 52,
+      "time_ms": 2600,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 53,
+      "time_ms": 2650,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 54,
+      "time_ms": 2700,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    },
+    {
+      "index": 55,
+      "time_ms": 2750,
+      "blink": 0.0,
+      "head_response": 0.0,
+      "hand_translation_px": [
+        0.0,
+        0.0
+      ],
+      "hand_rotation_deg": 0.0
+    }
+  ],
+  "events_ms": {
+    "approach_start": 180,
+    "contact": 640,
+    "stroke_end": 1370,
+    "hand_withdrawn": 1970,
+    "cat_returned": 2280,
+    "end": 2800
+  },
+  "method": "Approved base + generated closed-eye and hand keys; local eyelid occlusion and head/ear tween. Torso, tail and paws fixed. No whole-cat scaling as motion.",
+  "checks": {
+    "fixed_body_pixels_identical": true,
+    "first_and_last_cat_equal_idle": true,
+    "first_and_last_hand_empty": true
+  },
+  "preview": "猫_抚摸回应_预览.gif",
+  "integration": "Run cat_response and pet_hand from frame0 on the same clock. First/repeat reuse cat_response. Preserve full canvas; do not auto-trim or recenter individual frames. Asset rendering only, no game code modified or run.",
+  "preview_gif_frame_count": 41
+}

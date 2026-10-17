@@ -81,6 +81,7 @@ var _handled := {} # 已处理的实例 ID。
 var _handled_order: Array[String] = []
 var _serial := 0
 var _tree: SceneTree
+var _completed_narrative_tracks := {}
 
 
 func _init() -> void:
@@ -208,11 +209,16 @@ func stop_soundscape() -> void:
 	_set_loop("ambient", "", false)
 	current_soundscape = {}
 
-func set_narrative_soundscape(bgm_key: String) -> void:
+func set_narrative_soundscape(bgm_key: String, rebuild: bool = false) -> void:
 	# 章场已在配置层解析；相同曲目沿现有轨道延续，空引用明确停曲。
 	if catalog == null or not settings_ready: return
 	_wanted = {}
-	_set_loop("bgm", bgm_key, false)
+	var ending := bgm_key == "BGM_FINALE_CREDITS_ENTRY"
+	if rebuild: _completed_narrative_tracks.erase(bgm_key)
+	if ending and _completed_narrative_tracks.has(bgm_key): return
+	_set_loop("bgm", bgm_key, rebuild, not ending)
+	var track: Track = _slots["bgm"]["active"]
+	if track != null: track.klass = "world" if ending else "music"; _apply_pause(track)
 	_set_loop("ambient", "", false)
 	current_soundscape = {"kind": "narrative", "bgm": _active_path("bgm"), "ambient": ""}
 
@@ -239,7 +245,7 @@ func _apply_soundscape(rebuild: bool) -> Dictionary:
 	return result
 
 
-func _set_loop(slot: String, resource_key: String, rebuild: bool) -> String:
+func _set_loop(slot: String, resource_key: String, rebuild: bool, looping: bool = true) -> String:
 	# 更新一条循环轨：空键停轨；同资源延续；不同资源交叉淡化；无效资源保留原声并记录错误。
 	var active: Track = _slots[slot]["active"]
 	if resource_key.is_empty():
@@ -257,18 +263,18 @@ func _set_loop(slot: String, resource_key: String, rebuild: bool) -> String:
 	var path: String = info["path"]
 	if active != null and active.path == path and not rebuild:
 		return "same"
-	var stream: AudioStream = catalog.get_stream(path, true)
+	var stream: AudioStream = catalog.get_stream(path, looping)
 	if stream == null:
 		_report("无法读取音频：" + path)
 		return "missing"
-	_start_loop(slot, path, stream, _event_gain(slot))
+	_start_loop(slot, path, stream, _event_gain(slot), looping)
 	return "started"
 
 
-func _start_loop(slot: String, path: String, stream: AudioStream, gain: float) -> void:
+func _start_loop(slot: String, path: String, stream: AudioStream, gain: float, looping: bool = true) -> void:
 	var fade_ms := _fade_ms(slot)
 	_retire_active(slot, fade_ms)
-	var track := _create_track(slot, path, stream, gain, true)
+	var track := _create_track(slot, path, stream, gain, looping)
 	if fade_ms > 0:
 		track.fade_value = 0.0
 		track.begin_fade(1, float(fade_ms))
@@ -309,6 +315,7 @@ func _event_gain(slot: String) -> float:
 func begin_session() -> void:
 	# 新调查或读档成功：旧会话请求失效，去重表清空，节点声音与配音停止；不补播历史声音。
 	session_id += 1
+	_completed_narrative_tracks.clear()
 	_handled.clear()
 	_handled_order.clear()
 	stop_node_media()
@@ -318,6 +325,22 @@ func stop_node_media() -> void:
 	# 换节点或离开会话：停止旧的结果／节点声音与配音。
 	_release(_slots["result"]["active"])
 	_release(_slots["voice"]["active"])
+
+func export_narrative_media(key: String) -> Dictionary:
+	var track: Track = _slots["bgm"]["active"]
+	return {"key": key, "position": track.player.get_playback_position() if track != null else 0.0,
+		"completed": _completed_narrative_tracks.has(key)}
+
+func restore_narrative_media(data: Dictionary) -> void:
+	var key := str(data.get("key", ""))
+	if data.get("completed", false):
+		_completed_narrative_tracks[key] = true
+		_set_loop("bgm", "", false)
+		return
+	set_narrative_soundscape(key, true)
+	var track: Track = _slots["bgm"]["active"]
+	if track != null:
+		track.player.seek(clampf(float(data.get("position", 0)), 0, track.player.stream.get_length()))
 
 
 func play_ui(kind: String, instance_id := "") -> Dictionary:
@@ -441,6 +464,9 @@ func request_media(request: Dictionary) -> Dictionary:
 	# 玩法、剧情、猫互动、结局等模块的统一入口：
 	# 既支持 {"event": 事件键, "instance": 实例ID, "ref": 资源引用, "session": 会话号}，
 	# 也支持 {"sfx": 备用音效ID或名称, "slot": "ui"/"result", "instance": 实例ID, "session": 会话号}。
+	if request.get("command") == "stop_node":
+		stop_node_media()
+		return {"status": "stopped"}
 	var options := {}
 	if request.has("gain"):
 		var request_gain = request.gain
@@ -771,6 +797,7 @@ func _on_player_finished(player: AudioStreamPlayer) -> void:
 	if track.loop:
 		player.play()
 	else:
+		if track.slot == "bgm" and not track.loop: _completed_narrative_tracks["BGM_FINALE_CREDITS_ENTRY"] = true
 		_release(track)
 
 

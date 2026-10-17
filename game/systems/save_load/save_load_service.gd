@@ -29,7 +29,7 @@ func configure(row: Dictionary) -> bool:
 func scan() -> Array:
 	# 按固定栏位读取磁盘文件，并恢复本次运行的序号基线。
 	records.clear()
-	for kind in ["manual", "auto", "pre_accusation"]:
+	for kind in ["manual", "auto", "pre_accusation", "ending_resume"]:
 		var count := manual_slot_count if kind == "manual" else (AUTO_SLOT_COUNT if kind == "auto" else PRE_ACCUSATION_SLOT_COUNT)
 		for index in range(count):
 			var path := _path(kind, index)
@@ -37,8 +37,8 @@ func scan() -> Array:
 			var file := FileAccess.open(path, FileAccess.READ)
 			var data = JSON.parse_string(file.get_as_text()) if file else null
 			if _valid_record(data, kind, index):
-				records.append(data)
 				sequence = maxi(sequence, int(data.get("save_sequence", 0)))
+				if kind != "ending_resume" or data.get("ending_status") == "active": records.append(data)
 	scan_completed.emit(records.duplicate(true))
 	return records.duplicate(true)
 
@@ -80,7 +80,9 @@ func _write_snapshot(slot_kind: String, slot_index: int, snapshot: Dictionary) -
 	file.flush()
 	var write_error := file.get_error()
 	file.close()
-	if write_error != OK or DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path)) != OK:
+	# 先重读临时文件确认完整有效，再原子替换旧栏位；失败不提交序号。
+	var verified = JSON.parse_string(FileAccess.get_file_as_string(temporary))
+	if write_error != OK or not _valid_record(verified, slot_kind, slot_index) or DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path)) != OK:
 		operation_completed.emit(false, "存档写入失败，原存档已保留")
 		return false
 	sequence = next_sequence
@@ -91,15 +93,29 @@ func save_auto(snapshot: Dictionary) -> bool:
 	# 普通自动档固定写入唯一自动栏，不占用手动存档栏位。
 	return save_snapshot("auto", 0, snapshot)
 
+func save_ending(snapshot: Dictionary) -> bool:
+	# 续播独立于auto/pre和手动栏，只有active记录参与“继续”。
+	if snapshot.get("ending_status") not in ["active", "completed", "abandoned"]: return false
+	return save_snapshot("ending_resume", 0, snapshot)
+
+func abandon_ending() -> void:
+	var info := slot_info("ending_resume", 0)
+	if not info.valid: return
+	var record := load_snapshot("ending_resume", 0)
+	if record.get("ending_status") != "active": return
+	record.ending_status = "abandoned"
+	save_ending(record)
+
 func clear_previous_run_protection(run_id: String) -> void:
 	# 只清理已确认属于上一调查的固定保护；手动栏永远保留。
-	var path := _path("pre_accusation", 0)
-	if not FileAccess.file_exists(path): return
-	var file := FileAccess.open(path, FileAccess.READ)
-	var record = JSON.parse_string(file.get_as_text()) if file else null
-	if file != null: file.close()
-	if record is Dictionary and record.get("card_snapshot", {}) is Dictionary and record.card_snapshot.get("run_id", run_id) != run_id:
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	for kind in ["pre_accusation", "ending_resume"]:
+		var path := _path(kind, 0)
+		if not FileAccess.file_exists(path): continue
+		var file := FileAccess.open(path, FileAccess.READ)
+		var record = JSON.parse_string(file.get_as_text()) if file else null
+		if file != null: file.close()
+		var previous := str(record.get("run_id", record.get("card_snapshot", {}).get("run_id", ""))) if record is Dictionary else ""
+		if not previous.is_empty() and previous != run_id: DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func load_snapshot(slot_kind: String, slot_index: int) -> Dictionary:
 	if busy: return {}
@@ -205,12 +221,12 @@ func latest_summary() -> String:
 		return "当前没有已保存的存档。"
 	var kind := str(record.get("slot_kind", "manual"))
 	var index := int(record.get("slot_index", 0)) + 1
-	var kind_text := "手动存档" if kind == "manual" else ("自动存档" if kind == "auto" else "保护存档")
+	var kind_text: String = str({"manual": "手动存档", "auto": "自动存档", "ending_resume": "结局续播", "pre_accusation": "指认前"}.get(kind, "存档"))
 	return "最新保存：%s %d（保存序号 %d）" % [kind_text, index, int(record.get("save_sequence", 0))]
 
 func _valid_slot(kind: String, index: int) -> bool:
 	# 约束栏位类型和编号，防止写入未知位置。
-	return (kind == "manual" and index >= 0 and index < manual_slot_count) or (kind == "auto" and index == 0) or (kind == "pre_accusation" and index == 0)
+	return (kind == "manual" and index >= 0 and index < manual_slot_count) or (kind in ["auto", "pre_accusation", "ending_resume"] and index == 0)
 
 func _path(kind: String, index: int) -> String:
 	# 将逻辑栏位映射到 user:// 下的实际文件名。

@@ -53,7 +53,7 @@ func _draw() -> void:
 	var surface := _texture(str(layout_definition.get("grid_surface_ref", "")))
 	var line := Color(str(layout_definition.get("grid_line_color", "#573F29")))
 	line.a = float(layout_definition.get("grid_line_opacity", 1))
-	for y in range(rows):
+	for y in range(0 if layout_definition.get("grid_baked", false) else rows):
 		for x in range(cols):
 			var rect := Rect2(board_origin + Vector2(x, y) * cell_size, Vector2.ONE * cell_size)
 			# 双色资源是两张相邻格面；逐格取对应半幅，不能把整图拉成两大片颜色。
@@ -69,7 +69,14 @@ func _draw() -> void:
 		if building == null: continue
 		var dimensions := Vector2(_display("building_width", 192), _display("building_height", 128)) * cell_size / logical_cell_size
 		var point := cell_point(Vector2(int(node.get("grid_col", 0)), int(node.get("grid_row", 0))))
+		var factor_art := cell_size / logical_cell_size
+		var ring := _texture(str(group_definition.get("current_ring_ref", "")))
+		if record.get("current", false) and ring != null: draw_texture_rect(ring, Rect2(point - Vector2(50, 50) * factor_art, Vector2(100, 100) * factor_art), false)
 		draw_texture_rect(building, Rect2(point - Vector2(dimensions.x / 2, dimensions.y), dimensions), false)
+		var plate := _texture(str(group_definition.get("name_plate_ref", "")))
+		if plate != null: draw_texture_rect(plate, Rect2(point + Vector2(-116, 26) * factor_art, Vector2(232, 66) * factor_art), false)
+		var focus := _texture(str(group_definition.get("focus_frame_ref", "")))
+		if record.get("selected", false) and focus != null: draw_texture_rect(focus, Rect2(point - Vector2(116, 123) * factor_art, Vector2(232, 246) * factor_art), false)
 	if is_instance_valid(pawn_overlay): pawn_overlay.queue_redraw()
 
 func _draw_pawn() -> void:
@@ -79,13 +86,20 @@ func _draw_pawn() -> void:
 		var texture := _texture(str(pawn_definition.get("image_ref", "")))
 		if texture != null:
 			var dimensions := Vector2(_display("pawn_width", 64), _display("pawn_height", 88)) * cell_size / logical_cell_size
-			pawn_overlay.draw_texture_rect(texture, Rect2(point - Vector2(dimensions.x / 2, dimensions.y + pawn_lift), dimensions), false, Color(1, 1, 1, pawn_alpha))
+			var pivot := Vector2(float(pawn_definition.get("pivot_x", 32)), float(pawn_definition.get("pivot_y", 88))) * cell_size / logical_cell_size
+			pawn_overlay.draw_texture_rect(texture, Rect2(point - pivot - Vector2(0, pawn_lift), dimensions), false, Color(1, 1, 1, pawn_alpha))
 			return
 		pawn_overlay.draw_circle(point + Vector2(0, -12 - pawn_lift), 10, Color(0.93, 0.86, 0.68, pawn_alpha))
 		pawn_overlay.draw_rect(Rect2(point + Vector2(-9, -4 - pawn_lift), Vector2(18, 19)), Color(0.25, 0.20, 0.16, pawn_alpha))
 		pawn_overlay.draw_line(point + Vector2(-13, 15 - pawn_lift), point + Vector2(13, 15 - pawn_lift), Color(0.93, 0.86, 0.68, pawn_alpha), 4)
 
 func draw_ellipse_shadow(point: Vector2) -> void:
+	var shadow := _texture(str(pawn_definition.get("shadow_ref", "")))
+	if shadow != null:
+		var factor := cell_size / logical_cell_size
+		var pivot := Vector2(float(pawn_definition.get("shadow_pivot_x", 32)), float(pawn_definition.get("shadow_pivot_y", 9))) * factor
+		pawn_overlay.draw_texture_rect(shadow, Rect2(point - pivot, Vector2(64, 18) * factor), false, Color(1, 1, 1, pawn_alpha))
+		return
 	pawn_overlay.draw_circle(point + Vector2(0, 14), 14, Color(0, 0, 0, 0.25 * pawn_alpha))
 
 func _layout_buttons() -> void:
@@ -121,6 +135,12 @@ func _texture(id: String) -> Texture2D:
 	if textures.has(id): return textures[id]
 	var path := str(resource_definition.get(id, {}).get("path", ""))
 	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	var row: Dictionary = resource_definition.get(id, {})
+	if texture != null and float(row.get("region_width", 0)) > 0 and float(row.get("region_height", 0)) > 0:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = texture
+		atlas.region = Rect2(float(row.get("region_x", 0)), float(row.get("region_y", 0)), float(row.region_width), float(row.region_height))
+		texture = atlas
 	textures[id] = texture
 	return texture
 

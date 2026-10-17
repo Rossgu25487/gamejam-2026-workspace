@@ -44,6 +44,7 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 	var texture := _texture(path)
 	# 非空的必需背景缺失时保持当前舞台；不先清人物再报告失败。
 	if not path.is_empty() and texture == null: return
+	if row.get("clear_positions", false): reset_stage()
 	if not next_scene.is_empty() and next_scene != scene_id:
 		reset_stage()
 		scene_id = next_scene
@@ -129,6 +130,10 @@ func _layout() -> void:
 	background.position = offset
 	background.size = Vector2(1600, 900) * factor
 	var rects := {1: Rect2(140, 130, 440, 770), 2: Rect2(570, 90, 460, 810), 3: Rect2(1020, 130, 440, 770)}
+	var owner: Node = get_parent()
+	var has_formal_record: bool = owner != null and owner.get("service") != null and owner.service.current_record().has("font_color")
+	if has_formal_record:
+		rects = {1: Rect2(80, 150, 480, 750), 2: Rect2(560, 150, 480, 750), 3: Rect2(1040, 150, 480, 750)}
 	for position_index in occupants:
 		var node: TextureRect = occupants[position_index].node
 		var rect: Rect2 = rects[position_index]

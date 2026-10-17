@@ -1,0 +1,35 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://main/aurora_main.gd" id="1"]
+[ext_resource type="Script" path="res://pages/aurora/aurora_gameplay_page.gd" id="2"]
+[ext_resource type="PackedScene" path="res://title_page/title_page.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://pause_page/pause_page.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://pages/save_page.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://pages/load_page.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://pages/settings_page.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://pages/confirm_page.tscn" id="8"]
+
+[node name="Aurora" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="GameplayPage" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2")
+
+[node name="TitlePage" parent="." instance=ExtResource("3")]
+[node name="PausePage" parent="." instance=ExtResource("4")]
+[node name="SavePage" parent="." instance=ExtResource("5")]
+[node name="LoadPage" parent="." instance=ExtResource("6")]
+[node name="SettingsPage" parent="." instance=ExtResource("7")]
+[node name="ConfirmPage" parent="." instance=ExtResource("8")]

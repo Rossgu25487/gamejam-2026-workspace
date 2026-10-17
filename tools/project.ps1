@@ -64,6 +64,11 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_audit_test.gd','--quit-after','2400') 'system-audit-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_test_package_test.gd','--quit-after','2400') 'system-test-package.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/system_test_demo_input_test.gd','--quit-after','2400') 'system-test-input.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_configuration_test.gd') 'aurora-configuration-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_core_test.gd') 'aurora-core-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_session_test.gd') 'aurora-session-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_playthrough_test.gd','--quit-after','2400') 'aurora-playthrough-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_page_test.gd','--quit-after','2400') 'aurora-page-tests.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }

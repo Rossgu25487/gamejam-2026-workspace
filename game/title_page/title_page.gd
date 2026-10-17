@@ -36,6 +36,16 @@ func apply_story_title(title: String) -> void:
 	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.custom_minimum_size.x = 280
 
+func apply_navigation(rows: Array, text_of: Callable) -> void:
+	var buttons := {"new_game": new_game_button, "continue": continue_button, "load": load_button, "settings": settings_button, "exit": exit_button}
+	var index := 1
+	for row in rows:
+		if row.page != "title" or not buttons.has(row.action): continue
+		var button: Button = buttons[row.action]
+		button.text = str(text_of.call(str(row.label_key)))
+		button.get_parent().move_child(button, index)
+		index += 1
+
 func set_developer_tools_enabled(enabled: bool) -> void:
 	# 工具入口与正式五项导航分开；隐藏的入口不参与焦点顺序。
 	sfx_button.visible = enabled

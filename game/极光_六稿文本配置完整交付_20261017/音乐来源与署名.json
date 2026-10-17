@@ -1,0 +1,470 @@
+{
+  "title": "极光｜音乐与音效来源及署名",
+  "source_note": "依据编曲交付的逐曲采样署名整理，保留来源、作者、许可及采样使用说明。",
+  "ui_sounds": [
+    {"sound_id": "SFX_UI_CLICK", "resource_path": "res://assets/aurora/audio/SFX_UI_CLICK.ogg", "duration_ms": 80, "origin": "项目编曲师原创短音效"},
+    {"sound_id": "SFX_UI_CONFIRM", "resource_path": "res://assets/aurora/audio/SFX_UI_CONFIRM.ogg", "duration_ms": 160, "origin": "项目编曲师原创短音效"},
+    {"sound_id": "SFX_UI_FEEDBACK", "resource_path": "res://assets/aurora/audio/SFX_UI_FEEDBACK.ogg", "duration_ms": 200, "origin": "项目编曲师原创短音效"}
+  ],
+  "music": [
+    {
+      "music_id": "BGM_STATION_LOOP",
+      "title": "进站相处",
+      "resource_path": "res://assets/aurora/audio/BGM_STATION_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_INVESTIGATION_LOOP",
+      "title": "低压调查",
+      "resource_path": "res://assets/aurora/audio/BGM_INVESTIGATION_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Greg Sullivan Hohner Pianet T",
+          "author": "Greg Sullivan; SFZ conversion by kinwie",
+          "license": "CC-BY-3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/GregSullivan.E-Pianos/tree/8c3e581acda3594b553948ff0222d4f84a698376",
+          "use": {
+            "selection": "Hohner Pianet T normal attack notes, MIDI 54-78 only; source velocity split 1-82 / 83-127 retained; separate recorded release-noise layer omitted",
+            "release": "Source default CC72 0.05 x 2 frozen as 0.1 seconds",
+            "pitch": "Original fixed tuning/offset retained; no chorus, tremolo or pitch LFO added"
+          }
+        },
+        {
+          "library": "Karoryfer Swagbass",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.swagbass/tree/9d10fcae71af1975988ddecd5af1c95d372c7355",
+          "use": {
+            "selection": "Clean ordinary bass notes, MIDI 38-50; excludes release/noise/slap articulations",
+            "round_robin": "Original deterministic 4-position sequence retained",
+            "velocity": "Original 0-50 / 51-110 / 111-127 layers and amp curves retained",
+            "bend": "Source bend range frozen at zero; no bend used"
+          }
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_ARCHIVE_LOOP",
+      "title": "档案与旧事",
+      "resource_path": "res://assets/aurora/audio/BGM_ARCHIVE_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Greg Sullivan Hohner Pianet T",
+          "author": "Greg Sullivan; SFZ conversion by kinwie",
+          "license": "CC-BY-3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/GregSullivan.E-Pianos/tree/8c3e581acda3594b553948ff0222d4f84a698376",
+          "use": {
+            "selection": "Hohner Pianet T normal attack notes, MIDI 54-78 only; source velocity split 1-82 / 83-127 retained; separate recorded release-noise layer omitted",
+            "release": "Source default CC72 0.05 x 2 frozen as 0.1 seconds",
+            "pitch": "Original fixed tuning/offset retained; no chorus, tremolo or pitch LFO added"
+          }
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_QUESTION_LOOP",
+      "title": "发现矛盾与追问",
+      "resource_path": "res://assets/aurora/audio/BGM_QUESTION_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Greg Sullivan Hohner Pianet T",
+          "author": "Greg Sullivan; SFZ conversion by kinwie",
+          "license": "CC-BY-3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/GregSullivan.E-Pianos/tree/8c3e581acda3594b553948ff0222d4f84a698376",
+          "use": {
+            "selection": "Hohner Pianet T normal attack notes, MIDI 54-78 only; source velocity split 1-82 / 83-127 retained; separate recorded release-noise layer omitted",
+            "release": "Source default CC72 0.05 x 2 frozen as 0.1 seconds",
+            "pitch": "Original fixed tuning/offset retained; no chorus, tremolo or pitch LFO added"
+          }
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_PRESSURE_LOOP",
+      "title": "继续追问",
+      "resource_path": "res://assets/aurora/audio/BGM_PRESSURE_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Greg Sullivan Hohner Pianet T",
+          "author": "Greg Sullivan; SFZ conversion by kinwie",
+          "license": "CC-BY-3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/GregSullivan.E-Pianos/tree/8c3e581acda3594b553948ff0222d4f84a698376",
+          "use": {
+            "selection": "Hohner Pianet T normal attack notes, MIDI 54-78 only; source velocity split 1-82 / 83-127 retained; separate recorded release-noise layer omitted",
+            "release": "Source default CC72 0.05 x 2 frozen as 0.1 seconds",
+            "pitch": "Original fixed tuning/offset retained; no chorus, tremolo or pitch LFO added"
+          }
+        },
+        {
+          "library": "Karoryfer Swagbass",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.swagbass/tree/9d10fcae71af1975988ddecd5af1c95d372c7355",
+          "use": {
+            "selection": "Clean ordinary bass notes, MIDI 38-50; excludes release/noise/slap articulations",
+            "round_robin": "Original deterministic 4-position sequence retained",
+            "velocity": "Original 0-50 / 51-110 / 111-127 layers and amp curves retained",
+            "bend": "Source bend range frozen at zero; no bend used"
+          }
+        },
+        {
+          "library": "Karoryfer Gogodze Phu Vol II",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.gogodze-phu-vol-ii/tree/69a0274cdc39c99c3098cde1bc3789690de86d62",
+          "use": {
+            "selection": "One real mic per articulation: kick/kick mic, closed hi-hat/overhead mic, acoustic snare/snare mic",
+            "key_map": {
+              "36": "kick (ks)",
+              "38": "acoustic snare (sc)",
+              "42": "closed hi-hat (hc; source key 46 remapped)"
+            },
+            "round_robin": "Original deterministic 4-position sequence retained",
+            "velocity": "All original layers retained: kick/snare 6, closed hat 4",
+            "processing": "No multi-mic delays, mic detuning or synthetic drum replacement; original raw mic samples"
+          }
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_FINAL_QUESTION_LOOP",
+      "title": "终局攻防",
+      "resource_path": "res://assets/aurora/audio/BGM_FINAL_QUESTION_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_OLD_LETTER_LOOP",
+      "title": "旧信与未竟生活",
+      "resource_path": "res://assets/aurora/audio/BGM_OLD_LETTER_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_CONFESSION_LOOP",
+      "title": "供述与关系余波",
+      "resource_path": "res://assets/aurora/audio/BGM_CONFESSION_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_AFTERMATH_LOOP",
+      "title": "认罪后的家庭余波",
+      "resource_path": "res://assets/aurora/audio/BGM_AFTERMATH_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Shinyguitar",
+          "author": "D. Smolken / Karoryfer Samples",
+          "license": "CC0-1.0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3",
+          "use": "Acoustic microphone samples only; project SFZ uses four velocity layers and sequential RR1-4. Original samples retained."
+        },
+        {
+          "library": "Greg Sullivan Hohner Pianet T",
+          "author": "Greg Sullivan; SFZ conversion by kinwie",
+          "license": "CC-BY-3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/GregSullivan.E-Pianos/tree/8c3e581acda3594b553948ff0222d4f84a698376",
+          "use": {
+            "selection": "Hohner Pianet T normal attack notes, MIDI 54-78 only; source velocity split 1-82 / 83-127 retained; separate recorded release-noise layer omitted",
+            "release": "Source default CC72 0.05 x 2 frozen as 0.1 seconds",
+            "pitch": "Original fixed tuning/offset retained; no chorus, tremolo or pitch LFO added"
+          }
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_FAREWELL_LOOP",
+      "title": "收拾与告别",
+      "resource_path": "res://assets/aurora/audio/BGM_FAREWELL_LOOP.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    },
+    {
+      "music_id": "BGM_FINALE_CREDITS_ENTRY",
+      "title": "极光与片尾",
+      "resource_path": "res://assets/aurora/audio/BGM_FINALE_CREDITS_ENTRY.ogg",
+      "origin": "项目编曲原创配乐；使用下列采样库及项目原创合成音色。",
+      "sample_credits": [
+        {
+          "library": "Salamander Grand Piano V3",
+          "author": "Alexander Holm",
+          "additional_credit": "SFZ mapping: kinwie; library retuning contribution: Markus Fiedler",
+          "license": "CC BY 3.0",
+          "license_url": "https://creativecommons.org/licenses/by/3.0/",
+          "source": "https://github.com/sfzinstruments/SalamanderGrandPiano/tree/3382bf9496bba2486f5ab0de55a264d1dfc38404",
+          "use": "Natural mapping; sampled performances, MIDI/control shaping and mixing"
+        },
+        {
+          "library": "VSCO 2 Community Edition",
+          "author": "Versilian Studios / contributors",
+          "license": "CC0",
+          "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "source": "https://github.com/sgossner/VSCO-2-CE",
+          "use": "Sampled orchestral and harp parts, with project performance and envelope settings"
+        },
+        {
+          "library": "Project Original Synth",
+          "author": "Project-original additive synthesis",
+          "license": "Project-original generated material; no additional public sample-library licence granted.",
+          "license_url": "",
+          "source": "Locally generated sine partials; no third-party or reference recording."
+        }
+      ]
+    }
+  ]
+}

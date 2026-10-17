@@ -115,6 +115,9 @@ func _render() -> void:
 	text_label.add_theme_color_override("default_color", Color("f0ede5"))
 	if kind in ["内心", "inner"]: text_label.add_theme_color_override("default_color", Color("b8cdd8"))
 	elif kind in ["旁白", "narration"]: text_label.add_theme_color_override("default_color", Color("d7dfe3"))
+	# 正式表逐条声明颜色；旧表没有此列时保留原来的类型配色。
+	var configured_color := str(row.get("font_color", ""))
+	if not configured_color.is_empty() and Color.html_is_valid(configured_color): text_label.add_theme_color_override("default_color", Color(configured_color))
 	if subtitle:
 		_place(text_label, Rect2(200, 220, 1200, 160))
 		text_label.add_theme_font_size_override("normal_font_size", 44 if kind == "章节字幕" else 32)
