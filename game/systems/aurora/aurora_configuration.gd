@@ -146,12 +146,13 @@ func _relocate_resources() -> void:
 
 func _scene_image_path(raw_path: String) -> String:
 	var resolved := resource_path(raw_path)
-	if FileAccess.file_exists(resolved): return resolved
+	# PNG 导出后由 .import 映射到内部纹理；用资源加载器检查，兼容编辑器与 PCK 成品。
+	if ResourceLoader.exists(resolved): return resolved
 	var fallback := str(SCENE_IMAGE_FALLBACKS.get(raw_path, ""))
 	if fallback.is_empty():
 		return resolved
 	var fallback_path := resource_path(fallback)
-	if not FileAccess.file_exists(fallback_path):
+	if not ResourceLoader.exists(fallback_path):
 		return resolved
 	path_migrations[resolved] = fallback_path
 	var message := "场景图片缺失，临时使用替代资源：%s → %s" % [resolved, fallback_path]
@@ -235,7 +236,7 @@ func _validate() -> void:
 			_check_ref(contents, content, "出示版本", str(row.id))
 			if not content.is_empty() and contents.has(content) and contents[content].material_id != row.get(slot + "_material_ref"): errors.append("出示材料与版本不一致：" + str(row.id))
 	for id in resources:
-		if resources[id].get("required", false) and not FileAccess.file_exists(str(resources[id].path)): errors.append("地图必需资源缺失：%s / %s" % [id, resources[id].path])
+		if resources[id].get("required", false) and not ResourceLoader.exists(str(resources[id].path)): errors.append("地图必需资源缺失：%s / %s" % [id, resources[id].path])
 
 func _check_ref(target: Dictionary, id: String, purpose: String, owner: String) -> void:
 	if not id.is_empty() and not target.has(id): errors.append("%s引用不存在：%s → %s" % [purpose, owner, id])

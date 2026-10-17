@@ -35,7 +35,7 @@ func _run() -> void:
 	_check(session.case_state.data.npc.get("CHR04", {}).get("scene_id") == "SC02" and ivan_layers.size() == 1, "餐后大厅应有伊万的唯一人物图层")
 	if not ivan_layers.is_empty():
 		var portrait_path := str(ivan_layers[0].image_path)
-		_check(FileAccess.file_exists(portrait_path) and ResourceLoader.exists(portrait_path) and load(portrait_path) is Texture2D, "伊万在场图片必须实际存在并可加载，不能只留透明热点")
+		_check(ResourceLoader.exists(portrait_path) and load(portrait_path) is Texture2D, "伊万在场图片必须实际存在并可加载，不能只留透明热点")
 	_check(model.hotspots().any(func(row): return row.object_ref == "CHR04"), "餐后伊万应有交谈热点")
 	_call("TALK_CH01_MAIN_1")
 	_call("TALK_CH01_MAIN_2")

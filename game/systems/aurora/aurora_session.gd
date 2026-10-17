@@ -139,7 +139,8 @@ func prepare_scene(id: String) -> bool:
 	if not config.scenes.has(id): return false
 	var ref := str(config.scenes[id].get("background_ref", ""))
 	var path := str(config.resources.get(ref, {}).get("path", ""))
-	return not path.is_empty() and FileAccess.file_exists(path)
+	# 成品保留导入资源映射，原 PNG 不一定作为普通文件存在。
+	return not path.is_empty() and ResourceLoader.exists(path)
 
 func condition(id: String) -> bool:
 	return case_state.condition(id)
