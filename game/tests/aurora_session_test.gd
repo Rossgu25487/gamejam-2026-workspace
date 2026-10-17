@@ -29,6 +29,14 @@ func _run() -> void:
 	_check(session.case_state.owns("E01_V1"), "实际读完才取得清单")
 	_move("SC02")
 	_check(session.case_state.data.events.get("EV_SHARED_MEAL_FINISHED", false), "返回大厅应接上共餐")
+	var model := preload("res://systems/aurora/aurora_investigation.gd").new()
+	model.bind(session)
+	var ivan_layers: Array = model.image_layers().filter(func(row): return row.object_ref == "CHR04")
+	_check(session.case_state.data.npc.get("CHR04", {}).get("scene_id") == "SC02" and ivan_layers.size() == 1, "餐后大厅应有伊万的唯一人物图层")
+	if not ivan_layers.is_empty():
+		var portrait_path := str(ivan_layers[0].image_path)
+		_check(FileAccess.file_exists(portrait_path) and ResourceLoader.exists(portrait_path) and load(portrait_path) is Texture2D, "伊万在场图片必须实际存在并可加载，不能只留透明热点")
+	_check(model.hotspots().any(func(row): return row.object_ref == "CHR04"), "餐后伊万应有交谈热点")
 	_call("TALK_CH01_MAIN_1")
 	_call("TALK_CH01_MAIN_2")
 	_call("ENTRY_CH01_E05_READER")
@@ -45,8 +53,6 @@ func _run() -> void:
 	_check(session.narrative.current_record().get("scene_id") == "SC02", "回归前应留下大厅对话舞台")
 	_move("SC08")
 	_check(session.case_state.data.chapter == "CH01", "走进房间不能自行推进案发")
-	var model := preload("res://systems/aurora/aurora_investigation.gd").new()
-	model.bind(session)
 	var beds: Array = model.hotspots().filter(func(row): return row.object_ref == "OBJ_SC08_BED")
 	_check(beds.size() == 1, "艾琳房间应有唯一床热点")
 	if beds.is_empty(): session.queue_free(); quit(1); return

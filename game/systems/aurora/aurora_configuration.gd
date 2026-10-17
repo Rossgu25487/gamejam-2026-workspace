@@ -34,6 +34,13 @@ var relations: Array = []
 var path_migrations := {}
 var content_revision := "AVG_20261017_01"
 
+# 正式表中的场景姿态仍由策划维护。当前素材包尚未交付伊万大厅坐姿图，
+# 先把这一条明确登记为临时资源回退，避免图片加载失败后整个人物图层被静默跳过。
+# 交付坐姿 PNG 后删除该项即可恢复正式表中的原路径。
+const SCENE_IMAGE_FALLBACKS := {
+	"res://assets/aurora/characters/1000004/伊万_坐姿_提取.png": "res://assets/aurora/characters/1000004/伊万_常态站姿.png",
+}
+
 func load_package(root: String = DEFAULT_ROOT) -> bool:
 	definition.root = root
 	errors.clear()
@@ -132,9 +139,24 @@ func _relocate_resources() -> void:
 	for id in actors: actors[id].default_portrait_path = resource_path(str(actors[id].get("default_portrait_path", "")))
 	for id in texts:
 		for field in ["portrait_path", "avatar_ref", "background_path"]: texts[id][field] = resource_path(str(texts[id].get(field, "")))
-	for row in rows("investigation", "对象图片"): row.image_path = resource_path(str(row.image_path))
+	for row in rows("investigation", "对象图片"):
+		row.image_path = _scene_image_path(str(row.image_path))
 	for row in rows("investigation", "资源需求"): row.resource_or_text_ref = resource_path(str(row.get("resource_or_text_ref", "")))
 	for row in rows("narrative", "片段地点关联"): row.background_path = resource_path(str(row.get("background_path", "")))
+
+func _scene_image_path(raw_path: String) -> String:
+	var resolved := resource_path(raw_path)
+	if FileAccess.file_exists(resolved): return resolved
+	var fallback := str(SCENE_IMAGE_FALLBACKS.get(raw_path, ""))
+	if fallback.is_empty():
+		return resolved
+	var fallback_path := resource_path(fallback)
+	if not FileAccess.file_exists(fallback_path):
+		return resolved
+	path_migrations[resolved] = fallback_path
+	var message := "场景图片缺失，临时使用替代资源：%s → %s" % [resolved, fallback_path]
+	if message not in warnings: warnings.append(message)
+	return fallback_path
 
 func text(id: String) -> String:
 	# 导航label_key先引用界面绑定，再引用唯一功能文字，不能把绑定ID显示给玩家。
