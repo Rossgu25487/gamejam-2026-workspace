@@ -109,9 +109,57 @@ func _run() -> void:
 		root.size = dimensions
 		await frames(6)
 		check(game.scene_page.canvas.scale.x == game.scene_page.canvas.scale.y, "调查画布等比显示")
+	# 真实第一章留下大厅对话，随后移动到卧室并以鼠标点床，验证页面舞台而非只验scene状态。
+	root.size = Vector2i(1280, 800)
+	await frames(6)
+	check(app.session.new_game(), "床菜单回归从新游戏建立真实状态")
+	game.reset_page()
+	app._resume()
+	drain()
+	for id in ["ENTRY_CH01_ENTER", "ENTRY_CH01_READ_E01"]: story_entry(id)
+	story_move("SC02")
+	for id in ["TALK_CH01_MAIN_1", "TALK_CH01_MAIN_2", "ENTRY_CH01_E05_READER"]: story_entry(id)
+	story_move("SC06")
+	story_entry("TALK_CH01_MAIN_3")
+	story_move("SC02")
+	await frames()
+	await click(button(game.scene_page, "观察环境"))
+	drain()
+	check(game.narrative_page.stage.scene_id == "SC02", "点床前保留的是大厅对话舞台")
+	story_move("SC08")
+	await frames()
+	var bed: Control = game.scene_page.find_child("HS_SC08_BED", true, false)
+	if bed == null:
+		for row in game.scene_page.model.hotspots():
+			if row.object_ref == "OBJ_SC08_BED": bed = game.scene_page.find_child(str(row.hotspot_id), true, false)
+	var bed_name := str(bed.name) if is_instance_valid(bed) else "HS_SC08_BED"
+	await click(bed)
+	check(app.session.mode == "narrative" and app.session.case_state.data.scene == "SC08", "鼠标点床仅打开卧室选项")
+	check(game.narrative_page.stage.scene_id == "SC08" and game.narrative_page.stage.background.texture.resource_path.contains("SC08_"), "床菜单实际舞台显示卧室背景")
+	check(game.narrative_page.stage.occupants.is_empty(), "床菜单没有残留上一段人物")
+	check(button(game.narrative_page, "休息") != null and button(game.narrative_page, "再待一会儿") != null, "点床显示两项实际操作")
+	await click(button(game.narrative_page, "再待一会儿"))
+	check(app.session.mode == "investigation" and app.session.case_state.data.scene == "SC08", "鼠标取消休息回到卧室")
+	await click(game.scene_page.find_child(bed_name, true, false))
+	await click(button(game.narrative_page, "休息"))
+	check(app.session.active_entry == "ENTRY_CH01_REST" and game.narrative_page.stage.scene_id == "SC08", "选择休息才在卧室开始休息正文")
+	drain()
+	check(app.session.case_state.data.chapter == "CH02" and app.session.case_state.data.scene == "SC02", "休息后仍按正式剧情经过案发和电话到大厅")
 	app.queue_free()
 	# 动态页面和主题资源在退出前需要至少一个完整空闲周期；多等几帧
 	# 让 queue_free、信号断开和渲染资源释放完成，避免把测试收尾告警误判为业务错误。
 	await frames(30)
 	print("AURORA_PAGE ", failures.is_empty(), " checks=", checks)
 	quit(0 if failures.is_empty() else 1)
+
+func story_entry(id: String) -> void:
+	check(app.session.activate_entry(id), "实际剧情入口可用：" + id)
+	drain()
+	if app.session.mode == "material":
+		check(app.session.material_read_complete(), "原件实际读完：" + id)
+		drain()
+
+func story_move(id: String) -> void:
+	check(app.session.travel(id), "实际地图前往：" + id)
+	app.session.arrive()
+	drain()

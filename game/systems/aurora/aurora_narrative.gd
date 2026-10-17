@@ -25,7 +25,8 @@ func export_snapshot() -> Dictionary:
 func validate_snapshot(snapshot: Dictionary) -> bool:
 	if not snapshot.get("choices", []) is Array: return false
 	if snapshot.get("state", {}).get("current_text_id") == "__CONTROL__":
-		catalog.data.texts["__CONTROL__"] = {"text_id": "__CONTROL__", "text": str(snapshot.get("control_label", "")), "read_version": 1, "text_type": "narration", "font_color": "#FFFFFF"}
+		catalog.data.texts["__CONTROL__"] = _control_record()
+		catalog.data.texts["__CONTROL__"].text = str(snapshot.get("control_label", ""))
 	for jump in snapshot.get("choices", []):
 		if not jump is Dictionary or not jump.has("target_kind") or not jump.has("target_ref"): return false
 	return super.validate_snapshot(snapshot)
@@ -97,6 +98,20 @@ func _finish_current_text() -> bool:
 	if id == "TXT_CH03_0635" and session.response_active and session.question == "L11_R02":
 		if not session.case_state.event("EV_CH03_L11_DOCUMENT_SCOPE_CONFIRMED", session.source_context()): return false
 	return session.finish_text(id)
+
+func show_control_choices(rows: Array) -> void:
+	# 无正文入口也必须发出新舞台记录，避免点床时还显示大厅的旧对话。
+	# 空正文不显示程序入口名；清除旧人物，且不登记为玩家已听过的原话。
+	var id := "__CONTROL__"
+	catalog.data.texts[id] = _control_record()
+	if state.is_empty(): start(id)
+	else: _begin_text(id)
+	show_choices(rows)
+
+func _control_record() -> Dictionary:
+	# 快照校验和恢复也重建同一地点背景，不能把菜单退化成没有舞台的文字记录。
+	return {"text_id": "__CONTROL__", "text": "", "text_type": "narration", "read_version": 1,
+		"font_color": "#FFFFFF", "scene_id": session.display_scene(), "background_path": session.background_path(), "clear_positions": true}
 
 func show_choices(rows: Array) -> void:
 	available_choices = rows.duplicate(true)

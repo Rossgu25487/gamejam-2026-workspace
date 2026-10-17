@@ -252,12 +252,11 @@ func resolve_source(source: String, depth: int = 0) -> bool:
 	var choices: Array = candidates.filter(func(row): return row.get("trigger") in ["choice", "question"])
 	if not choices.is_empty():
 		mode = "narrative"
-		# 无正文的操作菜单仍使用当前文本作为只读背景；没有上一句时显示入口名。
-		if narrative.state.is_empty():
-			var id := "__CONTROL__"
-			narrative.catalog.data.texts[id] = {"text": entry_label(source), "text_id": id, "text_type": "narration", "read_version": 1, "font_color": "#FFFFFF"}
-			narrative.start(id)
-		narrative.show_choices(choices)
+		# 调查新开的入口菜单不能沿用已经结束或来自别处的旧对话。
+		# 同一场对话继续进入选项时，仍保留刚读完的句子和人物。
+		var new_context: bool = narrative.state.is_empty() or narrative.state.get("finished", false) or narrative.current_record().get("scene_id", "") != display_scene()
+		if config.entries.has(source) and new_context: narrative.show_control_choices(choices)
+		else: narrative.show_choices(choices)
 		changed.emit()
 		return true
 	# 真正不同目标同时成立时停止，不按文件排序猜剧情。
