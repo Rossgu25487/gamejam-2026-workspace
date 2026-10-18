@@ -191,15 +191,20 @@ func _result() -> void:
 	body.add_child(result_scroll)
 	var result_box := VBoxContainer.new()
 	result_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	result_box.custom_minimum_size.x = 1
+	# 结果正文必须锁定在核查页的实际可视宽度内；否则长按钮或长文会
+	# 把 VBoxContainer 撑宽，RichTextLabel 即使禁用横向滚动也会画到屏幕外。
+	result_box.custom_minimum_size.x = maxf(1.0, size.x - 48.0)
 	result_box.add_theme_constant_override("separation", 8)
 	result_box.clip_contents = true
 	result_scroll.add_child(result_box)
 	var feedback_label := UI.label(result_box, {"support": "得到支持", "exclude": "排除原说法", "inference": "发现新的关联", "insufficient": "材料尚不足", "incorrect": "这项出示有误"}.get(pending.get("feedback", ""), "核查结果"), 28)
 	feedback_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_result_prose(result_box, session.target_text())
-	var sources := HBoxContainer.new()
+	var sources := HFlowContainer.new()
 	sources.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sources.custom_minimum_size.x = result_box.custom_minimum_size.x
+	sources.add_theme_constant_override("h_separation", 6)
+	sources.add_theme_constant_override("v_separation", 4)
 	result_box.add_child(sources)
 	for id in pending.get("refs", []): UI.button(sources, "回看依据 · " + str(session.config.contents[id].name), material_requested.emit.bind(str(id)))
 	if pending.has("text"): _result_prose(result_box, str(pending.text))
@@ -224,7 +229,7 @@ func _result_prose(parent: Control, text: String) -> RichTextLabel:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	label.custom_minimum_size = Vector2(1, 0)
+	label.custom_minimum_size = Vector2(maxf(1.0, size.x - 48.0), 0)
 	label.add_theme_font_size_override("normal_font_size", 19)
 	parent.add_child(label)
 	return label
