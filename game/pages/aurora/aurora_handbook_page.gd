@@ -103,6 +103,8 @@ func _render() -> void:
 	UI.clear(self)
 	mouse_filter = Control.MOUSE_FILTER_STOP if not compact_mode else Control.MOUSE_FILTER_IGNORE
 	canvas = Control.new()
+	# 紧凑手册是独立视口；任何子控件都不能绘制到面板外。
+	canvas.clip_contents = true
 	if compact_mode:
 		canvas.size = Vector2(520, 680)
 		var compact_scale := minf(1.0, minf((size.x - 32.0) / canvas.size.x, (size.y - 32.0) / canvas.size.y))
@@ -127,6 +129,7 @@ func _render() -> void:
 	root_box.add_theme_constant_override("separation", 12)
 	root_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	root_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_box.custom_minimum_size.x = _reading_content_width()
 	margin.add_child(root_box)
 	var heading := HFlowContainer.new()
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -220,33 +223,36 @@ func _reading() -> void:
 	# 回执位于全文下面。未阅读就返回不会触发completion_event或发卡。
 	var content_actions := HFlowContainer.new()
 	content_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_actions.custom_minimum_size.x = _reading_content_width()
 	content_actions.add_theme_constant_override("h_separation", 6)
 	content_actions.add_theme_constant_override("v_separation", 4)
 	pages.add_child(content_actions)
-	if reading_entry: UI.button(pages, "已读完这份原件", _complete_reading)
+	if reading_entry: _reading_button(pages, "已读完这份原件", _complete_reading)
 	else:
 		var id := str(row.material_id)
 		var record: Dictionary = session.case_state.data.materials[id]
 		record.read[reading_content] = true
-		UI.button(content_actions, "取消重点" if record.star else "标为重点", func(): record.star = not record.star; _render())
+		_reading_button(content_actions, "取消重点" if record.star else "标为重点", func(): record.star = not record.star; _render())
 		if session.mode == "selection" and allow_selection:
 			var same_material: bool = session.slots.any(func(value): return not str(value).is_empty() and session.config.contents[value].material_id == id)
-			UI.button(content_actions, "请先撤下已入槽的同一材料" if same_material else "选用当前版本", func(): content_selected.emit(reading_content); close_page(), not same_material)
+			_reading_button(content_actions, "请先撤下已入槽的同一材料" if same_material else "选用当前版本", func(): content_selected.emit(reading_content); close_page(), not same_material)
 		var versions_title := UI.label(pages, "实际取得的版本", 19 if compact_mode else 22)
 		versions_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var versions: Array = record.versions.keys()
 		versions.sort_custom(func(a, b): return int(session.config.contents[a].version) > int(session.config.contents[b].version))
 		var version_actions := HFlowContainer.new()
 		version_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		version_actions.custom_minimum_size.x = _reading_content_width()
 		version_actions.add_theme_constant_override("h_separation", 6)
 		version_actions.add_theme_constant_override("v_separation", 4)
 		pages.add_child(version_actions)
 		for version in versions:
-			UI.button(version_actions, str(session.config.contents[version].name) + " · 第%d版" % int(session.config.contents[version].version), _push_content.bind(str(version)), versions.size() > 1 and version != reading_content)
+			_reading_button(version_actions, str(session.config.contents[version].name) + " · 第%d版" % int(session.config.contents[version].version), _push_content.bind(str(version)), versions.size() > 1 and version != reading_content)
 		var sources_title := UI.label(pages, "来源", 19 if compact_mode else 22)
 		sources_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var source_actions := HFlowContainer.new()
 		source_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		source_actions.custom_minimum_size.x = _reading_content_width()
 		source_actions.add_theme_constant_override("h_separation", 6)
 		source_actions.add_theme_constant_override("v_separation", 4)
 		pages.add_child(source_actions)
@@ -255,27 +261,38 @@ func _reading() -> void:
 	scroll.get_v_scroll_bar().value_changed.connect(func(value): read_positions[reading_content] = value)
 	var actions := HFlowContainer.new()
 	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.custom_minimum_size.x = _reading_content_width()
 	actions.add_theme_constant_override("h_separation", 6)
 	actions.add_theme_constant_override("v_separation", 4)
 	pages.add_child(actions)
-	UI.button(actions, "取消阅读" if reading_entry else ("上一级" if not return_stack.is_empty() else "返回"), _back)
-	if not reading_entry: UI.button(actions, "关闭阅读", close_page)
+	_reading_button(actions, "取消阅读" if reading_entry else ("上一级" if not return_stack.is_empty() else "返回"), _back)
+	if not reading_entry: _reading_button(actions, "关闭阅读", close_page)
 	if not new_list.is_empty() and reading_content in new_list:
 		var controls := HFlowContainer.new()
 		controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		controls.custom_minimum_size.x = _reading_content_width()
 		controls.add_theme_constant_override("h_separation", 6)
 		pages.add_child(controls)
-		UI.button(controls, "前一项", _new_move.bind(-1), new_index > 0)
+		_reading_button(controls, "前一项", _new_move.bind(-1), new_index > 0)
 		UI.label(controls, "%d / %d" % [new_index + 1, new_list.size()])
-		UI.button(controls, "后一项", _new_move.bind(1), new_index + 1 < new_list.size())
+		_reading_button(controls, "后一项", _new_move.bind(1), new_index + 1 < new_list.size())
 
 func _source(parent: Control, source: Dictionary) -> void:
 	var label := str(source.get("entry", source.get("question", "实际调查")))
 	if source.has("text"): label = session.config.text(str(source.text))
-	UI.button(parent, label, _push_source.bind(source))
+	_reading_button(parent, label, _push_source.bind(source))
 	for item in source.get("sources", []):
 		var id := str(item.get("content_id", ""))
-		if session.case_state.owns(id): UI.button(parent, "依据 · " + str(session.config.contents[id].name), _push_content.bind(id, item.get("sources", [])))
+		if session.case_state.owns(id): _reading_button(parent, "依据 · " + str(session.config.contents[id].name), _push_content.bind(id, item.get("sources", [])))
+
+func _reading_button(parent: Control, text: String, action: Callable, enabled: bool = true) -> Button:
+	# 详情页按钮统一限制在内容列内，长文案自动换行，不能撑出手册面板。
+	var node := UI.button(parent, text, action, enabled)
+	node.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	node.custom_minimum_size = Vector2(120, 42 if compact_mode else 44)
+	node.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	node.add_theme_font_size_override("font_size", 16 if compact_mode else 19)
+	return node
 
 func _push_content(id: String, sources = null) -> void:
 	return_stack.append({"content": reading_content, "sources": frozen_sources, "selectable": allow_selection, "document": source_document.duplicate(true)})
@@ -431,6 +448,7 @@ func _source_reading() -> void:
 		if session.case_state.owns(id): UI.button(box, str(session.config.contents[id].name), _push_content.bind(id, item.get("sources", [])))
 	var actions := HFlowContainer.new()
 	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.custom_minimum_size.x = _reading_content_width()
 	root_box.add_child(actions)
-	UI.button(actions, "上一级", _back)
-	UI.button(actions, "关闭来源与阅读", close_page)
+	_reading_button(actions, "上一级", _back)
+	_reading_button(actions, "关闭来源与阅读", close_page)
