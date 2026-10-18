@@ -14,12 +14,14 @@ var pawn_overlay: Control
 var logical_cell_size := 100.0
 var layout_definition := {}
 var resource_definition := {}
+var map_definition := {} # 完整地图定义，供跨层原地切换取 groups/boards
 var group_definition := {}
 var display_definition := {}
 var pawn_definition := {}
 var textures := {} # 绘制命令在帧末使用纹理，必须持有引用，避免临时加载后被回收成白块。
 
 func configure_art(definition: Dictionary, group_id: String) -> void:
+	map_definition = definition
 	resource_definition = definition.get("resources", {})
 	group_definition = definition.get("groups", {}).get(group_id, {})
 	display_definition = definition.get("display", {})
@@ -39,6 +41,19 @@ func setup(records: Array, layout: Dictionary, group_id: String) -> void:
 	pawn_overlay.z_index = 10
 	add_child(pawn_overlay)
 	pawn_overlay.draw.connect(_draw_pawn)
+	queue_redraw()
+
+func switch_group(group_id: String) -> void:
+	# 跨层切换原地换楼层背景与格子定义，不整页重建（反馈#21）。
+	if group_id == selected_group: return
+	var layout: Dictionary = map_definition.get("boards", {}).get(group_id, {})
+	if layout.is_empty(): return # 目标层无棋盘定义，不切换（由页面走整页重建）
+	selected_group = group_id
+	group_definition = map_definition.get("groups", {}).get(group_id, {})
+	layout_definition = layout
+	rows = maxi(1, int(layout.get("rows", 5)))
+	cols = maxi(1, int(layout.get("cols", 8)))
+	logical_cell_size = float(layout.get("cell_size", 100))
 	queue_redraw()
 
 func cell_point(cell: Vector2) -> Vector2:

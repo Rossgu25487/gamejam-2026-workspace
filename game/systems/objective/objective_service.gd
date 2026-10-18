@@ -25,6 +25,7 @@ var text_source := Callable() # 解析功能文字 ID 的函数；Main 注入核
 
 var _read_busy := false
 var _go_busy := false
+var _review_folded_hud := false # 打开回顾时若主动收起 HUD 浮窗，返回调查时恢复展开
 var _function_texts: Dictionary = {}
 
 
@@ -211,6 +212,9 @@ func _finish_review(ok: bool) -> String:
 	if ok:
 		model.mark_seen()
 		_set_review_state("open")
+		if model.expanded:
+			model.toggle()
+			_review_folded_hud = true  # 打开全屏回顾时收起 HUD 浮窗（反馈#14）
 		_update_processing()
 		changed.emit()
 		return "opened"
@@ -220,6 +224,13 @@ func _finish_review(ok: bool) -> String:
 	return "failed"
 
 
+func _restore_folded_hud() -> void:
+	# 打开回顾时若主动收起了 HUD 浮窗，返回调查/前往核对/重置时恢复展开（反馈#14）。
+	if _review_folded_hud:
+		_review_folded_hud = false
+		model.toggle()
+
+
 func close_review() -> void:
 	# 【返回调查】：结束回顾占用，回到原调查画面。
 	if review_state != "open":
@@ -227,6 +238,7 @@ func close_review() -> void:
 	_set_review_state("closed")
 	if provider != null:
 		provider.end_review()
+	_restore_folded_hud()
 	changed.emit()
 
 
@@ -239,6 +251,7 @@ func reset() -> void:
 		_set_review_state("closed")
 		if provider != null:
 			provider.end_review()
+	_restore_folded_hud()
 	changed.emit()
 
 
@@ -308,6 +321,7 @@ func request_go(entry_id: String) -> Dictionary:
 	if bool(went.get("ok", false)):
 		review_state = "closed"
 		review_state_changed.emit("closed")
+		_restore_folded_hud()
 		changed.emit()
 		return {"status": "ok"}
 	return {"status": "failed", "reason": String(went.get("reason", ""))}

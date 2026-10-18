@@ -128,11 +128,22 @@ func _render() -> void:
 	list.add_theme_constant_override("separation", 8)
 	list_scroll.add_child(list)
 	var selected_button: Button
+	var last_list_group := ""
 	for item in records:
 		var scene_id := str(item.to_scene)
 		var status := "当前位置" if item.current else ("可前往" if item.available else "暂不可前往")
 		for target in [nodes, list]:
 			if target == nodes and has_board and item.node.get("group_id", "") != group_id: continue
+			# 侧栏地点列表按楼层分区，每组前插入楼层标题（反馈#20）。
+			if target == list:
+				var list_group := str(item.node.get("group_id", ""))
+				if not list_group.is_empty() and list_group != last_list_group:
+					last_list_group = list_group
+					var gdef: Dictionary = service.map_definition.get("groups", {}).get(list_group, {})
+					var gregion: String = service.core.ui(str(gdef.get("region_name_text_id", "")))
+					var gfloor: String = service.core.ui(str(gdef.get("floor_name_text_id", "")))
+					var gtitle := str(gdef.get("name", list_group)) if gregion.is_empty() else gregion + (" / " + gfloor if not gfloor.is_empty() else "")
+					UI.label(list, gtitle, 18)
 			# 已公开但不可达的地点仍可选中查看原因，只有前往动作受资格限制。
 			var button := UI.button(target, str(item.title) + "\n" + status, service.select_scene.bind(scene_id), not busy)
 			button.set_meta("scene_id", scene_id)
@@ -212,7 +223,12 @@ func _process(delta: float) -> void:
 	if animation_phase == "cross" and amount >= 0.5 and not cross_switched:
 		cross_switched = true
 		selected_group = str(service.locations.get(service.state.active_request.to_scene, {}).get("node", {}).get("group_id", ""))
-		_queue_render(true)
+		# 跨层中点原地换楼层背景，避免整页重建出现空帧花屏（反馈#21）。
+		# 目标层无棋盘定义时无法原地换背景，仍走整页重建（保留原处理）。
+		if is_instance_valid(board_view) and service.map_definition.get("boards", {}).has(selected_group):
+			board_view.switch_group(selected_group)
+		else:
+			_queue_render(true)
 	if is_instance_valid(board_view) and route.size() > 1:
 		var from_cell: Vector2 = route[clampi(animation_step - 1, 0, route.size() - 1)]
 		var to_cell: Vector2 = route[clampi(animation_step, 0, route.size() - 1)]

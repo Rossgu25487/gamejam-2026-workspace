@@ -128,7 +128,11 @@ func _show_context(context: Dictionary) -> void:
 		if options.is_empty(): current_context.clear(); return
 	elif context.get("kind") == "inspection":
 		options = model.observation_options(str(context.get("object", "")))
-		if options.size() <= 1: current_context.clear(); return
+		if options.size() <= 1:
+			# 单一观察对象读完直接回到“检查物件”目录，而不是清空回主场景（反馈#18）。
+			current_context = {"kind": "scene_items", "scene": context.get("scene", ""), "view": context.get("view", "")}
+			_show_context(current_context)
+			return
 	elif context.get("kind") == "scene_items": options = model.scene_options()
 	elif context.get("kind") == "reasoning":
 		for item in session.available_reasoning(): options.append({"entry_ref": item.entry, "display_name": item.text})
