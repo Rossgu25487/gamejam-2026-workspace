@@ -50,8 +50,10 @@ const ARRIVAL_ENTRIES := {
 	"SC02": ["ENTRY_CH01_RECEPTION", "ENTRY_CH01_HALL_RETURN", "ENTRY_CH04_HALL_RETURN", "ENTRY_CH06_PHONE"],
 	"SC06": ["ENTRY_CH01_TEA"], "SC09": ["ENTRY_CH02_SC09_HANDOVER"], "SC04": ["ENTRY_CH02_ARCHIVE_FIRST"]}
 
-func initialize(root: String = ConfigScript.DEFAULT_ROOT) -> bool:
-	if not config.load_package(root): return false
+func initialize(root: String = ConfigScript.DEFAULT_ROOT, shared_config: RefCounted = null) -> bool:
+	# 调试快进的隔离会话复用已载入的只读配置，不再重复解析十一册工作簿。
+	if shared_config != null: config = shared_config
+	elif not config.load_package(root): return false
 	case_state.bind(config)
 	case_state.commit_guard = _prepare_event_commit
 	case_state.reset()
@@ -398,6 +400,14 @@ func scene_status(id: String) -> Dictionary:
 func travel(id: String) -> bool:
 	if not can_save() or not scene_status(id).available: return false
 	if not set_scene(id): return false
+	return_context = {"kind": "scene", "scene": id, "view": case_state.data.view}
+	_apply_music({"chapter_id": case_state.data.chapter})
+	changed.emit()
+	return true
+
+func force_travel(id: String) -> bool:
+	# 调试与测试用：跳过地点资格和保存条件直接前往，只在可操作调查中生效；不触发到达短场。
+	if mode != "investigation" or not set_scene(id): return false
 	return_context = {"kind": "scene", "scene": id, "view": case_state.data.view}
 	_apply_music({"chapter_id": case_state.data.chapter})
 	changed.emit()

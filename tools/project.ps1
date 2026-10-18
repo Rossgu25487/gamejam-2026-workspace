@@ -69,6 +69,7 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_session_test.gd') 'aurora-session-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_playthrough_test.gd','--quit-after','2400') 'aurora-playthrough-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_page_test.gd','--quit-after','2400') 'aurora-page-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/debug_console_test.gd') 'debug-console-tests.log'
   }
   'export' {
     if ($Preset -ne 'Windows Desktop') { throw '当前仅配置 Windows Desktop；新增目标先补齐并验证对应导出预设。' }
