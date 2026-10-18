@@ -184,24 +184,50 @@ func _card_area_style() -> StyleBoxFlat:
 func _result() -> void:
 	var pending: Dictionary = session.pending_result
 	var result: Dictionary = session.config.results.get(pending.get("result", ""), {})
-	UI.label(body, {"support": "得到支持", "exclude": "排除原说法", "inference": "发现新的关联", "insufficient": "材料尚不足", "incorrect": "这项出示有误"}.get(pending.get("feedback", ""), "核查结果"), 34)
-	UI.body(body, session.target_text(), 90)
+	var result_scroll := ScrollContainer.new()
+	result_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	result_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	result_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(result_scroll)
+	var result_box := VBoxContainer.new()
+	result_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	result_box.custom_minimum_size.x = 1
+	result_box.add_theme_constant_override("separation", 8)
+	result_box.clip_contents = true
+	result_scroll.add_child(result_box)
+	var feedback_label := UI.label(result_box, {"support": "得到支持", "exclude": "排除原说法", "inference": "发现新的关联", "insufficient": "材料尚不足", "incorrect": "这项出示有误"}.get(pending.get("feedback", ""), "核查结果"), 28)
+	feedback_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_result_prose(result_box, session.target_text())
 	var sources := HBoxContainer.new()
-	body.add_child(sources)
+	sources.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	result_box.add_child(sources)
 	for id in pending.get("refs", []): UI.button(sources, "回看依据 · " + str(session.config.contents[id].name), material_requested.emit.bind(str(id)))
-	if pending.has("text"): UI.body(body, str(pending.text), 120)
-	if not pending.get("response_read", false) and not str(pending.get("response", "")).is_empty() and (not pending.get("response_after_accept", false) or pending.get("accepted", false)): UI.button(body, "阅读完整回应", session.read_result_response)
+	if pending.has("text"): _result_prose(result_box, str(pending.text))
+	if not pending.get("response_read", false) and not str(pending.get("response", "")).is_empty() and (not pending.get("response_after_accept", false) or pending.get("accepted", false)): UI.button(result_box, "阅读完整回应", session.read_result_response)
 	elif pending.get("complete", false):
 		var inference := str(result.get("inference_content_ref", ""))
 		if not inference.is_empty():
 			var row: Dictionary = session.config.contents[inference]
-			UI.label(body, str(row.name), 28)
-			UI.body(body, str(row.detail_text), 240)
-			UI.button(body, "收下推论" if not pending.get("accepted", false) else "已收下", session.accept_inference, not pending.get("accepted", false))
-		UI.button(body, "继续", session.continue_result, inference.is_empty() or pending.get("accepted", false))
+			UI.label(result_box, str(row.name), 24)
+			_result_prose(result_box, str(row.detail_text))
+			UI.button(result_box, "收下推论" if not pending.get("accepted", false) else "已收下", session.accept_inference, not pending.get("accepted", false))
+		UI.button(result_box, "继续", session.continue_result, inference.is_empty() or pending.get("accepted", false))
 	else:
-		UI.button(body, "重新选材", session.continue_result)
-		UI.button(body, "稍后核对", func(): session.pending_result.clear(); session.mode = "selection"; session.collapse_question())
+		UI.button(result_box, "重新选材", session.continue_result)
+		UI.button(result_box, "稍后核对", func(): session.pending_result.clear(); session.mode = "selection"; session.collapse_question())
+
+func _result_prose(parent: Control, text: String) -> RichTextLabel:
+	var label := RichTextLabel.new()
+	label.text = text
+	label.fit_content = true
+	label.scroll_active = false
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	label.custom_minimum_size = Vector2(1, 0)
+	label.add_theme_font_size_override("normal_font_size", 19)
+	parent.add_child(label)
+	return label
 
 func _toggle_grid() -> void:
 	grid_mode = not grid_mode
