@@ -192,8 +192,8 @@ func _library() -> void:
 
 func _reading() -> void:
 	var row: Dictionary = session.config.contents[reading_content]
-	# 详情使用单列纵向阅读区，宽度始终跟随页面；这样正文自动换行，
-	# 不会因为图片、按钮或长标题把内容撑出右侧而出现横向滚动条。
+	# 详情使用单一内容流：图片、正文、版本、来源和操作都在同一个滚动区域内。
+	# 这样不会出现图片在上一页、按钮被挤到下一页的断裂布局。
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -201,7 +201,7 @@ func _reading() -> void:
 	root_box.add_child(scroll)
 	var pages := VBoxContainer.new()
 	pages.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	pages.add_theme_constant_override("separation", 10)
+	pages.add_theme_constant_override("separation", 6)
 	scroll.add_child(pages)
 	var path := str(row.get("image_ref", ""))
 	if not path.is_empty() and ResourceLoader.exists(path):
@@ -209,38 +209,60 @@ func _reading() -> void:
 		picture.texture = load(path)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		picture.custom_minimum_size = Vector2(0, 150 if compact_mode else 230)
+		# 图片只占详情页顶部的一段固定高度，避免把操作按钮整体推到下一屏。
+		picture.custom_minimum_size = Vector2(0, 112 if compact_mode else 170)
 		picture.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pages.add_child(picture)
 	_prose(pages, str(row.detail_text))
 	# 回执位于全文下面。未阅读就返回不会触发completion_event或发卡。
+	var content_actions := HFlowContainer.new()
+	content_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_actions.add_theme_constant_override("h_separation", 6)
+	content_actions.add_theme_constant_override("v_separation", 4)
+	pages.add_child(content_actions)
 	if reading_entry: UI.button(pages, "已读完这份原件", _complete_reading)
 	else:
 		var id := str(row.material_id)
 		var record: Dictionary = session.case_state.data.materials[id]
 		record.read[reading_content] = true
-		UI.button(pages, "取消重点" if record.star else "标为重点", func(): record.star = not record.star; _render())
+		UI.button(content_actions, "取消重点" if record.star else "标为重点", func(): record.star = not record.star; _render())
 		if session.mode == "selection" and allow_selection:
 			var same_material: bool = session.slots.any(func(value): return not str(value).is_empty() and session.config.contents[value].material_id == id)
-			UI.button(pages, "请先撤下已入槽的同一材料" if same_material else "选用当前版本", func(): content_selected.emit(reading_content); close_page(), not same_material)
-		UI.label(pages, "实际取得的版本", 22)
+			UI.button(content_actions, "请先撤下已入槽的同一材料" if same_material else "选用当前版本", func(): content_selected.emit(reading_content); close_page(), not same_material)
+		var versions_title := UI.label(pages, "实际取得的版本", 19 if compact_mode else 22)
+		versions_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var versions: Array = record.versions.keys()
 		versions.sort_custom(func(a, b): return int(session.config.contents[a].version) > int(session.config.contents[b].version))
+		var version_actions := HFlowContainer.new()
+		version_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		version_actions.add_theme_constant_override("h_separation", 6)
+		version_actions.add_theme_constant_override("v_separation", 4)
+		pages.add_child(version_actions)
 		for version in versions:
-			UI.button(pages, str(session.config.contents[version].name) + " · 第%d版" % int(session.config.contents[version].version), _push_content.bind(str(version)), versions.size() > 1 and version != reading_content)
-		UI.label(pages, "来源", 22)
-		for source in (frozen_sources if frozen_sources is Array else record.versions[reading_content]): _source(pages, source)
+			UI.button(version_actions, str(session.config.contents[version].name) + " · 第%d版" % int(session.config.contents[version].version), _push_content.bind(str(version)), versions.size() > 1 and version != reading_content)
+		var sources_title := UI.label(pages, "来源", 19 if compact_mode else 22)
+		sources_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var source_actions := HFlowContainer.new()
+		source_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		source_actions.add_theme_constant_override("h_separation", 6)
+		source_actions.add_theme_constant_override("v_separation", 4)
+		pages.add_child(source_actions)
+		for source in (frozen_sources if frozen_sources is Array else record.versions[reading_content]): _source(source_actions, source)
 	scroll.set_deferred("scroll_vertical", int(read_positions.get(reading_content, 0)))
 	scroll.get_v_scroll_bar().value_changed.connect(func(value): read_positions[reading_content] = value)
 	var actions := HFlowContainer.new()
 	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	root_box.add_child(actions)
+	actions.add_theme_constant_override("h_separation", 6)
+	actions.add_theme_constant_override("v_separation", 4)
+	pages.add_child(actions)
 	UI.button(actions, "取消阅读" if reading_entry else ("上一级" if not return_stack.is_empty() else "返回"), _back)
 	if not reading_entry: UI.button(actions, "关闭阅读", close_page)
 	if not new_list.is_empty() and reading_content in new_list:
 		var controls := HFlowContainer.new()
-		root_box.add_child(controls)
+		controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		controls.add_theme_constant_override("h_separation", 6)
+		pages.add_child(controls)
 		UI.button(controls, "前一项", _new_move.bind(-1), new_index > 0)
 		UI.label(controls, "%d / %d" % [new_index + 1, new_list.size()])
 		UI.button(controls, "后一项", _new_move.bind(1), new_index + 1 < new_list.size())
@@ -397,5 +419,8 @@ func _source_reading() -> void:
 	for item in source_document.get("sources", []):
 		var id := str(item.get("content_id", ""))
 		if session.case_state.owns(id): UI.button(box, str(session.config.contents[id].name), _push_content.bind(id, item.get("sources", [])))
-	UI.button(root_box, "上一级", _back)
-	UI.button(root_box, "关闭来源与阅读", close_page)
+	var actions := HFlowContainer.new()
+	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root_box.add_child(actions)
+	UI.button(actions, "上一级", _back)
+	UI.button(actions, "关闭来源与阅读", close_page)
