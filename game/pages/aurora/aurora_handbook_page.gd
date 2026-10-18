@@ -201,6 +201,8 @@ func _reading() -> void:
 	root_box.add_child(scroll)
 	var pages := VBoxContainer.new()
 	pages.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pages.custom_minimum_size.x = _reading_content_width()
+	pages.clip_contents = true
 	pages.add_theme_constant_override("separation", 6)
 	scroll.add_child(pages)
 	var path := str(row.get("image_ref", ""))
@@ -310,11 +312,18 @@ func _prose(parent: Control, text: String) -> RichTextLabel:
 	var label := UI.body(parent, text, 0)
 	label.fit_content = true
 	label.scroll_active = false
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	label.custom_minimum_size = Vector2(0, 0)
+	label.custom_minimum_size = Vector2(1, 0)
 	label.add_theme_font_size_override("normal_font_size", 19 if compact_mode else 23)
 	return label
+
+func _reading_content_width() -> float:
+	# ScrollContainer 的子节点必须明确小于视口宽度，否则长文会把
+	# RichTextLabel 和 HFlowContainer 撑宽，产生屏幕外文案或横向溢出。
+	var margin_px := 18.0 if compact_mode else 32.0
+	return maxf(1.0, canvas.size.x - margin_px * 2.0 - 24.0)
 
 func _picture(parent: Control, path: String, minimum: Vector2) -> void:
 	if path.is_empty() or not ResourceLoader.exists(path): return
@@ -412,7 +421,8 @@ func _source_reading() -> void:
 	root_box.add_child(scroll)
 	var box := VBoxContainer.new()
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	box.custom_minimum_size.x = 0
+	box.custom_minimum_size.x = _reading_content_width()
+	box.clip_contents = true
 	scroll.add_child(box)
 	var text_id := str(source_document.get("text", ""))
 	_prose(box, session.config.text(text_id) if session.config.texts.has(text_id) else session.entry_label(str(source_document.get("entry", ""))))
