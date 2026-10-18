@@ -125,8 +125,14 @@ func _render() -> void:
 	canvas.add_child(margin)
 	root_box = VBoxContainer.new()
 	root_box.add_theme_constant_override("separation", 12)
+	root_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	margin.add_child(root_box)
-	UI.label(root_box, str(source_document.get("title", "办案手册" if reading_content.is_empty() else str(session.config.contents[reading_content].name))), 24 if compact_mode else 30)
+	var heading := HFlowContainer.new()
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root_box.add_child(heading)
+	var heading_text := UI.label(heading, str(source_document.get("title", "办案手册" if reading_content.is_empty() else str(session.config.contents[reading_content].name))), 22 if compact_mode else 28)
+	heading_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if not source_document.is_empty(): _source_reading()
 	elif not reading_content.is_empty(): _reading()
 	else: _library()
@@ -138,6 +144,7 @@ func _library() -> void:
 	if tab == "materials": _filters()
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	root_box.add_child(scroll)
 	library_scroll = scroll
 	var scroll_key := tab + "/" + category
@@ -185,27 +192,27 @@ func _library() -> void:
 
 func _reading() -> void:
 	var row: Dictionary = session.config.contents[reading_content]
-	var split := HBoxContainer.new()
-	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root_box.add_child(split)
+	# 详情使用单列纵向阅读区，宽度始终跟随页面；这样正文自动换行，
+	# 不会因为图片、按钮或长标题把内容撑出右侧而出现横向滚动条。
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	root_box.add_child(scroll)
+	var pages := VBoxContainer.new()
+	pages.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pages.add_theme_constant_override("separation", 10)
+	scroll.add_child(pages)
 	var path := str(row.get("image_ref", ""))
 	if not path.is_empty() and ResourceLoader.exists(path):
 		var picture := TextureRect.new()
 		picture.texture = load(path)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		picture.custom_minimum_size.x = 170 if compact_mode else 300
-		picture.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		picture.custom_minimum_size = Vector2(0, 150 if compact_mode else 230)
+		picture.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		split.add_child(picture)
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	split.add_child(scroll)
-	var pages := VBoxContainer.new()
-	pages.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	pages.add_theme_constant_override("separation", 20)
-	scroll.add_child(pages)
+		pages.add_child(picture)
 	_prose(pages, str(row.detail_text))
 	# 回执位于全文下面。未阅读就返回不会触发completion_event或发卡。
 	if reading_entry: UI.button(pages, "已读完这份原件", _complete_reading)
@@ -226,10 +233,13 @@ func _reading() -> void:
 		for source in (frozen_sources if frozen_sources is Array else record.versions[reading_content]): _source(pages, source)
 	scroll.set_deferred("scroll_vertical", int(read_positions.get(reading_content, 0)))
 	scroll.get_v_scroll_bar().value_changed.connect(func(value): read_positions[reading_content] = value)
-	UI.button(root_box, "取消阅读" if reading_entry else ("上一级" if not return_stack.is_empty() else "返回"), _back)
-	if not reading_entry: UI.button(root_box, "关闭阅读", close_page)
+	var actions := HFlowContainer.new()
+	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root_box.add_child(actions)
+	UI.button(actions, "取消阅读" if reading_entry else ("上一级" if not return_stack.is_empty() else "返回"), _back)
+	if not reading_entry: UI.button(actions, "关闭阅读", close_page)
 	if not new_list.is_empty() and reading_content in new_list:
-		var controls := HBoxContainer.new()
+		var controls := HFlowContainer.new()
 		root_box.add_child(controls)
 		UI.button(controls, "前一项", _new_move.bind(-1), new_index > 0)
 		UI.label(controls, "%d / %d" % [new_index + 1, new_list.size()])
@@ -278,8 +288,10 @@ func _prose(parent: Control, text: String) -> RichTextLabel:
 	var label := UI.body(parent, text, 0)
 	label.fit_content = true
 	label.scroll_active = false
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	label.add_theme_font_size_override("normal_font_size", 28)
+	label.custom_minimum_size = Vector2(0, 0)
+	label.add_theme_font_size_override("normal_font_size", 19 if compact_mode else 23)
 	return label
 
 func _picture(parent: Control, path: String, minimum: Vector2) -> void:
@@ -374,9 +386,11 @@ func _push_source(source: Dictionary) -> void:
 func _source_reading() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	root_box.add_child(scroll)
 	var box := VBoxContainer.new()
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.custom_minimum_size.x = 0
 	scroll.add_child(box)
 	var text_id := str(source_document.get("text", ""))
 	_prose(box, session.config.text(text_id) if session.config.texts.has(text_id) else session.entry_label(str(source_document.get("entry", ""))))
