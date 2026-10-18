@@ -88,11 +88,12 @@ func inspect(row: Dictionary) -> bool:
 	session.returned.emit(context)
 	return true
 
-func image_layers() -> Array:
+func image_layers(view_id: String = "") -> Array:
 	var result: Array = []
 	var state: Dictionary = session.case_state.data
+	var view := view_id if not view_id.is_empty() else str(state.view)
 	for row in config.rows("investigation", "对象图片"):
-		if row.scene_id != state.scene or row.get("view_id") != state.view: continue
+		if row.scene_id != state.scene or row.get("view_id") != view: continue
 		if not session.condition(str(row.get("required_condition_ref", ""))): continue
 		var ref := str(row.get("state_ref", ""))
 		var expected_scene := str(row.get("expected_scene_ref", ""))
@@ -113,3 +114,10 @@ func observation_status(object_id: String) -> String:
 		if session.case_state.data.entries.get(str(row.entry_ref), false): seen += 1
 	if seen == 0: return ""
 	return "已查" if seen == options.size() else "可补查"
+
+func view_resource(view_id: String) -> Dictionary:
+	# 同一视图还可登记脸额、伤口等附图；底图只取明确的视图资源，不能逐行覆盖。
+	for row in config.rows("investigation", "资源需求"):
+		if row.get("view_id") == view_id and row.get("view_kind") in ["fixed_view", "scene_background", "object_detail"]:
+			return row
+	return {}

@@ -69,6 +69,7 @@ switch ($Action) {
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_session_test.gd') 'aurora-session-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_playthrough_test.gd','--quit-after','2400') 'aurora-playthrough-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_page_test.gd','--quit-after','2400') 'aurora-page-tests.log'
+    Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/aurora_investigation_bug_test.gd','--quit-after','2400') 'aurora-investigation-bug-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/debug_console_test.gd') 'debug-console-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/debug_console_ui_test.gd') 'debug-console-ui-tests.log'
     Invoke-EngineCheck @('--headless','--path',$projectRoot,'--script','res://tests/debug_autoplay_test.gd') 'debug-autoplay-tests.log'

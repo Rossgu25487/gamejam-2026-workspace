@@ -77,6 +77,7 @@ func bind(value: Node, map_service: Node) -> void:
 	cat_page.menu_requested.connect(menu_requested.emit)
 	cat_page.closed.connect(refresh)
 	narrative_page.menu_requested.connect(menu_requested.emit)
+	narrative_page.inspection_close_requested.connect(session.cancel_inspection)
 	reader_page.closed.connect(_reader_closed)
 	reader_page.content_selected.connect(session.select_content)
 	session.changed.connect(refresh)
@@ -103,12 +104,13 @@ func _refresh() -> void:
 	scene_page.visible = session.mode in ["investigation", "cat"]
 	card_page.visible = session.mode in ["selection", "result", "failure"]
 	narrative_page.visible = session.mode == "narrative"
+	narrative_page.set_inspection_close_available(session.can_cancel_inspection())
 	if reader_page.visible: reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 	if session.mode == "material" and (not reader_page.visible or reader_page.reading_content != str(session.reader.content)): reader_page.open_content(str(session.reader.content), true)
 	elif not handbook_overlay: reader_page.hide()
 	if card_page.visible: card_page.refresh()
 	if scene_page.visible: scene_page.refresh()
-	objectives.set_display_allowed(active and session.mode == "investigation" and scene_page.current_context.is_empty() and not handbook_overlay and not map_page.visible and not cat_page.visible)
+	objectives.set_display_allowed(active and session.mode == "investigation" and not scene_page.has_context() and not handbook_overlay and not map_page.visible and not cat_page.visible)
 	if session.mode == "credits": ending_page.open()
 	else: ending_page.hide()
 
@@ -188,6 +190,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif objective_page.visible: objectives.close_review()
 		elif map_page.visible: map_page.close()
 		elif narrative_page.visible and narrative_page.handle_escape(): pass
+		elif narrative_page.visible and session.can_cancel_inspection(): session.cancel_inspection()
 		elif card_page.visible and card_page.handle_escape(): pass
 		elif scene_page.visible and scene_page.handle_escape(): pass
 		else: menu_requested.emit()

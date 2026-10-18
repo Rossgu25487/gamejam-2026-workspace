@@ -17,6 +17,7 @@ const LINE_START_FORBIDDEN := "，。、；：！？）》」』”’…—·"
 const MIN_SENTENCE_FILL := 0.4 # 句末断点至少要占满本页的这一比例，否则宁可多排一点
 const MIN_CLAUSE_FILL := 0.6
 const STUB_CHARS := 10 # 末页不足这个字数就算残页，向前借一个断点
+signal inspection_close_requested
 signal menu_requested
 var stage: Control
 var service: Node
@@ -33,6 +34,12 @@ var pagination_ready := false
 var layout_canvas: Control
 var status_message := ""
 var pending_ending := false
+var inspection_close_available := false
+
+func set_inspection_close_available(value: bool) -> void:
+	if inspection_close_available == value: return
+	inspection_close_available = value
+	_queue_render()
 
 func bind(value: Node) -> void:
 	service = value
@@ -155,6 +162,9 @@ func _render() -> void:
 	fast_button.button_up.connect(service.stop_fast_read)
 	skip_button = UI.button(footer, "停止跳过" if service.fast_mode == "skip" else "跳过 Tab", _toggle_skip, service.fast_read_available())
 	for control in [fast_button, skip_button]: control.tooltip_text = "仅可用于已看过的对话"
+	if inspection_close_available:
+		var close := UI.button(layout_canvas, "返回调查", inspection_close_requested.emit)
+		_place(close, Rect2(28, 840, 200, 44))
 	_render_choices()
 	if not status_message.is_empty():
 		var status := UI.label(layout_canvas, status_message, 22)

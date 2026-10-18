@@ -2,6 +2,7 @@ extends Node
 ## 正式会话：组织入口、文案、案件事件与核查。界面只消费模型和提交玩家操作。
 const ConfigScript = preload("res://systems/aurora/aurora_configuration.gd")
 const StateScript = preload("res://systems/aurora/aurora_case_state.gd")
+const InvestigationScript = preload("res://systems/aurora/aurora_investigation.gd")
 const NarrativeScript = preload("res://systems/aurora/aurora_narrative.gd")
 signal changed
 signal notice(message: String)
@@ -475,14 +476,37 @@ func arrive() -> bool:
 func display_scene() -> String:
 	return str(case_state.data.scene)
 
+func investigation_view() -> String:
+	# 局部图是当前检查的表现，不改变真实地点与存档中的主视图。
+	var entry: Dictionary = config.entries.get(active_entry, {})
+	if entry.get("location_mode") != "fixed" and return_context.get("kind") == "inspection" and return_context.get("scene") == case_state.data.scene:
+		var detail := str(return_context.get("detail", ""))
+		if not detail.is_empty(): return detail
+	return str(case_state.data.view)
+
+func can_cancel_inspection() -> bool:
+	return not processing and not response_active and mode == "narrative" and return_context.get("kind") == "inspection" and config.entries.get(active_entry, {}).get("location_mode", "caller") == "caller"
+
+func cancel_inspection() -> bool:
+	# 提前返回只结束阅读，不执行入口完成事件，也不把未读完的观察记成已查。
+	if not can_cancel_inspection(): return false
+	call_stack.clear()
+	return return_to_context()
+
 func background_path() -> String:
 	var entry: Dictionary = config.entries.get(active_entry, {})
 	if entry.get("location_mode") == "fixed":
 		for link in config.rows("narrative", "片段地点关联"):
 			if link.sequence_id == entry.get("sequence_id") and not str(link.get("background_path", "")).is_empty(): return str(link.background_path)
-	var view := str(case_state.data.view)
-	for row in config.rows("investigation", "资源需求"):
-		if row.get("view_id") == view and row.get("view_kind") == "fixed_view": return str(row.resource_or_text_ref)
+	var model := InvestigationScript.new()
+	model.bind(self)
+	var view := investigation_view()
+	var layers: Array = model.image_layers(view)
+	var backgrounds: Array = layers.filter(func(row): return int(row.get("draw_layer", 0)) == 0)
+	if not backgrounds.is_empty(): return str(backgrounds.back().image_path)
+	var resource: Dictionary = model.view_resource(view)
+	if resource.get("view_kind") in ["fixed_view", "scene_background"]: return str(resource.resource_or_text_ref)
+	# 独立物件图保持其配置矩形，仍以当前场景为底，不把透明物件拉成整屏。
 	var ref := str(config.scenes.get(case_state.data.scene, {}).get("background_ref", ""))
 	return str(config.resources.get(ref, {}).get("path", ""))
 

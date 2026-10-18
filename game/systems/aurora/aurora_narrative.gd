@@ -134,7 +134,7 @@ func _attach_scene_layers(row: Dictionary) -> void:
 	var model := InvestigationScript.new()
 	model.bind(session)
 	var layers: Array = []
-	for layer in model.image_layers():
+	for layer in model.image_layers(session.investigation_view()):
 		var path := str(layer.image_path)
 		# 第0层是调查页替换底图的整屏背景，不是叠加图层。
 		if int(layer.get("draw_layer", 0)) == 0:
@@ -143,6 +143,11 @@ func _attach_scene_layers(row: Dictionary) -> void:
 		var who := str(layer.get("object_ref", ""))
 		layers.append({"image_path": path, "x": float(layer.image_x), "y": float(layer.image_y), "w": float(layer.image_w), "h": float(layer.image_h),
 			"flip_h": bool(layer.get("flip_h", false)), "character_id": who if session.config.actors.has(who) else ""})
+	# 独立物件按资源表坐标叠加；固定局部底图已经由 background_path 提供。
+	var resource: Dictionary = model.view_resource(session.investigation_view())
+	if resource.get("view_kind") == "object_detail":
+		layers.append({"image_path": resource.resource_or_text_ref, "x": resource.display_x, "y": resource.display_y,
+			"w": resource.display_w, "h": resource.display_h, "character_id": ""})
 	row["scene_layers"] = layers
 
 func show_choices(rows: Array) -> void:
