@@ -1,13 +1,22 @@
 extends RefCounted
 ## 调试控制台命令表：解析命令行并操作正式会话，不含任何界面，便于无头回归。
 ## 所有状态修改都经游戏自己的接口（grant / event / activate_entry / force_travel），
-## 快进跳关走 debug_fast_forward.gd 的隔离会话，不直接篡改章节或事件。
+## 跳关与自动推进走 debug_auto_play.gd（隔离会话或实机驱动），不直接篡改章节或事件。
 signal output_requested(kind: String, text: String)
-const FastForward = preload("res://systems/debug_console/debug_fast_forward.gd")
+## 一次自动推进结束（含取消、失败）后发出，参数为完整报告。
+signal report_ready(report: Dictionary)
+## 实机演示开始、结束时发出；界面据此收起面板并放行游戏输入。
+signal live_run_changed(active: bool)
+const AutoPlay = preload("res://systems/debug_console/debug_auto_play.gd")
 const SOURCE_ENTRY := "调试控制台"
 const TYPE_LABELS := {"evidence": "证物", "testimony": "证言", "inference": "推论"}
 const LIST_LIMIT := 60
 const FLOW_MODES := ["investigation", "selection", "failure"]
+const REPORT_DIR := "user://debug_console"
+const REPORT_PATH := "user://debug_console/autoplay_last.json"
+const STRATEGY_ALIASES := {"win": "win", "通关": "win", "fail": "fail", "错误": "fail", "random": "random", "随机": "random"}
+const CHOICE_ALIASES := {"cycle": "cycle", "循环": "cycle", "first": "first", "第一": "first", "last": "last", "最后": "last", "random": "random", "随机": "random"}
+const DELAY_PRESETS := {"fast": 40, "normal": 250, "slow": 700}
 
 var app: Control
 var ui: Node
@@ -16,7 +25,9 @@ var aliases := {}
 var undo_snapshot := {}
 var busy := false
 var speed_changed := false
-var _fast_forward: RefCounted
+var live_run := false
+var last_report := {}
+var _auto: RefCounted
 var session: Node:
 	get:
 		return app.session
@@ -69,7 +80,7 @@ func execute(line: String) -> void:
 	await registry[name].fn.call(tokens)
 
 func cancel() -> void:
-	if _fast_forward != null: _fast_forward.cancel()
+	if _auto != null: _auto.cancel()
 
 func _out(text: String, kind: String = "info") -> void: output_requested.emit(kind, text)
 func _ok(text: String) -> void: output_requested.emit("ok", text)
@@ -103,6 +114,8 @@ func _register() -> void:
 	_add("entry", "跳转", "entry <入口ID> [-s]", "触发剧情入口；-s 先移动到入口允许的场景", _cmd_entry)
 	_add("event", "跳转", "event <事件ID>", "按游戏规则执行案件事件（受事件条件约束）", _cmd_event)
 	_add("skip", "跳转", "skip", "快速读完当前对白与原件，停在选项或调查画面", _cmd_skip)
+	_add("auto", "自动推进", "auto [目标] [-s 打法] [-c 取项] [-seed N] [-live] [-here] [-save]", "自动按指定打法玩完整个剧情并出报告，检验全流程能否正常游玩", _cmd_auto, ["autoplay", "play"],
+		"目标：end（默认，片尾）、章节 1-6 或 CHxx、关卡 ID，如 auto L07_R02。\n打法 -s：win 通关（默认）、fail 故意出错并走失败界面、random 随机打法。\n取项 -c：cycle 循环取项（默认）、first 总选第一项、last 总选最后一项、random 随机取项。\n随机 -seed N：固定随机种子可复现；不写则随机取一个，报告里会记录。\n-live：实机演示，在游戏画面里亲眼看着推进（默认在隔离会话里秒跑，不动当前游戏）；-fast / -slow 调整演示速度，-delay 毫秒 自定。\n-here：从当前进度继续（隔离模式用当前存档作起点；实机模式不重开新局）。\n-save：实机演示时允许写自动存档（默认不写，避免污染测试存档）。\n-nocheck：不做逐阶段的存档校验与读档往返。\nauto report 重新显示上一次的详细报告；报告同时保存在 autoplay_last.json。\n例：auto  /  auto -s random -seed 7  /  auto 3 -live -slow  /  auto -s fail -c first")
 	_add("give", "物品", "give <物品ID|all|evidence|testimony|inference> [-a]", "获得材料；材料 ID 取最新版，具体版本用内容 ID（如 E02_V3），-a 取全部版本", _cmd_give, ["get"],
 		"give E01        获得 E01 的最新版本。\ngive E02_V3     获得指定版本。\ngive E02 -a     获得 E02 的全部版本。\ngive evidence   获得全部证物（testimony 证言、inference 推论、all 全部）。\n可一次写多个：give E01 T01 P01。")
 	_add("take", "物品", "take <物品ID|all>", "移除材料（材料 ID 移除全部版本，内容 ID 移除单个版本）", _cmd_take, ["drop"])
@@ -259,7 +272,7 @@ func _cmd_chapters(_args: PackedStringArray) -> void:
 
 func _level_status(id: String) -> String:
 	if session.case_state.data.completed_questions.has(id): return "已完成"
-	return "可进入" if FastForward.level_open(session, id) else "未开放"
+	return "可进入" if AutoPlay.level_open(session, id) else "未开放"
 
 func _cmd_levels(_args: PackedStringArray) -> void:
 	for id in config.questions:
@@ -412,12 +425,10 @@ func _cmd_jump(args: PackedStringArray) -> void:
 	_remember_undo()
 	busy = true
 	_warn("快进到 %s：在隔离会话中沿真实流程推进，当前进度将被替换（undo 可撤回）。Esc 取消。" % goal.label)
-	_fast_forward = FastForward.new()
-	_fast_forward.host = ui if ui != null else app
-	_fast_forward.shared_config = config
-	_fast_forward.progress = func(text): output_requested.emit("progress", text)
-	var result: Dictionary = await _fast_forward.run(goal)
-	_fast_forward = null
+	# 跳关只关心到达目标：通关打法，不做逐阶段存档校验，游戏本身的流程问题留给 auto 报告。
+	_auto = _new_engine({"strategy": "win", "choice": "cycle", "checks": false}, goal)
+	var result: Dictionary = await _auto.run()
+	_auto = null
 	busy = false
 	output_requested.emit("progress", "")
 	if not is_instance_valid(app): return
@@ -457,6 +468,203 @@ func _open_level(question_id: String) -> void:
 			else: _warn("入口剧情停在选项处，请自行选择（skip 可读完选项以外的段落）。")
 	else: _warn("关卡已开放，但入口 %s 没有自动触发%s；可前往 %s 后重试 entry。" % [entry_id, "（" + session.last_notice + "）" if not session.last_notice.is_empty() else "", ", ".join(allowed) if not allowed.is_empty() else "对应场景"])
 	_refresh_pages()
+
+# ---------- 自动推进 ----------
+
+func _new_engine(options: Dictionary, goal: Dictionary) -> RefCounted:
+	var engine: RefCounted = AutoPlay.new()
+	engine.host = ui if ui != null else app
+	engine.shared_config = config
+	engine.goal = goal
+	engine.strategy = str(options.get("strategy", "win"))
+	engine.choice_policy = str(options.get("choice", "cycle"))
+	engine.seed_value = maxi(0, int(options.get("seed", 0)))
+	engine.checks = bool(options.get("checks", true))
+	engine.delay_ms = int(options.get("delay", 0))
+	engine.progress = func(text): output_requested.emit("progress", text)
+	return engine
+
+## 解析 auto 命令的参数，返回 {ok, options} 或 {ok: false, error}。界面的"自动推进"页也用同一份选项。
+func parse_auto(args: PackedStringArray) -> Dictionary:
+	var options := {"goal": {"kind": "ending", "label": "片尾演职员画面"}, "strategy": "win", "choice": "cycle", "seed": -1, "live": false, "delay": -1, "here": false, "save": false, "checks": true}
+	var goal_token := ""
+	var index := 0
+	while index < args.size():
+		var token := str(args[index])
+		var lower := token.to_lower()
+		if lower.begins_with("-") and lower.length() > 1 and not lower.is_valid_float():
+			var key := lower.substr(1)
+			match key:
+				"live", "l": options.live = true
+				"here": options.here = true
+				"save": options.save = true
+				"nocheck": options.checks = false
+				"fast", "normal", "slow": options.delay = int(DELAY_PRESETS[key])
+				"s", "strategy", "c", "choice", "seed", "delay":
+					index += 1
+					if index >= args.size(): return {"ok": false, "error": "选项 %s 缺少取值。help auto 查看用法。" % token}
+					var value := str(args[index]).to_lower()
+					match key:
+						"s", "strategy":
+							if not STRATEGY_ALIASES.has(value): return {"ok": false, "error": "未知打法 %s，可选 win / fail / random。" % args[index]}
+							options.strategy = STRATEGY_ALIASES[value]
+						"c", "choice":
+							if not CHOICE_ALIASES.has(value): return {"ok": false, "error": "未知取项方式 %s，可选 cycle / first / last / random。" % args[index]}
+							options.choice = CHOICE_ALIASES[value]
+						"seed":
+							if not value.is_valid_int() or int(value) < 0: return {"ok": false, "error": "随机种子须是非负整数：%s" % args[index]}
+							options.seed = int(value)
+						"delay":
+							if not value.is_valid_int() or int(value) < 0 or int(value) > 5000: return {"ok": false, "error": "演示间隔须是 0-5000 毫秒：%s" % args[index]}
+							options.delay = int(value)
+				_: return {"ok": false, "error": "未知选项 %s。help auto 查看用法。" % token}
+		elif goal_token.is_empty(): goal_token = token
+		else: return {"ok": false, "error": "多余的参数：%s" % token}
+		index += 1
+	if not goal_token.is_empty():
+		var goal := _parse_goal(goal_token)
+		if goal.is_empty(): return {"ok": false, "error": "无法识别的目标：%s。可用 chapters / levels 查看。" % goal_token}
+		options.goal = goal
+	if int(options.delay) < 0: options.delay = int(DELAY_PRESETS.normal) if options.live else 0
+	return {"ok": true, "options": options}
+
+func _cmd_auto(args: PackedStringArray) -> void:
+	if args.size() == 1 and args[0].to_lower() in ["report", "报告"]:
+		if last_report.is_empty(): _err("还没有自动推进报告。")
+		else: emit_report(last_report, true)
+		return
+	var parsed := parse_auto(args)
+	if not bool(parsed.ok):
+		_err(str(parsed.error))
+		return
+	await run_autoplay(parsed.options)
+
+## 把报告按行输出到控制台。
+func emit_report(data: Dictionary, detail: bool) -> void:
+	for line in AutoPlay.report_lines(data, detail): output_requested.emit(str(line.kind), str(line.text))
+
+func _flow_active() -> bool:
+	return app.current_layer != "title" and not session.run_id.is_empty()
+
+## 运行一次自动推进。隔离模式在临时会话里完成，不碰当前游戏；实机模式驱动正在运行的游戏。
+## 返回引擎结果（含 report）；无法开始时返回空字典。
+func run_autoplay(options: Dictionary) -> Dictionary:
+	if busy:
+		_err("上一条命令仍在执行，按 Esc 可取消。")
+		return {}
+	var live: bool = bool(options.get("live", false))
+	var here: bool = bool(options.get("here", false))
+	var seed_value := int(options.get("seed", -1))
+	var strategy := str(options.get("strategy", "win"))
+	var choice := str(options.get("choice", "cycle"))
+	if seed_value < 0:
+		# 随机打法没指定种子时取一个新的，写进报告以便复现；其余打法固定为 0。
+		seed_value = int(Time.get_unix_time_from_system()) % 100000 if (strategy == "random" or choice == "random") else 0
+	var settled := options.duplicate()
+	settled.seed = seed_value
+	var goal: Dictionary = options.get("goal", {"kind": "ending", "label": "片尾演职员画面"})
+	var engine := _new_engine(settled, goal)
+	if live:
+		if not _prepare_live(engine, here): return {}
+	elif here and _flow_active():
+		var snapshot: Dictionary = session.export_snapshot()
+		if not session.validate_snapshot(snapshot):
+			_err("当前进度无法作为起点（存档校验未通过），请先回到调查画面再试。")
+			return {}
+		engine.start_snapshot = snapshot
+	var held := {}
+	var announce := "%s · %s · 取项 %s%s · 目标 %s" % [AutoPlay.STRATEGIES.get(strategy, strategy), "实机演示" if live else "隔离快速", AutoPlay.CHOICE_POLICIES.get(choice, choice), "（种子 %d）" % seed_value if strategy == "random" or choice == "random" else "", goal.label]
+	busy = true
+	_auto = engine
+	if live:
+		held = _suppress_saves() if not bool(options.get("save", false)) else {}
+		live_run = true
+		_warn("自动推进开始（%s）。游戏画面里亲眼看着推进；Esc 停止。" % announce)
+		live_run_changed.emit(true)
+	else:
+		_warn("自动推进开始（%s）。不影响当前游戏；Esc 取消。" % announce)
+	var result: Dictionary = await engine.run()
+	_auto = null
+	busy = false
+	output_requested.emit("progress", "")
+	if not is_instance_valid(app): return result
+	if live:
+		live_run = false
+		if not held.is_empty(): _restore_saves_later(held)
+		live_run_changed.emit(false)
+	_finish_autoplay(result, live)
+	return result
+
+## 实机模式的开局：需要时开新局（先留 undo），并检查游戏当前处在能被驱动的界面。
+func _prepare_live(engine: RefCounted, here: bool) -> bool:
+	if here and _flow_active():
+		if app.current_layer == "pause": app.call("_resume")
+		if app.current_layer != "game":
+			_err("请先关闭当前菜单页面再继续演示。")
+			return false
+	else:
+		if app.current_layer not in ["title", "game", "pause"]:
+			_err("请先关闭当前菜单页面再开始演示。")
+			return false
+		_remember_undo()
+		if not app.debug_new_game():
+			_err("无法开始新局：" + str(session.last_notice))
+			return false
+	engine.isolated = false
+	engine.app = app
+	engine.session = session
+	return true
+
+## 演示期间不让游戏写存档：丢弃自动存档写入，并摘掉结局存档与"清除旧档保护"的连接，演示后原样恢复。
+func _suppress_saves() -> Dictionary:
+	var held := {"writer": session.save_writer, "ending": false, "initial": false}
+	session.save_writer = Callable()
+	var ending: Callable = Callable(app, "_save_ending")
+	if session.ending_checkpoint_requested.is_connected(ending):
+		session.ending_checkpoint_requested.disconnect(ending)
+		held.ending = true
+	var clear: Callable = app.save_service.clear_previous_run_protection
+	if session.initial_save_completed.is_connected(clear):
+		session.initial_save_completed.disconnect(clear)
+		held.initial = true
+	return held
+
+func _restore_saves(held: Dictionary) -> void:
+	if not is_instance_valid(app): return
+	var ending: Callable = Callable(app, "_save_ending")
+	session.save_writer = held.writer
+	if held.ending and not session.ending_checkpoint_requested.is_connected(ending): session.ending_checkpoint_requested.connect(ending)
+	var clear: Callable = app.save_service.clear_previous_run_protection
+	if held.initial and not session.initial_save_completed.is_connected(clear): session.initial_save_completed.connect(clear)
+
+## 演示若停在片尾画面，玩家点"结束并返回标题"会触发结局存档；等离开片尾后再恢复存档写入。
+func _restore_saves_later(held: Dictionary) -> void:
+	var tree := (ui if ui != null else app).get_tree()
+	while is_instance_valid(app) and str(session.mode) == "credits" and app.current_layer == "game": await tree.process_frame
+	_restore_saves(held)
+
+func _finish_autoplay(result: Dictionary, live: bool) -> void:
+	var data: Dictionary = result.get("report", {})
+	if data.is_empty():
+		_err("自动推进没有产生报告：" + str(result.get("message", "")))
+		return
+	data["finished_at"] = Time.get_datetime_string_from_system()
+	data["serial"] = Time.get_ticks_usec()
+	var path := _store_report(data)
+	data["file"] = path
+	last_report = data
+	emit_report(data, not bool(data.get("ok", false)))
+	if not path.is_empty(): _out("完整报告（含全部决策记录）：" + path, "dim")
+	if live and not undo_snapshot.is_empty(): _out("输入 undo 可回到演示前的进度。", "dim")
+	report_ready.emit(data)
+
+func _store_report(data: Dictionary) -> String:
+	DirAccess.make_dir_recursive_absolute(REPORT_DIR)
+	var file := FileAccess.open(REPORT_PATH, FileAccess.WRITE)
+	if file == null: return ""
+	file.store_string(JSON.stringify(data, "\t"))
+	file.close()
+	return ProjectSettings.globalize_path(REPORT_PATH)
 
 func _cmd_undo(_args: PackedStringArray) -> void:
 	if undo_snapshot.is_empty():
@@ -720,6 +928,7 @@ func _arg_candidates(name: String, index: int) -> Array:
 		"take": pool = ["all"] + session.case_state.data.materials.keys()
 		"scene": pool = config.scenes.keys() if index == 1 else ["arrive"]
 		"jump": pool = ["end"] + config.chapters.keys() + config.questions.keys()
+		"auto": pool = ["end", "report", "-s", "-c", "-seed", "-live", "-here", "-save", "-nocheck", "-fast", "-slow", "-delay", "win", "fail", "random", "cycle", "first", "last"] + config.chapters.keys() + config.questions.keys()
 		"entry": pool = config.entries.keys() + ["-s"]
 		"event": pool = config.events.keys()
 		"cond": pool = config.conditions.keys()

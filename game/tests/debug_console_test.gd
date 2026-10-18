@@ -1,6 +1,7 @@
 extends SceneTree
 ## 调试控制台回归：按键呼出与解锁、跳关与关卡跳转、物品、调试命令；隔离存储，不读写玩家档案。
-const FastForward = preload("res://systems/debug_console/debug_fast_forward.gd")
+## 命令走 console.submit（图形按钮也走这条路径）；图形界面本身见 debug_console_ui_test。
+const AutoPlay = preload("res://systems/debug_console/debug_auto_play.gd")
 var app: Control
 var console: CanvasLayer
 var commands: RefCounted
@@ -53,17 +54,20 @@ func _run() -> void:
 	await press(KEY_QUOTELEFT)
 	check(console.is_open and console.panel_root.visible and paused, "标题界面按 ~ 键呼出控制台并冻结游戏")
 	check(not console.unlocked, "初次呼出处于未解锁状态")
+	check(console.prompt_box.visible and not console.main_panel.visible, "未解锁只显示口令弹窗，不显示功能面板")
 	var out := await run_command("help")
 	said(out, "未知命令", "未解锁时不执行任何命令")
-	check(not console.unlocked, "输错口令不解锁")
+	check(not console.unlocked and not console.main_panel.visible, "输错口令不解锁")
 	out = await run_command("jump 3")
 	check(app.current_layer == "title", "未解锁时 jump 不生效")
 	await run_command("SUPER")
 	check(console.unlocked, "输入 super（不分大小写）后解锁")
+	check(console.main_panel.visible and not console.prompt_box.visible, "解锁后直接弹出图形功能面板")
 	await press(KEY_QUOTELEFT)
 	check(not console.is_open and not paused and not console.panel_root.visible, "再按 ~ 键关闭并恢复游戏")
 	await press(KEY_ASCIITILDE)
 	check(console.is_open and console.unlocked, "~ 键重新呼出，解锁状态保持")
+	check(console.main_panel.visible and not console.prompt_box.visible, "解锁后再按 ~ 键直接呼出图形面板，不再要口令")
 	await press(KEY_ESCAPE)
 	check(not console.is_open and not paused, "Esc 关闭控制台")
 	check(app.current_layer == "title", "Esc 被控制台吞掉，没有触发游戏菜单")
@@ -192,7 +196,7 @@ func _run() -> void:
 	said(out, "读完", "skip 读完当前对白")
 	out = await run_command("jump L02_R01")
 	check(app.session.mode == "selection" and app.session.question == "L02_R01", "jump 直接进入关卡选材界面")
-	check(not FastForward.solvable_rows(app.session, "L02_R01").is_empty(), "关卡跳转时已持有可过关的材料")
+	check(not AutoPlay.solvable_rows(app.session, "L02_R01").is_empty(), "关卡跳转时已持有可过关的材料")
 	check(app.gameplay_page.card_page.visible, "选材界面实际显示")
 
 	# ---- 撤回 ----
@@ -245,6 +249,7 @@ func _run() -> void:
 	# ---- 锁定与收尾 ----
 	await run_command("lock")
 	check(not console.unlocked, "lock 重新锁定")
+	check(console.prompt_box.visible and not console.main_panel.visible, "锁定后面板换回口令弹窗")
 	out = await run_command("status")
 	said(out, "未知命令", "锁定后命令不再可用")
 	await press(KEY_ESCAPE)

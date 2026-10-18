@@ -178,6 +178,21 @@ func debug_load_snapshot(snapshot: Dictionary) -> bool:
 	_loaded(snapshot)
 	return current_layer == "game"
 
+## 调试控制台的开局入口：不经确认页，其余沿"新游戏"确认后的正式路径。
+func debug_new_game() -> bool:
+	pending_leave = ""
+	pending_load = false
+	confirmation_action = ""
+	gameplay_page.set_active(false)
+	title_page.hide_page()
+	pause_page.hide_page()
+	for page in [save_page, load_page, settings_page, confirm_page]: page.close_page()
+	if not session.new_game(): return false
+	gameplay_page.reset_page()
+	audio_service.begin_session()
+	_resume()
+	return current_layer == "game"
+
 func _resume() -> void:
 	current_layer = "game"
 	title_page.hide_page()
