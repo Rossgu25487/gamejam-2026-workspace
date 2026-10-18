@@ -126,6 +126,8 @@ func _run() -> void:
 	await click(button(game.scene_page, "观察环境"))
 	drain()
 	check(game.narrative_page.stage.scene_id == "SC02", "点床前保留的是大厅对话舞台")
+	check(game.narrative_page.stage.scene_layers.any(func(item): return item.character_id == "CHR04"), "大厅对话舞台沿用调查画面里站着的伊万，不会换位置")
+	check(game.narrative_page.stage.occupants.values().all(func(item): return item.character_id != "CHR04"), "站在场景里的伊万没有再生成槽位立绘")
 	story_move("SC08")
 	await frames()
 	var bed: Control = game.scene_page.find_child("HS_SC08_BED", true, false)

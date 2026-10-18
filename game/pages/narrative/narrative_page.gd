@@ -3,6 +3,20 @@ extends Control
 
 const UI = preload("res://pages/core/page_controls.gd")
 const StageScript = preload("res://pages/narrative/narrative_stage.gd")
+# 人名与正文的区分：更大的字号、暖色和深色描边；内心独白的名字沿用冷色。
+const NAME_FONT_SIZE := 36
+const NAME_COLOR := Color("f2d8a0")
+const INNER_NAME_COLOR := Color("b8cdd8")
+const NAME_OUTLINE_COLOR := Color(0.04, 0.07, 0.1, 0.95)
+const NAME_OUTLINE_SIZE := 6
+# 分页：每页行数，以及自然断点的取舍。
+const PAGE_LINES := 2
+const SENTENCE_MARKS := "。！？…"
+const CLAUSE_MARKS := "，、；："
+const LINE_START_FORBIDDEN := "，。、；：！？）》」』”’…—·"
+const MIN_SENTENCE_FILL := 0.4 # 句末断点至少要占满本页的这一比例，否则宁可多排一点
+const MIN_CLAUSE_FILL := 0.6
+const STUB_CHARS := 10 # 末页不足这个字数就算残页，向前借一个断点
 signal menu_requested
 var stage: Control
 var service: Node
@@ -98,8 +112,12 @@ func _render() -> void:
 			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			_place(portrait, Rect2(80, 694, 112, 112))
-	name_label = UI.label(layout_canvas, str(row.get("speaker_name", row.get("character_name", ""))) + (" · 内心" if kind in ["内心", "inner"] else ""), 32)
-	_place(name_label, Rect2(left, 658, 600, 40))
+	var inner := kind in ["内心", "inner"]
+	name_label = UI.label(layout_canvas, str(row.get("speaker_name", row.get("character_name", ""))) + (" · 内心" if inner else ""), NAME_FONT_SIZE)
+	name_label.add_theme_color_override("font_color", INNER_NAME_COLOR if inner else NAME_COLOR)
+	name_label.add_theme_color_override("font_outline_color", NAME_OUTLINE_COLOR)
+	name_label.add_theme_constant_override("outline_size", NAME_OUTLINE_SIZE)
+	_place(name_label, Rect2(left, 650, 600, 50))
 	# 姓名和正文是阅读画布的装饰/文本层；点击它们也要交给本页继续阅读，
 	# 不能让 RichTextLabel 把鼠标事件截在自己内部。
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -164,28 +182,61 @@ func _paginate(label: RichTextLabel) -> void:
 	# 等容器完成布局后再按实际宽度分页；首帧不得先把整句打进正文。
 	await get_tree().process_frame
 	if not is_instance_valid(label) or service == null: return
-	var font := label.get_theme_font("normal_font")
-	var font_size := label.get_theme_font_size("normal_font_size")
-	var width := maxf(80.0, label.size.x - 24)
 	var text: String = service.current_text()
-	var ends: Array[int] = []
-	var line := ""
-	var lines := 1
-	var breaks := TextServerManager.get_primary_interface().string_get_character_breaks(text)
-	var start := 0
-	for end in breaks:
-		var glyph := text.substr(start, end - start)
-		if glyph == "\n" or (not line.is_empty() and font.get_string_size(line + glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > width and not glyph in ["，", "。", "！", "？", "；", "、", "：", "”", "）"]):
-			lines += 1
-			line = ""
-			if lines > 2:
-				if start > 0: ends.append(start)
-				lines = 1
-		line += glyph
-		start = end
-	if ends.is_empty() or ends[-1] != text.length(): ends.append(text.length())
-	service.set_page_ends(ends)
+	service.set_page_ends(page_ends(text, label.get_theme_font("normal_font"), label.get_theme_font_size("normal_font_size"), label.size.x))
 	pagination_ready = true
+
+static func _text_lines(text: String, font: Font, font_size: int, width: float) -> TextParagraph:
+	# 与 RichTextLabel 的自动换行同一套断行规则，分页看到的行就是正文实际排出的行。
+	var paragraph := TextParagraph.new()
+	paragraph.width = width
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.add_string(text, font, font_size)
+	return paragraph
+
+static func _is_alnum(character: String) -> bool:
+	return (character >= "0" and character <= "9") or (character >= "A" and character <= "Z") or (character >= "a" and character <= "z")
+
+static func _can_start_page(text: String, index: int) -> bool:
+	# 新页开头不能是句末或收尾标点，也不能把一串字母数字从中间劈开。
+	if index <= 0 or index >= text.length(): return true
+	if LINE_START_FORBIDDEN.contains(text[index]): return false
+	return not (_is_alnum(text[index - 1]) and _is_alnum(text[index]))
+
+static func _natural_break(text: String, start: int, window: int, marks: String, min_fill: float, limit: int = -1) -> int:
+	# 在 [start, window] 内找最靠后的自然断点：断在 marks 之后，且至少占满本页 min_fill。
+	var upper := window if limit < 0 else mini(window, limit)
+	var lower := start + ceili((window - start) * min_fill)
+	for index in range(upper, lower - 1, -1):
+		if index > start and marks.contains(text[index - 1]) and _can_start_page(text, index): return index
+	return -1
+
+static func page_ends(text: String, font: Font, font_size: int, width: float) -> Array[int]:
+	## 返回每页结束的字符位置。每页至多 PAGE_LINES 行；优先在句末、其次在句内停顿处翻页，
+	## 末页不留只有几个字的残页，新页不以标点开头。
+	var ends: Array[int] = []
+	var length := text.length()
+	var start := 0
+	while start < length:
+		var paragraph := _text_lines(text.substr(start), font, font_size, width)
+		if paragraph.get_line_count() <= PAGE_LINES: break
+		var window := start + mini(paragraph.get_line_range(PAGE_LINES - 1).y, length - start)
+		if window >= length: break
+		var end := _natural_break(text, start, window, SENTENCE_MARKS, MIN_SENTENCE_FILL)
+		if end < 0: end = _natural_break(text, start, window, CLAUSE_MARKS, MIN_CLAUSE_FILL)
+		if end < 0:
+			# 没有自然断点就硬切，但把会落在新页开头的标点连同前一个字一起带到下一页。
+			end = window
+			while end - 1 > start and not _can_start_page(text, end): end -= 1
+		# 余下内容还不够一个残页的字数时，向前借一个断点，让最后两页分得均匀些。
+		if length - end < STUB_CHARS:
+			var earlier := _natural_break(text, start, window, SENTENCE_MARKS, MIN_SENTENCE_FILL, length - STUB_CHARS)
+			if earlier < 0: earlier = _natural_break(text, start, window, CLAUSE_MARKS, MIN_CLAUSE_FILL, length - STUB_CHARS)
+			if earlier > start: end = earlier
+		ends.append(end)
+		start = end
+	ends.append(length)
+	return ends
 
 func _render_log() -> void:
 	var panel := VBoxContainer.new()

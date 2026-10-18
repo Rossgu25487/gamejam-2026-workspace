@@ -292,7 +292,66 @@ func stage_checks() -> void:
 	row.scene_id = "NEW"; row.text_type = "旁白"
 	stage.apply_record(row, catalog)
 	check(stage.occupants.is_empty(), "新场景清除旧舞台人物")
+	# 清空人物位只动人物；站在场景里的人物以图层呈现，不再另起槽位立绘。
+	var icon := "res://art/visual/loop_mark.svg"
+	var base := {"scene_id": "SCENE2", "background_path": icon, "text_type": "对白", "avatar_path": icon}
+	stage.apply_record(base.merged({"character_id": "A", "position": "左"}, true), catalog)
+	stage.apply_record(base.merged({"character_id": "B", "position": "右"}, true), catalog)
+	check(stage.occupants.size() == 2, "同场景连续发言保留两位人物")
+	stage.apply_record(base.merged({"character_id": "C", "position": "中", "clear_positions": true}, true), catalog)
+	check(stage.occupants.size() == 1 and stage.occupants.has(2) and stage.scene_id == "SCENE2" and stage.background.texture != null, "清空人物位只清人物，不动背景与地点")
+	stage.apply_record(base.merged({"character_id": "A", "position": "左", "clear_positions": true}, true), catalog)
+	check(stage.occupants.size() == 1 and stage.occupants.has(1), "清空人物位后发言人仍按位置入场")
+	var layers := [
+		{"image_path": icon, "x": 100, "y": 200, "w": 300, "h": 400, "character_id": "A"},
+		{"image_path": icon, "x": 900, "y": 200, "w": 300, "h": 400, "character_id": "B"},
+		{"image_path": "res://art/visual/missing_layer.png", "x": 0, "y": 0, "w": 10, "h": 10, "character_id": "D"},
+		{"image_path": icon, "x": 600, "y": 700, "w": 100, "h": 100, "character_id": ""}]
+	stage.apply_record(base.merged({"character_id": "A", "position": "左", "scene_layers": layers}, true), catalog)
+	check(stage.scene_layers.size() == 3, "缺图的场景图层被跳过，其余照常建立")
+	check(stage.occupants.is_empty(), "已站在场景里的发言人不再另起槽位立绘，旧槽位一并撤下")
+	var layer_a: TextureRect = stage.scene_layers[0].node
+	var layer_b: TextureRect = stage.scene_layers[1].node
+	check(layer_a.position.is_equal_approx(Vector2(80, 160)) and layer_a.size.is_equal_approx(Vector2(240, 320)), "场景图层按调查画面坐标缩放到舞台")
+	check(layer_a.modulate == Color.WHITE and is_equal_approx(layer_b.modulate.r, 0.88), "发言人所在图层保持亮度，其他场景人物变暗")
+	stage.apply_record(base.merged({"character_id": "", "text_type": "旁白", "scene_layers": layers}, true), catalog)
+	check(stage.scene_layers.all(func(item): return item.node.modulate == Color.WHITE), "旁白时场景人物都不变暗")
+	stage.apply_record(base.merged({"character_id": "E", "position": "右"}, true), catalog)
+	check(stage.scene_layers.is_empty() and stage.occupants.has(3), "记录不带图层时清掉上一幕图层")
 	stage.queue_free()
+
+func pagination_checks() -> void:
+	# 分页只依赖字体度量；用与正文相同的 RichTextLabel 取字体，断言的是性质而非具体字数。
+	var Page := preload("res://pages/narrative/narrative_page.gd")
+	var label := RichTextLabel.new()
+	label.add_theme_font_size_override("normal_font_size", 32)
+	root.add_child(label)
+	await frames(2)
+	var font: Font = label.get_theme_font("normal_font")
+	var width := 1192.0
+	check(Page.page_ends("", font, 32, width) == [0] and Page.page_ends("很短的一句。", font, 32, width) == [6], "空文与单页短句各只有一个终点")
+	var sentences := "这是一句用来检验分页的台词，它长度适中。".repeat(16)
+	var cases := {"短句重复": sentences, "无标点长串": "字".repeat(260), "带换行": "第一段话。\n".repeat(8) + sentences, "标点扎堆": ("他说：“没有，真的没有……”" + "。".repeat(3)).repeat(30)}
+	for name in cases:
+		var text: String = cases[name]
+		var ends: Array[int] = Page.page_ends(text, font, 32, width)
+		var ordered := ends[-1] == text.length()
+		var fits := true
+		var punctuation_start := false
+		var start := 0
+		for index in range(ends.size()):
+			ordered = ordered and ends[index] > start
+			fits = fits and Page._text_lines(text.substr(start, ends[index] - start), font, 32, width).get_line_count() <= 2
+			if start > 0 and Page.LINE_START_FORBIDDEN.contains(text[start]): punctuation_start = true
+			start = ends[index]
+		check(ends.size() > 1 and ordered and fits, name + "：分页终点递增，每页不超过两行")
+		check(not punctuation_start, name + "：新页不以标点开头")
+	var ends: Array[int] = Page.page_ends(sentences, font, 32, width)
+	var natural := true
+	for index in range(ends.size() - 1): natural = natural and Page.SENTENCE_MARKS.contains(sentences[ends[index] - 1])
+	check(natural, "句子较短时每页都停在句末，不在句中翻页")
+	check(ends.size() < 2 or ends[-1] - ends[-2] >= Page.STUB_CHARS, "末页不留只有几个字的残页")
+	label.queue_free()
 
 func narrative_input_checks() -> void:
 	var service := Narrative.new()
@@ -309,6 +368,8 @@ func narrative_input_checks() -> void:
 	service.tick(20)
 	await frames()
 	check(page.text_label.get_line_count() <= 2, "长对白每页最多两行")
+	check(page.name_label.get_theme_font_size("font_size") > page.text_label.get_theme_font_size("normal_font_size"), "姓名字号大于正文")
+	check(page.name_label.get_theme_color("font_color") != page.text_label.get_theme_color("default_color"), "姓名与正文颜色不同")
 	var visible_before: String = service.visible_text()
 	await press_key(KEY_H)
 	check(service.hidden, "H隐藏对白")
@@ -536,6 +597,7 @@ func _run() -> void:
 	inspection_atomic_checks()
 	await configured_map_page_checks()
 	stage_checks()
+	await pagination_checks()
 	await narrative_input_checks()
 	await page_checks()
 	if failures.is_empty(): print("SYSTEM_AUDIT_PASS: %d checks" % checks)

@@ -6,6 +6,7 @@ const SaveScript = preload("res://systems/save_load/save_load_service.gd")
 const AudioScript = preload("res://systems/audio/audio_service.gd")
 const MapScript = preload("res://systems/map_navigation/map_navigation_service.gd")
 const MapBridge = preload("res://systems/aurora/aurora_map_bridge.gd")
+const DebugConsole = preload("res://systems/debug_console/debug_console.gd")
 @onready var title_page: Control = $TitlePage
 @onready var pause_page: Control = $PausePage
 @onready var save_page: Control = $SavePage
@@ -19,6 +20,7 @@ var save_service: Node
 var audio_service: Node
 var map_service: Node
 var map_bridge: Node
+var debug_console: CanvasLayer
 var current_layer := "title"
 var subpage_origin := "title"
 var confirmation_action := ""
@@ -103,6 +105,10 @@ func _ready() -> void:
 	get_window().focus_exited.connect(gameplay_page.handle_window_focus_loss)
 	get_window().focus_exited.connect(audio_service.notify_window_focus.bind(false))
 	get_window().focus_entered.connect(audio_service.notify_window_focus.bind(true))
+	# 测试用调试控制台：最后加入场景树，任何界面按 ~ 键都由它先收到。
+	debug_console = DebugConsole.new()
+	add_child(debug_console)
+	debug_console.bind(self)
 	_show_title()
 
 func _show_title() -> void:
@@ -158,6 +164,34 @@ func _loaded(snapshot: Dictionary) -> void:
 	if not session.ending_media.is_empty(): audio_service.restore_narrative_media(session.ending_media)
 	else: audio_service.set_narrative_soundscape(session.last_bgm, true)
 	_resume()
+
+## 调试控制台的换档入口：先收起所有子页面和待办流程，再沿普通读档路径换入快照。
+func debug_load_snapshot(snapshot: Dictionary) -> bool:
+	if not session.validate_snapshot(snapshot) or not session.prepare_scene(str(snapshot.case_state.scene)): return false
+	pending_leave = ""
+	pending_load = false
+	confirmation_action = ""
+	gameplay_page.set_active(false)
+	title_page.hide_page()
+	pause_page.hide_page()
+	for page in [save_page, load_page, settings_page, confirm_page]: page.close_page()
+	_loaded(snapshot)
+	return current_layer == "game"
+
+## 调试控制台的开局入口：不经确认页，其余沿"新游戏"确认后的正式路径。
+func debug_new_game() -> bool:
+	pending_leave = ""
+	pending_load = false
+	confirmation_action = ""
+	gameplay_page.set_active(false)
+	title_page.hide_page()
+	pause_page.hide_page()
+	for page in [save_page, load_page, settings_page, confirm_page]: page.close_page()
+	if not session.new_game(): return false
+	gameplay_page.reset_page()
+	audio_service.begin_session()
+	_resume()
+	return current_layer == "game"
 
 func _resume() -> void:
 	current_layer = "game"

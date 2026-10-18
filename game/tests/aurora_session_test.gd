@@ -46,11 +46,19 @@ func _run() -> void:
 	_check(session.condition("COND_CH01_REST_AVAILABLE"), "三项主要交谈完成才允许休息")
 	# 先在大厅实际读一句，再到卧室点床；菜单舞台不能继承上一段大厅对话。
 	_move("SC02")
+	var opened: Array = []
+	var capture := func(row: Dictionary): opened.append(row.duplicate(true))
+	session.narrative.text_started.connect(capture)
 	for row in session.config.rows("investigation", "入口绑定"):
 		if row.get("scene_id") == "SC02" and row.get("purpose") == "scene_observation":
 			_call(str(row.entry_ref))
 			break
+	session.narrative.text_started.disconnect(capture)
 	_check(session.narrative.current_record().get("scene_id") == "SC02", "回归前应留下大厅对话舞台")
+	_check(not opened.is_empty() and opened[0].get("clear_positions", false), "从调查进入对话先清空上次留在舞台上的人物")
+	_check(opened.size() < 2 or not opened[1].get("clear_positions", false), "同一段对话内部不再清空人物")
+	var lobby_layers: Array = session.narrative.current_record().get("scene_layers", [])
+	_check(lobby_layers.any(func(layer): return layer.get("character_id", "") == "CHR04" and ResourceLoader.exists(str(layer.get("image_path", "")))), "大厅对话沿用调查画面里的伊万图层，不另立槽位人物")
 	_move("SC08")
 	_check(session.case_state.data.chapter == "CH01", "走进房间不能自行推进案发")
 	var beds: Array = model.hotspots().filter(func(row): return row.object_ref == "OBJ_SC08_BED")

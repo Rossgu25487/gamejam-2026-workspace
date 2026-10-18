@@ -191,7 +191,18 @@ func _library() -> void:
 			if str(row.get("text", "")).is_empty(): continue
 			UI.label(list, str(row.get("speaker_name", "")), 22)
 			_prose(list, str(row.text))
+		# 交谈记录默认定位到最新段落，而不是停在最早处（反馈#19）。
+		if not library_positions.has(scroll_key): _scroll_records_to_latest()
 	UI.button(root_box, "关闭手册", close_page)
+
+func _scroll_records_to_latest() -> void:
+	# 滚动条 max_value 要等本帧布局完成后才正确；call_deferred 仍可能早于容器排序，等到下一帧再读。
+	if is_instance_valid(library_scroll) and library_scroll.is_inside_tree():
+		library_scroll.get_tree().process_frame.connect(_apply_records_latest, CONNECT_ONE_SHOT)
+
+func _apply_records_latest() -> void:
+	if is_instance_valid(library_scroll):
+		library_scroll.scroll_vertical = int(library_scroll.get_v_scroll_bar().max_value)
 
 func _reading() -> void:
 	var row: Dictionary = session.config.contents[reading_content]
