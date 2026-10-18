@@ -1,5 +1,6 @@
 extends "res://systems/narrative/narrative_service.gd"
 ## 沿用逐字、分页、记录、快读与已看登记；正式接续交由同一会话执行器处理。
+const InvestigationScript = preload("res://systems/aurora/aurora_investigation.gd")
 var session: Node
 var available_choices: Array = []
 
@@ -57,6 +58,8 @@ func show_text(id: String) -> bool:
 	var background: String = session.background_path()
 	# 固定回忆图沿片段地点关联；caller反馈不能把玩家拉回编辑表中的旧场景。
 	if not background.is_empty(): row.background_path = background
+	_mark_stage_clearing(row)
+	_attach_scene_layers(row)
 	available_choices.clear()
 	catalog.data.transitions.clear()
 	for jump in session.config.jumps.get(id, []):
@@ -110,8 +113,37 @@ func show_control_choices(rows: Array) -> void:
 
 func _control_record() -> Dictionary:
 	# 快照校验和恢复也重建同一地点背景，不能把菜单退化成没有舞台的文字记录。
-	return {"text_id": "__CONTROL__", "text": "", "text_type": "narration", "read_version": 1,
+	var record := {"text_id": "__CONTROL__", "text": "", "text_type": "narration", "read_version": 1,
 		"font_color": "#FFFFFF", "scene_id": session.display_scene(), "background_path": session.background_path(), "clear_positions": true}
+	_attach_scene_layers(record)
+	return record
+
+func _mark_stage_clearing(row: Dictionary) -> void:
+	# 上一轮阅读已结束后重新开始，必然是新的一幕，旧舞台人物不能带过来；
+	# 同一轮里换到新片段时，才按该片段的“清空人物位”决定。
+	var fresh := state.is_empty() or bool(state.get("finished", false))
+	var sequence := str(row.get("sequence_id", ""))
+	var new_sequence := fresh or sequence != str(current_record().get("sequence_id", ""))
+	row["clear_positions"] = fresh or (new_sequence and bool(session.config.sequences.get(sequence, {}).get("clear_positions", false)))
+
+func _attach_scene_layers(row: Dictionary) -> void:
+	# 调用者地点的对话沿用调查画面的人物与物件图层，站定的人不会因为打开对话框而换成另一处的立绘；
+	# 固定地点和回忆片段有自己的画面，不叠加。
+	row.erase("scene_layers")
+	if str(session.config.entries.get(session.active_entry, {}).get("location_mode", "caller")) != "caller": return
+	var model := InvestigationScript.new()
+	model.bind(session)
+	var layers: Array = []
+	for layer in model.image_layers():
+		var path := str(layer.image_path)
+		# 第0层是调查页替换底图的整屏背景，不是叠加图层。
+		if int(layer.get("draw_layer", 0)) == 0:
+			row["background_path"] = path
+			continue
+		var who := str(layer.get("object_ref", ""))
+		layers.append({"image_path": path, "x": float(layer.image_x), "y": float(layer.image_y), "w": float(layer.image_w), "h": float(layer.image_h),
+			"flip_h": bool(layer.get("flip_h", false)), "character_id": who if session.config.actors.has(who) else ""})
+	row["scene_layers"] = layers
 
 func show_choices(rows: Array) -> void:
 	available_choices = rows.duplicate(true)

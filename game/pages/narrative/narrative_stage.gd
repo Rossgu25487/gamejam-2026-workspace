@@ -9,6 +9,8 @@ var movement_time := 0.0
 var movement_duration := 0.0
 var departures: Array = []
 var reduced := false
+# 调用者地点的对话沿用调查画面的人物与物件图层；{node, rect, character_id}
+var scene_layers: Array = []
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -21,14 +23,46 @@ func _ready() -> void:
 	resized.connect(_layout)
 
 func reset_stage() -> void:
+	_clear_actors()
+	_clear_scene_layers()
+	scene_id = ""
+	if background != null: background.texture = null
+
+func _clear_actors() -> void:
+	# 只清人物；背景和地点不动，供“清空人物位”这类片段起点使用。
 	movements.clear()
 	for item in departures:
 		if is_instance_valid(item.node): item.node.queue_free()
 	departures.clear()
 	for item in occupants.values(): item.node.queue_free()
 	occupants.clear()
-	scene_id = ""
-	if background != null: background.texture = null
+
+func _clear_scene_layers() -> void:
+	for item in scene_layers:
+		if is_instance_valid(item.node): item.node.queue_free()
+	scene_layers.clear()
+
+func _apply_scene_layers(layers: Array) -> void:
+	# 每条记录按调用方给出的当前图层重建；贴图缺失的图层直接跳过，不占用“站定人物”的位置。
+	_clear_scene_layers()
+	for layer in layers:
+		var texture := _texture(str(layer.get("image_path", "")))
+		if texture == null: continue
+		var node := TextureRect.new()
+		node.texture = texture
+		node.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		node.stretch_mode = TextureRect.STRETCH_SCALE
+		node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		node.flip_h = bool(layer.get("flip_h", false))
+		add_child(node)
+		scene_layers.append({"node": node, "character_id": str(layer.get("character_id", "")),
+			"rect": Rect2(float(layer.get("x", 0)), float(layer.get("y", 0)), float(layer.get("w", 0)), float(layer.get("h", 0)))})
+
+func _layer_has_character(character_id: String) -> bool:
+	if character_id.is_empty(): return false
+	for item in scene_layers:
+		if item.character_id == character_id: return true
+	return false
 
 func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 	# 正文切换前收束上一条动画，离场节点从槽位移走后单独管理到淡出结束。
@@ -44,11 +78,12 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 	var texture := _texture(path)
 	# 非空的必需背景缺失时保持当前舞台；不先清人物再报告失败。
 	if not path.is_empty() and texture == null: return
-	if row.get("clear_positions", false): reset_stage()
+	if row.get("clear_positions", false): _clear_actors()
 	if not next_scene.is_empty() and next_scene != scene_id:
 		reset_stage()
 		scene_id = next_scene
 	if not path.is_empty(): background.texture = texture
+	_apply_scene_layers(row.get("scene_layers", []))
 	for id in row.get("exit_characters", []):
 		for slot in occupants.keys():
 			if occupants[slot].character_id == id:
@@ -60,7 +95,12 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 	var position_index: int = {"左": 1, "中": 2, "右": 3, "left": 1, "center": 2, "right": 3, "1": 1, "2": 2, "3": 3}.get(position_key, 0)
 	var kind := str(row.get("text_type", ""))
 	var character_id := str(row.get("character_id", ""))
-	if position_index > 0 and kind not in ["旁白", "画外对白", "narration", "offscreen"]:
+	# 人物已作为场景图层站在原处时，不再另起一个槽位立绘，否则点开对话人物会跳到别处。
+	var anchored := _layer_has_character(character_id)
+	if anchored:
+		for slot in occupants.keys():
+			if occupants[slot].character_id == character_id: _remove_actor(slot)
+	if position_index > 0 and not anchored and kind not in ["旁白", "画外对白", "narration", "offscreen"]:
 		path = str(row.get("avatar_path", ""))
 		texture = _texture(path)
 		if not character_id.is_empty() and texture != null:
@@ -79,7 +119,12 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 				actor.z_index = {1: 1, 3: 2, 2: 3}[position_index]
 				add_child(actor)
 				occupants[position_index] = {"character_id": character_id, "path": path, "node": actor}
-	for item in occupants.values(): item.node.modulate = Color.WHITE if item.character_id == character_id and kind not in ["旁白", "画外对白", "narration", "offscreen"] else Color(0.88, 0.88, 0.88)
+	var speaking := not character_id.is_empty() and kind not in ["旁白", "画外对白", "narration", "offscreen"]
+	for item in occupants.values(): item.node.modulate = Color.WHITE if item.character_id == character_id and speaking else Color(0.88, 0.88, 0.88)
+	# 场景里的人物只在“别人发言”时变暗，旁白和内心保持与调查画面一致的亮度。
+	for item in scene_layers:
+		var dimmed: bool = speaking and not item.character_id.is_empty() and item.character_id != character_id
+		item.node.modulate = Color(0.88, 0.88, 0.88) if dimmed else Color.WHITE
 	_layout()
 	movements.clear()
 	movement_time = 0
@@ -134,6 +179,10 @@ func _layout() -> void:
 	var has_formal_record: bool = owner != null and owner.get("service") != null and owner.service.current_record().has("font_color")
 	if has_formal_record:
 		rects = {1: Rect2(80, 150, 480, 750), 2: Rect2(560, 150, 480, 750), 3: Rect2(1040, 150, 480, 750)}
+	for item in scene_layers:
+		var layer_rect: Rect2 = item.rect
+		item.node.position = offset + layer_rect.position * factor
+		item.node.size = layer_rect.size * factor
 	for position_index in occupants:
 		var node: TextureRect = occupants[position_index].node
 		var rect: Rect2 = rects[position_index]
