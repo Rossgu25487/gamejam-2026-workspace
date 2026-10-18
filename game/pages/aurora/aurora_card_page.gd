@@ -12,6 +12,8 @@ var category := "all"
 var starred_only := false
 var order_descending := false
 var body: VBoxContainer
+var card_scroll: ScrollContainer
+var card_buttons: Array[Button] = []
 var proof_time := 0.0
 var current_question := ""
 var scroll_positions := {}
@@ -65,11 +67,26 @@ func _render() -> void:
 	else: _result()
 
 func _selection() -> void:
-	var target := UI.button(body, ("已选定：" if session.selected_target else "点击选定听过的原话：") + session.target_text(), session.select_target)
+	# 核查页分成上下两个明确区域：上方是当前问题和操作，下方固定保留牌区。
+	# 不能让 VBoxContainer 按问题文字的长度把底部卡牌继续向下挤出窗口。
+	var layout := Control.new()
+	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	layout.custom_minimum_size.y = 440
+	body.add_child(layout)
+	var upper := VBoxContainer.new()
+	upper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	upper.offset_bottom = -286
+	upper.add_theme_constant_override("separation", 8)
+	upper.clip_contents = true
+	layout.add_child(upper)
+	var target := UI.button(upper, ("已选定：" if session.selected_target else "点击选定听过的原话：") + session.target_text(), session.select_target)
 	target.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	UI.label(body, "容错：%d / 3" % int(session.case_state.data.chances.get(session.question, 3)), 22)
+	target.custom_minimum_size.y = 64
+	var chances := UI.label(upper, "容错：%d / 3" % int(session.case_state.data.chances.get(session.question, 3)), 22)
+	chances.custom_minimum_size.y = 28
 	var slots_box := HBoxContainer.new()
-	body.add_child(slots_box)
+	upper.add_child(slots_box)
+	slots_box.custom_minimum_size.y = 76
 	for index in range(2):
 		var id := str(session.slots[index])
 		var slot := VBoxContainer.new()
@@ -78,14 +95,16 @@ func _selection() -> void:
 		UI.button(slot, "空引用夹位" if id.is_empty() else str(session.config.contents[id].name), material_requested.emit.bind(id), not id.is_empty())
 		UI.button(slot, "撤下", session.clear_slot.bind(index), not id.is_empty())
 	var actions := HBoxContainer.new()
-	body.add_child(actions)
+	upper.add_child(actions)
+	actions.custom_minimum_size.y = 38
 	UI.button(actions, "出示", session.present, session.selected_target and not session.slots.all(func(id): return str(id).is_empty()))
 	UI.button(actions, "全部撤下", func(): session.clear_slot(0); session.clear_slot(1))
 	UI.button(actions, "收起对局", session.collapse_question)
 	UI.button(actions, "收起牌库" if grid_mode else "全部材料", _toggle_grid)
 	UI.button(actions, "新推论", _new_inference, _has_new_inference())
 	var filter_bar := HBoxContainer.new()
-	body.add_child(filter_bar)
+	upper.add_child(filter_bar)
+	filter_bar.custom_minimum_size.y = 38
 	for pair in [["all", "全部"], ["evidence", "证据"], ["testimony", "证言"], ["inference", "推论"]]:
 		UI.button(filter_bar, pair[1], _set_category.bind(pair[0]))
 	UI.button(filter_bar, "仅重点 ✓" if starred_only else "仅重点", func(): starred_only = not starred_only; page = 0; _remember(); refresh())
@@ -97,16 +116,28 @@ func _selection() -> void:
 		if starred_only and not record.star: continue
 		all.append({"id": id, "record": record})
 	all.sort_custom(func(a, b): return a.record.order > b.record.order if order_descending else a.record.order < b.record.order)
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_child(scroll)
-	scroll.set_deferred("scroll_vertical", int(scroll_positions.get(category, 0)))
-	scroll.get_v_scroll_bar().value_changed.connect(func(value): scroll_positions[category] = value; _remember())
+	# 牌区固定贴在页面底部；无论上方问题文本多长，牌面都留在可视窗口内。
+	var card_area := PanelContainer.new()
+	card_area.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	card_area.offset_top = -278
+	card_area.add_theme_stylebox_override("panel", _card_area_style())
+	layout.add_child(card_area)
+	var card_box := VBoxContainer.new()
+	card_box.add_theme_constant_override("separation", 4)
+	card_area.add_child(card_box)
+	card_scroll = ScrollContainer.new()
+	card_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	card_box.add_child(card_scroll)
+	card_scroll.set_deferred("scroll_vertical", int(scroll_positions.get(category, 0)))
+	card_scroll.get_v_scroll_bar().value_changed.connect(func(value): scroll_positions[category] = value; _remember())
 	var grid := GridContainer.new()
 	grid.columns = 6 if grid_mode else 5
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 12)
-	scroll.add_child(grid)
+	grid.add_theme_constant_override("v_separation", 8)
+	card_scroll.add_child(grid)
+	card_buttons.clear()
 	page = clampi(page, 0, maxi(0, ceili(all.size() / 5.0) - 1))
 	var shown := all if grid_mode else all.slice(page * 5, page * 5 + 5)
 	for item in shown:
@@ -123,14 +154,27 @@ func _selection() -> void:
 		detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		detail.custom_minimum_size.y = 70
 		detail.max_lines_visible = 3
-		UI.button(box, "已选用" if content_id in session.slots else "选用", session.select_content.bind(content_id), content_id not in session.slots)
-	if all.is_empty(): UI.label(body, "没有符合条件的已取得材料", 22)
+		var select := UI.button(box, "已选用" if content_id in session.slots else "选用", session.select_content.bind(content_id), content_id not in session.slots)
+		card_buttons.append(select)
+	if all.is_empty(): UI.label(card_box, "没有符合条件的已取得材料", 22)
 	if not grid_mode:
 		var pages := HBoxContainer.new()
-		body.add_child(pages)
+		card_box.add_child(pages)
 		UI.button(pages, "上一页", _change_page.bind(-1), page > 0)
 		UI.label(pages, "%d / %d" % [page + 1, maxi(1, ceili(all.size() / 5.0))], 20)
 		UI.button(pages, "下一页", _change_page.bind(1), (page + 1) * 5 < all.size())
+
+func _card_area_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.055, 0.08, 0.1, 0.98)
+	style.border_color = Color(0.22, 0.34, 0.38, 1.0)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(8)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	style.content_margin_top = 6
+	style.content_margin_bottom = 4
+	return style
 
 func _result() -> void:
 	var pending: Dictionary = session.pending_result
