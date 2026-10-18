@@ -23,6 +23,13 @@ var new_index := 0
 var source_document := {}
 var canvas: Control
 var library_scroll: ScrollContainer
+var compact_mode := false
+
+func set_compact_mode(value: bool) -> void:
+	# 推理页打开手册时使用右侧紧凑抽屉，保留底部手牌和出示区。
+	if compact_mode == value: return
+	compact_mode = value
+	if visible: _render()
 
 func export_view() -> Dictionary:
 	return {"visible": visible, "content": reading_content, "entry": reading_entry, "selectable": allow_selection,
@@ -64,10 +71,12 @@ func reset_session() -> void:
 	source_document.clear()
 	reading_content = ""
 	reading_entry = false
+	compact_mode = false
 	hide()
 
 func bind(value: Node) -> void:
 	session = value
+	resized.connect(func(): if visible: _render())
 	hide()
 
 func open_library() -> void:
@@ -92,11 +101,17 @@ func open_content(id: String, from_entry: bool = false, selectable: bool = false
 
 func _render() -> void:
 	UI.clear(self)
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	mouse_filter = Control.MOUSE_FILTER_STOP if not compact_mode else Control.MOUSE_FILTER_IGNORE
 	canvas = Control.new()
-	canvas.size = Vector2(1600, 900)
-	canvas.scale = Vector2.ONE * minf(size.x / 1600, size.y / 900)
-	canvas.position = (size - canvas.size * canvas.scale) / 2
+	if compact_mode:
+		canvas.size = Vector2(520, 680)
+		var compact_scale := minf(1.0, minf((size.x - 32.0) / canvas.size.x, (size.y - 32.0) / canvas.size.y))
+		canvas.scale = Vector2.ONE * compact_scale
+		canvas.position = Vector2(size.x - canvas.size.x * compact_scale - 16.0, 16.0)
+	else:
+		canvas.size = Vector2(1600, 900)
+		canvas.scale = Vector2.ONE * minf(size.x / 1600, size.y / 900)
+		canvas.position = (size - canvas.size * canvas.scale) / 2
 	add_child(canvas)
 	var color := ColorRect.new()
 	color.color = Color(0.04, 0.06, 0.08, 0.98)
@@ -105,12 +120,13 @@ func _render() -> void:
 	canvas.add_child(color)
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 32)
+	var margin_px := 18 if compact_mode else 32
+	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, margin_px)
 	canvas.add_child(margin)
 	root_box = VBoxContainer.new()
 	root_box.add_theme_constant_override("separation", 12)
 	margin.add_child(root_box)
-	UI.label(root_box, str(source_document.get("title", "办案手册" if reading_content.is_empty() else str(session.config.contents[reading_content].name))), 30)
+	UI.label(root_box, str(source_document.get("title", "办案手册" if reading_content.is_empty() else str(session.config.contents[reading_content].name))), 24 if compact_mode else 30)
 	if not source_document.is_empty(): _source_reading()
 	elif not reading_content.is_empty(): _reading()
 	else: _library()
@@ -134,29 +150,29 @@ func _library() -> void:
 	if tab == "materials":
 		var ids := _material_ids()
 		var grid := GridContainer.new()
-		grid.columns = 6
-		grid.add_theme_constant_override("h_separation", 14)
-		grid.add_theme_constant_override("v_separation", 14)
+		grid.columns = 2 if compact_mode else 6
+		grid.add_theme_constant_override("h_separation", 10 if compact_mode else 14)
+		grid.add_theme_constant_override("v_separation", 10 if compact_mode else 14)
 		list.add_child(grid)
 		for id in ids:
 			var record: Dictionary = session.case_state.data.materials[id]
 			var content_id := str(record.current)
 			var row: Dictionary = session.config.contents[content_id]
 			var box := VBoxContainer.new()
-			box.custom_minimum_size = Vector2(238, 357)
+			box.custom_minimum_size = Vector2(220, 270) if compact_mode else Vector2(238, 357)
 			grid.add_child(box)
 			var mark := "" if record.read.get(content_id, false) else ("更新" if record.read.values().has(true) else "新")
-			_picture(box, str(row.get("image_ref", "")), Vector2(238, 160))
+			_picture(box, str(row.get("image_ref", "")), Vector2(220, 112) if compact_mode else Vector2(238, 160))
 			var button := UI.button(box, str(row.name), _open_library_content.bind(content_id))
-			button.custom_minimum_size.y = 70
+			button.custom_minimum_size.y = 54 if compact_mode else 70
 			button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			button.add_theme_font_size_override("font_size", 24)
+			button.add_theme_font_size_override("font_size", 18 if compact_mode else 24)
 			button.tooltip_text = str(row.description)
-			UI.label(box, "%s · 第%d版 · %s" % [session.config.materials[id].type, int(row.version), mark], 20)
-			var summary := UI.label(box, str(row.description), 20)
+			UI.label(box, "%s · 第%d版 · %s" % [session.config.materials[id].type, int(row.version), mark], 16 if compact_mode else 20)
+			var summary := UI.label(box, str(row.description), 16 if compact_mode else 20)
 			summary.max_lines_visible = 2
 			UI.button(box, "★ 重点" if record.star else "☆ 标为重点", _star.bind(id))
-		if ids.is_empty(): UI.label(list, "尚未取得材料" if session.case_state.data.materials.is_empty() else "没有符合筛选的材料 · 0/0", 24)
+		if ids.is_empty(): UI.label(list, "尚未取得材料" if session.case_state.data.materials.is_empty() else "没有符合筛选的材料 · 0/0", 18 if compact_mode else 24)
 	elif tab == "people":
 		_people(list)
 	else:
@@ -178,7 +194,7 @@ func _reading() -> void:
 		picture.texture = load(path)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		picture.custom_minimum_size.x = 300
+		picture.custom_minimum_size.x = 170 if compact_mode else 300
 		picture.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		split.add_child(picture)

@@ -103,6 +103,7 @@ func _refresh() -> void:
 	scene_page.visible = session.mode in ["investigation", "cat"]
 	card_page.visible = session.mode in ["selection", "result", "failure"]
 	narrative_page.visible = session.mode == "narrative"
+	if reader_page.visible: reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 	if session.mode == "material" and (not reader_page.visible or reader_page.reading_content != str(session.reader.content)): reader_page.open_content(str(session.reader.content), true)
 	elif not handbook_overlay: reader_page.hide()
 	if card_page.visible: card_page.refresh()
@@ -131,6 +132,7 @@ func open_handbook() -> void:
 	if session.processing or session.mode == "cat" or objective_page.visible: return
 	handbook_overlay = true
 	session.narrative.set_log_open(true)
+	reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 	reader_page.open_library()
 	refresh()
 
@@ -138,6 +140,7 @@ func _open_content(id: String) -> void:
 	if id.is_empty(): return
 	handbook_overlay = true
 	session.narrative.set_log_open(true)
+	reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 	reader_page.open_content(id, false, session.mode == "selection" and not objective_page.visible)
 
 func _reader_closed() -> void:
@@ -156,6 +159,7 @@ func reset_page() -> void:
 	narrative_page.reset_stage()
 	scene_page.current_context = session.return_context.duplicate(true) if session.return_context.get("kind") in ["topics", "inspection", "scene_items", "reasoning"] else {}
 	if not session.page_snapshot.is_empty():
+		reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 		reader_page.restore_view(session.page_snapshot.get("reader", {}))
 		handbook_overlay = reader_page.visible and session.mode != "material"
 	objectives.reset()
