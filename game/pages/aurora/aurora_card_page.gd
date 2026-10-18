@@ -53,10 +53,15 @@ func _render() -> void:
 	add_child(margin)
 	body = VBoxContainer.new()
 	body.add_theme_constant_override("separation", 14)
+	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	margin.add_child(body)
 	var top := HBoxContainer.new()
+	top.custom_minimum_size.y = 44
+	top.add_theme_constant_override("separation", 10)
 	body.add_child(top)
-	UI.label(top, "核查 · " + session.question, 28)
+	var heading := UI.label(top, "核查 · " + session.question, 28)
+	# 标题占据左侧剩余空间，右侧固定放置办案手册和菜单，三者保持同一横行。
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	UI.button(top, "办案手册", handbook_requested.emit)
 	UI.button(top, "菜单", menu_requested.emit)
 	if session.mode == "selection": _selection()
@@ -71,11 +76,11 @@ func _selection() -> void:
 	# 不能让 VBoxContainer 按问题文字的长度把底部卡牌继续向下挤出窗口。
 	var layout := Control.new()
 	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	layout.custom_minimum_size.y = 440
+	layout.custom_minimum_size.y = 0
 	body.add_child(layout)
 	var upper := VBoxContainer.new()
 	upper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	upper.offset_bottom = -286
+	upper.offset_bottom = -294
 	upper.add_theme_constant_override("separation", 8)
 	upper.clip_contents = true
 	layout.add_child(upper)
@@ -119,7 +124,7 @@ func _selection() -> void:
 	# 牌区固定贴在页面底部；无论上方问题文本多长，牌面都留在可视窗口内。
 	var card_area := PanelContainer.new()
 	card_area.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	card_area.offset_top = -278
+	card_area.offset_top = -286
 	card_area.add_theme_stylebox_override("panel", _card_area_style())
 	layout.add_child(card_area)
 	var card_box := VBoxContainer.new()
