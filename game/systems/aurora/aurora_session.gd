@@ -191,6 +191,15 @@ func condition(id: String) -> bool:
 
 func activate_entry(id: String, context: Dictionary = {}, depth: int = 0) -> bool:
 	if depth > 48 or not config.entries.has(id): return _notice("入口接续无效：" + id)
+	if id == "ENTRY_T00_R02" and not _tutorial_pair_ready():
+		if response_active:
+			# 先按原结果时点完整结束上一轮回应，再在继续时恢复调查。
+			pending_result["continuation"] = {"target_kind": "entry", "target_ref": id}
+			return finish_response()
+		_recover_missing_tutorial_materials()
+		_notice("请先到二楼休息室读完撤站移交清单，再回大厅继续核对。")
+		changed.emit()
+		return true
 	var row: Dictionary = config.entries[id]
 	if not _entry_condition(row): return false
 	var allowed: Array[String] = ConfigScript.ids(str(row.get("allowed_scene_ids", "")))
@@ -702,9 +711,14 @@ func entry_label(id: String) -> String:
 
 func choice_label(row: Dictionary) -> String:
 	var label := str(row.get("option_text", ""))
-	if label.is_empty(): label = str(row.get("operation_id", ""))
-	if label.begins_with("ENTRY_") or label.is_empty(): label = entry_label(str(row.get("target_ref", "")))
-	return label
+	if not label.is_empty(): return label
+	var operation := str(row.get("operation_id", ""))
+	# 操作入口可以与地图目标不同；优先沿操作入口取正式名称，不能显示SC编号。
+	if config.entries.has(operation): return entry_label(operation)
+	if not operation.is_empty() and not operation.begins_with("ENTRY_"): return operation
+	var target := str(row.get("target_ref", ""))
+	if config.scenes.has(target): return config.text(str(config.scenes[target].get("name_text_id", "")))
+	return entry_label(target)
 
 func can_save() -> bool:
 	return not processing and mode in ["investigation", "selection"] and not response_active and pending_result.is_empty()
@@ -724,6 +738,10 @@ func open_question(id: String) -> bool:
 	if not question_reading.is_empty() and question_reading.get("kind") == "press" and id == question:
 		return _finish_question_reading()
 	if not config.questions.has(id): return false
+	if id == "T00_R02" and not _tutorial_pair_ready():
+		_recover_missing_tutorial_materials()
+		changed.emit()
+		return _notice("请先到二楼休息室读完撤站移交清单，再回大厅核对登记册。")
 	question = id
 	current_statement = ""
 	narrative.end_reading()
@@ -748,6 +766,23 @@ func open_question(id: String) -> bool:
 			return _read_question_texts(targets, "statement")
 	changed.emit()
 	return true
+
+func _tutorial_pair_ready() -> bool:
+	return case_state.owns("E01_V1") and case_state.owns("E28_V1") and case_state.data.events.get("EV_E01_READ", false)
+
+func _recover_missing_tutorial_materials() -> void:
+	# 兼容旧版提前进入双卡核对的存档：只退出缺牌的操作，不伪造材料或完成回执。
+	if not question.is_empty(): _store_draft()
+	mode = "investigation"
+	active_entry = ""
+	reader.clear()
+	question_reading.clear()
+	call_stack.clear()
+	response_active = false
+	response_after.clear()
+	pending_result.clear()
+	return_context = {"kind": "scene", "scene": case_state.data.scene, "view": case_state.data.view}
+	narrative.end_reading()
 
 func available_reasoning() -> Array:
 	# 只公开配置的自主推理入口；说法质询仍在实际问话中进入。
@@ -1321,6 +1356,9 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	departure_managed = false
 	if snapshot.narrative.is_empty(): narrative.state = {}
 	else: narrative.restore_snapshot(snapshot.narrative)
+	if mode == "selection" and question == "T00_R02" and not _tutorial_pair_ready():
+		_recover_missing_tutorial_materials()
+		_notice("请先到二楼休息室读完撤站移交清单，再回大厅继续核对。")
 	last_bgm = str(snapshot.get("bgm", ""))
 	music_requested.emit(last_bgm)
 	changed.emit()

@@ -67,6 +67,10 @@ func _mark(step: Dictionary) -> void:
 	session.case_state.data.tutorial_completed_steps = steps
 
 func _set_step(step: Dictionary) -> void:
+	if str(step.get("group_id", "")).begins_with("TUT_T00"):
+		var cards: Control = gameplay.get("card_page")
+		if is_instance_valid(cards) and cards.has_method("prepare_tutorial_hand"):
+			cards.prepare_tutorial_hand(str(step.get("target_ref", "")) if step.get("target_kind") == "material" else "")
 	if step_key(current_step) == step_key(step) and str(current_step.get("target_ref", "")) == str(step.get("target_ref", "")): return
 	current_step = step.duplicate(true)
 	if not step.is_empty(): _armed[step_key(step)] = step.duplicate(true)
@@ -248,7 +252,7 @@ func permits_control(control: Control) -> bool:
 	if current_step.get("allow_pause", true) and (control.name in ["MenuButton", "PauseButton"] or (control is Button and control.text in ["菜单", "菜单 Esc"])): return true
 	if current_step.get("allow_cancel", false) and (str(control.get_meta("tutorial_target", "")) == "map.return" or (control is Button and control.text in ["关闭手册", "返回调查", "取消准备", "返回"])): return true
 	# T00允许撤回原草稿，但不允许用其他卡替换指定材料。
-	if str(current_step.get("group_id", "")).begins_with("TUT_T00") and control is Button and control.text in ["撤下", "全部撤下"]: return true
+	if str(current_step.get("group_id", "")).begins_with("TUT_T00") and control is Button and (control.text in ["撤下", "全部撤下"] or str(control.name) in ["WithdrawSlot0", "WithdrawSlot1"]): return true
 	return false
 
 func input_allowed(event: InputEvent) -> bool:
@@ -264,7 +268,7 @@ func input_allowed(event: InputEvent) -> bool:
 		if feedback_left > 0: return false
 		var picked := actual_hit_control(gameplay, event.position)
 		# 选材步骤只放行卡牌本体，卡内“详情”是另一项真实操作，不能借目标祖先绕过。
-		if current_step.get("target_kind") == "material" and str(current_step.get("group_id", "")).begins_with("TUT_T00") and picked != target_control(): return false
+		if current_step.get("target_kind") == "material" and str(current_step.get("group_id", "")).begins_with("TUT_T00") and picked != target_control() and (picked == null or str(picked.name) not in ["WithdrawSlot0", "WithdrawSlot1"]): return false
 		return permits_control(picked) and original_hit(picked, event.position)
 	if event is InputEventJoypadButton or event is InputEventJoypadMotion: return false
 	return true

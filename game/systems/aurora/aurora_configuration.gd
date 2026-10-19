@@ -120,6 +120,7 @@ func load_package(root: String = DEFAULT_ROOT) -> bool:
 		if entries.has(id): entries[id].allowed_scene_ids = "SC04;SC10"
 	_repair_final_register_receipts()
 	_repair_final_counter_topic()
+	_repair_final_tutorial_prerequisites()
 	# 正式第四章的厨房质询在旧案对证结束后开启；若第二章提前启动，
 	# 完整回应会撞上仍未满足的还衣接续。入口与公开话题共用真实章节门槛。
 	for id in ["COND_TOPIC_NINA_MEAL", "COND_CH04_MEAL_OBSERVATIONS_READY"]:
@@ -227,6 +228,21 @@ func _repair_final_register_receipts() -> void:
 	# 调卷发生在当面核实假登记之后；以实际完成回执开题，不复制旧门槛。
 	for branch in conditions.get("COND_TOPIC_IVAN_LATER_FILES", {}).values():
 		branch.append({"kind": "event", "ref": "EV_REGISTER_ACCOUNT_CONFIRMED", "expected": true})
+
+func _repair_final_tutorial_prerequisites() -> void:
+	# T00先用休息室实际读过的清单，再核对柜台内页。大厅旧观察入口
+	# 没有此前置时会提前把玩家锁进缺牌的双卡教学，不能靠教学自动补发材料。
+	for id in ["INV_SC02_REGISTER", "ENTRY_T00_START", "ENTRY_T00_R02"]:
+		if not entries.has(id): continue
+		var original := str(entries[id].get("condition_id", ""))
+		var gate: String = "COND_FINAL_TUTORIAL_" + str(id)
+		var branches: Dictionary = conditions.get(original, {"1": []}).duplicate(true)
+		for terms in branches.values():
+			terms.append({"kind": "content", "ref": "E01_V1", "expected": true})
+			terms.append({"kind": "event", "ref": "EV_E01_READ", "expected": true})
+			if id == "ENTRY_T00_R02": terms.append({"kind": "content", "ref": "E28_V1", "expected": true})
+		conditions[gate] = branches
+		entries[id]["condition_id"] = gate
 
 func _load_final_json_bindings(root: String) -> void:
 	# 最终包把逐句追问、到达绑定和分页放在 JSON 中；正文、条件和事件仍以工作簿为唯一来源。

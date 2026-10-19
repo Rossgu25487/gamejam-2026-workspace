@@ -65,6 +65,25 @@ func refresh() -> void:
 	queued = true
 	call_deferred("_render")
 
+func prepare_tutorial_hand(content_id: String) -> void:
+	# 教学指向可直接选用的浅扇卡，不能指向展开库中只负责查看的卡面。
+	# 筛选项继续保留；教学期间先关闭展开库/详情并定位指定材料的手牌页。
+	if session == null or session.mode != "selection": return
+	var changed_view := grid_mode or not detail_content.is_empty()
+	grid_mode = false
+	detail_content = ""
+	if not content_id.is_empty():
+		var items := _material_items(false)
+		var index := items.find_custom(func(item): return str(item.record.current) == content_id)
+		if index >= 0:
+			var target_page := floori(float(index) / hand_capacity())
+			changed_view = changed_view or page != target_page
+			page = target_page
+			hand_page = page
+	if changed_view:
+		_remember()
+		refresh()
+
 func _render() -> void:
 	queued = false
 	if session == null or session.question.is_empty(): return

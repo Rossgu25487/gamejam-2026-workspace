@@ -31,8 +31,9 @@ func run() -> void:
 	# 本专项隔离核验页面生命周期：只准备两张真实内容版，不伪造结果回执。
 	session.case_state.grant("E28_V1", {})
 	session.case_state.grant("E01_V1", {})
-	# 本题唯一已读前置作为隔离夹具；真实判定、回应与发卡仍由会话执行。
+	# 材料已读前置作为隔离夹具；真实判定、回应与发卡仍由会话执行。
 	session.case_state.data.events["EV_T00_INNER_READ"] = true
+	session.case_state.data.events["EV_E01_READ"] = true
 	session.active_entry = str(session.config.questions.T00_R01.entry_ref)
 	check(session.open_question("T00_R01"), "打开正式首轮核验")
 	for index in range(40):
