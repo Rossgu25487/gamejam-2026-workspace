@@ -37,17 +37,25 @@ var pending_read := {}
 var rebuild_queued := false
 var dirty := false
 var restore := {}
+var final_paper := false
+var paper_panel: PanelContainer
+var selected_tab := "pending"
+var tab_pending: Button
+var tab_progress: Button
+var shared_tools_managed := false
 
 
 func bind(objective_service: Node) -> void:
 	service = objective_service
 	review = service.config.get("review", {})
 	hud = service.config.get("hud", {})
+	final_paper = bool(review.get("final_paper", false))
 	_build()
 	service.review_state_changed.connect(_on_state)
 	service.changed.connect(_on_changed)
 	service.read_completed.connect(_on_read_completed)
 	get_viewport().size_changed.connect(_apply_transform)
+	resized.connect(_apply_transform)
 	hide()
 
 
@@ -55,7 +63,7 @@ func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP # 回顾期间不操作背后的调查画面
 	colors = {"main": Style.color(hud["main_color"]), "body": Style.color(hud["body_color"]), "reason": Style.color(hud["reason_color"])}
 	var dim := ColorRect.new()
-	dim.color = Color(0.035, 0.04, 0.055, 0.97)
+	dim.color = Color(0.035, 0.04, 0.055, float(review.get("modal_dimmer_opacity", 0.32)) if final_paper else 0.97)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dim)
@@ -64,6 +72,11 @@ func _build() -> void:
 	canvas.size = Layout.vec(review["viewport"])
 	canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(canvas)
+	if final_paper:
+		paper_panel = PanelContainer.new()
+		paper_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+		paper_panel.add_theme_stylebox_override("panel", Style.paper(review.get("assets", {}), "panel_paper", 24))
+		canvas.add_child(paper_panel)
 	var button_px := int(review["button_font_px"])
 	var button_h := float(review["button_height_px"])
 	# 先建返回按钮，使 Tab 顺序从【返回调查】开始。
@@ -95,6 +108,13 @@ func _build() -> void:
 	reading.setup(service)
 	reading.finished.connect(_on_reading_finished)
 	reading.visibility_changed.connect(func(): reading_cover.visible = reading.visible)
+	if final_paper:
+		tab_pending = Style.button(canvas, service.label("label_pending"), button_px, button_h, _select_tab.bind("pending"))
+		tab_progress = Style.button(canvas, service.label("label_progress"), button_px, button_h, _select_tab.bind("progress"))
+		for button in [return_button, tab_pending, tab_progress]: Style.paper_button(button, review.get("assets", {}))
+		reading_cover.color = Color("eee6cf")
+		canvas.move_child(reading_cover, -1)
+		canvas.move_child(reading, -1)
 	_apply_transform()
 
 
@@ -119,15 +139,70 @@ func _make_list(node_name: String, rect: Rect2, line_px: int) -> ScrollContainer
 
 
 func _viewport_size() -> Vector2:
-	return viewport_override if viewport_override != Vector2.ZERO else get_viewport_rect().size
+	return viewport_override if viewport_override != Vector2.ZERO else (size if final_paper and size.x > 0 and size.y > 0 else get_viewport_rect().size)
 
 
 func _apply_transform() -> void:
 	if canvas == null:
 		return
+	if final_paper:
+		_layout_paper()
+		return
 	var placed := Layout.review_transform(_viewport_size(), Layout.vec(review["viewport"]))
 	canvas.scale = Vector2.ONE * float(placed["scale"])
 	canvas.position = placed["origin"]
+
+func _layout_paper() -> void:
+	var extent := _viewport_size()
+	var factor := extent.y / 900.0
+	var logical := extent / maxf(0.01, factor)
+	var width := minf(float(review.get("max_width_px", 1240)), logical.x - 48)
+	var height := minf(float(review.get("max_height_px", 814)), logical.y - 48)
+	canvas.size = logical
+	canvas.scale = Vector2.ONE * factor
+	canvas.position = Vector2.ZERO
+	var origin := Vector2((logical.x - width) / 2, (logical.y - height) / 2)
+	paper_panel.position = origin
+	paper_panel.size = Vector2(width, height)
+	var inner := Rect2(origin + Vector2(32, 28), Vector2(width - 64, height - 56))
+	title.position = inner.position
+	title.size = Vector2(inner.size.x - 220, 52)
+	return_button.position = Vector2(inner.end.x - 190, inner.position.y)
+	return_button.size = Vector2(190, 48)
+	caption.position = inner.position + Vector2(0, 76)
+	caption.size = Vector2(inner.size.x, 36)
+	var single := logical.x / logical.y < float(review.get("single_column_ratio", 1.5))
+	var list_left := inner.position.x
+	var list_top := inner.position.y + 272 if single else inner.position.y + 140
+	var list_width := inner.size.x if single else inner.size.x * 0.65
+	if not single: list_left = inner.position.x + inner.size.x * 0.35 + 24
+	main_list.position = inner.position + Vector2(0, 118)
+	main_list.size = Vector2(inner.size.x if single else inner.size.x * 0.35 - 12, 104 if single else inner.size.y - 186)
+	var tab_top := inner.position.y + 218 if single else inner.position.y + 76
+	tab_pending.position = Vector2(list_left, tab_top)
+	tab_progress.position = Vector2(list_left + 180, tab_top)
+	tab_pending.size = Vector2(170, 48)
+	tab_progress.size = Vector2(170, 48)
+	for list in [pending_list, progress_list]:
+		list.position = Vector2(list_left, list_top)
+		list.size = Vector2(minf(list_width, inner.end.x - list_left), maxf(100, inner.end.y - list_top - 44))
+	pending_title.hide()
+	progress_title.hide()
+	message_label.position = Vector2(list_left, inner.end.y - 38)
+	message_label.size = Vector2(inner.end.x - list_left, 38)
+	reading.position = inner.position
+	reading.size = inner.size
+	reading_cover.position = origin + Vector2(20, 20)
+	reading_cover.size = Vector2(width - 40, height - 40)
+	_select_tab(selected_tab)
+
+func _select_tab(kind: String) -> void:
+	selected_tab = kind
+	if final_paper:
+		pending_list.visible = kind == "pending"
+		progress_list.visible = kind == "progress"
+		for pair in [[tab_pending, "pending"], [tab_progress, "progress"]]:
+			pair[0].add_theme_color_override("font_color", Color("7b4830") if pair[1] == kind else Color("34413f"))
 
 
 func _on_state(state: String) -> void:
@@ -174,7 +249,7 @@ func _input(event: InputEvent) -> void:
 	if event.keycode == KEY_ESCAPE:
 		handle_escape()
 		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_I:
+	elif event.keycode == KEY_I and not shared_tools_managed:
 		get_viewport().set_input_as_handled() # 不从回顾另开完整手册，也不穿透回原调查
 
 
@@ -264,6 +339,14 @@ func _build_item(list: ScrollContainer, row: Dictionary) -> void:
 	go.name = "Go"
 	go.set_meta("focus_key", "go:" + item_id)
 	go.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if final_paper:
+		# 窄列保留横排文字，状态与操作另起一行，防止动作挤走整段事项。
+		head.remove_child(go)
+		var action_row := HBoxContainer.new()
+		column.add_child(action_row)
+		action_row.add_child(go)
+		go.custom_minimum_size.x = 160
+		go.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var notes: Array[String] = []
 	var reason := String(row["reason"])
 	if not reason.is_empty():
@@ -279,7 +362,7 @@ func _build_item(list: ScrollContainer, row: Dictionary) -> void:
 		var note_label := Style.label(column, note, meta_px, colors["reason"], meta_line)
 		note_label.name = "Note"
 	for base in row["bases"]:
-		var line := HBoxContainer.new()
+		var line: BoxContainer = VBoxContainer.new() if final_paper else HBoxContainer.new()
 		line.add_theme_constant_override("separation", 12)
 		column.add_child(line)
 		var info := Style.label(line, "%s · %s" % [base["name"], base["version_text"]], meta_px, colors["reason"], meta_line)
@@ -300,6 +383,11 @@ func _build_item(list: ScrollContainer, row: Dictionary) -> void:
 	if row["bases"].is_empty():
 		var none := Style.label(column, service.label("no_basis"), meta_px, colors["reason"], meta_line)
 		none.name = "NoBasis"
+	if final_paper:
+		block.add_theme_stylebox_override("panel", Style.box(Color.TRANSPARENT, 8))
+		status.add_theme_color_override("font_color", Color("3f6b4c") if checked else Color("7b4830"))
+		Style.paper_button(go, review.get("assets", {}), true)
+		for button in block.find_children("*", "Button", true, false): Style.paper_button(button, review.get("assets", {}))
 
 
 # ---------- 动作 ----------
@@ -450,6 +538,9 @@ func _apply_restore() -> void:
 	elif not key.is_empty():
 		target = find_button(key)
 	if target != null:
+		if final_paper:
+			var target_kind := _list_of(item_id, state["new_ids"])
+			if not target_kind.is_empty(): _select_tab(target_kind)
 		target.grab_focus()
 	else:
 		return_button.grab_focus() # 本区为空或原控件已失效时，焦点回【返回调查】

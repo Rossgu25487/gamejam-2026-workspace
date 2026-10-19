@@ -10,6 +10,12 @@ static func vec(values: Array) -> Vector2:
 
 
 static func hud_layout(viewport: Vector2, hud: Dictionary) -> Dictionary:
+	if hud.get("final_paper", false):
+		var factor := viewport.y / 900.0
+		var margin := float(hud.get("safe_margin_px", 24)) * factor
+		var width := minf(float(hud.get("hud_expand_max_width_px", 520)) * factor, viewport.x - margin * 2)
+		return {"compact": viewport.x / maxf(1, viewport.y) < 1.5, "left": maxf(margin, viewport.x - margin - width), "top": margin,
+			"width": width, "max_height": minf(430 * factor, viewport.y - margin * 2)}
 	# 在 1920x1080 与 1280x800 两种参考窗口之间按宽度选取；其他尺寸保持右侧边距并限制在可视范围内。
 	var base_viewport := vec(hud["base_viewport"])
 	var compact_viewport := vec(hud["compact_viewport"])

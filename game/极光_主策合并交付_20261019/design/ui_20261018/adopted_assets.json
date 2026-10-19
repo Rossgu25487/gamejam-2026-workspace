@@ -1,0 +1,4123 @@
+{
+  "version": "ui-20261018-runtime-shared-final",
+  "root": "design/ui_20261018/assets",
+  "purpose": "副4七册当前有效采用项，加上核心、导航、文案、调查正式资源绑定实际依赖；唯一asset_id对应唯一runtime_path。原源path仅作来源追溯，运行读取runtime_path。",
+  "primary_visual": "PAPER_V2共用浅羊皮纸；A03图标/行态/焦点、A02 v3人物；B卡牌由所属核心案采用",
+  "runtime_excluded": [
+    "A01旧v2 UI及人物",
+    "raw重复原画",
+    "demo_art示例场景/物件/地图",
+    "演示工程与业务脚本",
+    "预览截图",
+    "旧红绳连接premise_connector",
+    "B旧主按钮primary_rust",
+    "B备用字体"
+  ],
+  "known_gaps": [],
+  "assets": [
+    {
+      "asset_id": "A03_focus",
+      "path": "a/png/focus.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/focus.png",
+      "purpose": "键盘焦点：短边＋手绘下划线，非四边框",
+      "runtime_path": "res://assets/aurora/ui/a/png/focus.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_row_hover",
+      "path": "a/png/row_hover.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/row_hover.png",
+      "purpose": "列表行开放式选中底；右侧渐隐",
+      "runtime_path": "res://assets/aurora/ui/a/png/row_hover.png",
+      "size_px": [
+        780,
+        104
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_row_selected",
+      "path": "a/png/row_selected.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/row_selected.png",
+      "purpose": "选中行以短竖划和渐隐色块强调，无包围框",
+      "runtime_path": "res://assets/aurora/ui/a/png/row_selected.png",
+      "size_px": [
+        780,
+        104
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_slider_track",
+      "path": "a/png/slider_track.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/slider_track.png",
+      "purpose": "滑杆轨道",
+      "runtime_path": "res://assets/aurora/ui/a/png/slider_track.png",
+      "size_px": [
+        560,
+        8
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_slider_fill",
+      "path": "a/png/slider_fill.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/slider_fill.png",
+      "purpose": "滑杆填充",
+      "runtime_path": "res://assets/aurora/ui/a/png/slider_fill.png",
+      "size_px": [
+        560,
+        8
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        0.65,
+        0.78,
+        0.58,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_slider_knob",
+      "path": "a/png/slider_knob.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/slider_knob.png",
+      "purpose": "滑杆拖动点",
+      "runtime_path": "res://assets/aurora/ui/a/png/slider_knob.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_switch_off",
+      "path": "a/png/switch_off.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/switch_off.png",
+      "purpose": "原生开关纹理；开状态右侧",
+      "runtime_path": "res://assets/aurora/ui/a/png/switch_off.png",
+      "size_px": [
+        88,
+        44
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_switch_on",
+      "path": "a/png/switch_on.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/switch_on.png",
+      "purpose": "原生开关纹理；开状态右侧",
+      "runtime_path": "res://assets/aurora/ui/a/png/switch_on.png",
+      "size_px": [
+        88,
+        44
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_back",
+      "path": "a/png/icon_back.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_back.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_back.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_next",
+      "path": "a/png/icon_next.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_next.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_next.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_menu",
+      "path": "a/png/icon_menu.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_menu.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_menu.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_archive",
+      "path": "a/png/icon_archive.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_archive.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_archive.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_eye",
+      "path": "a/png/icon_eye.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_eye.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_eye.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_pin",
+      "path": "a/png/icon_pin.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_pin.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_pin.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_warning",
+      "path": "a/png/icon_warning.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_warning.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_warning.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_icon_records",
+      "path": "a/png/icon_records.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_records.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_records.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "asset_id": "A03_DreamHanSansCN-W12",
+      "path": "a/fonts/DreamHanSansCN-W12.ttf",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/fonts/DreamHanSansCN-W12.ttf",
+      "purpose": "梦源黑体正文 W12 / 强调 W16 与原许可证",
+      "runtime_path": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W12.ttf",
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip"
+    },
+    {
+      "asset_id": "A03_DreamHanSansCN-W16",
+      "path": "a/fonts/DreamHanSansCN-W16.ttf",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/fonts/DreamHanSansCN-W16.ttf",
+      "purpose": "梦源黑体正文 W12 / 强调 W16 与原许可证",
+      "runtime_path": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W16.ttf",
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip"
+    },
+    {
+      "asset_id": "A03_LICENSE",
+      "path": "a/fonts/LICENSE.txt",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/fonts/LICENSE.txt",
+      "purpose": "梦源黑体正文 W12 / 强调 W16 与原许可证",
+      "runtime_path": "res://assets/aurora/ui/a/fonts/LICENSE.txt",
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip"
+    },
+    {
+      "asset_id": "A03_来源",
+      "path": "a/fonts/来源.txt",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/fonts/来源.txt",
+      "purpose": "梦源黑体正文 W12 / 强调 W16 与原许可证",
+      "runtime_path": "res://assets/aurora/ui/a/fonts/来源.txt",
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip"
+    },
+    {
+      "asset_id": "A02V3_erin_reaction",
+      "path": "a/characters_v3/reactions/erin_reaction.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/反应头像/erin_reaction.png",
+      "purpose": "艾琳反应头像",
+      "runtime_path": "res://assets/aurora/characters/1000001/erin_reaction.png",
+      "size_px": [
+        1312,
+        1199
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR01",
+      "content_bounds_xywh": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_grant_reaction",
+      "path": "a/characters_v3/reactions/grant_reaction.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/反应头像/grant_reaction.png",
+      "purpose": "格兰特反应头像",
+      "runtime_path": "res://assets/aurora/characters/1000007/grant_reaction.png",
+      "size_px": [
+        1312,
+        1199
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR07",
+      "content_bounds_xywh": [
+        0,
+        0,
+        1312,
+        1199
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_lorne_reaction",
+      "path": "a/characters_v3/reactions/lorne_reaction.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/反应头像/lorne_reaction.png",
+      "purpose": "洛恩反应头像",
+      "runtime_path": "res://assets/aurora/characters/1000002/lorne_reaction.png",
+      "size_px": [
+        1230,
+        1278
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR02",
+      "content_bounds_xywh": [
+        1,
+        0,
+        1228,
+        1278
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_nina_reaction",
+      "path": "a/characters_v3/reactions/nina_reaction.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/反应头像/nina_reaction.png",
+      "purpose": "尼娜反应头像",
+      "runtime_path": "res://assets/aurora/characters/1000003/nina_reaction.png",
+      "size_px": [
+        1312,
+        1199
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR03",
+      "content_bounds_xywh": [
+        7,
+        3,
+        1299,
+        1196
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_yuri_reaction",
+      "path": "a/characters_v3/reactions/yuri_reaction.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/反应头像/yuri_reaction.png",
+      "purpose": "尤里反应头像",
+      "runtime_path": "res://assets/aurora/characters/1000006/yuri_reaction.png",
+      "size_px": [
+        1312,
+        1199
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR06",
+      "content_bounds_xywh": [
+        11,
+        0,
+        1300,
+        1199
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_erin_neutral",
+      "path": "a/characters_v3/portraits/erin_neutral.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/立绘/erin_neutral.png",
+      "purpose": "艾琳立绘源图",
+      "runtime_path": "res://assets/aurora/characters/1000001/erin_neutral.png",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR01",
+      "content_bounds_xywh": [
+        263,
+        29,
+        536,
+        1476
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_grant_neutral",
+      "path": "a/characters_v3/portraits/grant_neutral.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/立绘/grant_neutral.png",
+      "purpose": "格兰特立绘源图",
+      "runtime_path": "res://assets/aurora/characters/1000007/grant_neutral.png",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR07",
+      "content_bounds_xywh": [
+        270,
+        15,
+        530,
+        1486
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_lorne_neutral",
+      "path": "a/characters_v3/portraits/lorne_neutral.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/立绘/lorne_neutral.png",
+      "purpose": "洛恩立绘源图",
+      "runtime_path": "res://assets/aurora/characters/1000002/lorne_neutral.png",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR02",
+      "content_bounds_xywh": [
+        257,
+        16,
+        510,
+        1496
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_nina_neutral",
+      "path": "a/characters_v3/portraits/nina_neutral.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/立绘/nina_neutral.png",
+      "purpose": "尼娜立绘源图",
+      "runtime_path": "res://assets/aurora/characters/1000003/nina_neutral.png",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR03",
+      "content_bounds_xywh": [
+        270,
+        21,
+        528,
+        1488
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "A02V3_yuri_neutral",
+      "path": "a/characters_v3/portraits/yuri_neutral.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "人物浅色粗笔触升级_v3_20261018/立绘/yuri_neutral.png",
+      "purpose": "尤里立绘源图",
+      "runtime_path": "res://assets/aurora/characters/1000006/yuri_neutral.png",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "source_nested_archive": "美术A交付包_20261018/02_人物v3/人物浅色粗笔触升级_v3_20261018.zip",
+      "character_id": "CHR06",
+      "content_bounds_xywh": [
+        251,
+        34,
+        529,
+        1480
+      ],
+      "bounds_note": "原包真实透明内容范围；仅去除透明边距的区域定义，未裁切图片。实际膝上近景须按人物演出案定位与屏幕裁切。"
+    },
+    {
+      "asset_id": "B_V4_card_default",
+      "path": "b/common/png/card_default.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_default.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_default.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_default.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_card_focus",
+      "path": "b/common/png/card_focus.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_focus.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_focus.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_focus.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_card_presented",
+      "path": "b/common/png/card_presented.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_presented.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_presented.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_presented.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_card_selected",
+      "path": "b/common/png/card_selected.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_selected.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_selected.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_selected.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_card_shadow",
+      "path": "b/common/png/card_shadow.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_shadow.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_shadow.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_shadow.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_card_thickness",
+      "path": "b/common/png/card_thickness.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/card_thickness.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/card_thickness.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/common/cards/marks/card_thickness.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_type_inference",
+      "path": "b/common/png/type_inference.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/type_inference.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/type_inference.png",
+      "size_px": [
+        96,
+        96
+      ],
+      "source_project_path": "assets/common/cards/marks/type_inference.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "B_V4_type_testimony",
+      "path": "b/common/png/type_testimony.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/type_testimony.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/type_testimony.png",
+      "size_px": [
+        96,
+        96
+      ],
+      "source_project_path": "assets/common/cards/marks/type_testimony.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计"
+    },
+    {
+      "asset_id": "SCENE_SC02",
+      "path": "scenes/SC02_大厅_基础.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017/backgrounds/SC02_大厅_基础.png",
+      "purpose": "大厅，尼娜仍在厨房的已定背景",
+      "size_px": [
+        1672,
+        941
+      ],
+      "coordinate_rule": "场景按自身原图contain一次变换；不乘UI的5/6",
+      "binding_source": "scene-art/场景图层绑定_20261017.json",
+      "state_note": "仅指定状态母图；不据UI打开/关闭或取得记录自动切图",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC02_大厅_基础.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "SCENE_SC04",
+      "path": "scenes/SC04_档案间_基础.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017/backgrounds/SC04_档案间_基础.png",
+      "purpose": "档案间，沿17日正式母图",
+      "size_px": [
+        1672,
+        941
+      ],
+      "coordinate_rule": "场景按自身原图contain一次变换；不乘UI的5/6",
+      "binding_source": "scene-art/场景图层绑定_20261017.json",
+      "state_note": "仅指定状态母图；不据UI打开/关闭或取得记录自动切图",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC04_档案间_基础.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "SCENE_SC08",
+      "path": "scenes/SC08_艾琳房间_基础.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017/backgrounds/SC08_艾琳房间_基础.png",
+      "purpose": "艾琳房间，场景ID保持SC08",
+      "size_px": [
+        1672,
+        941
+      ],
+      "coordinate_rule": "场景按自身原图contain一次变换；不乘UI的5/6",
+      "binding_source": "scene-art/场景图层绑定_20261017.json",
+      "state_note": "仅指定状态母图；不据UI打开/关闭或取得记录自动切图",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC08_艾琳房间_基础.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "SCENE_SC09",
+      "path": "scenes/SC09_六稿案后_两物证已取.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017-sixth/backgrounds/SC09_六稿案后_两物证已取.png",
+      "purpose": "站长室，六稿案后酒壶与瓶塞均已收取，遗体及其他现场痕迹仍在",
+      "size_px": [
+        1672,
+        941
+      ],
+      "coordinate_rule": "场景按自身原图contain一次变换；不乘UI的5/6",
+      "binding_source": "scene-art/六稿新增痕迹与绑定_20261017.json",
+      "state_note": "已完成EV_E03_EXAMINED与EV_E04_EXAMINED；用于已有E03/E04材料的手册测试画面，不由取得记录统一移除遗体",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC09_六稿案后_两物证已取.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "SCENE_SC01",
+      "path": "scenes/SC01_站外_货车停靠.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017/backgrounds/SC01_站外_货车停靠.png",
+      "source_resource_key": "BG_SC01_TRUCK_PARKED",
+      "purpose": "站外正式默认夜景，货车停靠",
+      "size_px": [
+        1671,
+        941
+      ],
+      "coordinate_rule": "按自身原图contain一次；不乘UI的5/6",
+      "binding_source": "scene-art/场景图层绑定_20261017.json",
+      "state_note": "母图已含货车及告示栏，不重复叠加；极光图只按正式结局状态使用",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC01_站外_货车停靠.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "SCENE_SC01_AURORA",
+      "path": "scenes/SC01_站外_极光.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017/backgrounds/SC01_站外_极光.png",
+      "source_resource_key": "BG_SC01_AURORA",
+      "purpose": "站外正式极光结局状态",
+      "size_px": [
+        1671,
+        941
+      ],
+      "coordinate_rule": "按自身原图contain一次；不乘UI的5/6",
+      "binding_source": "scene-art/场景图层绑定_20261017.json",
+      "state_note": "母图已含货车及告示栏，不重复叠加；极光图只按正式结局状态使用",
+      "runtime_path": "res://assets/aurora/scenes/backgrounds/SC01_站外_极光.png",
+      "runtime_binding_note": "本岗交付目标路径；来源为已核准场景状态母图，程序依映射复制接入。"
+    },
+    {
+      "asset_id": "HB_PAPER01",
+      "path": "../../handbook/assets/materials/PAPER01_新公文_空白.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER01_新公文_空白.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/PAPER01_新公文_空白.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "sha256": "6f5e2ebcb99acca36fadcf2e3493cf0598435a65c67ba9ecf6c71186c9aba43d"
+    },
+    {
+      "asset_id": "HB_E02_BODY",
+      "path": "../../handbook/assets/materials/格兰特_椅旁倒地.png",
+      "runtime_path": "res://assets/aurora/scenes/characters/格兰特_椅旁倒地.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261016/characters/格兰特_椅旁倒地.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "95b6d14c665675a4a7b6cb8749feca458ca91b2ffd694fc1584a17f6252fc7dd"
+    },
+    {
+      "asset_id": "HB_E03_BLOOD_PRINT",
+      "path": "../../handbook/assets/materials/E03_扁酒壶_半枚血指印.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E03_扁酒壶_半枚血指印.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017-sixth/objects/E03_扁酒壶_半枚血指印.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "e03333eb6381b74b4bf5378124f7b3f344ce2d13bf329eb580c63581720ee174",
+      "source_resource_key": "OBJ_E03_S6_BLOOD_PRINT"
+    },
+    {
+      "asset_id": "HB_E04_IN_PLACE",
+      "path": "../../handbook/assets/materials/E04_瓶塞汤渍_在位近景.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E04_瓶塞汤渍_在位近景.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261017-sixth/objects/E04_瓶塞汤渍_在位近景.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        850,
+        660
+      ],
+      "sha256": "f8db518ce98ecf65944141def5dde76fdcc05dfb07240ce6f2e4755070d08512",
+      "source_resource_key": "INSPECT_E04_S6_IN_PLACE"
+    },
+    {
+      "asset_id": "HB_BOOK01_OPEN",
+      "path": "../../handbook/assets/materials/BOOK01_登记册_摊开空页.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/BOOK01_登记册_摊开空页.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/BOOK01_登记册_摊开空页.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "1e2d6f2969d51078bee2770bee0591db02a2e7e3f67c58b922834d559bfcc98a"
+    },
+    {
+      "asset_id": "HB_E07_BAG",
+      "path": "../../handbook/assets/materials/E07_旧棕皮旅行包_打开乱衣.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E07_旧棕皮旅行包_打开乱衣.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E07_旧棕皮旅行包_打开乱衣.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "e03a264670ec53d115b4f2fccda18277890715e2f4996b23915421e1f6f4b02d"
+    },
+    {
+      "asset_id": "HB_E08_CASH",
+      "path": "../../handbook/assets/materials/E08_现金_几叠独立.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E08_现金_几叠独立.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261016/objects/E08_现金_几叠独立.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "0283979eff267158337b7135430fbda34fa70ec461b03451897a2a3883409f10"
+    },
+    {
+      "asset_id": "HB_E10_KNIFE",
+      "path": "../../handbook/assets/materials/E10_割绳刀_少量污迹.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E10_割绳刀_少量污迹.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E10_割绳刀_少量污迹.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "78e25bfc43f4bcbf7da138afcd7e7552afa6b66f19ea659347e26724680cfd1f"
+    },
+    {
+      "asset_id": "HB_E11_HANDKERCHIEF",
+      "path": "../../handbook/assets/materials/E11_湿手帕_褶缝暗红痕.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E11_湿手帕_褶缝暗红痕.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E11_湿手帕_褶缝暗红痕.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "628d9d44f7eea738b4584568ae27cde37b86cddc30b991a3582b89326b3dba5f"
+    },
+    {
+      "asset_id": "HB_E12_WRENCH",
+      "path": "../../handbook/assets/materials/E12_旧短柄扳手_陈旧血痕.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E12_旧短柄扳手_陈旧血痕.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261016/objects/E12_旧短柄扳手_陈旧血痕.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "f520423d1d206a1a8b863eaa12c83ca5ca236155b5e52ebdeafb813ab9ea53c3"
+    },
+    {
+      "asset_id": "HB_PAPER02",
+      "path": "../../handbook/assets/materials/PAPER02_旧薄纸_空白.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER02_旧薄纸_空白.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/PAPER02_旧薄纸_空白.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "sha256": "68cce9f25a5b668a857e50c67165445d31af42134822fe7b129dd54c2c581441"
+    },
+    {
+      "asset_id": "HB_E14_DIARY",
+      "path": "../../handbook/assets/materials/E14_格兰特日记_封皮.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E14_格兰特日记_封皮.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E14_格兰特日记_封皮.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "5d834e35b7696604b4ca6c1fdb07bf54b55c739ba4eb5240f241d9b350b54459"
+    },
+    {
+      "asset_id": "HB_E16_BOOK",
+      "path": "../../handbook/assets/materials/E16_婚事小本_封皮.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E16_婚事小本_封皮.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E16_婚事小本_封皮.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "ccf31d39b2fc30594f1eebd9bbfa796b8a869796172397dc2892355af183b06f"
+    },
+    {
+      "asset_id": "HB_BOOK01_CLOSED",
+      "path": "../../handbook/assets/materials/BOOK01_登记册_闭合.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/BOOK01_登记册_闭合.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/BOOK01_登记册_闭合.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "f6309442512721561bbe2ea1f9f80ccf11ddc1a6a12545c24edeff94ec71681d"
+    },
+    {
+      "asset_id": "HB_FOLDER01",
+      "path": "../../handbook/assets/materials/FOLDER01_待核档案夹_空.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/FOLDER01_待核档案夹_空.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/FOLDER01_待核档案夹_空.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "1ab1bc8a38e0b80d353c67be7fec58e6450ca3ad59c345ffed8a79be93f79621"
+    },
+    {
+      "asset_id": "HB_E19_BOOK",
+      "path": "../../handbook/assets/materials/E19_交款小本_缺页.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E19_交款小本_缺页.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E19_交款小本_缺页.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "13416f3892e9a853157b7174d8785c0d87879df47d7245846f651139d59390b6"
+    },
+    {
+      "asset_id": "HB_PAPER03",
+      "path": "../../handbook/assets/materials/PAPER03_信纸信封_空白.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER03_信纸信封_空白.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/PAPER03_信纸信封_空白.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "9bef14653f7d19900c47be68f97d2ff9422931827e88ce0868d7d194c00fc3d0"
+    },
+    {
+      "asset_id": "HB_E21_PHOTO",
+      "path": "../../handbook/assets/materials/E21_三人年轻合照.png",
+      "runtime_path": "res://assets/aurora/scenes/characters/E21_三人年轻合照.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261016/characters/E21_三人年轻合照.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "sha256": "3f68af1a2f710f46e39ab7d2bb085088702486283b9ef2f7f66db0e4567a2cf3"
+    },
+    {
+      "asset_id": "HB_E24_BOWL",
+      "path": "../../handbook/assets/materials/E24_汤碗_吃过.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E24_汤碗_吃过.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E24_汤碗_吃过.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "eb7bc797ffb0f95b01d900e4b637bcf2abe8e6c8060c49cc19e1ed923cce373c"
+    },
+    {
+      "asset_id": "HB_E25_MEDICINE",
+      "path": "../../handbook/assets/materials/E25_拆开药纸包.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E25_拆开药纸包.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E25_拆开药纸包.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "sha256": "3b820647cdad1be087c46f7699e661ea5e09439ec08b118b36d497a6649fd1fb"
+    },
+    {
+      "asset_id": "HB_E26_TAPE",
+      "path": "../../handbook/assets/materials/E26_同源纸带_断开双片.png",
+      "runtime_path": "res://assets/aurora/scenes/objects/E26_同源纸带_断开双片.png",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/objects/E26_同源纸带_断开双片.png",
+      "purpose": "办案手册当前已获内容的观察图；准确文字由材料内容表提供",
+      "size_px": [
+        2172,
+        724
+      ],
+      "sha256": "0d15dcd4ef4633deda2be20920e46fd3e2e672071bd897cf27a23d8e4a8a44a9"
+    },
+    {
+      "asset_id": "CAST_CHR04_PORTRAIT",
+      "path": "characters/CHR04/伊万_常态站姿.png",
+      "runtime_path": "res://assets/aurora/characters/1000004/伊万_常态站姿.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/action-poses-20261016/伊万_常态站姿.png",
+      "purpose": "办案手册人物资料.portrait_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        1024,
+        1536
+      ],
+      "sha256": "4a8119d83905716f25bec800f126b2f1bf8416f69e664539650645d47504a916"
+    },
+    {
+      "asset_id": "CAST_CHR05_PORTRAIT",
+      "path": "characters/CHR05/薇拉_倚椅站姿_提取.png",
+      "runtime_path": "res://assets/aurora/characters/1000005/薇拉_倚椅站姿_提取.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/action-poses-20261016/reused/薇拉_倚椅站姿_提取.png",
+      "purpose": "办案手册人物资料.portrait_ref；按实际非空路径保留人物身份与当前公开范围",
+      "binding_note": "实际XLSX保留倚椅提取姿态；本次按该非空路径交付，不改写默认演出绑定。",
+      "size_px": [
+        415,
+        1027
+      ],
+      "sha256": "fafcd2b73d1a8295c5adddb1bd99312a27e9d44387aff9b1188b6b8c2427bd41"
+    },
+    {
+      "asset_id": "CAST_CHR10_PORTRAIT",
+      "path": "characters/CHR10/1000010_基里尔_常态立绘.png",
+      "runtime_path": "res://assets/aurora/characters/1000010/1000010_基里尔_常态立绘.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/twin-drivers-20261015/runtime/1000010_基里尔_常态立绘.png",
+      "purpose": "办案手册人物资料.portrait_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        420,
+        896
+      ],
+      "sha256": "98505e453c32c380a20899be69dc93bfb221328351739fca4c2686cc47070ca0"
+    },
+    {
+      "asset_id": "CAST_CHR11_PORTRAIT",
+      "path": "characters/CHR11/1000011_帕维尔_常态立绘.png",
+      "runtime_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_常态立绘.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/twin-drivers-20261015/runtime/1000011_帕维尔_常态立绘.png",
+      "purpose": "办案手册人物资料.portrait_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        420,
+        896
+      ],
+      "sha256": "a2b7bf40c4339d198f6e1b79a448817d45f288052f4d2eb8530f15bd493820a6"
+    },
+    {
+      "asset_id": "CAST_CHR04_AVATAR",
+      "path": "characters/CHR04/伊万_常态头像.png",
+      "runtime_path": "res://assets/aurora/characters/1000004/伊万_常态头像.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/action-poses-20261016/portraits/伊万_常态头像.png",
+      "purpose": "办案手册人物资料.avatar_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        512,
+        512
+      ],
+      "sha256": "be3b825acf4356dac0acaffc8a5256caa2e41ad7802554b318ffaf62e6d65400"
+    },
+    {
+      "asset_id": "CAST_CHR05_AVATAR",
+      "path": "characters/CHR05/薇拉_常态头像.png",
+      "runtime_path": "res://assets/aurora/characters/1000005/薇拉_常态头像.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/action-poses-20261016/portraits/薇拉_常态头像.png",
+      "purpose": "办案手册人物资料.avatar_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        512,
+        512
+      ],
+      "sha256": "612e6b5a292519b6b92ae7d0cb04d79243b8f111bccb23b8ec8ea4c7ecb6b293"
+    },
+    {
+      "asset_id": "CAST_CHR10_AVATAR",
+      "path": "characters/CHR10/1000010_基里尔_平常.png",
+      "runtime_path": "res://assets/aurora/characters/1000010/1000010_基里尔_平常.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/twin-drivers-20261015/runtime/1000010_基里尔_平常.png",
+      "purpose": "办案手册人物资料.avatar_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        352,
+        352
+      ],
+      "sha256": "c7833f4cc8f8a470db61f47eb544f43503a16447fa89f0fa0ccebf11e9cc685c"
+    },
+    {
+      "asset_id": "CAST_CHR11_AVATAR",
+      "path": "characters/CHR11/1000011_帕维尔_平常.png",
+      "runtime_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_平常.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/twin-drivers-20261015/runtime/1000011_帕维尔_平常.png",
+      "purpose": "办案手册人物资料.avatar_ref；按实际非空路径保留人物身份与当前公开范围",
+      "size_px": [
+        352,
+        352
+      ],
+      "sha256": "d73893941b3dd8038f1d2985901c6371b5acba183539f571547da7b8ede5e0dd"
+    },
+    {
+      "asset_id": "PAPER_V2_button_primary_normal",
+      "path": "art7/paper_v2/controls/button_primary_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_normal.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_primary_normal.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_primary_hover",
+      "path": "art7/paper_v2/controls/button_primary_hover.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_hover.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_primary_hover.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_primary_pressed",
+      "path": "art7/paper_v2/controls/button_primary_pressed.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_pressed.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_primary_pressed.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 1,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_primary_disabled",
+      "path": "art7/paper_v2/controls/button_primary_disabled.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_disabled.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_primary_disabled.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_normal",
+      "path": "art7/paper_v2/controls/button_secondary_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_secondary_normal.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_hover",
+      "path": "art7/paper_v2/controls/button_secondary_hover.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_secondary_hover.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_pressed",
+      "path": "art7/paper_v2/controls/button_secondary_pressed.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_pressed.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_secondary_pressed.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 1,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_disabled",
+      "path": "art7/paper_v2/controls/button_secondary_disabled.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_disabled.png",
+      "size_px": [
+        480,
+        88
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/button_secondary_disabled.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_at_default_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_minimum_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "padding_scope": "文字按钮；纯图标使用icon_only_padding_ltrb。",
+      "hud_display_px": [
+        170,
+        48
+      ],
+      "hud_content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "hud_icon_px": 24,
+      "hud_icon_label_gap_px": 10,
+      "icon_only_display_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_ltrb": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_only_icon_px": 24,
+      "label_offset_y_display_px": 0,
+      "minimum_display_size": [
+        64,
+        48
+      ],
+      "surface_family": "R4完整手绘微不规则厚纸按钮"
+    },
+    {
+      "asset_id": "PAPER_V2_quote_normal",
+      "path": "art7/paper_v2/controls/quote_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/quote_normal.png",
+      "size_px": [
+        1280,
+        224
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/quote_normal.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        40,
+        36,
+        40,
+        36
+      ],
+      "content_padding_ltrb": [
+        48,
+        26,
+        48,
+        30
+      ],
+      "edge_protection_native_ltrb": [
+        22,
+        24,
+        22,
+        24
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "surface_family": "保留A水彩信息面"
+    },
+    {
+      "asset_id": "PAPER_V2_quote_focus",
+      "path": "art7/paper_v2/controls/quote_focus.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/quote_focus.png",
+      "size_px": [
+        1280,
+        224
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/quote_focus.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        40,
+        36,
+        40,
+        36
+      ],
+      "content_padding_ltrb": [
+        48,
+        26,
+        48,
+        30
+      ],
+      "edge_protection_native_ltrb": [
+        22,
+        24,
+        22,
+        24
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "surface_family": "保留A水彩信息面"
+    },
+    {
+      "asset_id": "PAPER_V2_dialogue_paper",
+      "path": "art7/paper_v2/controls/dialogue_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png",
+      "size_px": [
+        1600,
+        300
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/dialogue_paper.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        36,
+        32,
+        36,
+        36
+      ],
+      "content_padding_native_ltrb": [
+        64,
+        40,
+        64,
+        44
+      ],
+      "edge_protection_ltrb": [
+        18,
+        18,
+        18,
+        20
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "surface_family": "保留A水彩信息面"
+    },
+    {
+      "asset_id": "PAPER_V2_panel_paper",
+      "path": "art7/paper_v2/controls/panel_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png",
+      "size_px": [
+        960,
+        640
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/panel_paper.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        32,
+        32,
+        32,
+        36
+      ],
+      "content_padding_native_ltrb": [
+        48,
+        40,
+        48,
+        44
+      ],
+      "edge_protection_ltrb": [
+        18,
+        18,
+        18,
+        20
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "surface_family": "保留A水彩信息面"
+    },
+    {
+      "asset_id": "PAPER_V2_small_paper",
+      "path": "art7/paper_v2/controls/small_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+      "size_px": [
+        320,
+        80
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/controls/small_paper.png",
+      "purpose": "浅羊皮纸共用控件，文字由当前UI配置叠加",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "content_padding_native_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_ltrb": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "source_manifest": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/controls_manifest.json",
+      "normalization_note": "生产PNG已由原作者延展中段归一化；root原字节接收。运行直接使用实际尺寸与九切，不设前置区域裁切。",
+      "surface_family": "保留A水彩信息面"
+    },
+    {
+      "asset_id": "PAPER_V2_category_paper_evidence",
+      "path": "art7/paper_v2/components/category_paper_evidence.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_evidence.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/components/category_paper_evidence.png",
+      "purpose": "分类卡面底纹层；叠加在卡体上并保持类别跨交互状态一致",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_slice": false,
+      "scale_uniformly": true,
+      "category": "evidence"
+    },
+    {
+      "asset_id": "PAPER_V2_category_paper_testimony",
+      "path": "art7/paper_v2/components/category_paper_testimony.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_testimony.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/components/category_paper_testimony.png",
+      "purpose": "分类卡面底纹层；叠加在卡体上并保持类别跨交互状态一致",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_slice": false,
+      "scale_uniformly": true,
+      "category": "testimony"
+    },
+    {
+      "asset_id": "PAPER_V2_category_paper_inference",
+      "path": "art7/paper_v2/components/category_paper_inference.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_inference.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "theme_version": "PAPER_V2_20261018",
+      "adoption_status": "current",
+      "source_workspace": "副策划6场景工作稿",
+      "source_member": "assets/revised-20261018-cards/components/category_paper_inference.png",
+      "purpose": "分类卡面底纹层；叠加在卡体上并保持类别跨交互状态一致",
+      "text_baked": false,
+      "texture_modulate": "#FFFFFFFF",
+      "spec_ref": "specs/paper_v2_adopted.json",
+      "nine_slice": false,
+      "scale_uniformly": true,
+      "category": "inference"
+    },
+    {
+      "source_member": "core_cards/components/card_face.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/card_face.png",
+      "asset_id": "C18_card_face",
+      "path": "core_cards/components/card_face.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/state_normal.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/state_normal.png",
+      "asset_id": "C18_state_normal",
+      "path": "core_cards/components/state_normal.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/border_hover.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/border_hover.png",
+      "asset_id": "C18_border_hover",
+      "path": "core_cards/components/border_hover.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/border_selected.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/border_selected.png",
+      "asset_id": "C18_border_selected",
+      "path": "core_cards/components/border_selected.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/shadow_normal.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/shadow_normal.png",
+      "asset_id": "C18_shadow_normal",
+      "path": "core_cards/components/shadow_normal.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/card_thickness.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/card_thickness.png",
+      "asset_id": "C18_card_thickness",
+      "path": "core_cards/components/card_thickness.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_slot_empty",
+      "path": "b/core/png/slot_empty.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/slot_empty.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/slot_empty.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/systems/core/ui/slot_empty.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/slot_empty.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/slot_empty.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_slot_focus",
+      "path": "b/core/png/slot_focus.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/slot_focus.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/slot_focus.png",
+      "size_px": [
+        600,
+        900
+      ],
+      "source_project_path": "assets/systems/core/ui/slot_focus.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/slot_focus.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/slot_focus.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_close",
+      "path": "a/png/icon_close.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_close.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_close.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_source",
+      "path": "a/png/icon_source.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_source.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_source.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_remove",
+      "path": "a/png/icon_remove.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_remove.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_remove.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_supported",
+      "path": "b/core/png/feedback_supported.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_supported.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_supported.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_supported.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_supported.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_supported.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_partial",
+      "path": "b/core/png/feedback_partial.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_partial.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_partial.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_partial.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_partial.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_partial.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_counter",
+      "path": "b/core/png/feedback_counter.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_counter.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_counter.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_counter.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_counter.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_counter.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_insufficient",
+      "path": "b/core/png/feedback_insufficient.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_insufficient.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_insufficient.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_insufficient.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_insufficient.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_insufficient.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_excluded",
+      "path": "b/core/png/feedback_excluded.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_excluded.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_excluded.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_excluded.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_excluded.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_excluded.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_feedback_linked",
+      "path": "b/core/png/feedback_linked.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/feedback_linked.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/feedback_linked.png",
+      "size_px": [
+        600,
+        180
+      ],
+      "source_project_path": "assets/systems/core/fx/feedback_linked.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/feedback_linked.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/feedback_linked.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_review_available",
+      "path": "b/core/png/review_available.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/review_available.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/review_available.png",
+      "size_px": [
+        104,
+        112
+      ],
+      "source_project_path": "assets/systems/core/ui/review_available.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/review_available.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/review_available.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_review_consumed",
+      "path": "b/core/png/review_consumed.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/review_consumed.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/review_consumed.png",
+      "size_px": [
+        104,
+        112
+      ],
+      "source_project_path": "assets/systems/core/ui/review_consumed.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/review_consumed.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/review_consumed.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_deduct_stroke",
+      "path": "b/core/png/deduct_stroke.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/01_核心玩法/01_素材/PNG/deduct_stroke.png",
+      "purpose": "推理槽位、反馈或演出效果补充",
+      "runtime_path": "res://assets/aurora/ui/b/core/png/deduct_stroke.png",
+      "size_px": [
+        104,
+        112
+      ],
+      "source_project_path": "assets/systems/core/fx/deduct_stroke.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/core/svg/deduct_stroke.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/core/svg/deduct_stroke.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_new_tag",
+      "path": "b/common/png/new_tag.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/new_tag.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/new_tag.png",
+      "size_px": [
+        160,
+        88
+      ],
+      "source_project_path": "assets/common/cards/marks/new_tag.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/common/svg/new_tag.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/common/svg/new_tag.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_updated_tag",
+      "path": "b/common/png/updated_tag.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/updated_tag.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/updated_tag.png",
+      "size_px": [
+        180,
+        88
+      ],
+      "source_project_path": "assets/common/cards/marks/updated_tag.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/common/svg/updated_tag.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/common/svg/updated_tag.svg",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "fx_ink_link_web",
+      "path": "original/fx_ink_link_web.png",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\core_effects\\manifest.json",
+      "source_root": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\core_effects",
+      "runtime_path": "res://assets/systems/core/fx/fx_ink_link_web.png",
+      "size_px": [
+        1536,
+        1024
+      ],
+      "content_bounds_xywh": [
+        72,
+        62,
+        1419,
+        879
+      ],
+      "purpose": "灵感涌现的来源汇聚墨线；纸页与字标的后景层。",
+      "presentation": {
+        "target_rect_xywh": [
+          290,
+          146,
+          1040,
+          541
+        ],
+        "visible_ms": [
+          900,
+          4180
+        ],
+        "max_alpha": 0.65,
+        "fade_ms": 600
+      },
+      "adoption_status": "current"
+    },
+    {
+      "source_member": "core_cards/components/mark_pending.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/mark_pending.png",
+      "asset_id": "C18_mark_pending",
+      "path": "core_cards/components/mark_pending.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "source_member": "core_cards/components/overlay_disabled.png",
+      "purpose": "美术7核心卡牌、按钮与原话框组件；文字与实际材料图独立加载",
+      "runtime_path": "res://assets/aurora/ui/core_cards/components/overlay_disabled.png",
+      "asset_id": "C18_overlay_disabled",
+      "path": "core_cards/components/overlay_disabled.png",
+      "source_archive": "美术7 revised-20261018-cards",
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_expand",
+      "path": "a/png/icon_expand.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_expand.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_expand.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_collapse",
+      "path": "a/png/icon_collapse.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_collapse.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_collapse.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_icon_check",
+      "path": "a/png/icon_check.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/icon_check.png",
+      "purpose": "同一套线宽的开放式功能图标",
+      "runtime_path": "res://assets/aurora/ui/a/png/icon_check.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_separator",
+      "path": "a/png/separator.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/separator.png",
+      "purpose": "疏朗细分隔线，不做整圈边框",
+      "runtime_path": "res://assets/aurora/ui/a/png/separator.png",
+      "size_px": [
+        960,
+        8
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        0.7,
+        0.85,
+        0.8,
+        0.5
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "A03_short_rule",
+      "path": "a/png/short_rule.png",
+      "source_archive": "美术A交付包_20261018.zip",
+      "source_member": "UI手绘PNG_梦源黑体_1080p_Godot_20261018/ui_open/assets/png/short_rule.png",
+      "purpose": "姓名／标题短笔触线",
+      "runtime_path": "res://assets/aurora/ui/a/png/short_rule.png",
+      "size_px": [
+        320,
+        12
+      ],
+      "source_nested_archive": "美术A交付包_20261018/03_最新UI/UI手绘PNG_梦源黑体_1080p_Godot_20261018.zip",
+      "state_tint_already_baked": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "source_index": "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "B_V4_type_document",
+      "path": "b/common/png/type_document.png",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "source_member": "ArtB_v4_素材预览交接_按系统_20261016/ArtB_v4_按系统完整交付/00_通用/01_素材/PNG/type_document.png",
+      "purpose": "卡面、材料类型或获得/更新状态补充",
+      "runtime_path": "res://assets/aurora/ui/b/common/png/type_document.png",
+      "size_px": [
+        96,
+        96
+      ],
+      "source_project_path": "assets/common/cards/marks/type_document.svg",
+      "origin": "现有 SVG 按原尺寸导出 PNG；不是新增设计",
+      "svg_source_path": "b/common/svg/type_document.svg",
+      "svg_runtime_path": "res://assets/aurora/ui/b/common/svg/type_document.svg",
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_inspect_32",
+      "path": "art7/cursors/cursor_inspect_32.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_inspect_32.png",
+      "purpose": "可调查物件的普通检查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_inspect_32.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "state": "普通检查",
+      "display_px": [
+        32,
+        32
+      ],
+      "hotspot_px": [
+        14,
+        13
+      ],
+      "badge": null,
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_checked_32",
+      "path": "art7/cursors/cursor_checked_32.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_checked_32.png",
+      "purpose": "可调查物件的已查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_checked_32.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "state": "已查",
+      "display_px": [
+        32,
+        32
+      ],
+      "hotspot_px": [
+        14,
+        13
+      ],
+      "badge": {
+        "shape": "check",
+        "position_px": [
+          1,
+          19
+        ],
+        "size_px": [
+          12,
+          12
+        ],
+        "colour": "灰绿"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_recheck_32",
+      "path": "art7/cursors/cursor_recheck_32.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_recheck_32.png",
+      "purpose": "可调查物件的可补查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_recheck_32.png",
+      "size_px": [
+        32,
+        32
+      ],
+      "state": "可补查",
+      "display_px": [
+        32,
+        32
+      ],
+      "hotspot_px": [
+        14,
+        13
+      ],
+      "badge": {
+        "shape": "plus",
+        "position_px": [
+          1,
+          19
+        ],
+        "size_px": [
+          12,
+          12
+        ],
+        "colour": "暖金"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_inspect_48",
+      "path": "art7/cursors/cursor_inspect_48.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_inspect_48.png",
+      "purpose": "可调查物件的普通检查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_inspect_48.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "state": "普通检查",
+      "display_px": [
+        48,
+        48
+      ],
+      "hotspot_px": [
+        21,
+        20
+      ],
+      "badge": null,
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_checked_48",
+      "path": "art7/cursors/cursor_checked_48.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_checked_48.png",
+      "purpose": "可调查物件的已查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_checked_48.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "state": "已查",
+      "display_px": [
+        48,
+        48
+      ],
+      "hotspot_px": [
+        21,
+        20
+      ],
+      "badge": {
+        "shape": "check",
+        "position_px": [
+          1,
+          29
+        ],
+        "size_px": [
+          18,
+          18
+        ],
+        "colour": "灰绿"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_recheck_48",
+      "path": "art7/cursors/cursor_recheck_48.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_recheck_48.png",
+      "purpose": "可调查物件的可补查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_recheck_48.png",
+      "size_px": [
+        48,
+        48
+      ],
+      "state": "可补查",
+      "display_px": [
+        48,
+        48
+      ],
+      "hotspot_px": [
+        21,
+        20
+      ],
+      "badge": {
+        "shape": "plus",
+        "position_px": [
+          1,
+          29
+        ],
+        "size_px": [
+          18,
+          18
+        ],
+        "colour": "暖金"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_inspect_64",
+      "path": "art7/cursors/cursor_inspect_64.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_inspect_64.png",
+      "purpose": "可调查物件的普通检查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_inspect_64.png",
+      "size_px": [
+        64,
+        64
+      ],
+      "state": "普通检查",
+      "display_px": [
+        64,
+        64
+      ],
+      "hotspot_px": [
+        28,
+        26
+      ],
+      "badge": null,
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_checked_64",
+      "path": "art7/cursors/cursor_checked_64.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_checked_64.png",
+      "purpose": "可调查物件的已查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_checked_64.png",
+      "size_px": [
+        64,
+        64
+      ],
+      "state": "已查",
+      "display_px": [
+        64,
+        64
+      ],
+      "hotspot_px": [
+        28,
+        26
+      ],
+      "badge": {
+        "shape": "check",
+        "position_px": [
+          2,
+          38
+        ],
+        "size_px": [
+          24,
+          24
+        ],
+        "colour": "灰绿"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    },
+    {
+      "asset_id": "ART7_cursor_recheck_64",
+      "path": "art7/cursors/cursor_recheck_64.png",
+      "source_workspace": "副策划6工作稿",
+      "source_member": "art-direction/cursors-20261018/cursor_recheck_64.png",
+      "purpose": "可调查物件的可补查放大镜光标",
+      "runtime_path": "res://assets/aurora/ui/art7/cursors/cursor_recheck_64.png",
+      "size_px": [
+        64,
+        64
+      ],
+      "state": "可补查",
+      "display_px": [
+        64,
+        64
+      ],
+      "hotspot_px": [
+        28,
+        26
+      ],
+      "badge": {
+        "shape": "plus",
+        "position_px": [
+          2,
+          38
+        ],
+        "size_px": [
+          24,
+          24
+        ],
+        "colour": "暖金"
+      },
+      "binding_source": "art-direction/cursors-20261018/cursor_manifest.json",
+      "state_rule_boundary": "仅图形状态；实际可查、已查、可补查条件由调查案配置。",
+      "source_commit": "4a94d37",
+      "revision_note": "原光标增加浅米细边与暗灰绿描边；原ID、运行路径、尺寸、热点、透明镜心及状态语义保持。",
+      "contrast_revision": {
+        "method": "原水彩母图加浅米色细边与暗灰绿外描边；按原热点内收少量轮廓为描边留距。角标形状保留。",
+        "outline_at_32px": {
+          "light_outer_px": 0.4,
+          "dark_outer_px": 0.8
+        },
+        "hotspots_unchanged": true,
+        "validation": "9张尺寸及热点保持；四周最外一圈alpha=0且镜片中心alpha=0；32px已叠放于实际格兰特深灰衣物和浅纸质界面检查。"
+      },
+      "source_index": "E:\\gamejam\\策划工作稿\\design\\ui_20261018\\adopted_assets.json"
+    }
+  ],
+  "workbook_bindings": [
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_PAPER01",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER01_新公文_空白.png",
+      "records": [
+        "E01_V1",
+        "E06_V1",
+        "E06_V2",
+        "E09_V1",
+        "E23_V1",
+        "E23_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E02_BODY",
+      "runtime_path": "res://assets/aurora/scenes/characters/格兰特_椅旁倒地.png",
+      "records": [
+        "E02_V1",
+        "E02_V2",
+        "E02_V3",
+        "E02_V4",
+        "E02_V5",
+        "E02_V6",
+        "E02_V7",
+        "E02_V8"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E03_BLOOD_PRINT",
+      "runtime_path": "res://assets/aurora/scenes/objects/E03_扁酒壶_半枚血指印.png",
+      "records": [
+        "E03_V1",
+        "E03_V2",
+        "E03_V3",
+        "E03_V4"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E04_IN_PLACE",
+      "runtime_path": "res://assets/aurora/scenes/objects/E04_瓶塞汤渍_在位近景.png",
+      "records": [
+        "E04_V1",
+        "E04_V2",
+        "E04_V3",
+        "E04_V4",
+        "E04_V5"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_BOOK01_OPEN",
+      "runtime_path": "res://assets/aurora/scenes/objects/BOOK01_登记册_摊开空页.png",
+      "records": [
+        "E05_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E07_BAG",
+      "runtime_path": "res://assets/aurora/scenes/objects/E07_旧棕皮旅行包_打开乱衣.png",
+      "records": [
+        "E07_V1",
+        "E07_V2",
+        "E07_V3",
+        "E07_V4",
+        "E07_V5",
+        "E07_V6",
+        "E07_V7",
+        "E07_V8"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E08_CASH",
+      "runtime_path": "res://assets/aurora/scenes/objects/E08_现金_几叠独立.png",
+      "records": [
+        "E08_V1",
+        "E08_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E10_KNIFE",
+      "runtime_path": "res://assets/aurora/scenes/objects/E10_割绳刀_少量污迹.png",
+      "records": [
+        "E10_V1",
+        "E10_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E11_HANDKERCHIEF",
+      "runtime_path": "res://assets/aurora/scenes/objects/E11_湿手帕_褶缝暗红痕.png",
+      "records": [
+        "E11_V1",
+        "E11_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E12_WRENCH",
+      "runtime_path": "res://assets/aurora/scenes/objects/E12_旧短柄扳手_陈旧血痕.png",
+      "records": [
+        "E12_V1",
+        "E12_V2",
+        "E12_V3",
+        "E12_V4"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_PAPER02",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER02_旧薄纸_空白.png",
+      "records": [
+        "E13_V1",
+        "E13_V2",
+        "E15_V1",
+        "E15_V2",
+        "E13_V3",
+        "E13_V4",
+        "E15_V3"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E14_DIARY",
+      "runtime_path": "res://assets/aurora/scenes/objects/E14_格兰特日记_封皮.png",
+      "records": [
+        "E14_V1",
+        "E14_V2",
+        "E14_V3"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E16_BOOK",
+      "runtime_path": "res://assets/aurora/scenes/objects/E16_婚事小本_封皮.png",
+      "records": [
+        "E16_V1",
+        "E16_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_BOOK01_CLOSED",
+      "runtime_path": "res://assets/aurora/scenes/objects/BOOK01_登记册_闭合.png",
+      "records": [
+        "E17_V1",
+        "E17_V2",
+        "E17_V3",
+        "E17_V4"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_FOLDER01",
+      "runtime_path": "res://assets/aurora/scenes/objects/FOLDER01_待核档案夹_空.png",
+      "records": [
+        "E18_V1",
+        "E18_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E19_BOOK",
+      "runtime_path": "res://assets/aurora/scenes/objects/E19_交款小本_缺页.png",
+      "records": [
+        "E19_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_PAPER03",
+      "runtime_path": "res://assets/aurora/scenes/objects/PAPER03_信纸信封_空白.png",
+      "records": [
+        "E20_V1",
+        "E20_V2",
+        "E22_V1",
+        "E22_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E21_PHOTO",
+      "runtime_path": "res://assets/aurora/scenes/characters/E21_三人年轻合照.png",
+      "records": [
+        "E21_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E24_BOWL",
+      "runtime_path": "res://assets/aurora/scenes/objects/E24_汤碗_吃过.png",
+      "records": [
+        "E24_V1",
+        "E24_V2",
+        "E24_V3",
+        "E24_V4"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E25_MEDICINE",
+      "runtime_path": "res://assets/aurora/scenes/objects/E25_拆开药纸包.png",
+      "records": [
+        "E25_V1",
+        "E25_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "材料内容",
+      "field": "image_ref",
+      "asset_id": "HB_E26_TAPE",
+      "runtime_path": "res://assets/aurora/scenes/objects/E26_同源纸带_断开双片.png",
+      "records": [
+        "E26_V1",
+        "E26_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "A02V3_erin_neutral",
+      "runtime_path": "res://assets/aurora/characters/1000001/erin_neutral.png",
+      "records": [
+        "PROFILE_CHR01_V1",
+        "PROFILE_CHR01_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "A02V3_lorne_neutral",
+      "runtime_path": "res://assets/aurora/characters/1000002/lorne_neutral.png",
+      "records": [
+        "PROFILE_CHR02_V1",
+        "PROFILE_CHR02_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "A02V3_nina_neutral",
+      "runtime_path": "res://assets/aurora/characters/1000003/nina_neutral.png",
+      "records": [
+        "PROFILE_CHR03_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "CAST_CHR04_PORTRAIT",
+      "runtime_path": "res://assets/aurora/characters/1000004/伊万_常态站姿.png",
+      "records": [
+        "PROFILE_CHR04_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "CAST_CHR05_PORTRAIT",
+      "runtime_path": "res://assets/aurora/characters/1000005/薇拉_倚椅站姿_提取.png",
+      "records": [
+        "PROFILE_CHR05_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "A02V3_yuri_neutral",
+      "runtime_path": "res://assets/aurora/characters/1000006/yuri_neutral.png",
+      "records": [
+        "PROFILE_CHR06_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "A02V3_grant_neutral",
+      "runtime_path": "res://assets/aurora/characters/1000007/grant_neutral.png",
+      "records": [
+        "PROFILE_CHR07_V1",
+        "PROFILE_CHR07_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "CAST_CHR10_PORTRAIT",
+      "runtime_path": "res://assets/aurora/characters/1000010/1000010_基里尔_常态立绘.png",
+      "records": [
+        "PROFILE_CHR10_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "portrait_ref",
+      "asset_id": "CAST_CHR11_PORTRAIT",
+      "runtime_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_常态立绘.png",
+      "records": [
+        "PROFILE_CHR11_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "A02V3_erin_reaction",
+      "runtime_path": "res://assets/aurora/characters/1000001/erin_reaction.png",
+      "records": [
+        "PROFILE_CHR01_V1",
+        "PROFILE_CHR01_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "A02V3_lorne_reaction",
+      "runtime_path": "res://assets/aurora/characters/1000002/lorne_reaction.png",
+      "records": [
+        "PROFILE_CHR02_V1",
+        "PROFILE_CHR02_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "A02V3_nina_reaction",
+      "runtime_path": "res://assets/aurora/characters/1000003/nina_reaction.png",
+      "records": [
+        "PROFILE_CHR03_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "CAST_CHR04_AVATAR",
+      "runtime_path": "res://assets/aurora/characters/1000004/伊万_常态头像.png",
+      "records": [
+        "PROFILE_CHR04_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "CAST_CHR05_AVATAR",
+      "runtime_path": "res://assets/aurora/characters/1000005/薇拉_常态头像.png",
+      "records": [
+        "PROFILE_CHR05_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "A02V3_yuri_reaction",
+      "runtime_path": "res://assets/aurora/characters/1000006/yuri_reaction.png",
+      "records": [
+        "PROFILE_CHR06_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "A02V3_grant_reaction",
+      "runtime_path": "res://assets/aurora/characters/1000007/grant_reaction.png",
+      "records": [
+        "PROFILE_CHR07_V1",
+        "PROFILE_CHR07_V2"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "CAST_CHR10_AVATAR",
+      "runtime_path": "res://assets/aurora/characters/1000010/1000010_基里尔_平常.png",
+      "records": [
+        "PROFILE_CHR10_V1"
+      ]
+    },
+    {
+      "workbook": "办案手册系统配置表.xlsx",
+      "sheet": "人物资料",
+      "field": "avatar_ref",
+      "asset_id": "CAST_CHR11_AVATAR",
+      "runtime_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_平常.png",
+      "records": [
+        "PROFILE_CHR11_V1"
+      ]
+    }
+  ],
+  "workbook_reference_summary": {
+    "workbook": "办案手册系统配置表.xlsx",
+    "material_content_rows": 119,
+    "nonempty_image_refs": 74,
+    "unique_material_images": 21,
+    "valid_empty_image_refs": 45,
+    "empty_material_types": {
+      "testimony": 39,
+      "inference": 6
+    },
+    "person_profile_rows": 16,
+    "unique_portraits": 9,
+    "unique_avatars": 9,
+    "valid_empty_profile_refs": [
+      "PROFILE_CHR08_V1",
+      "PROFILE_CHR08_V2",
+      "PROFILE_CHR08_V3",
+      "PROFILE_CHR09_V1"
+    ],
+    "empty_image_policy": {
+      "testimony": "B_V4_type_testimony",
+      "inference": "B_V4_type_inference"
+    },
+    "content_policy": "空图使用类型图标；不填入假图，不据此增加缺失项，不改变正文、版本身份与公开时点"
+  },
+  "required_runtime_dependency_ids": [
+    "A02V3_erin_neutral",
+    "A02V3_erin_reaction",
+    "A02V3_grant_neutral",
+    "A02V3_grant_reaction",
+    "A02V3_lorne_neutral",
+    "A02V3_lorne_reaction",
+    "A02V3_nina_neutral",
+    "A02V3_nina_reaction",
+    "A02V3_yuri_neutral",
+    "A02V3_yuri_reaction",
+    "A03_DreamHanSansCN-W12",
+    "A03_DreamHanSansCN-W16",
+    "A03_LICENSE",
+    "A03_focus",
+    "A03_来源",
+    "B_V4_type_inference",
+    "B_V4_type_testimony",
+    "CAST_CHR04_AVATAR",
+    "CAST_CHR04_PORTRAIT",
+    "CAST_CHR05_AVATAR",
+    "CAST_CHR05_PORTRAIT",
+    "CAST_CHR10_AVATAR",
+    "CAST_CHR10_PORTRAIT",
+    "CAST_CHR11_AVATAR",
+    "CAST_CHR11_PORTRAIT",
+    "HB_BOOK01_CLOSED",
+    "HB_BOOK01_OPEN",
+    "HB_E02_BODY",
+    "HB_E03_BLOOD_PRINT",
+    "HB_E04_IN_PLACE",
+    "HB_E07_BAG",
+    "HB_E08_CASH",
+    "HB_E10_KNIFE",
+    "HB_E11_HANDKERCHIEF",
+    "HB_E12_WRENCH",
+    "HB_E14_DIARY",
+    "HB_E16_BOOK",
+    "HB_E19_BOOK",
+    "HB_E21_PHOTO",
+    "HB_E24_BOWL",
+    "HB_E25_MEDICINE",
+    "HB_E26_TAPE",
+    "HB_FOLDER01",
+    "HB_PAPER01",
+    "HB_PAPER02",
+    "HB_PAPER03",
+    "PAPER_V2_button_primary_disabled",
+    "PAPER_V2_button_primary_hover",
+    "PAPER_V2_button_primary_normal",
+    "PAPER_V2_button_primary_pressed",
+    "PAPER_V2_button_secondary_disabled",
+    "PAPER_V2_button_secondary_hover",
+    "PAPER_V2_button_secondary_normal",
+    "PAPER_V2_button_secondary_pressed",
+    "PAPER_V2_category_paper_evidence",
+    "PAPER_V2_category_paper_inference",
+    "PAPER_V2_category_paper_testimony",
+    "PAPER_V2_dialogue_paper",
+    "PAPER_V2_panel_paper",
+    "PAPER_V2_quote_focus",
+    "PAPER_V2_quote_normal",
+    "PAPER_V2_small_paper"
+  ],
+  "component_families": {
+    "B_V4_card": {
+      "default": "B_V4_card_default",
+      "focus": "B_V4_card_focus",
+      "presented": "B_V4_card_presented",
+      "selected": "B_V4_card_selected",
+      "shadow": "B_V4_card_shadow",
+      "thickness": "B_V4_card_thickness"
+    },
+    "PAPER_V2_button_primary": {
+      "normal": "PAPER_V2_button_primary_normal",
+      "hover": "PAPER_V2_button_primary_hover",
+      "pressed": "PAPER_V2_button_primary_pressed",
+      "disabled": "PAPER_V2_button_primary_disabled"
+    },
+    "PAPER_V2_button_secondary": {
+      "normal": "PAPER_V2_button_secondary_normal",
+      "hover": "PAPER_V2_button_secondary_hover",
+      "pressed": "PAPER_V2_button_secondary_pressed",
+      "disabled": "PAPER_V2_button_secondary_disabled"
+    },
+    "PAPER_V2_quote": {
+      "normal": "PAPER_V2_quote_normal",
+      "focus": "PAPER_V2_quote_focus"
+    }
+  },
+  "dependency_policy": "保留最终七册实际key并集，加XLSX非空资源引用、合法空图类型图标、字体许可与来源；任一已用按钮族保留normal/hover/pressed/disabled四态。源只用于制作追溯，运行取本岗实际文件。",
+  "integration_notes": [
+    "本七册当前必用美术依赖均有实际文件；未交付字段不据示例补图。",
+    "检查光标已由副6于18日交付三状态32/48/64 PNG及热点规格；该组当前不属于七册静态UI消费，保留副6原件，不再登记为缺图。",
+    "A02 v3覆盖的艾琳、洛恩、尼娜、尤里、格兰特采用原包；伊万、薇拉与双司机按实际人物资料路径采用副6正式源。",
+    "人物近景以真实源图和演出定义膝线定位，默认1600×900发顶250；手册头像与人物在场状态分别读取。",
+    "B红绳属于核心独立效果，此七册不收旧premise_connector。",
+    "20261018 PAPER canonical收口：正式新ID与runtime_path完全复制父根；16张共用/分类图与canonical规格原字节落在本岗assets/art7/paper_v2及assets/specs。helper现场从canonical读取规格，无第二套数字surface_specs；文字色仍由本岗实际text_styles优先。旧11 A记录仅来源专用，原件保留。"
+  ],
+  "layout_dependency_ids": [
+    "A03_focus",
+    "A03_icon_archive",
+    "A03_icon_back",
+    "A03_icon_eye",
+    "A03_icon_menu",
+    "A03_icon_next",
+    "A03_icon_pin",
+    "A03_icon_records",
+    "A03_icon_warning",
+    "A03_row_hover",
+    "A03_row_selected",
+    "A03_slider_fill",
+    "A03_slider_knob",
+    "A03_slider_track",
+    "A03_switch_off",
+    "A03_switch_on",
+    "B_V4_card_default",
+    "B_V4_card_focus",
+    "B_V4_card_selected",
+    "B_V4_type_testimony",
+    "PAPER_V2_button_primary_disabled",
+    "PAPER_V2_button_primary_normal",
+    "PAPER_V2_button_secondary_disabled",
+    "PAPER_V2_button_secondary_normal",
+    "PAPER_V2_dialogue_paper",
+    "PAPER_V2_panel_paper",
+    "PAPER_V2_small_paper"
+  ],
+  "scene_dependency_ids": [
+    "SCENE_SC01",
+    "SCENE_SC01_AURORA",
+    "SCENE_SC02",
+    "SCENE_SC04",
+    "SCENE_SC08",
+    "SCENE_SC09"
+  ],
+  "component_family_notes": {
+    "A03_primary": "原A四态仅来源参照，adoption_status=source_reference_only，正式运行采用current_paper_theme.replaces的新ID。",
+    "A03_secondary": "原A四态仅来源参照，adoption_status=source_reference_only，正式运行采用current_paper_theme.replaces的新ID。",
+    "B_V4_card": "现有完整源族为default/focus/presented/selected/shadow/thickness；无独立hover/pressed/disabled PNG。当前悬停用A03_row_hover，焦点用card_focus，不补造不存在的单图。"
+  },
+  "text_style_source": {
+    "path": "../basic/text_styles.json",
+    "source_workbook": "游戏初始化与开始系统配置表.xlsx",
+    "source_sheet": "文字样式",
+    "id_field": "id",
+    "color_field": "font_color",
+    "roles": {
+      "ink": "TEXT_BODY",
+      "deepgreen": "TEXT_TIME_PLACE"
+    },
+    "dependency_note": "唯一色值从真实XLSX导出JSON读取，随公共配置交付；不得各册另写RGB回退。图片白色装饰与alpha不变。"
+  },
+  "surface_materials": {
+    "panel": "PAPER_V2_panel_paper",
+    "menu": "PAPER_V2_panel_paper",
+    "dialogue": "PAPER_V2_dialogue_paper",
+    "reading": "PAPER_V2_dialogue_paper",
+    "hint": "PAPER_V2_small_paper",
+    "compact": "PAPER_V2_small_paper",
+    "quote": "PAPER_V2_quote_normal"
+  },
+  "component_state_composition": {
+    "buttons": "PAPER_V2实际四态PNG；disabled本身保纸底/原alpha，无旧A normal叠底。",
+    "primary_ink_mark": "采用源PNG自身hover态标与原生纸面层次，撤销临时SVG primary墨线以免双绘。",
+    "focus_asset_id": "A03_focus",
+    "focus_policy": "真实焦点独立叠A03_focus；quote用PAPER_V2_quote_focus；icon-only无宽按钮底。",
+    "reading_surface": "PAPER_V2_dialogue_paper真实九宫浅纸，不加暗阅读矩形。"
+  },
+  "surface_aliases": {
+    "menu": "panel",
+    "reading": "dialogue",
+    "hint": "compact",
+    "short_label": "compact"
+  },
+  "required_shared_ui_dependency_ids": [
+    "A03_DreamHanSansCN-W12",
+    "A03_DreamHanSansCN-W16",
+    "A03_LICENSE",
+    "A03_focus",
+    "A03_icon_archive",
+    "A03_icon_back",
+    "A03_icon_check",
+    "A03_icon_close",
+    "A03_icon_collapse",
+    "A03_icon_expand",
+    "A03_icon_eye",
+    "A03_icon_menu",
+    "A03_icon_next",
+    "A03_icon_pin",
+    "A03_icon_records",
+    "A03_icon_remove",
+    "A03_icon_source",
+    "A03_icon_warning",
+    "A03_row_hover",
+    "A03_separator",
+    "A03_short_rule",
+    "A03_来源",
+    "ART7_cursor_checked_32",
+    "ART7_cursor_checked_48",
+    "ART7_cursor_checked_64",
+    "ART7_cursor_inspect_32",
+    "ART7_cursor_inspect_48",
+    "ART7_cursor_inspect_64",
+    "ART7_cursor_recheck_32",
+    "ART7_cursor_recheck_48",
+    "ART7_cursor_recheck_64",
+    "B_V4_deduct_stroke",
+    "B_V4_feedback_counter",
+    "B_V4_feedback_excluded",
+    "B_V4_feedback_insufficient",
+    "B_V4_feedback_linked",
+    "B_V4_feedback_partial",
+    "B_V4_feedback_supported",
+    "B_V4_new_tag",
+    "B_V4_review_available",
+    "B_V4_review_consumed",
+    "B_V4_slot_empty",
+    "B_V4_slot_focus",
+    "B_V4_type_document",
+    "B_V4_updated_tag",
+    "C18_border_hover",
+    "C18_border_selected",
+    "C18_card_face",
+    "C18_card_thickness",
+    "C18_mark_pending",
+    "C18_overlay_disabled",
+    "C18_shadow_normal",
+    "C18_state_normal",
+    "PAPER_V2_button_primary_disabled",
+    "PAPER_V2_button_primary_hover",
+    "PAPER_V2_button_primary_normal",
+    "PAPER_V2_button_primary_pressed",
+    "PAPER_V2_button_secondary_disabled",
+    "PAPER_V2_button_secondary_hover",
+    "PAPER_V2_button_secondary_normal",
+    "PAPER_V2_button_secondary_pressed",
+    "PAPER_V2_category_paper_evidence",
+    "PAPER_V2_category_paper_inference",
+    "PAPER_V2_category_paper_testimony",
+    "PAPER_V2_dialogue_paper",
+    "PAPER_V2_panel_paper",
+    "PAPER_V2_quote_focus",
+    "PAPER_V2_quote_normal",
+    "PAPER_V2_small_paper",
+    "fx_ink_link_web"
+  ],
+  "compact_state_marks": {
+    "normal": {
+      "visible": false,
+      "width": 0,
+      "opacity": 0
+    },
+    "hover": {
+      "visible": true,
+      "width": 2,
+      "opacity": 0.75
+    },
+    "pressed": {
+      "visible": true,
+      "width": 3,
+      "opacity": 1
+    },
+    "disabled": {
+      "visible": true,
+      "width": 1,
+      "opacity": 0.35
+    }
+  },
+  "shared_hud_entry": {
+    "logical_size_at_900": [
+      170,
+      48
+    ],
+    "surface_kind": "compact",
+    "icon_size": 28,
+    "icon_offset_xy": [
+      20,
+      10
+    ],
+    "label_font_px": 22,
+    "label_x_offset": 51,
+    "label_baseline_offset": 32,
+    "key_font_px": 16,
+    "key_right_offset": 150,
+    "key_baseline_offset": 31,
+    "measurement_font_id": "A03_DreamHanSansCN-W12",
+    "measured_label_4_cjk_advance": 88,
+    "measured_I_advance": 5,
+    "measured_L_advance": 9,
+    "minimum_actual_key_gap": 2,
+    "note": "保持原170×48热区，布局由hud_entry_geometry以真实TTF测宽返回，不估字符且不自动扩框。",
+    "label_weight": 400,
+    "draw_key": true,
+    "key_hint_mode": "inline_key_and_button_title_aria",
+    "layout_source": "design/basic/ui_layout/entry/ui_layout.json#HUD/default",
+    "source_note": "沿初始化原实排；canonical的24+24仅为无键字容量示例，不覆盖本实际布局。"
+  },
+  "current_paper_theme": {
+    "theme_version": "PAPER_V2_20261018",
+    "spec": "specs/paper_v2_adopted.json",
+    "asset_ids": [
+      "PAPER_V2_button_primary_normal",
+      "PAPER_V2_button_primary_hover",
+      "PAPER_V2_button_primary_pressed",
+      "PAPER_V2_button_primary_disabled",
+      "PAPER_V2_button_secondary_normal",
+      "PAPER_V2_button_secondary_hover",
+      "PAPER_V2_button_secondary_pressed",
+      "PAPER_V2_button_secondary_disabled",
+      "PAPER_V2_quote_normal",
+      "PAPER_V2_quote_focus",
+      "PAPER_V2_dialogue_paper",
+      "PAPER_V2_panel_paper",
+      "PAPER_V2_small_paper",
+      "PAPER_V2_category_paper_evidence",
+      "PAPER_V2_category_paper_testimony",
+      "PAPER_V2_category_paper_inference"
+    ],
+    "replaces": {
+      "A03_primary_normal": "PAPER_V2_button_primary_normal",
+      "A03_primary_hover": "PAPER_V2_button_primary_hover",
+      "A03_primary_pressed": "PAPER_V2_button_primary_pressed",
+      "A03_primary_disabled": "PAPER_V2_button_primary_disabled",
+      "A03_secondary_normal": "PAPER_V2_button_secondary_normal",
+      "A03_secondary_hover": "PAPER_V2_button_secondary_hover",
+      "A03_secondary_pressed": "PAPER_V2_button_secondary_pressed",
+      "A03_secondary_disabled": "PAPER_V2_button_secondary_disabled",
+      "A03_dialogue_wash": "PAPER_V2_dialogue_paper",
+      "A03_panel_wash": "PAPER_V2_panel_paper",
+      "A03_menu_wash": "PAPER_V2_panel_paper"
+    },
+    "status": "稳定控件已纳入；其他人物/外景不属于此回件。",
+    "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+    "controls_source_manifest": "E:\\gamejam\\副策划6场景工作稿\\assets\\revised-20261018-cards\\controls\\controls_manifest.json",
+    "controls_normalized": "完整生产PNG直接九切；8按钮480×88、边距16/12/16/16，免前置区域裁切。",
+    "rejected_skin_revisions": [
+      "CONTROL_SKIN_V3"
+    ]
+  },
+  "paper_canonical_source": {
+    "manifest": "E:/gamejam/策划工作稿/design/ui_20261018/adopted_assets.json",
+    "spec": "E:/gamejam/策划工作稿/design/ui_20261018/assets/specs/paper_v2_adopted.json",
+    "local_spec": "assets/specs/paper_v2_adopted.json",
+    "policy": "本岗复制canonical原字节；helper直接读local_spec，禁止另存一份数字surface_specs。父目录仅为只读追溯，不是运行依赖。"
+  },
+  "runtime_asset_policy": "仅assets列为本包当前可消费映射；runtime_path是实际字段。source_reference_only与旧A03纸面族不进入assets。来源与已退役名称保留在排除/出处信息中，不作别名回退。",
+  "runtime_excluded_asset_ids": [
+    "A03_dialogue_wash",
+    "A03_menu_wash",
+    "A03_panel_wash",
+    "A03_primary_disabled",
+    "A03_primary_hover",
+    "A03_primary_normal",
+    "A03_primary_pressed",
+    "A03_secondary_disabled",
+    "A03_secondary_hover",
+    "A03_secondary_normal",
+    "A03_secondary_pressed",
+    "C18_button_primary_disabled",
+    "C18_button_primary_hover",
+    "C18_button_primary_normal",
+    "C18_button_primary_pressed",
+    "C18_button_secondary_disabled",
+    "C18_button_secondary_hover",
+    "C18_button_secondary_normal",
+    "C18_button_secondary_pressed",
+    "C18_category_paper_evidence",
+    "C18_category_paper_inference",
+    "C18_category_paper_testimony",
+    "C18_dialogue_paper",
+    "C18_panel_paper",
+    "C18_quote_focus",
+    "C18_quote_normal",
+    "C18_small_paper"
+  ],
+  "required_runtime_spec_files": [
+    "specs/paper_v2_adopted.json"
+  ],
+  "consumer_sources": [
+    "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json",
+    "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\adopted_assets.json",
+    "E:\\gamejam\\副策划2工作稿\\art\\ui_20261018\\core_effects\\manifest.json",
+    "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+    "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx",
+    "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json",
+    "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json"
+  ],
+  "runtime_extension": {
+    "base_count": 100,
+    "base_removed_source_reference_only": [
+      "A03_dialogue_wash",
+      "A03_menu_wash",
+      "A03_panel_wash",
+      "A03_primary_disabled",
+      "A03_primary_hover",
+      "A03_primary_normal",
+      "A03_primary_pressed",
+      "A03_secondary_disabled",
+      "A03_secondary_hover",
+      "A03_secondary_normal",
+      "A03_secondary_pressed"
+    ],
+    "added_ids": [
+      "A03_icon_check",
+      "A03_icon_close",
+      "A03_icon_collapse",
+      "A03_icon_expand",
+      "A03_icon_remove",
+      "A03_icon_source",
+      "A03_separator",
+      "A03_short_rule",
+      "ART7_cursor_checked_32",
+      "ART7_cursor_checked_48",
+      "ART7_cursor_checked_64",
+      "ART7_cursor_inspect_32",
+      "ART7_cursor_inspect_48",
+      "ART7_cursor_inspect_64",
+      "ART7_cursor_recheck_32",
+      "ART7_cursor_recheck_48",
+      "ART7_cursor_recheck_64",
+      "B_V4_deduct_stroke",
+      "B_V4_feedback_counter",
+      "B_V4_feedback_excluded",
+      "B_V4_feedback_insufficient",
+      "B_V4_feedback_linked",
+      "B_V4_feedback_partial",
+      "B_V4_feedback_supported",
+      "B_V4_new_tag",
+      "B_V4_review_available",
+      "B_V4_review_consumed",
+      "B_V4_slot_empty",
+      "B_V4_slot_focus",
+      "B_V4_type_document",
+      "B_V4_updated_tag",
+      "C18_border_hover",
+      "C18_border_selected",
+      "C18_card_face",
+      "C18_card_thickness",
+      "C18_mark_pending",
+      "C18_overlay_disabled",
+      "C18_shadow_normal",
+      "C18_state_normal",
+      "fx_ink_link_web"
+    ],
+    "consumer_bindings": {
+      "A03_DreamHanSansCN-W12": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FONT_BODY",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/font_regular",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_DreamHanSansCN-W12"
+      ],
+      "A03_DreamHanSansCN-W16": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FONT_HEADING",
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FONT_LOCATION",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/font_emphasis",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_DreamHanSansCN-W16"
+      ],
+      "PAPER_V2_quote_normal": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PANEL_TARGET",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/row_hover"
+      ],
+      "PAPER_V2_panel_paper": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PANEL_RESULT",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/panel_paper",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/topic_panel/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/panel_paper/asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/material_reading/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/PAPER_V2_panel_paper"
+      ],
+      "PAPER_V2_button_primary_normal": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PRIMARY_BUTTON_NORMAL",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/action_normal",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_primary/normal/asset_id",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/PAPER_V2_button_primary_normal"
+      ],
+      "PAPER_V2_button_primary_hover": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PRIMARY_BUTTON_HOVER",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/action_hover",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_primary/hover/asset_id"
+      ],
+      "PAPER_V2_button_primary_pressed": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PRIMARY_BUTTON_PRESSED",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/action_pressed",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_primary/pressed/asset_id"
+      ],
+      "PAPER_V2_button_primary_disabled": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PRIMARY_BUTTON_DISABLED",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/action_disabled",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_primary/disabled/asset_id"
+      ],
+      "PAPER_V2_button_secondary_normal": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SECONDARY_BUTTON_NORMAL",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/secondary_normal",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/topic_panel/button_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_secondary/normal/asset_id",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/PAPER_V2_button_secondary_normal"
+      ],
+      "PAPER_V2_button_secondary_hover": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SECONDARY_BUTTON_HOVER",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/secondary_hover",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/topic_panel/row_background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_secondary/hover/asset_id"
+      ],
+      "PAPER_V2_button_secondary_pressed": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SECONDARY_BUTTON_PRESSED",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/secondary_pressed",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_secondary/pressed/asset_id"
+      ],
+      "PAPER_V2_button_secondary_disabled": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SECONDARY_BUTTON_DISABLED",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/secondary_disabled",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/button_secondary/disabled/asset_id"
+      ],
+      "A03_focus": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_BUTTON_FOCUS_VISIBLE",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/keyboard_focus"
+      ],
+      "C18_card_face": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_SURFACE_NORMAL"
+      ],
+      "C18_state_normal": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_NORMAL"
+      ],
+      "C18_border_hover": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_FOCUSED"
+      ],
+      "C18_border_selected": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_SELECTED",
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_PRESENTED"
+      ],
+      "C18_shadow_normal": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_SHADOW_NORMAL"
+      ],
+      "C18_card_thickness": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_THICKNESS_NORMAL"
+      ],
+      "B_V4_slot_empty": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SLOT_FRAME_EMPTY"
+      ],
+      "B_V4_slot_focus": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_SLOT_FRAME_FOCUSED"
+      ],
+      "A03_icon_archive": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_OPEN_RECORD",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_archive"
+      ],
+      "A03_icon_back": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_BACK",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_back"
+      ],
+      "A03_icon_close": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_CLOSE",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_close"
+      ],
+      "A03_icon_source": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_SOURCE",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_source"
+      ],
+      "A03_icon_remove": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_REMOVE"
+      ],
+      "B_V4_feedback_supported": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_SUPPORT"
+      ],
+      "B_V4_feedback_partial": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_PARTIAL"
+      ],
+      "B_V4_feedback_counter": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_COUNTER"
+      ],
+      "B_V4_feedback_insufficient": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_INSUFFICIENT"
+      ],
+      "B_V4_feedback_excluded": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_EXCLUDE"
+      ],
+      "B_V4_feedback_linked": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_FEEDBACK_MARK_INFERENCE"
+      ],
+      "B_V4_review_available": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_REVIEW_MARK_AVAILABLE"
+      ],
+      "B_V4_review_consumed": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_REVIEW_MARK_CONSUMED"
+      ],
+      "B_V4_deduct_stroke": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_REVIEW_MARK_DEDUCT"
+      ],
+      "B_V4_new_tag": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_MATERIAL_TAG_NEW",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/B_V4_new_tag"
+      ],
+      "B_V4_updated_tag": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_MATERIAL_TAG_UPDATED"
+      ],
+      "A03_icon_records": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_DIALOGUE_LOG",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_records"
+      ],
+      "fx_ink_link_web": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_INSIGHT_LINK_SOURCE_GATHER"
+      ],
+      "A03_icon_menu": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_ACTION_ICON_MENU",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_menu"
+      ],
+      "PAPER_V2_quote_focus": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PANEL_TARGET_FOCUSED",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/row_selected"
+      ],
+      "C18_mark_pending": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_PENDING"
+      ],
+      "C18_overlay_disabled": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_FRAME_DISABLED"
+      ],
+      "PAPER_V2_small_paper": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PANEL_SMALL",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/hud_paper",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/hud_fold",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/global_entries/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/scene_info/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/objective/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/object_hint/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/record_toast/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/local_view/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/counter_view/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/view_switch_controls/0/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/view_switch_controls/1/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/panning_controls/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/small_paper/asset_id"
+      ],
+      "PAPER_V2_dialogue_paper": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_PANEL_DIALOGUE",
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/reading_band/background_asset_id",
+        "E:\\gamejam\\副策划5工作稿\\调查界面资源配置.json#/paper_styles/dialogue_paper/asset_id"
+      ],
+      "PAPER_V2_category_paper_evidence": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_CATEGORY_EVIDENCE"
+      ],
+      "PAPER_V2_category_paper_testimony": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_CATEGORY_TESTIMONY"
+      ],
+      "PAPER_V2_category_paper_inference": [
+        "E:\\gamejam\\副策划2工作稿\\制作源\\核心规则配置.json#核心界面资源/CORE_UI_CARD_CATEGORY_INFERENCE"
+      ],
+      "A03_icon_next": [
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_next",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_next"
+      ],
+      "A03_icon_eye": [
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_eye"
+      ],
+      "A03_LICENSE": [
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json"
+      ],
+      "A03_来源": [
+        "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json"
+      ],
+      "A03_icon_expand": [
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_expand",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_expand"
+      ],
+      "A03_icon_collapse": [
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_collapse"
+      ],
+      "A03_icon_pin": [
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_pin",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_pin"
+      ],
+      "A03_icon_check": [
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/icon_check",
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_check"
+      ],
+      "A03_separator": [
+        "E:\\gamejam\\策划工作稿\\outputs\\全系统策划交付_20261018_UI改造\\06_目标导航\\目标导航系统配置表.xlsx#界面资源/rule"
+      ],
+      "A03_icon_warning": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_icon_warning"
+      ],
+      "A03_short_rule": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_short_rule"
+      ],
+      "A03_row_hover": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/A03_row_hover"
+      ],
+      "B_V4_type_document": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/B_V4_type_document"
+      ],
+      "ART7_cursor_inspect_32": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_inspect_32"
+      ],
+      "ART7_cursor_checked_32": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_checked_32"
+      ],
+      "ART7_cursor_recheck_32": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_recheck_32"
+      ],
+      "ART7_cursor_inspect_48": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_inspect_48"
+      ],
+      "ART7_cursor_checked_48": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_checked_48"
+      ],
+      "ART7_cursor_recheck_48": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_recheck_48"
+      ],
+      "ART7_cursor_inspect_64": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_inspect_64"
+      ],
+      "ART7_cursor_checked_64": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_checked_64"
+      ],
+      "ART7_cursor_recheck_64": [
+        "E:\\gamejam\\副策划5工作稿\\制作源\\调查配置.json#资源需求/ART7_cursor_recheck_64"
+      ]
+    },
+    "missing_ids": [],
+    "runtime_path_conflicts": []
+  },
+  "delivery_status": "ready_for_runtime_json_bundle"
+}

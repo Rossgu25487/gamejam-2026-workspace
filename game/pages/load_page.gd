@@ -14,6 +14,8 @@ var allow_save_first := false
 var confirmation: Control
 var load_button: Button
 var status_label: Label
+var formal_layout: RefCounted
+var slot_buttons: Array[Button] = []
 
 func _ready() -> void:
 	# 页面只初始化一次，重复打开通过 open() 刷新列表。
@@ -47,11 +49,14 @@ func _build_page() -> void:
 	close.text = "关闭读取"
 	close.pressed.connect(closed.emit)
 	box.add_child(close)
+	formal_layout = preload("res://pages/aurora/aurora_save_layout.gd").new()
+	formal_layout.bind(self, "load", panel, box, close)
 	confirmation = preload("res://pages/confirm_page.tscn").instantiate()
 	add_child(confirmation)
 	confirmation.cancelled.connect(cancel_confirmation)
 	confirmation.direct_requested.connect(_read_selected)
 	confirmation.accepted.connect(_save_first)
+	formal_layout.bind_confirmation(confirmation)
 
 func open(service: Node, replacing: bool = false, can_save_current: bool = false) -> void:
 	# 扫描磁盘中的有效栏位并重新生成当前列表。
@@ -71,10 +76,12 @@ func open(service: Node, replacing: bool = false, can_save_current: bool = false
 	load_button.text = "读取"
 	load_button.pressed.connect(_request_load)
 	box.add_child(load_button)
+	formal_layout.set_records(slot_buttons, load_button, status_label)
 	_refresh_selected()
+	for index in range(slot_buttons.size()):
+		if str(slot_buttons[index].get_meta("slot_kind")) == selected.slot_kind and int(slot_buttons[index].get_meta("slot_index")) == int(selected.slot_index): formal_layout.reveal(index)
 	show()
-	var focus_index := 3 if not records.is_empty() else 2
-	var focus_control := box.get_child(focus_index) as Control
+	var focus_control: Control = slot_buttons[0] if not slot_buttons.is_empty() else formal_layout.close
 	if is_instance_valid(focus_control): focus_control.grab_focus()
 
 func close_page() -> void:
@@ -83,6 +90,14 @@ func close_page() -> void:
 	confirmation.close_page()
 
 func _clear_records() -> void:
+	for button in slot_buttons:
+		button.get_parent().remove_child(button)
+		button.queue_free()
+	slot_buttons.clear()
+	for control in [status_label, load_button]:
+		if is_instance_valid(control):
+			control.get_parent().remove_child(control)
+			control.queue_free()
 	# 先从容器移除旧条目，再延迟释放节点，确保读取回调结束后可以再次打开页面。
 	for index in range(box.get_child_count() - 1, 2, -1):
 		var old_record := box.get_child(index)
@@ -97,12 +112,13 @@ func _add_record_button(record: Dictionary) -> void:
 	var info: Dictionary = save_service.slot_info(kind, index)
 	button.text = save_service.slot_label(kind, index) + "\n" + info.summary
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	button.custom_minimum_size.x = 540
+	button.custom_minimum_size = Vector2.ZERO
 	button.tooltip_text = info.get("full_summary", info.summary)
 	button.set_meta("slot_kind", kind)
 	button.set_meta("slot_index", index)
 	button.pressed.connect(_load_slot.bind(kind, index))
 	box.add_child(button)
+	slot_buttons.append(button)
 
 func _load_slot(kind: String, index: int) -> void:
 	# 列表点击只预览，不替换会话。
@@ -115,6 +131,11 @@ func _refresh_selected() -> void:
 	status_label.text = info.summary
 	status_label.tooltip_text = info.get("full_summary", info.summary)
 	load_button.disabled = not info.valid
+	for button in slot_buttons:
+		var kind: String = str(button.get_meta("slot_kind"))
+		var index: int = int(button.get_meta("slot_index"))
+		formal_layout.decorate(button, save_service.slot_label(kind, index), save_service.slot_info(kind, index), kind == selected.slot_kind and index == int(selected.slot_index))
+	formal_layout.layout()
 
 func _request_load() -> void:
 	if load_button.disabled or confirmation.visible or save_service.busy: return

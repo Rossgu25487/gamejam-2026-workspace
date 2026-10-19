@@ -1,5 +1,6 @@
 extends RefCounted
 ## 所有系统共同读取的案件状态。条件为“分支或、分支内且”，反条件严格保留false。
+signal actor_location_confirmed
 var config: RefCounted
 var data := {}
 var errors: Array[String] = []
@@ -15,7 +16,8 @@ func reset() -> void:
 	data = {"chapter": "CH01", "scene": "SC01", "view": "VIEW_SC01_MAIN", "events": {}, "texts": {}, "entries": {},
 		"npc": {}, "objects": {}, "profiles": {}, "materials": {}, "next_acquisition": 1, "revision": 0,
 		"completed_questions": {}, "drafts": {}, "chances": {}, "climaxes": {}, "results": {}, "cat_first_seen": false,
-		"history": [], "ending_started": false, "ending_completed": false, "ending_cursor": 0}
+		"history": [], "ending_started": false, "ending_completed": false, "ending_cursor": 0,
+		"confirmed_actor_locations": [], "tutorial_completed_steps": [], "cat_pet_completed_count": 0}
 	errors.clear()
 	_executing.clear()
 
@@ -32,6 +34,7 @@ func condition(id: String) -> bool:
 			match str(term.kind):
 				"event": actual = bool(data.events.get(ref, false))
 				"text": actual = bool(data.texts.get(ref, false))
+				"content": actual = owns(ref)
 				"entry":
 					# 正式表用entry判断可调用入口，dispatch据此选择前后阶段。
 					var entry: Dictionary = config.entries.get(ref, {})
@@ -63,7 +66,9 @@ func event(id: String, source: Dictionary = {}) -> bool:
 			success = _apply_event("EV_MEAL_LOCATIONS_BOTH_OBSERVED", source)
 	# 六稿正文明确I01结束兄弟返回空值班室；表只记录了赴站长室，漏记返回。
 	if success and id == "EV_INJURY_DEATH_SEQUENCE_LINKED":
-		for person in ["CHR10", "CHR11"]: data.npc[person] = {"scene_id": "SC10"}
+		for person in ["CHR10", "CHR11"]:
+			data.npc[person] = {"scene_id": "SC10"}
+			_revoke_stale_actor_location(person, "SC10")
 	_transaction_depth -= 1
 	if success and _transaction_depth == 0 and commit_guard.is_valid():
 		var candidate: Dictionary = data.duplicate(true)
@@ -99,6 +104,11 @@ func _apply_event(id: String, source: Dictionary) -> bool:
 					_executing.erase(id)
 					return false
 				data.npc[ref] = parsed.duplicate(true)
+				# NPC 后台状态变化不会自动变成玩家已确认位置。若旧确认已与实际位置不符，
+				# 只撤销旧确认，等公开事件或可见场景入口显式确认新位置。
+				_revoke_stale_actor_location(ref, str(parsed.get("scene_id", "")))
+			"set_confirmed_actor_location":
+				_set_confirmed_actor_location(ref, str(value) if value != null else "")
 			"set_object_state":
 				var parsed = JSON.parse_string(str(value)) if value is String and str(value).begins_with("{") else value
 				# 已交付表对此历史位置标签有明确含义；保留原值，并仅映射被采用的SC04材料桌。
@@ -141,6 +151,32 @@ func grant(content_id: String, source: Dictionary) -> bool:
 	if int(content.version) > int(config.contents[record.current].version): record.current = content_id
 	return true
 
+func set_confirmed_actor_location(actor_id: String, scene_id: String) -> void:
+	# 公开位置由实际呈现页回执；后台人物移动不能调用此接口公开新地点。
+	var previous: Array = data.get("confirmed_actor_locations", []).duplicate(true)
+	_set_confirmed_actor_location(actor_id, scene_id)
+	if previous != data.get("confirmed_actor_locations", []): actor_location_confirmed.emit()
+
+func _set_confirmed_actor_location(actor_id: String, scene_id: String) -> void:
+	if actor_id.is_empty(): return
+	if scene_id == "null": scene_id = ""
+	if not config.actors.has(actor_id) or (not scene_id.is_empty() and not config.scenes.has(scene_id)): return
+	for item in data.get("confirmed_actor_locations", []):
+		if str(item.get("actor_id", "")) == actor_id and str(item.get("scene_id", "")) == scene_id: return
+	var updated: Array = []
+	for item in data.get("confirmed_actor_locations", []):
+		if str(item.get("actor_id", "")) != actor_id: updated.append(item)
+	if not scene_id.is_empty(): updated.append({"actor_id": actor_id, "scene_id": scene_id})
+	data.confirmed_actor_locations = updated
+
+func _revoke_stale_actor_location(actor_id: String, actual_scene_id: String) -> void:
+	if actor_id.is_empty(): return
+	var updated: Array = []
+	for item in data.get("confirmed_actor_locations", []):
+		if str(item.get("actor_id", "")) != actor_id or str(item.get("scene_id", "")) == actual_scene_id:
+			updated.append(item)
+	data.confirmed_actor_locations = updated
+
 func owns(content_id: String) -> bool:
 	var row: Dictionary = config.contents.get(content_id, {})
 	return not row.is_empty() and data.materials.get(row.material_id, {}).get("versions", {}).has(content_id)
@@ -160,6 +196,18 @@ func finish_text(row: Dictionary) -> void:
 func validate(incoming: Dictionary) -> bool:
 	for key in ["events", "texts", "entries", "npc", "objects", "profiles", "materials", "completed_questions", "drafts", "chances", "climaxes", "results"]:
 		if not incoming.get(key) is Dictionary: return false
+	if not incoming.get("confirmed_actor_locations", []) is Array: return false
+	if not incoming.get("tutorial_completed_steps", []) is Array: return false
+	for step in incoming.get("tutorial_completed_steps", []):
+		if not step is String: return false
+	if not _integer(incoming.get("cat_pet_completed_count", 0)) or int(incoming.get("cat_pet_completed_count", 0)) < 0 or int(incoming.get("cat_pet_completed_count", 0)) > 5: return false
+	var confirmed_ids := {}
+	for item in incoming.get("confirmed_actor_locations", []):
+		if not item is Dictionary: return false
+		var actor_id := str(item.get("actor_id", ""))
+		var scene_id := str(item.get("scene_id", ""))
+		if actor_id.is_empty() or confirmed_ids.has(actor_id) or not config.actors.has(actor_id) or not config.scenes.has(scene_id): return false
+		confirmed_ids[actor_id] = true
 	if not config.chapters.has(incoming.get("chapter", "")) or not config.scenes.has(incoming.get("scene", "")): return false
 	for id in incoming.events:
 		if not config.events.has(id) or not incoming.events[id] is bool: return false

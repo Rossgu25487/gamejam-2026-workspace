@@ -1,0 +1,1134 @@
+{
+  "schema_version": 1,
+  "status": "adopted_images_and_canonical_runtime_references",
+  "resources": [
+    {
+      "id": "BG_SC06_LORNE_PRESENT",
+      "scene_id": "SC06",
+      "view_id": "VIEW_SC06_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC06_洛恩整理病历_在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR02"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC07_COUPLE_PRESENT",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC07_薇拉尤里_案后在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR05",
+        "CHR06"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_PAVEL_PRECASE",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_帕维尔盘绳_案前在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR11"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC06_LORNE_TALK",
+      "scene_id": "SC06",
+      "view_id": "VIEW_SC06_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC06_洛恩交谈_去洛恩.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC07_NO_VERA",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC07_与薇拉交谈_仅尤里在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR06"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC07_NO_YURI",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC07_与尤里交谈_仅薇拉在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR05"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_TWINS_AFTER",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_兄弟并坐_结案后.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR10",
+        "CHR11"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_NO_KIRILL",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_与基里尔交谈_仅帕维尔在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR11"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_NO_PAVEL",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_与帕维尔交谈_仅基里尔在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR10"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_NO_TWINS",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_兄弟共同交谈_去兄弟.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC07_VERA_LETTERS_PRESENT",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC07_薇拉独处看信_在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR05"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC10_TWINS_TELLING",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC10_兄弟听取告知_在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR10",
+        "CHR11"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC05_YURI_DOOR_PRESENT",
+      "scene_id": "SC05",
+      "view_id": "VIEW_SC05_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC05_尤里扶客房门框_在场.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [
+        "CHR06"
+      ],
+      "data_scope": "runtime"
+    },
+    {
+      "id": "BG_SC05_COUPLE_DOOR_EMPTY",
+      "scene_id": "SC05",
+      "view_id": "VIEW_SC05_MAIN",
+      "resource_path": "res://assets/aurora/scenes/backgrounds/SC05_左近客房_门开.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "display_rect_default_px": [
+        0.4250797024442363,
+        0,
+        1599.1498405951115,
+        900
+      ],
+      "embedded_actor_refs": [],
+      "data_scope": "runtime"
+    }
+  ],
+  "groups": [
+    {
+      "id": "CBG_SC06_LORNE",
+      "scene_id": "SC06",
+      "view_id": "VIEW_SC06_MAIN",
+      "base_background_ref": "BG_SC06_LORNE_PRESENT",
+      "embedded_actor_refs": [
+        "CHR02"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR02"
+          ],
+          "background_ref": "BG_SC06_LORNE_TALK"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR02_SC06"
+      ],
+      "phase_source_event_refs": [
+        "EV_SHARED_MEAL_FINISHED",
+        "EV_CH01_REST_SELECTED"
+      ],
+      "usage": "洛恩坐原右前椅整理病历；左侧暖气手套/木楔保持原位可见可点。正常交谈去洛恩配对不变，ID/运行路径保持，source采用7右侧椅位修正版。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH01",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR02",
+              "expected": true,
+              "scene_id": "SC06"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC07_COUPLE",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "base_background_ref": "BG_SC07_COUPLE_PRESENT",
+      "embedded_actor_refs": [
+        "CHR05",
+        "CHR06"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR05"
+          ],
+          "background_ref": "BG_SC07_NO_VERA"
+        },
+        {
+          "foreground_actor_refs": [
+            "CHR06"
+          ],
+          "background_ref": "BG_SC07_NO_YURI"
+        },
+        {
+          "foreground_actor_refs": [
+            "CHR05",
+            "CHR06"
+          ],
+          "background_ref": "VIEW_SC07_MAIN"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR05_SC07",
+        "ENTRY_CLICK_CHR06_SC07"
+      ],
+      "phase_source_event_refs": [
+        "EV_VERA_ASKED_YURI_OUT",
+        "EV_YURI_CURRENT_DIALOGUE_ENTER_ROOM",
+        "EV_CH03_YURI_PRIVATE_AT_SC04",
+        "EV_CH03_YURI_PRIVATE_RETURNED",
+        "EV_CH03_YURI_IN_ROOM",
+        "EV_CH03_VERA_YURI_MEMORY_HEARD"
+      ],
+      "usage": "双方实际同在客房时的案后在场；移走参与交谈的人，其他在场者保留。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH02",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC07"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC07_VERA_ALONE_CH02",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "base_background_ref": "BG_SC07_NO_YURI",
+      "embedded_actor_refs": [
+        "CHR05"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR05"
+          ],
+          "background_ref": "VIEW_SC07_MAIN"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR05_SC07"
+      ],
+      "phase_source_event_refs": [
+        "EV_VERA_ASKED_YURI_OUT",
+        "EV_CH02_L01_RESTORE_SEPARATED"
+      ],
+      "usage": "第二章尤里真实离房到SC05后，薇拉仍坐在客房；复用既有仅薇拉在场同机位图，不提前进入独处看信态。与薇拉交谈时只去薇拉，正常返回后依真实位置恢复。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH02",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC05"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC07_VERA_LETTERS",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "base_background_ref": "BG_SC07_VERA_LETTERS_PRESENT",
+      "embedded_actor_refs": [
+        "CHR05"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR05"
+          ],
+          "background_ref": "VIEW_SC07_MAIN"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR05_SC07"
+      ],
+      "phase_source_event_refs": [
+        "EV_VERA_ASKED_YURI_OUT",
+        "EV_CH06_VERA_LETTERS_FINISHED",
+        "EV_CH06_GUESTS_GATHERED"
+      ],
+      "usage": "尤里离房后薇拉看信；是否到此演出时点由文案当前段落选择，不能仅凭尤里不在就推定看信。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC05"
+            },
+            {
+              "kind": "chapter",
+              "ref": "CH03",
+              "expected": true
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH03_VERA_YURI_MEMORY_HEARD",
+              "expected": true
+            }
+          ],
+          [
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC05"
+            },
+            {
+              "kind": "chapter",
+              "ref": "CH03",
+              "expected": true
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH03_YURI_PRIVATE_RETURNED",
+              "expected": true
+            }
+          ],
+          [
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC05"
+            },
+            {
+              "kind": "chapter",
+              "ref": "CH04",
+              "expected": true
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH04_AFTERMATH_FINISHED",
+              "expected": true
+            }
+          ],
+          [
+            {
+              "kind": "npc_scene",
+              "ref": "CHR05",
+              "expected": true,
+              "scene_id": "SC07"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR06",
+              "expected": true,
+              "scene_id": "SC05"
+            },
+            {
+              "kind": "chapter",
+              "ref": "CH06",
+              "expected": true
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH06_VERA_LETTERS_FINISHED",
+              "expected": true
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC10_PAVEL_PRECASE",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "base_background_ref": "BG_SC10_PAVEL_PRECASE",
+      "embedded_actor_refs": [
+        "CHR11"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR11"
+          ],
+          "background_ref": "BG_SC10_TOOLS_OPEN"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR11_SC10"
+      ],
+      "phase_source_event_refs": [
+        "EV_CASE_INVESTIGATION_OPEN",
+        "EV_CH01_REST_SELECTED"
+      ],
+      "usage": "第一章案前帕维尔盘绳，右桌工具箱保持打开；哥哥不自动画入。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH01",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR11",
+              "expected": true,
+              "scene_id": "SC10"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR10",
+              "expected": true,
+              "scene_id": "SC02"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC10_TWINS_TELLING",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "base_background_ref": "BG_SC10_TWINS_TELLING",
+      "embedded_actor_refs": [
+        "CHR10",
+        "CHR11"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR10"
+          ],
+          "background_ref": "BG_SC10_NO_KIRILL"
+        },
+        {
+          "foreground_actor_refs": [
+            "CHR11"
+          ],
+          "background_ref": "BG_SC10_NO_PAVEL"
+        },
+        {
+          "foreground_actor_refs": [
+            "CHR10",
+            "CHR11"
+          ],
+          "background_ref": "BG_SC10_NO_TWINS"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "ENTRY_CLICK_CHR10_SC10",
+        "ENTRY_CLICK_CHR11_SC10"
+      ],
+      "phase_source_event_refs": [
+        "EV_CH06_TWINS_TOLD",
+        "EV_CH06_GUESTS_GATHERED",
+        "EV_CH06_ENTER"
+      ],
+      "usage": "第六章告知进行中，闭合箱在长椅中央；告知完成后的观察改用BG_SC10_TWINS_AFTER。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH06",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR10",
+              "expected": true,
+              "scene_id": "SC10"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR11",
+              "expected": true,
+              "scene_id": "SC10"
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH06_TWINS_TOLD",
+              "expected": false
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "CBG_SC05_YURI_DOOR",
+      "scene_id": "SC05",
+      "view_id": "VIEW_SC05_MAIN",
+      "base_background_ref": "BG_SC05_YURI_DOOR_PRESENT",
+      "embedded_actor_refs": [
+        "CHR06"
+      ],
+      "pairs": [
+        {
+          "foreground_actor_refs": [
+            "CHR06"
+          ],
+          "background_ref": "BG_SC05_COUPLE_DOOR_EMPTY"
+        }
+      ],
+      "phase_source_entry_refs": [
+        "TALK_CH06_YURI_RESULT",
+        "ENTRY_CH06_COUPLE_FIRST"
+      ],
+      "phase_source_event_refs": [
+        "EV_CH06_YURI_TOLD",
+        "EV_CH06_GUESTS_GATHERED"
+      ],
+      "usage": "第六章本次听结果后扶框的短演出；不作走廊常驻。玩家仍SC07、尤里真实SC05，临时取景使用VIEW_SC05_MAIN，放手后还原caller。",
+      "selection_mode": "temporary_text_cue",
+      "temporary_cue": {
+        "entry_ref": "ENTRY_CH06_COUPLE_FIRST",
+        "text_ref": "TXT_CH06_0109",
+        "player_scene_policy": "preserve_SC07_caller",
+        "actor_scene_ref": "SC05",
+        "end_rule": "同段随后放手时立即退出；正常返回清临时画面并按真实状态重取母背景。"
+      }
+    }
+  ],
+  "observation_only_backgrounds": [
+    {
+      "background_ref": "BG_SC10_TWINS_AFTER",
+      "embedded_actor_refs": [
+        "CHR10",
+        "CHR11"
+      ],
+      "phase_source_event_ref": "EV_CH06_TWINS_TOLD",
+      "conversation_pairs": [],
+      "meaning": "结案后并坐观察，既有点击心声不切去人图，不为此补新话题。",
+      "selection_condition": {
+        "any": [
+          [
+            {
+              "kind": "chapter",
+              "ref": "CH06",
+              "expected": true
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR10",
+              "expected": true,
+              "scene_id": "SC10"
+            },
+            {
+              "kind": "npc_scene",
+              "ref": "CHR11",
+              "expected": true,
+              "scene_id": "SC10"
+            },
+            {
+              "kind": "event",
+              "ref": "EV_CH06_TWINS_TOLD",
+              "expected": true
+            }
+          ]
+        ]
+      },
+      "inspect_entry_ref": "ENTRY_CLICK_CHR11_CH06_1717"
+    }
+  ],
+  "hotspots": [
+    {
+      "hotspot_id": "HS_EMB_SC06_LORNE",
+      "scene_id": "SC06",
+      "view_id": "VIEW_SC06_MAIN",
+      "object_ref": "CHR02",
+      "public_name": "洛恩",
+      "object_kind": "embedded_character",
+      "rect_default_px": [
+        529,
+        303,
+        470,
+        597
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC06_LORNE_PRESENT",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR02_SC06",
+      "topic_entry_ref": "TOPICS_1000002_SC06",
+      "data_scope": "runtime",
+      "polygon_default_px": [
+        [
+          765,
+          304
+        ],
+        [
+          875,
+          304
+        ],
+        [
+          918,
+          353
+        ],
+        [
+          918,
+          452
+        ],
+        [
+          972,
+          499
+        ],
+        [
+          995,
+          585
+        ],
+        [
+          916,
+          737
+        ],
+        [
+          873,
+          900
+        ],
+        [
+          529,
+          900
+        ],
+        [
+          559,
+          779
+        ],
+        [
+          638,
+          726
+        ],
+        [
+          612,
+          687
+        ],
+        [
+          598,
+          633
+        ],
+        [
+          629,
+          579
+        ],
+        [
+          727,
+          579
+        ],
+        [
+          790,
+          579
+        ],
+        [
+          802,
+          510
+        ],
+        [
+          814,
+          485
+        ],
+        [
+          777,
+          473
+        ],
+        [
+          751,
+          441
+        ],
+        [
+          723,
+          379
+        ]
+      ]
+    },
+    {
+      "hotspot_id": "HS_EMB_SC07_VERA_PAIR",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "object_ref": "CHR05",
+      "public_name": "薇拉",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        1200,
+        151,
+        1337,
+        393
+      ],
+      "rect_default_px": [
+        1148.1402763018066,
+        144.42082890541977,
+        131.0308182784272,
+        231.4558979808714
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC07_COUPLE_PRESENT",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR05_SC07",
+      "topic_entry_ref": "TOPICS_1000005_SC07",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC07_YURI_PAIR",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "object_ref": "CHR06",
+      "public_name": "尤里",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        548,
+        153,
+        697,
+        428
+      ],
+      "rect_default_px": [
+        524.548352816153,
+        146.33368756641872,
+        142.50797024442082,
+        263.0180658873539
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC07_COUPLE_PRESENT",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR06_SC07",
+      "topic_entry_ref": "TOPICS_1000006_SC07",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC07_VERA_LETTERS",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "object_ref": "CHR05",
+      "public_name": "薇拉",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        1200,
+        149,
+        1340,
+        378
+      ],
+      "rect_default_px": [
+        1148.1402763018066,
+        142.50797024442082,
+        133.9001062699256,
+        219.02231668437832
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC07_VERA_LETTERS_PRESENT",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR05_SC07",
+      "topic_entry_ref": "TOPICS_1000005_SC07",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC10_PAVEL_PRECASE",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "object_ref": "CHR11",
+      "public_name": "帕维尔",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        974,
+        379,
+        1097,
+        616
+      ],
+      "rect_default_px": [
+        931.9872476089267,
+        362.48671625929865,
+        117.64080765143464,
+        226.67375132837407
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC10_PAVEL_PRECASE",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR11_SC10",
+      "topic_entry_ref": "TOPICS_1000011_SC10",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC10_KIRILL_TELLING",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "object_ref": "CHR10",
+      "public_name": "基里尔",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        638,
+        313,
+        771,
+        491
+      ],
+      "rect_default_px": [
+        610.6269925611052,
+        299.3623804463337,
+        127.20510095642933,
+        170.24442082890542
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC10_TWINS_TELLING",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR10_SC10",
+      "topic_entry_ref": "TOPICS_1000010_SC10",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC10_PAVEL_TELLING",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "object_ref": "CHR11",
+      "public_name": "帕维尔",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        975,
+        309,
+        1089,
+        508
+      ],
+      "rect_default_px": [
+        932.9436769394262,
+        295.5366631243358,
+        109.03294367693942,
+        190.32943676939425
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC10_TWINS_TELLING",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR11_SC10",
+      "topic_entry_ref": "TOPICS_1000011_SC10",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC10_KIRILL_AFTER",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "object_ref": "CHR10",
+      "public_name": "基里尔",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        681,
+        312,
+        810,
+        516
+      ],
+      "rect_default_px": [
+        651.7534537725824,
+        298.4059511158342,
+        123.37938363443146,
+        195.1115834218916
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC10_TWINS_AFTER",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR11_CH06_1717",
+      "topic_entry_ref": null,
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC10_PAVEL_AFTER",
+      "scene_id": "SC10",
+      "view_id": "VIEW_SC10_MAIN",
+      "object_ref": "CHR11",
+      "public_name": "帕维尔",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        893,
+        337,
+        1016,
+        520
+      ],
+      "rect_default_px": [
+        854.5164718384698,
+        322.31668437832093,
+        117.64080765143464,
+        175.02656748140276
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC10_TWINS_AFTER",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR11_CH06_1717",
+      "topic_entry_ref": null,
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC05_YURI_DOOR",
+      "scene_id": "SC05",
+      "view_id": "VIEW_SC05_MAIN",
+      "object_ref": "CHR06",
+      "public_name": "尤里",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        345,
+        162,
+        541,
+        526
+      ],
+      "rect_default_px": [
+        330.3931987247609,
+        154.94155154091393,
+        187.46014877789585,
+        348.1402763018066
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC05_YURI_DOOR_PRESENT",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR06_SC05",
+      "topic_entry_ref": "TOPICS_1000006_SC05",
+      "data_scope": "runtime"
+    },
+    {
+      "hotspot_id": "HS_EMB_SC07_VERA_ALONE_CH02",
+      "scene_id": "SC07",
+      "view_id": "VIEW_SC07_MAIN",
+      "object_ref": "CHR05",
+      "public_name": "薇拉",
+      "object_kind": "embedded_character",
+      "native_ltrb": [
+        1200,
+        151,
+        1337,
+        393
+      ],
+      "rect_default_px": [
+        1148.1402763018066,
+        144.42082890541977,
+        131.0308182784272,
+        231.4558979808714
+      ],
+      "hit_priority": 60,
+      "presentation_ref": "BG_SC07_NO_YURI",
+      "inspect_entry_ref": "ENTRY_CLICK_CHR05_SC07",
+      "topic_entry_ref": "TOPICS_1000005_SC07",
+      "data_scope": "runtime"
+    }
+  ],
+  "reuse_background_refs": [
+    "VIEW_SC07_MAIN",
+    "BG_SC10_TOOLS_OPEN"
+  ],
+  "selection_contract": {
+    "producer": "副3维护现有章节、真实NPC位置、事件和会话上下文，给出本view当前scene_presentation_ref及实际前景参与者。",
+    "consumer": "调查从本文件或既有资源索引解析唯一母背景，热区按presentation_ref匹配；同view不全量叠背景。",
+    "dialogue_pairing": "把当前前景角色集合与本组embedded_actor_refs求交，再按pairs精确匹配；随实际参与者变化只去当前转为前景的人。",
+    "busy": "无话题/纯心声保留母背景，不启动临时配对。",
+    "return": "退出交谈清前景，按真实NPC位置与当前剧情状态重新取常态scene_presentation_ref，恢复caller view/offset/focus。",
+    "legacy_nina": "SC02既有两对ID/path/入口保持，不在本文件另起别名。",
+    "selection_predicate_grammar": "沿文案现有any二维数组：任一组全真成立；chapter/npc_scene/event均读现有状态，无新条件ID或事件。",
+    "temporary_cue": "SC05扶框只在指定现有TXT动作时临时取景，不改玩家scene或NPC真实位置；放手后退出。",
+    "independent_layers": "常态输入→临时去人配对→实际绘制母图ID。手套原空房、右椅洛恩在场、去洛恩交谈三种母图各选一个同物层，原暖气坐标保持；TALK期间世界点查关闭，常态手套HS真实可达。",
+    "hit_geometry": "有polygon_default_px时按真实多边形命中，rect_default_px仅用于包围框与定位；两者共同随当前视图变换。"
+  },
+  "phase_source_note": "采用副策划3_任务交接第53行7组真实语义及根确认CH06_ENTER补兄弟真实SC10位置；既有入口/事件/位置均为表现选择依据，不建立平行进度。"
+}

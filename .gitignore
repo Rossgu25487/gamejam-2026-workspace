@@ -32,3 +32,11 @@ Thumbs.db
 game/music/*.zip
 game/music/**/*.zip
 game/music/**/*.url
+# Licensed performance mixes remain local; distribute them only integrated in the game.
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_PROGRESS.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_BREAKTHROUGH.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_INSIGHT.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_GENERATE.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_ERROR.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_FAILURE.ogg*
+game/极光_主策合并交付_20261019/assets/aurora/audio/SFX_CORE_RETRY.ogg*

@@ -17,6 +17,7 @@ var slot_buttons: Array[Button] = []
 var confirmation: Control
 var success_timer: Timer
 var session: Node
+var formal_layout: RefCounted
 
 func bind_session(value: Node) -> void:
 	session = value
@@ -67,10 +68,13 @@ func _build_page() -> void:
 	close.text = "关闭保存"
 	close.pressed.connect(_close_requested)
 	box.add_child(close)
+	formal_layout = preload("res://pages/aurora/aurora_save_layout.gd").new()
+	formal_layout.bind(self, "save", panel, box, close)
 	confirmation = preload("res://pages/confirm_page.tscn").instantiate()
 	add_child(confirmation)
 	confirmation.cancelled.connect(_cancel_overwrite)
 	confirmation.accepted.connect(_write)
+	formal_layout.bind_confirmation(confirmation)
 
 func _button(title: String, callback: Callable) -> Button:
 	var button := Button.new()
@@ -83,7 +87,7 @@ func open(service: Node, current_snapshot: Dictionary, excluded_slot: int = -1) 
 	# 保存打开瞬间复制快照，避免页面操作期间引用被外部修改。
 	save_service = service
 	if slot_buttons.size() != service.manual_slot_count:
-		for button in slot_buttons: box.remove_child(button); button.queue_free()
+		for button in slot_buttons: button.get_parent().remove_child(button); button.queue_free()
 		slot_buttons.clear()
 		for index in range(service.manual_slot_count):
 			var button := Button.new()
@@ -101,8 +105,10 @@ func open(service: Node, current_snapshot: Dictionary, excluded_slot: int = -1) 
 			selected_slot = index
 			break
 	status_label.text = "请选择一个手动栏位，再点击保存。"
+	formal_layout.set_records(slot_buttons, submit_button, status_label)
 	confirmation.close_page()
 	_refresh_slots()
+	formal_layout.reveal(selected_slot)
 	show()
 	var first := slot_buttons[selected_slot]
 	if is_instance_valid(first): first.grab_focus()
@@ -126,9 +132,10 @@ func _refresh_slots() -> void:
 		button.disabled = index == exclusion
 		button.text = save_service.slot_label("manual", index) + "\n" + info.summary
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button.custom_minimum_size.x = 460
+		button.custom_minimum_size = Vector2.ZERO
+		formal_layout.decorate(button, save_service.slot_label("manual", index), info, index == selected_slot)
 		button.tooltip_text = "待读取目标，不能覆盖" if button.disabled else info.get("full_summary", info.summary)
-		button.modulate = Color(1, 0.85, 0.5) if index == selected_slot else Color.WHITE
+	formal_layout.layout()
 
 func _submit() -> void:
 	if save_service.busy or selected_slot == exclusion or confirmation.visible: return

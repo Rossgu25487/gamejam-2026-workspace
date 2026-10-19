@@ -1,0 +1,431 @@
+{
+  "default_reference_size_px": [
+    1600,
+    900
+  ],
+  "font_regular": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W12.ttf",
+  "font_emphasis": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W16.ttf",
+  "colors": {
+    "paper_ink": "#34413F",
+    "body": "#34413F",
+    "muted_ink": "#59645C",
+    "time_location": "#3F6B4C"
+  },
+  "global_entries": {
+    "layout_source": "design/basic/ui_layout/entry/ui_layout.json",
+    "screen_id": "HUD",
+    "state_id": "default",
+    "control_refs": [
+      "UI_HANDBOOK_ENTRY",
+      "UI_HANDBOOK_RECORDS"
+    ],
+    "font_size_default_px": 24,
+    "line_height_default_px": 30,
+    "font_emphasis": true,
+    "geometry_owner": "副4HUD/default唯一170×48外框；内部图标/文字按共同R4内容规格测量居中，不另维护矩形。",
+    "background_asset_id": "PAPER_V2_button_secondary_normal",
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+    "content_style_source": "assets/specs/paper_v2_adopted.json#/surfaces/button_primary_and_secondary/hud"
+  },
+  "scene_info": {
+    "font_color": "#3F6B4C",
+    "origin_default_px": [
+      32,
+      28
+    ],
+    "height_default_px": 48,
+    "minimum_width_default_px": 100,
+    "padding_horizontal_default_px": 20,
+    "font_size_default_px": 24,
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+    "background_asset_id": "PAPER_V2_small_paper",
+    "line_height_default_px": 30
+  },
+  "objective": {
+    "rect_default_px": [
+      688,
+      28,
+      224,
+      48
+    ],
+    "font_size_default_px": 24,
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+    "background_asset_id": "PAPER_V2_small_paper",
+    "sizing_mode": "measure_complete_text_before_display",
+    "line_height_default_px": 30,
+    "content_padding_ltrb": [
+      20,
+      9,
+      20,
+      9
+    ]
+  },
+  "record_toast": {
+    "sizing_mode": "measure_complete_text_before_display",
+    "origin_default_px": [
+      32,
+      124
+    ],
+    "maximum_width_default_px": 540,
+    "minimum_height_default_px": 80,
+    "font_color": "#34413F",
+    "title_font_size_default_px": 24,
+    "body_font_size_default_px": 24,
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+    "background_asset_id": "PAPER_V2_small_paper",
+    "line_height_default_px": 30,
+    "padding_default_px": [
+      20,
+      9,
+      20,
+      9
+    ],
+    "icon_size_default_px": 28,
+    "icon_gap_default_px": 12
+  },
+  "local_view": {
+    "font_color": "#3F6B4C",
+    "back_rect_default_px": [
+      32,
+      28,
+      280,
+      56
+    ],
+    "header_rect_default_px": [
+      490,
+      28,
+      296,
+      48
+    ],
+    "font_size_default_px": 24,
+    "background_asset_id": "PAPER_V2_small_paper",
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+    "header_sizing_mode": "measure_complete_label",
+    "line_height_default_px": 30
+  },
+  "topic_panel": {
+    "rect_default_px": [
+      1000,
+      220,
+      520,
+      324
+    ],
+    "title_position_default_px": [
+      1060,
+      260
+    ],
+    "title_font_size_default_px": 24,
+    "row_rect_default_px": [
+      1048,
+      326,
+      424,
+      68
+    ],
+    "row_font_size_default_px": 24,
+    "back_rect_default_px": [
+      1084,
+      444,
+      280,
+      56
+    ],
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png",
+    "background_asset_id": "PAPER_V2_panel_paper",
+    "title_font_color": "#3F6B4C",
+    "row_line_height_default_px": 30,
+    "button_asset_id": "PAPER_V2_button_secondary_normal",
+    "button_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+    "row_background_asset_id": "PAPER_V2_button_secondary_hover",
+    "row_background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png"
+  },
+  "reading_band": {
+    "resource": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png",
+    "font_color": "#34413F",
+    "surface": "shared_light_parchment",
+    "speaker_font_size_default_px": 24,
+    "body_font_size_default_px": 28,
+    "background_asset_id": "PAPER_V2_dialogue_paper",
+    "speaker_line_height_default_px": 30,
+    "speaker_font_color": "#3F6B4C",
+    "body_line_height_default_px": 43,
+    "content_padding_ltrb": [
+      64,
+      40,
+      64,
+      44
+    ],
+    "speaker_body_gap_default_px": 14,
+    "stable_rect_default_px": [
+      32,
+      572,
+      1536,
+      300
+    ],
+    "body_max_width_default_px": 1032,
+    "maximum_lines": 4,
+    "short_feedback_sizing": "measure_complete_page_at_bottom_left",
+    "short_feedback_maximum_width_default_px": 1032,
+    "short_feedback_origin_margin_default_px": [
+      32,
+      28
+    ]
+  },
+  "source_note": "HANDPAINT_BUTTONS_R4_20261018；世界悬停文字浮签已移除，鼠标使用光标差分、键盘使用焦点。170×48外框读取初始化HUD/default，图标与文字按共同R4内容规格居中；按钮直接九切完整480×88原图16/12/16/16。",
+  "cursor_lens_backdrop": {
+    "center_in_48px_cursor": [
+      21,
+      20
+    ],
+    "radius_px": 16,
+    "fill": "#F4EBD5",
+    "stroke": "#C8BFA5",
+    "stroke_width_px": 1
+  },
+  "counter_view": {
+    "back_rect_default_px": [
+      32,
+      28,
+      280,
+      56
+    ],
+    "header_rect_default_px": [
+      490,
+      28,
+      176,
+      48
+    ],
+    "conversation_return_label": "返回柜台",
+    "background_asset_id": "PAPER_V2_small_paper",
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png"
+  },
+  "view_switch_controls": [
+    {
+      "id": "UI_SC09_LOOK_DOORFRAME",
+      "data_scope": "runtime",
+      "scene_id": "SC09",
+      "view_id": "VIEW_SC09_MAIN",
+      "label": "转向门口",
+      "rect_default_px": [
+        1408,
+        28,
+        160,
+        64
+      ],
+      "anchor": "top_right",
+      "target_scene_ref": "SC09",
+      "target_view_ref": "VIEW_SC09_DOORFRAME",
+      "target_focus_ref": "HS_SC09_ALARM_BELL",
+      "font_color": "#34413F",
+      "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "return": "restore_actual_caller_view_offset_and_focus",
+      "status": "门框新机位与铃图已正式采用；屏幕视角控件，不以资料柜或空白墙面代理",
+      "background_asset_id": "PAPER_V2_button_secondary_normal",
+      "surface_kind": "button",
+      "font_size_default_px": 24,
+      "line_height_default_px": 30
+    },
+    {
+      "id": "UI_SC05_LOOK_PLATFORM",
+      "data_scope": "runtime",
+      "scene_id": "SC05",
+      "view_id": "VIEW_SC05_MAIN",
+      "label": "楼梯平台",
+      "rect_default_px": [
+        1408,
+        28,
+        160,
+        64
+      ],
+      "anchor": "top_right",
+      "target_scene_ref": "SC05",
+      "target_view_ref": "VIEW_SC05_TRANSITION",
+      "target_focus_ref": "HS_SC05_PLATFORM_DOWN",
+      "font_color": "#34413F",
+      "background_asset_id": "PAPER_V2_button_secondary_normal",
+      "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "surface_kind": "button",
+      "font_size_default_px": 24,
+      "line_height_default_px": 30,
+      "return": "restore_actual_caller_view_offset_and_focus",
+      "status": "采用真实楼梯平台固定机位；从主走廊转向平台，内廊开口回同地点走廊，楼梯只作既有观察"
+    },
+    {
+      "id": "UI_SC01_LOOK_REAR",
+      "data_scope": "runtime",
+      "scene_id": "SC01",
+      "view_id": "VIEW_SC01_MAIN",
+      "label": "查看后院",
+      "rect_default_px": [
+        1408,
+        28,
+        160,
+        64
+      ],
+      "anchor": "top_right",
+      "target_scene_ref": "SC01",
+      "target_view_ref": "VIEW_SC01_REAR",
+      "target_focus_ref": null,
+      "font_color": "#34413F",
+      "background_asset_id": "PAPER_V2_button_secondary_normal",
+      "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "surface_kind": "button",
+      "font_size_default_px": 24,
+      "line_height_default_px": 30,
+      "return": "restore_actual_caller_view_offset_and_focus",
+      "status": "站外同地点前后视角切换；后院沿可见返回入口回实际主视图，后门无空热区"
+    }
+  ],
+  "panning_controls": {
+    "left_button_rect_default_px": [
+      20,
+      426,
+      64,
+      48
+    ],
+    "right_button_rect_default_px": [
+      1516,
+      426,
+      64,
+      48
+    ],
+    "backplate_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+    "disabled_backplate_resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+    "icon_resource": "res://assets/aurora/ui/a/png/icon_back.png",
+    "right_icon_flip_h": true,
+    "icon_rect_in_button_default_px": [
+      20,
+      12,
+      24,
+      24
+    ],
+    "disabled_icon_opacity": 1,
+    "background_asset_id": "PAPER_V2_button_secondary_normal",
+    "disabled_icon_color": "#737B70"
+  },
+  "theme_version": "PAPER_V2_20261018",
+  "shared_spec_ref": "assets/specs/paper_v2_adopted.json",
+  "texture_modulate": "#FFFFFFFF",
+  "paper_styles": {
+    "small_paper": {
+      "asset_id": "PAPER_V2_small_paper",
+      "resource": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+      "border_reference_display_height_default_px": 48
+    },
+    "panel_paper": {
+      "asset_id": "PAPER_V2_panel_paper",
+      "resource": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png"
+    },
+    "dialogue_paper": {
+      "asset_id": "PAPER_V2_dialogue_paper",
+      "resource": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png"
+    },
+    "button_primary": {
+      "normal": {
+        "asset_id": "PAPER_V2_button_primary_normal",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_normal.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "hover": {
+        "asset_id": "PAPER_V2_button_primary_hover",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_hover.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "pressed": {
+        "asset_id": "PAPER_V2_button_primary_pressed",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_pressed.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "disabled": {
+        "asset_id": "PAPER_V2_button_primary_disabled",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_disabled.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      }
+    },
+    "button_secondary": {
+      "normal": {
+        "asset_id": "PAPER_V2_button_secondary_normal",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "hover": {
+        "asset_id": "PAPER_V2_button_secondary_hover",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "pressed": {
+        "asset_id": "PAPER_V2_button_secondary_pressed",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_pressed.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      },
+      "disabled": {
+        "asset_id": "PAPER_V2_button_secondary_disabled",
+        "resource": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_disabled.png",
+        "native_nine_slice_ltrb": [
+          16,
+          12,
+          16,
+          16
+        ],
+        "runtime_uses_full_png": true
+      }
+    }
+  },
+  "material_reading": {
+    "background_asset_id": "PAPER_V2_panel_paper",
+    "background_resource": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png",
+    "content_padding_ltrb": [
+      48,
+      40,
+      48,
+      44
+    ],
+    "body_font_size_default_px": 28,
+    "body_line_height_default_px": 43,
+    "title_font_size_default_px": 24,
+    "title_line_height_default_px": 30,
+    "font_color": "#34413F",
+    "page_rule": "measure_complete_page_before_reveal_and_mark_read_after_last_page"
+  },
+  "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+}

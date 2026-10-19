@@ -1,0 +1,478 @@
+{
+  "theme_version": "PAPER_V2_20261018",
+  "status": "HANDPAINT_BUTTONS_R4_20261018已采用；8按钮原作者已归一化并由root接收，其他5信息面保留A水彩，3类卡面未改。",
+  "source_manifests": [
+    "E:\\gamejam\\副策划6场景工作稿\\assets\\revised-20261018-cards\\controls\\controls_manifest.json",
+    "E:\\gamejam\\副策划6场景工作稿\\assets\\revised-20261018-cards\\components\\components_manifest.json",
+    "E:\\gamejam\\副策划6场景工作稿\\assets\\revised-20261018-cards\\theme_manifest.json"
+  ],
+  "font_defaults": {
+    "body_family": "DreamHanSansCN-W12",
+    "title_and_label_family": "DreamHanSansCN-W16",
+    "body_color": "#34413F",
+    "time_location_and_speaker_color": "#3F6B4C",
+    "button_and_category_label_color": "#34413F",
+    "disabled_text_color": "#737B70",
+    "body_px": 28,
+    "body_line_height_px": 43,
+    "speaker_px": 24,
+    "speaker_line_height_px": 30,
+    "short_label_px": 24,
+    "short_label_line_height_px": 30,
+    "button_px": 24,
+    "button_line_height_px": 30,
+    "fake_bold": false,
+    "alpha_policy": "Change actual font fields and RGB artwork colors only. Keep clip/alpha masks white, preserve source alpha and modulate textures with#FFFFFFFF."
+  },
+  "surfaces": {
+    "button_primary_and_secondary": {
+      "files": {
+        "primary": [
+          "controls/button_primary_normal.png",
+          "controls/button_primary_hover.png",
+          "controls/button_primary_pressed.png",
+          "controls/button_primary_disabled.png"
+        ],
+        "secondary": [
+          "controls/button_secondary_normal.png",
+          "controls/button_secondary_hover.png",
+          "controls/button_secondary_pressed.png",
+          "controls/button_secondary_disabled.png"
+        ]
+      },
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "native_px": [
+        480,
+        88
+      ],
+      "runtime_uses_full_png": true,
+      "nine_patch_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "edge_protection_ltrb": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "edge_protection_units": "完整生产PNG原生像素；保留实际手绘端部、纸边、厚度和阴影，独立于显示文字padding。",
+      "recommended_display_px": [
+        170,
+        48
+      ],
+      "minimum_display_px": [
+        64,
+        48
+      ],
+      "content_padding_at_display_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "content_padding_at_display_units": "文字/HUD显示像素；48高=9上+30行高+9下。宽度按完整标签与图标测量。",
+      "hud": {
+        "display_px": [
+          170,
+          48
+        ],
+        "padding_ltrb": [
+          20,
+          9,
+          20,
+          9
+        ],
+        "icon_px": 24,
+        "icon_label_gap_px": 10,
+        "font_px": 24,
+        "line_height_px": 30,
+        "four_character_fit": "20左+24图标+10间隔+96四字+20右=170；字形最终以实际TTF排版为准。"
+      },
+      "icon_only": {
+        "display_px": [
+          64,
+          48
+        ],
+        "padding_ltrb": [
+          20,
+          12,
+          20,
+          12
+        ],
+        "icon_px": 24,
+        "label": null
+      },
+      "font": {
+        "family": "DreamHanSansCN-W16",
+        "font_size_at_1600x900": 24,
+        "line_height_px": 30,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "primary_text": "#34413F",
+        "primary_disabled_text": "#737B70",
+        "secondary_text": "#34413F",
+        "secondary_disabled_text": "#737B70"
+      },
+      "states": {
+        "normal": "root native watercolor mother with restrained category tint",
+        "hover": "same alpha and paint;RGB brightened3.5percent",
+        "pressed": "same paint darkened4percent, native object down1px and label down1displaypx",
+        "disabled": "same silhouette/alpha, saturation reduced45percent; readable muted text"
+      },
+      "scaling": "完整480×88原图直接九切16/12/16/16，延展中心，不平铺、不整图压扁；按实际显示区排布控件。",
+      "pressed_label_offset_y_display_px": 1
+    },
+    "quote_or_result": {
+      "normal": "controls/quote_normal.png",
+      "focus": "controls/quote_focus.png",
+      "native_px": [
+        1280,
+        224
+      ],
+      "nine_patch_ltrb": [
+        40,
+        36,
+        40,
+        36
+      ],
+      "edge_protection_ltrb": [
+        22,
+        24,
+        22,
+        24
+      ],
+      "content_padding_ltrb": [
+        48,
+        26,
+        48,
+        30
+      ],
+      "font": {
+        "speaker_family": "DreamHanSansCN-W16",
+        "speaker_size_at_1600x900": 24,
+        "speaker_color": "#3F6B4C",
+        "speaker_line_height": 30,
+        "body_family": "DreamHanSansCN-W12",
+        "body_size_at_1600x900": 28,
+        "body_color": "#34413F",
+        "body_line_height": 43,
+        "body_tracking": 0,
+        "body_alignment": "left"
+      },
+      "height_policy": "Measure complete current text/page before reveal. One-line sample uses144px; longer pages use enough height for all full-size lines. The container remains stable during typewriter reveal."
+    },
+    "dialogue_reading": {
+      "file": "controls/dialogue_paper.png",
+      "native_size": [
+        1600,
+        300
+      ],
+      "nine_patch_margins_ltrb": [
+        36,
+        32,
+        36,
+        36
+      ],
+      "content_padding_ltrb": [
+        64,
+        40,
+        64,
+        44
+      ],
+      "stable_reading_rule": "Measure the complete page before revealing characters. Keep the resulting panel width/height fixed until the page changes. Body28/leading43; expand through9-slice center for an entire longer page, never per revealed character."
+    },
+    "general_panel": {
+      "file": "controls/panel_paper.png",
+      "native_size": [
+        960,
+        640
+      ],
+      "nine_patch_margins_ltrb": [
+        32,
+        32,
+        32,
+        36
+      ],
+      "content_padding_ltrb": [
+        48,
+        40,
+        48,
+        44
+      ]
+    },
+    "short_label_and_hint": {
+      "file": "controls/small_paper.png",
+      "native_size": [
+        320,
+        80
+      ],
+      "nine_patch_margins_ltrb": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "content_padding_ltrb": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_ltrb": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "minimum_display_size": [
+        100,
+        48
+      ],
+      "text_measurement": "Measure the complete label with the actual TTF, font24/leading30. Add40 horizontal and18 vertical padding, producing a48px single-line label. Use the320px small mother texture via9-slice; do not horizontally scale a giant panel.",
+      "edge_protection_units": "Native320x80 texture pixels; top/bottom12 are paper-edge protection, not text inset.",
+      "content_padding_units": "Display pixels for the48px single-line label: top9 + line30 + bottom9. Text occupiesy9..39 inside the visible paper."
+    }
+  },
+  "category_materials": {
+    "evidence": {
+      "asset_id": "PAPER_V2_category_paper_evidence",
+      "persistent_in_all_states": true,
+      "body_tint": "grey green",
+      "faint_pattern": "diagonal fiber lines"
+    },
+    "testimony": {
+      "asset_id": "PAPER_V2_category_paper_testimony",
+      "persistent_in_all_states": true,
+      "body_tint": "grey blue",
+      "faint_pattern": "horizontal ledger fibers"
+    },
+    "inference": {
+      "asset_id": "PAPER_V2_category_paper_inference",
+      "persistent_in_all_states": true,
+      "body_tint": "warm grey ivory",
+      "faint_pattern": "short scattered paper fibers"
+    }
+  },
+  "card_geometry_reference": {
+    "native_px": [
+      600,
+      900
+    ],
+    "face_xywh": [
+      24,
+      22,
+      552,
+      828
+    ],
+    "visible_bottom_anchor_px": [
+      300,
+      850
+    ],
+    "scale_uniformly": true,
+    "nine_slice": false,
+    "content_regions": {
+      "type": [
+        52,
+        44,
+        126,
+        36
+      ],
+      "title": [
+        52,
+        92,
+        496,
+        124
+      ],
+      "image_frame": [
+        52,
+        230,
+        496,
+        272
+      ],
+      "image": [
+        56,
+        234,
+        488,
+        264
+      ],
+      "summary": [
+        52,
+        530,
+        496,
+        248
+      ],
+      "footer": [
+        52,
+        798,
+        496,
+        26
+      ]
+    },
+    "source_fonts_native": {
+      "font_source": "../fonts",
+      "font_family": "DreamHanSansCN",
+      "license": "OFL-1.1",
+      "foreground": "#34413F",
+      "time_location_color": "#3F6B4C",
+      "type_label_color": "#34413F",
+      "recommended_title_px_at_source": 52,
+      "recommended_title_line_height_px_at_source": 60,
+      "recommended_title_lines": 2,
+      "recommended_summary_px_at_source": 44,
+      "recommended_summary_line_height_px_at_source": 58,
+      "recommended_type_px_at_source": 30,
+      "baked_text": false
+    },
+    "main_display_fonts_px": {
+      "scale": 0.5,
+      "title": 26,
+      "title_line_height": 30,
+      "summary": 22,
+      "summary_line_height": 29,
+      "type": 15,
+      "footer_visible": false
+    },
+    "hand_display_fonts_px": {
+      "scale": 0.4,
+      "title": 20.8,
+      "title_line_height": 24,
+      "type": 12,
+      "body_hidden": true
+    }
+  },
+  "layout_note": "1600×900为默认参考；按当前有效显示区和锚点布局。切片边界、纸边保护、文本内边距各自采用规格注明的单位。",
+  "scope_note": "本批根选件包含共用13控件与3类卡面底纹；全套卡体、厚度、阴影、遮罩及五态分层由核心系统正式交付接入。类别纸面不单独充当完整卡片。",
+  "adopted_file_map": {
+    "controls/button_primary_normal.png": {
+      "asset_id": "PAPER_V2_button_primary_normal",
+      "path": "art7/paper_v2/controls/button_primary_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_normal.png"
+    },
+    "controls/button_primary_hover.png": {
+      "asset_id": "PAPER_V2_button_primary_hover",
+      "path": "art7/paper_v2/controls/button_primary_hover.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_hover.png"
+    },
+    "controls/button_primary_pressed.png": {
+      "asset_id": "PAPER_V2_button_primary_pressed",
+      "path": "art7/paper_v2/controls/button_primary_pressed.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_pressed.png"
+    },
+    "controls/button_primary_disabled.png": {
+      "asset_id": "PAPER_V2_button_primary_disabled",
+      "path": "art7/paper_v2/controls/button_primary_disabled.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_primary_disabled.png"
+    },
+    "controls/button_secondary_normal.png": {
+      "asset_id": "PAPER_V2_button_secondary_normal",
+      "path": "art7/paper_v2/controls/button_secondary_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png"
+    },
+    "controls/button_secondary_hover.png": {
+      "asset_id": "PAPER_V2_button_secondary_hover",
+      "path": "art7/paper_v2/controls/button_secondary_hover.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png"
+    },
+    "controls/button_secondary_pressed.png": {
+      "asset_id": "PAPER_V2_button_secondary_pressed",
+      "path": "art7/paper_v2/controls/button_secondary_pressed.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_pressed.png"
+    },
+    "controls/button_secondary_disabled.png": {
+      "asset_id": "PAPER_V2_button_secondary_disabled",
+      "path": "art7/paper_v2/controls/button_secondary_disabled.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_disabled.png"
+    },
+    "controls/quote_normal.png": {
+      "asset_id": "PAPER_V2_quote_normal",
+      "path": "art7/paper_v2/controls/quote_normal.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/quote_normal.png"
+    },
+    "controls/quote_focus.png": {
+      "asset_id": "PAPER_V2_quote_focus",
+      "path": "art7/paper_v2/controls/quote_focus.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/quote_focus.png"
+    },
+    "controls/dialogue_paper.png": {
+      "asset_id": "PAPER_V2_dialogue_paper",
+      "path": "art7/paper_v2/controls/dialogue_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png"
+    },
+    "controls/panel_paper.png": {
+      "asset_id": "PAPER_V2_panel_paper",
+      "path": "art7/paper_v2/controls/panel_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png"
+    },
+    "controls/small_paper.png": {
+      "asset_id": "PAPER_V2_small_paper",
+      "path": "art7/paper_v2/controls/small_paper.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png"
+    },
+    "components/category_paper_evidence.png": {
+      "asset_id": "PAPER_V2_category_paper_evidence",
+      "path": "art7/paper_v2/components/category_paper_evidence.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_evidence.png"
+    },
+    "components/category_paper_testimony.png": {
+      "asset_id": "PAPER_V2_category_paper_testimony",
+      "path": "art7/paper_v2/components/category_paper_testimony.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_testimony.png"
+    },
+    "components/category_paper_inference.png": {
+      "asset_id": "PAPER_V2_category_paper_inference",
+      "path": "art7/paper_v2/components/category_paper_inference.png",
+      "runtime_path": "res://assets/aurora/ui/art7/paper_v2/components/category_paper_inference.png"
+    }
+  },
+  "font_dependency": "复用assets/a/fonts的梦源黑体W12/W16及SIL OFL1.1，不复制字体。",
+  "runtime_base": "res://assets/aurora/ui/art7/paper_v2/",
+  "spec_runtime_path": "res://assets/aurora/ui/specs/paper_v2_adopted.json",
+  "files": {
+    "runtime_png": [
+      "controls/button_primary_normal.png",
+      "controls/button_primary_hover.png",
+      "controls/button_primary_pressed.png",
+      "controls/button_primary_disabled.png",
+      "controls/button_secondary_normal.png",
+      "controls/button_secondary_hover.png",
+      "controls/button_secondary_pressed.png",
+      "controls/button_secondary_disabled.png",
+      "controls/quote_normal.png",
+      "controls/quote_focus.png",
+      "controls/dialogue_paper.png",
+      "controls/panel_paper.png",
+      "controls/small_paper.png",
+      "components/category_paper_evidence.png",
+      "components/category_paper_testimony.png",
+      "components/category_paper_inference.png"
+    ],
+    "path_rule": "runtime_png及surfaces中的controls/...、category_materials来源components/...均相对runtime_base；完整运行路径见adopted_file_map对应记录。字体继续复用既有a/fonts映射。"
+  },
+  "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+  "controls_source_manifest": "E:\\gamejam\\副策划6场景工作稿\\assets\\revised-20261018-cards\\controls\\controls_manifest.json",
+  "root_native_normalization": {
+    "mode": "producer_normalized_full_png_copy",
+    "button_source_size_px": [
+      480,
+      88
+    ],
+    "button_runtime_size_px": [
+      480,
+      88
+    ],
+    "nine_patch_margins_ltrb": [
+      16,
+      12,
+      16,
+      16
+    ],
+    "runtime_uses_full_png": true,
+    "requirement": "加载完整PNG后直接九切；无前置source-region裁切或运行二次归一化。",
+    "rejected_skin_revision": "CONTROL_SKIN_V3"
+  },
+  "shared_hud_layout_source": "design/basic/ui_layout/entry/ui_layout.json#HUD/default",
+  "shared_hud_layout_note": "当前右下入口统一170×48、24图标、10间距、24号四字、内容padding20/9/20/9；不在按钮内绘I/L键帽，原快捷键行为保留，在操作帮助和UI按钮title/aria提示。"
+}

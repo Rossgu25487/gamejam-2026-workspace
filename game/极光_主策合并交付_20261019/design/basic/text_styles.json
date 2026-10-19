@@ -1,0 +1,15 @@
+{
+  "schema": "text-styles-v1",
+  "source_workbook": "游戏初始化与开始系统配置表.xlsx",
+  "source_sheet": "文字样式",
+  "styles": [
+    {
+      "id": "TEXT_BODY",
+      "font_color": "#34413F"
+    },
+    {
+      "id": "TEXT_TIME_PLACE",
+      "font_color": "#3F6B4C"
+    }
+  ]
+}

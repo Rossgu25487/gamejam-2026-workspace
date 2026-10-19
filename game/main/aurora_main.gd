@@ -7,6 +7,7 @@ const AudioScript = preload("res://systems/audio/audio_service.gd")
 const MapScript = preload("res://systems/map_navigation/map_navigation_service.gd")
 const MapBridge = preload("res://systems/aurora/aurora_map_bridge.gd")
 const DebugConsole = preload("res://systems/debug_console/debug_console.gd")
+const DisplaySurface = preload("res://pages/display_surface.gd")
 @onready var title_page: Control = $TitlePage
 @onready var pause_page: Control = $PausePage
 @onready var save_page: Control = $SavePage
@@ -21,6 +22,7 @@ var audio_service: Node
 var map_service: Node
 var map_bridge: Node
 var debug_console: CanvasLayer
+var display_surface: Control
 var current_layer := "title"
 var subpage_origin := "title"
 var confirmation_action := ""
@@ -58,9 +60,19 @@ func _ready() -> void:
 	map_service.configure(map_bridge.definition())
 	map_service.initialize("SC01")
 	gameplay_page.bind(session, map_service)
+	display_surface = DisplaySurface.new()
+	display_surface.name = "EffectiveDisplaySurface"
+	add_child(display_surface)
+	display_surface.configure(session.config)
+	display_surface.bind_pages([gameplay_page, title_page, pause_page, save_page, load_page, settings_page, confirm_page])
+	settings_service.display_changed.connect(display_surface.set_display_area)
+	settings_service.changed.connect(display_surface.set_preferences)
 	title_page.apply_story_title("极光")
 	title_page.apply_navigation(session.config.rows("start", "导航按钮"), session.config.text)
 	pause_page.apply_navigation(session.config.rows("start", "导航按钮"), session.config.text)
+	title_page.configure_formal(session.config)
+	pause_page.configure_formal(session.config)
+	settings_page.configure_formal(session.config)
 	for page in [title_page, pause_page, settings_page]: page.set_developer_tools_enabled(false)
 	settings_service.changed.connect(gameplay_page.set_preferences)
 	settings_service.changed.connect(audio_service.apply_settings)
@@ -99,7 +111,8 @@ func _ready() -> void:
 	settings_service.initialize()
 	audio_service.apply_settings(settings_service.values)
 	gameplay_page.set_preferences(settings_service.values)
-	get_window().min_size = Vector2i(1100, 720)
+	display_surface.set_preferences(settings_service.values)
+	get_window().min_size = Vector2i(960, 540)
 	get_tree().auto_accept_quit = false
 	get_window().close_requested.connect(_window_close)
 	get_window().focus_exited.connect(gameplay_page.handle_window_focus_loss)
@@ -204,7 +217,7 @@ func _resume() -> void:
 	gameplay_page.refresh()
 
 func _open_pause() -> void:
-	if current_layer != "game" or session.processing: return
+	if current_layer != "game" or not gameplay_page.can_pause(): return
 	current_layer = "pause"
 	gameplay_page.set_active(false)
 	map_bridge.refresh()

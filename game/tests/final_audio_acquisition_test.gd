@@ -1,0 +1,137 @@
+extends SceneTree
+## 最终声音表的逻辑ID、按实例声像和普通取得反馈；不读写玩家存档。
+const Session = preload("res://systems/aurora/aurora_session.gd")
+const Audio = preload("res://systems/audio/audio_service.gd")
+const CardAudio = preload("res://systems/aurora/aurora_card_audio.gd")
+const Acquisition = preload("res://pages/aurora/aurora_acquisition_feedback.gd")
+var checks := 0
+var failures: Array[String] = []
+var requests: Array[Dictionary] = []
+var finished: Array[String] = []
+func _init() -> void: call_deferred("run")
+func check(ok: bool, message: String) -> void:
+	checks += 1
+	if not ok: failures.append(message); push_error(message)
+func frames(count: int = 2) -> void:
+	for index in range(count): await process_frame
+func run() -> void:
+	root.size = Vector2i(1600, 900)
+	var session := Session.new()
+	root.add_child(session)
+	session.seen_storage_path = ""
+	check(session.initialize(), "正式配置成功载入")
+	if not failures.is_empty(): quit(1); return
+	session.run_id = "audio_acquisition_test"
+	var audio := Audio.new()
+	root.add_child(audio)
+	audio.log_warnings = false
+	check(audio.setup_package(session.config), "正式声音工作簿可用")
+	audio.apply_settings({"master_volume": 100, "effect_volume": 80, "mute": false})
+	for resource_id in ["SFX_TEXT_DIALOGUE", "SFX_TEXT_TIME_LOCATION", "SFX_CARD_HOVER", "SFX_CARD_PICKUP", "SFX_CARD_PLACE", "SFX_CARD_REMOVE", "SFX_CARD_PRESENT", "SFX_CARD_ACQUIRE", "SFX_CARD_COLLECT", "SFX_CORE_BREAKTHROUGH", "SFX_CORE_INSIGHT", "SFX_CORE_PROGRESS"]:
+		var info: Dictionary = audio.catalog.resource_state(resource_id)
+		check(info.state == "ready" and ResourceLoader.exists(info.path), resource_id + "实际OGG可读")
+		var reply: Dictionary = audio.request_media({"sfx": resource_id, "instance": "formal/" + resource_id})
+		check(reply.status == "played", resource_id + "逻辑ID真实播放")
+	check(audio.production_errors.is_empty(), "正式声音没有空路径缺失警告")
+	check(audio.request_media({"event": "SND_RESULT", "ref": "SFX_CORE_INSIGHT", "instance": "major"}).status == "played", "结果固定ID沿同目录解析")
+	check(audio.request_media({"event": "SND_NODE_SOUND", "ref": "SFX_CARD_ACQUIRE", "instance": "node"}).status == "played", "节点动态ID沿同目录解析")
+	check(audio.catalog.configure({"resources": [{"id": "TEST_UNBOUND", "bus": "ui", "resource_ref": "", "resource_path": ""}]}, true), "额外未绑定资源合法")
+	check(audio.request_media({"sfx": "TEST_UNBOUND", "slot": "ui", "instance": "unbound"}).status == "unbound", "非空逻辑ID的空素材保持未绑定状态")
+	var bus_count := AudioServer.bus_count
+	check(audio.request_media({"sfx": "SFX_CARD_COLLECT", "slot": "ui", "instance": "collection", "pan": 0.0}).status == "played", "收卡创建中置实例")
+	check(AudioServer.bus_count == bus_count + 1, "独立声像子总线只属于当前实例")
+	check(audio.request_media({"command": "set_pan", "instance": "collection", "pan": 0.151}).status == "updated" and is_equal_approx(float(audio.track_state("ui").pan), 0.151), "收卡实际声像可随中心右移")
+	check(is_equal_approx(audio.effective_linear("ui"), audio.output_multiplier("ui")), "独立声像仍受效果音与总音量控制")
+	check(audio.request_media({"sfx": "SFX_UI_CLICK", "slot": "ui", "instance": "next"}).status == "played" and AudioServer.bus_count == bus_count + 1 and audio.total_live_tracks() >= 2, "下一UI声正常播放，收卡声像实例保留自然音尾")
+	check(audio.request_media({"command": "set_pan", "instance": "collection", "pan": -0.2}).status == "updated" and is_zero_approx(float(audio.track_state("ui").pan)), "旧收卡声像只更新自身，不移动新UI声音")
+	for track in audio._track_of.values().duplicate():
+		if track.instance_id == "collection":
+			check(is_equal_approx(track.player.stream.get_length(), 1.02), "交付收卡原件保留1.02秒包含自然尾")
+			# headless Dummy不保证音频时钟，沿真实finished回执验证回收。
+			audio._on_player_finished(track.player)
+	check(AudioServer.bus_count == bus_count and audio.request_media({"command": "set_pan", "instance": "collection", "pan": -0.2}).status == "stale", "自然结束回执回收子总线，旧动画失效")
+	check(audio.request_media({"sfx": "SFX_CARD_COLLECT", "pan": NAN}).status == "invalid_pan", "拒绝非法声像")
+	var card_audio := CardAudio.new()
+	root.add_child(card_audio)
+	card_audio.bind(session)
+	card_audio.set_process(false)
+	card_audio.media_requested.connect(func(request): requests.append(request))
+	check(card_audio.bindings.size() == 8, "读取正式八条动作绑定")
+	check(card_audio.trigger("hand_focus_changed", "E01_V1") == 1 and requests.size() == 1, "真实跨身份焦点只响一次")
+	check(card_audio.trigger("hand_focus_changed", "E01_V1") == 0 and requests.size() == 1, "同身份悬停和重绘不重播")
+	check(card_audio.trigger("hand_selection_accepted", "E01_V1") == 2 and requests.size() == 1, "接受选牌安排正式30与160ms双音点")
+	card_audio.advance(29)
+	check(requests.size() == 1, "30ms前不提前播放")
+	card_audio.advance(1)
+	check(requests.size() == 2 and requests.back().sfx == "SFX_CARD_PICKUP", "30ms准确拾起")
+	card_audio.advance(130)
+	check(requests.size() == 3 and requests.back().sfx == "SFX_CARD_PLACE", "160ms准确落槽")
+	card_audio.trigger("withdraw_material", "E01_V1")
+	card_audio.advance(30)
+	check(requests.back().sfx == "SFX_CARD_REMOVE", "撤下读取专用音")
+	card_audio.advance(130)
+	check(requests.back().sfx == "SFX_CARD_PLACE" and is_equal_approx(float(requests.back().gain), 0.65), "撤下归位使用0.65倍率")
+	card_audio.trigger("hand_selection_accepted", "E01_V1")
+	var before := requests.size()
+	card_audio.leave_page()
+	card_audio.advance(200)
+	check(requests.size() == before, "离页generation取消未响音点")
+	card_audio.set_preferences({"mute": true})
+	card_audio.trigger("present_materials")
+	card_audio.set_preferences({"mute": false})
+	card_audio.advance(200)
+	check(requests.size() == before, "静音不排队解除后补播")
+	card_audio.trigger("collect_inference", "P06_V1")
+	card_audio.update_collection_pan(1135, 1600)
+	check(requests.back().command == "set_pan" and is_equal_approx(float(requests.back().pan), 0.15075), "声像读取当前视口卡牌中心公式")
+	var feedback := Acquisition.new()
+	root.add_child(feedback)
+	feedback.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	feedback.bind(session)
+	feedback.set_process(false)
+	feedback.completed.connect(func(id): finished.append(id))
+	feedback.media_requested.connect(func(request): requests.append(request))
+	check(not feedback.enqueue("E02_V1"), "未取得内容不能借表现发卡")
+	check(session.case_state.grant("E01_V1", {}), "夹具实际取得教学清单")
+	check(not feedback.enqueue("E01_V1"), "教学E01由联合引导独占")
+	check(session.case_state.grant("E02_V1", {}), "夹具实际取得物证")
+	var state: Dictionary = session.case_state.data.duplicate(true)
+	check(feedback.enqueue("E02_V1") and feedback.active and not session.processing, "普通取得立即非阻断400ms表现")
+	check(feedback.mouse_filter == Control.MOUSE_FILTER_IGNORE and feedback.card.mouse_filter == Control.MOUSE_FILTER_IGNORE and feedback.card.focus_mode == Control.FOCUS_NONE, "普通卡片和根完全穿透不抢焦点")
+	check(not feedback.enqueue("E02_V1"), "同版重复不重播")
+	session.paused = true
+	feedback._process(0.3)
+	check(is_zero_approx(feedback.elapsed_ms), "暂停只冻结表现时轴")
+	session.paused = false
+	feedback._process(0.399)
+	check(feedback.active and finished.is_empty(), "400ms前仍显示")
+	feedback._process(0.002)
+	check(not feedback.active and finished == ["E02_V1"] and session.case_state.data == state, "400ms结束且无知识或计数副作用")
+	check(session.case_state.grant("E02_V2", {}), "夹具实际取得新内容版")
+	check(feedback.enqueue("E02_V2"), "新内容版本可再次普通生成")
+	feedback.cancel()
+	check(not feedback.active and session.case_state.owns("E02_V2") and not feedback.enqueue("E02_V2"), "切页结束表现且不丢取得、不补播")
+	feedback.reset()
+	check(not feedback.enqueue("E02_V2"), "读档基线不补历史反馈")
+	check(session.case_state.grant("P06_V1", {}) and not feedback.enqueue("P06_V1"), "推论不叠普通取得反馈")
+	feedback.set_preferences({"reduce_motion": true})
+	session.case_state.grant("E03_V1", {})
+	check(feedback.enqueue("E03_V1") and feedback.card.scale == Vector2.ONE, "低动态保留信息、不放大移动")
+	feedback.cancel()
+	session.mode = "narrative"
+	session.case_state.grant("E04_V1", {})
+	session.changed.emit()
+	await frames()
+	check(not feedback.active and feedback._pending == ["E04_V1"], "完整提交后检测新版本，关联对白中保持候选队列")
+	session.mode = "investigation"
+	feedback._process(0)
+	check(feedback.active and feedback.current_content == "E04_V1", "关联对白完成后显示候选普通材料")
+	session.mode = "material"
+	feedback._process(0)
+	check(not feedback.active and session.case_state.owns("E04_V1"), "新操作换页结束反馈，已取得内容继续保留")
+	audio.shutdown()
+	feedback.queue_free(); card_audio.queue_free(); audio.queue_free(); session.queue_free()
+	await frames()
+	await create_timer(0.2).timeout
+	print("FINAL_AUDIO_ACQUISITION: %d checks, %d failures" % [checks, failures.size()])
+	quit(1 if not failures.is_empty() else 0)

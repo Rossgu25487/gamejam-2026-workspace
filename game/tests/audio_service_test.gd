@@ -297,6 +297,11 @@ func test_events() -> void:
 	check(service.play_result("r-4", ref, {"session": old_session})["status"] == "stale", "旧会话请求在新会话中被拒绝")
 	var media: Dictionary = service.request_media({"event": "SND_RESULT", "instance": "m-1", "ref": ref, "session": service.session_id})
 	check(media["status"] == "played", "统一媒体入口播放结果音")
+	var starts_before: int = service.start_counts["result"]
+	var disposable: Dictionary = service.request_media({"event": "SND_NODE_SOUND", "instance": "typing/busy", "ref": ref, "options": {"drop_if_busy": true}})
+	check(disposable.status == "busy" and service.start_counts["result"] == starts_before, "逐字声音忙时丢弃，不中断剧情声音或排队")
+	service.stop_node_media()
+	check(service.request_media({"event": "SND_NODE_SOUND", "instance": "typing/free", "ref": ref, "options": {"drop_if_busy": true}}).status == "played", "空闲轨允许新增逐字声音")
 	# 自然结束后继续时不补播：一次性轨道在 finished 后被回收。
 	await create_timer(2.4).timeout
 	check(service.live_track_count("result") == 0, "自然结束后清理轨道")

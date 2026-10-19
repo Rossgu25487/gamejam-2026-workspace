@@ -1,0 +1,85 @@
+{
+  "id": "SFX_CARD_COLLECT",
+  "wav": "E:\\gamejam\\编曲工作区\\deliverables\\card_collect\\WAV\\SFX_CARD_COLLECT.wav",
+  "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\card_collect\\OGG\\SFX_CARD_COLLECT.ogg",
+  "duration_seconds": 1.02,
+  "frames": 48960,
+  "sample_rate": 48000,
+  "channels": 1,
+  "visual_core_duration_seconds": 0.9,
+  "landing_peak_seconds": 0.9,
+  "natural_tail_after_visual_seconds": 0.12,
+  "authored_peak_dbfs": -18,
+  "source": "User-supplied Kenney Casino Audio 1.1",
+  "credit": "Kenney / Kenney Vleugels (www.kenney.nl)",
+  "license": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "layers": [
+    {
+      "source": {
+        "pack": "kenney_casino-audio.zip",
+        "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+        "entry": "Audio/card-slide-4.ogg",
+        "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-slide-4.ogg",
+        "source_start_seconds": 0.0,
+        "selected_seconds": 0.13
+      },
+      "offset_seconds": 0.02,
+      "peak_seconds": 0.12577083333333333,
+      "peak_dbfs": -27.0
+    },
+    {
+      "source": {
+        "pack": "kenney_casino-audio.zip",
+        "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+        "entry": "Audio/card-shove-2.ogg",
+        "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-shove-2.ogg",
+        "source_start_seconds": 0.0,
+        "selected_seconds": 0.31
+      },
+      "offset_seconds": 0.3,
+      "peak_seconds": 0.510125,
+      "peak_dbfs": -26.5
+    },
+    {
+      "source": {
+        "pack": "kenney_casino-audio.zip",
+        "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+        "entry": "Audio/card-place-2.ogg",
+        "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-place-2.ogg",
+        "source_start_seconds": 0.04108333333333333,
+        "selected_seconds": 0.12
+      },
+      "offset_seconds": 0.7907083333333333,
+      "peak_seconds": 0.9,
+      "peak_dbfs": -18.0
+    }
+  ],
+  "runtime_pan": {
+    "mode": "per_playback_instance",
+    "input": "actual_animated_card_center_x / current_viewport_width",
+    "coordinate_space": "视口本地像素；若取屏幕坐标，先减去视口左边界，x与width使用同一坐标空间",
+    "formula": "clamp((x / viewport_width * 2 - 1) * 0.36, -0.25, 0.25)",
+    "reference_viewport": [
+      1600,
+      900
+    ],
+    "reference_start": [
+      800,
+      445
+    ],
+    "reference_end_example": [
+      1135,
+      686
+    ],
+    "example_start_pan": 0,
+    "example_end_pan": 0.15075,
+    "motion_duration_ms": 900,
+    "destination": "当前手牌末位卡牌中心，沿实际画幅、页码和卡数计算",
+    "after_landing": "900ms结束运动后保留声音实例至1.020秒，沿最终声像自然结束；声音不随卡动画节点销毁，也不阻塞下一操作",
+    "note": "原件为中置单声道；左右移动由播放端按实时卡位置实现，不改整个UI总线，不将Y坐标映射音高或音量。",
+    "implementation_status": "参数交接，未在游戏内运行；文件本身没有烘焙固定右移"
+  },
+  "listening_approval": false,
+  "game_playback_tested": false
+}

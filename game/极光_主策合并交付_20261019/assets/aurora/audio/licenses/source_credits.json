@@ -1,0 +1,393 @@
+{
+  "assets": [
+    {
+      "id": "SFX_CARD_HOVER",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_HOVER.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_HOVER.ogg",
+      "duration_seconds": 0.064,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-slide-7.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-slide-7.ogg",
+            "source_start_seconds": 0.08841666666666667,
+            "selected_seconds": 0.064
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_PICKUP",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_PICKUP.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_PICKUP.ogg",
+      "duration_seconds": 0.115,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-slide-4.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-slide-4.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.115
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_PLACE",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_PLACE.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_PLACE.ogg",
+      "duration_seconds": 0.12,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-place-2.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-place-2.ogg",
+            "source_start_seconds": 0.04108333333333333,
+            "selected_seconds": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_REMOVE",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_REMOVE.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_REMOVE.ogg",
+      "duration_seconds": 0.18,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-slide-5.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-slide-5.ogg",
+            "source_start_seconds": 0.048541666666666664,
+            "selected_seconds": 0.18
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_PRESENT",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_PRESENT.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_PRESENT.ogg",
+      "duration_seconds": 0.21,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-shove-1.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-shove-1.ogg",
+            "source_start_seconds": 0.08210416666666667,
+            "selected_seconds": 0.21
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_ACQUIRE",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_CARD_ACQUIRE.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_CARD_ACQUIRE.ogg",
+      "duration_seconds": 0.4,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-fan-1.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-fan-1.ogg",
+            "source_start_seconds": 0.024708333333333332,
+            "selected_seconds": 0.24
+          },
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-place-2.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-place-2.ogg",
+            "source_start_seconds": 0.04108333333333333,
+            "selected_seconds": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CORE_PENCIL",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\card_interaction\\WAV\\SFX_CORE_PENCIL.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\card_interaction\\OGG\\SFX_CORE_PENCIL.ogg",
+      "duration_seconds": 0.12,
+      "authored_sample_peak_dbfs": -23,
+      "source": {
+        "kind": "reuse_existing_CC0_recording",
+        "author": "Anthousai",
+        "license": "CC0 1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://freesound.org/people/Anthousai/sounds/337089/",
+        "source_file": "E:\\GameAssets\\Audio\\Freesound\\PencilWriting_337089\\337089_Anthousai_PencilWriting_hq.mp3",
+        "source_crop_seconds": [
+          0.242,
+          0.362
+        ],
+        "description": "沿已有演出使用的铅笔片段，短裁剪、滤波、单声道及固定增益。"
+      }
+    },
+    {
+      "id": "SFX_UI_FOCUS",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_FOCUS.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_FOCUS.ogg",
+      "duration_seconds": 0.07,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_impact-sounds.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_impact-sounds.zip",
+            "entry": "Audio/impactGeneric_light_001.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\impact\\impactGeneric_light_001.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.07
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_BACK",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_BACK.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_BACK.ogg",
+      "duration_seconds": 0.115,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_impact-sounds.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_impact-sounds.zip",
+            "entry": "Audio/impactWood_light_001.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\impact\\impactWood_light_001.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.115
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_OPEN",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_OPEN.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_OPEN.ogg",
+      "duration_seconds": 0.24,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/cards-pack-take-out-1.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\cards-pack-take-out-1.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.24
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_CLOSE",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_CLOSE.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_CLOSE.ogg",
+      "duration_seconds": 0.2,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-shove-2.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-shove-2.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_PAGE",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_PAGE.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_PAGE.ogg",
+      "duration_seconds": 0.28,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_casino-audio.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+            "entry": "Audio/card-fan-1.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-fan-1.ogg",
+            "source_start_seconds": 0.024708333333333332,
+            "selected_seconds": 0.28
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_TOGGLE_ON",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_TOGGLE_ON.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_TOGGLE_ON.ogg",
+      "duration_seconds": 0.095,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_impact-sounds.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_impact-sounds.zip",
+            "entry": "Audio/impactMetal_light_001.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\impact\\impactMetal_light_001.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.095
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_TOGGLE_OFF",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_TOGGLE_OFF.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_TOGGLE_OFF.ogg",
+      "duration_seconds": 0.095,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_impact-sounds.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_impact-sounds.zip",
+            "entry": "Audio/impactMetal_light_000.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\impact\\impactMetal_light_000.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.095
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_UI_INVALID",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\WAV\\SFX_UI_INVALID.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\kenney_ui\\OGG\\SFX_UI_INVALID.ogg",
+      "duration_seconds": 0.12,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels",
+        "license": "CC0 1.0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "pack": "kenney_impact-sounds.zip",
+            "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_impact-sounds.zip",
+            "entry": "Audio/impactSoft_medium_000.ogg",
+            "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\impact\\impactSoft_medium_000.ogg",
+            "source_start_seconds": 0.0,
+            "selected_seconds": 0.12
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFX_CARD_COLLECT",
+      "wav": "E:\\gamejam\\编曲工作区\\deliverables\\card_collect\\WAV\\SFX_CARD_COLLECT.wav",
+      "ogg": "E:\\gamejam\\编曲工作区\\deliverables\\card_collect\\OGG\\SFX_CARD_COLLECT.ogg",
+      "duration_seconds": 1.02,
+      "source": {
+        "kind": "Kenney_CC0_pack",
+        "author": "Kenney / Kenney Vleugels (www.kenney.nl)",
+        "license": "CC0 1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "source_files": [
+          {
+            "source": {
+              "pack": "kenney_casino-audio.zip",
+              "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+              "entry": "Audio/card-slide-4.ogg",
+              "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-slide-4.ogg",
+              "source_start_seconds": 0.0,
+              "selected_seconds": 0.13
+            },
+            "offset_seconds": 0.02,
+            "peak_seconds": 0.12577083333333333,
+            "peak_dbfs": -27.0
+          },
+          {
+            "source": {
+              "pack": "kenney_casino-audio.zip",
+              "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+              "entry": "Audio/card-shove-2.ogg",
+              "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-shove-2.ogg",
+              "source_start_seconds": 0.0,
+              "selected_seconds": 0.31
+            },
+            "offset_seconds": 0.3,
+            "peak_seconds": 0.510125,
+            "peak_dbfs": -26.5
+          },
+          {
+            "source": {
+              "pack": "kenney_casino-audio.zip",
+              "archive_path": "C:\\Users\\涛涛\\Downloads\\kenney_casino-audio.zip",
+              "entry": "Audio/card-place-2.ogg",
+              "retained_original": "E:\\gamejam\\编曲工作区\\sources\\kenney\\casino\\card-place-2.ogg",
+              "source_start_seconds": 0.04108333333333333,
+              "selected_seconds": 0.12
+            },
+            "offset_seconds": 0.7907083333333333,
+            "peak_seconds": 0.9,
+            "peak_dbfs": -18.0
+          }
+        ]
+      }
+    }
+  ]
+}

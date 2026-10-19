@@ -1,0 +1,356 @@
+{
+  "source": "E:\\gamejam\\副策划6场景工作稿\\assets\\map-pawns-20261019\\map-pawns-8-sheet.png",
+  "source_size": [
+    1499,
+    1049
+  ],
+  "source_metadata": "source.json",
+  "export_method": "Mechanical grid crop, trim alpha bounds, uniform Lanczos downscale, center each pedestal at a shared bottom contact point. No new generation or repainting.",
+  "canvas_size": [
+    64,
+    88
+  ],
+  "display_size": [
+    32,
+    44
+  ],
+  "anchor": {
+    "name": "pedestal_bottom_center",
+    "pixels": [
+      32,
+      86
+    ],
+    "normalized": [
+      0.5,
+      0.9772727272727273
+    ],
+    "display_pixels": [
+      16,
+      43
+    ],
+    "coordinate_convention": "top-left origin; anchor is bottom boundary of the pedestal silhouette"
+  },
+  "uniform_scale": 0.16129032258064516,
+  "assets": [
+    {
+      "character_id": "CHR02",
+      "name": "洛恩",
+      "path": "pawns/CHR02.png",
+      "source_grid": {
+        "row": 1,
+        "column": 1,
+        "crop_box": [
+          0,
+          0,
+          375,
+          525
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        0,
+        17,
+        357,
+        525
+      ],
+      "resized_content_size": [
+        58,
+        82
+      ],
+      "paste_position": [
+        3,
+        4
+      ],
+      "output_alpha_bbox": [
+        11,
+        4,
+        53,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR03",
+      "name": "尼娜",
+      "path": "pawns/CHR03.png",
+      "source_grid": {
+        "row": 1,
+        "column": 2,
+        "crop_box": [
+          375,
+          0,
+          750,
+          525
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        7,
+        15,
+        375,
+        517
+      ],
+      "resized_content_size": [
+        59,
+        81
+      ],
+      "paste_position": [
+        2,
+        5
+      ],
+      "output_alpha_bbox": [
+        10,
+        5,
+        53,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR04",
+      "name": "伊万",
+      "path": "pawns/CHR04.png",
+      "source_grid": {
+        "row": 1,
+        "column": 3,
+        "crop_box": [
+          750,
+          0,
+          1124,
+          525
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        0,
+        17,
+        372,
+        525
+      ],
+      "resized_content_size": [
+        60,
+        82
+      ],
+      "paste_position": [
+        2,
+        4
+      ],
+      "output_alpha_bbox": [
+        9,
+        4,
+        54,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR05",
+      "name": "薇拉",
+      "path": "pawns/CHR05.png",
+      "source_grid": {
+        "row": 1,
+        "column": 4,
+        "crop_box": [
+          1124,
+          0,
+          1499,
+          525
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        23,
+        17,
+        327,
+        525
+      ],
+      "resized_content_size": [
+        49,
+        82
+      ],
+      "paste_position": [
+        8,
+        4
+      ],
+      "output_alpha_bbox": [
+        15,
+        4,
+        57,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR06",
+      "name": "尤里",
+      "path": "pawns/CHR06.png",
+      "source_grid": {
+        "row": 2,
+        "column": 1,
+        "crop_box": [
+          0,
+          525,
+          375,
+          1049
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        58,
+        0,
+        375,
+        508
+      ],
+      "resized_content_size": [
+        51,
+        82
+      ],
+      "paste_position": [
+        6,
+        4
+      ],
+      "output_alpha_bbox": [
+        6,
+        4,
+        52,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR09",
+      "name": "警员",
+      "path": "pawns/CHR09.png",
+      "source_grid": {
+        "row": 2,
+        "column": 2,
+        "crop_box": [
+          375,
+          525,
+          750,
+          1049
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        1,
+        2,
+        354,
+        510
+      ],
+      "resized_content_size": [
+        57,
+        82
+      ],
+      "paste_position": [
+        4,
+        4
+      ],
+      "output_alpha_bbox": [
+        4,
+        4,
+        58,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR10",
+      "name": "基里尔",
+      "path": "pawns/CHR10.png",
+      "source_grid": {
+        "row": 2,
+        "column": 3,
+        "crop_box": [
+          750,
+          525,
+          1124,
+          1049
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        62,
+        0,
+        314,
+        508
+      ],
+      "resized_content_size": [
+        41,
+        82
+      ],
+      "paste_position": [
+        12,
+        4
+      ],
+      "output_alpha_bbox": [
+        12,
+        4,
+        53,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    },
+    {
+      "character_id": "CHR11",
+      "name": "帕维尔",
+      "path": "pawns/CHR11.png",
+      "source_grid": {
+        "row": 2,
+        "column": 4,
+        "crop_box": [
+          1124,
+          525,
+          1499,
+          1049
+        ]
+      },
+      "source_alpha_bbox_within_cell": [
+        5,
+        0,
+        328,
+        509
+      ],
+      "resized_content_size": [
+        52,
+        82
+      ],
+      "paste_position": [
+        6,
+        4
+      ],
+      "output_alpha_bbox": [
+        15,
+        4,
+        58,
+        86
+      ],
+      "checks": {
+        "rgba": true,
+        "transparent_background": true,
+        "complete_silhouette_inside_canvas": true
+      }
+    }
+  ]
+}

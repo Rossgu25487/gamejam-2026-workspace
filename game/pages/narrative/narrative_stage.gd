@@ -11,9 +11,28 @@ var departures: Array = []
 var reduced := false
 # 调用者地点的对话沿用调查画面的人物与物件图层；{node, rect, character_id}
 var scene_layers: Array = []
+var actor_layout: Dictionary = {}
+var actor_assets: Dictionary = {}
+
+func set_brightness(percent: int) -> void:
+	var factor := clampf(float(percent) / 100.0, 0.5, 1.5)
+	modulate = Color(factor, factor, factor, 1.0)
+
+func configure_formal(config: RefCounted) -> void:
+	actor_layout.clear()
+	actor_assets.clear()
+	var path: String = str(config.definition.root).path_join("02_文案/人物演出资源配置.json")
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null: return
+	var data = JSON.parse_string(file.get_as_text())
+	if not data is Dictionary: return
+	actor_layout = data
+	for asset in data.get("assets", []):
+		actor_assets[config.resource_path(str(asset.get("resource_path", "")))] = asset
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip_contents = true # 近景按人体锚点放大后，膝下及透明留白由有效画面裁切。
 	background = TextureRect.new()
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -92,16 +111,29 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 					occupants.erase(slot)
 				else: _remove_actor(slot)
 	var position_key := str(row.get("position", ""))
+	var conversation: Dictionary = row.get("conversation_actor", {})
+	if not conversation.is_empty(): position_key = str(conversation.position)
 	var position_index: int = {"左": 1, "中": 2, "右": 3, "left": 1, "center": 2, "right": 3, "1": 1, "2": 2, "3": 3}.get(position_key, 0)
 	var kind := str(row.get("text_type", ""))
 	var character_id := str(row.get("character_id", ""))
+	var display_character := str(conversation.get("character_id", character_id))
+	var inner := kind in ["内心", "inner"]
+	path = str(row.get("avatar_path", ""))
+	if not conversation.is_empty(): path = str(conversation.path)
+	var asset: Dictionary = actor_assets.get(path, {})
+	# 朝向以实际图片登记为准，文件名与表内站位不能把人物转向画面外。
+	if not asset.is_empty() and position_index > 0:
+		if asset.get("facing_direction") == "right": position_index = 1
+		elif asset.get("facing_direction") == "left": position_index = 3
 	# 人物已作为场景图层站在原处时，不再另起一个槽位立绘，否则点开对话人物会跳到别处。
-	var anchored := _layer_has_character(character_id)
+	var anchored := _layer_has_character(display_character)
 	if anchored:
 		for slot in occupants.keys():
 			if occupants[slot].character_id == character_id: _remove_actor(slot)
-	if position_index > 0 and not anchored and kind not in ["旁白", "画外对白", "narration", "offscreen"]:
-		path = str(row.get("avatar_path", ""))
+	# 心声仅有发言身份，不新建艾琳立绘；当前场景与已有会话人物保持。
+	if position_index > 0 and not anchored and not inner and kind not in ["旁白", "画外对白", "narration", "offscreen", "offscreen_dialogue", "时间字幕", "章节字幕"]:
+		path = str(conversation.get("path", row.get("avatar_path", "")))
+		character_id = display_character
 		texture = _texture(path)
 		if not character_id.is_empty() and texture != null:
 			for old_position in occupants.keys():
@@ -119,7 +151,7 @@ func apply_record(row: Dictionary, catalog: RefCounted) -> void:
 				actor.z_index = {1: 1, 3: 2, 2: 3}[position_index]
 				add_child(actor)
 				occupants[position_index] = {"character_id": character_id, "path": path, "node": actor}
-	var speaking := not character_id.is_empty() and kind not in ["旁白", "画外对白", "narration", "offscreen"]
+	var speaking := not character_id.is_empty() and not inner and kind not in ["旁白", "画外对白", "narration", "offscreen", "offscreen_dialogue", "时间字幕", "章节字幕"]
 	for item in occupants.values(): item.node.modulate = Color.WHITE if item.character_id == character_id and speaking else Color(0.88, 0.88, 0.88)
 	# 场景里的人物只在“别人发言”时变暗，旁白和内心保持与调查画面一致的亮度。
 	for item in scene_layers:
@@ -185,6 +217,20 @@ func _layout() -> void:
 		item.node.size = layer_rect.size * factor
 	for position_index in occupants:
 		var node: TextureRect = occupants[position_index].node
+		var asset: Dictionary = actor_assets.get(str(occupants[position_index].path), {})
+		if not asset.is_empty():
+			# 头顶与膝上切线用实际图内坐标，透明画布不参与人物身高计算。
+			var anchor: Array = asset.get("dialogue_anchor_px", [])
+			if anchor.size() == 2:
+				var head := float(asset.get("visible_head_top_y_px", 0))
+				var head_y := 900.0 * float(actor_layout.get("head_top_ratio", 250.0 / 900.0))
+				var bottom_y := 900.0 * float(actor_layout.get("bottom_cut_ratio", 1))
+				var image_scale := (bottom_y - head_y) / maxf(1, float(anchor[1]) - head)
+				var slot_name: String = {1: "left", 2: "center", 3: "right"}[position_index]
+				var center := 1600.0 * float(actor_layout.get("slot_center_x_ratio", {}).get(slot_name, float(position_index) * 0.3 - 0.1))
+				node.size = node.texture.get_size() * image_scale * factor
+				node.position = offset + Vector2(center - float(anchor[0]) * image_scale, head_y - head * image_scale) * factor
+				continue
 		var rect: Rect2 = rects[position_index]
 		var texture_size := node.texture.get_size()
 		var image_factor := minf(rect.size.x / texture_size.x, rect.size.y / texture_size.y)

@@ -3,6 +3,7 @@ extends "res://systems/narrative/narrative_service.gd"
 const InvestigationScript = preload("res://systems/aurora/aurora_investigation.gd")
 var session: Node
 var available_choices: Array = []
+var conversation: RefCounted
 
 func _begin_text(id: String) -> void:
 	# 无正文菜单只承担操作，不能变成听过的原话或污染跨重启快读登记。
@@ -41,6 +42,8 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 
 func configure_formal(value: Node) -> void:
 	session = value
+	conversation = preload("res://systems/aurora/aurora_conversation.gd").new()
+	conversation.bind(session)
 	catalog.data = {"texts": {}, "chapters": session.config.chapters, "scenes": {}, "avatars": {}, "transitions": {}}
 	for id in session.config.texts:
 		var row: Dictionary = session.config.texts[id].duplicate(true)
@@ -60,6 +63,8 @@ func show_text(id: String) -> bool:
 	if not background.is_empty(): row.background_path = background
 	_mark_stage_clearing(row)
 	_attach_scene_layers(row)
+	row.erase("conversation_actor")
+	conversation.apply(row)
 	available_choices.clear()
 	catalog.data.transitions.clear()
 	for jump in session.config.jumps.get(id, []):
@@ -74,14 +79,19 @@ func _finish_current_text() -> bool:
 	var row := current_record()
 	var id := str(state.current_text_id)
 	if not session.config.texts.has(id): return false
-	var version := int(row.get("read_version", 1))
-	if id not in state.read_text_ids: state.read_text_ids.append(id)
-	state.read_versions[id] = maxi(int(state.read_versions.get(id, 0)), version)
-	if int(seen_versions.get(id, 0)) < version:
-		seen_versions[id] = version
-		_persist_seen()
+	# 原ID可能同时是分页第一段；该身份的全局已看也要等待末页，不能快显便提前登记。
+	if not _is_page_group_intermediate(id): _register_read(id, row)
 	text_finished.emit(row.duplicate(true))
-	session.case_state.finish_text(row)
+	# 分页组的首段可能仍使用原文本 ID，但原文本的取得与完成回执必须等组内最后一页。
+	# 页面本身仍写入叙事已读记录，避免玩家再次进入时丢失实际阅读进度。
+	if not _is_page_group_intermediate(id):
+		session.case_state.finish_text(row)
+		for group in session.config.narrative_bindings("text_page_groups"):
+			if str(group.get("completion_text_ref", "")) != id: continue
+			var owner := str(group.get("text_id", ""))
+			if session.config.texts.has(owner):
+				session.case_state.finish_text(session.config.texts[owner])
+				_register_read(owner, session.config.texts[owner])
 	# 六稿正文在同一次认款结束只挂了认款事件，核心表同时要求纸带核对事件。
 	# 两张实物已出示且完整回应实际读完，才补交这一已配置结果；不改原件或对白。
 	if id == "TXT_CH02_0699" and session.response_active and session.question == "L03_R03":
@@ -100,7 +110,22 @@ func _finish_current_text() -> bool:
 		return session.activate_entry("ENTRY_CH03_L09_AFTER_BASIC")
 	if id == "TXT_CH03_0635" and session.response_active and session.question == "L11_R02":
 		if not session.case_state.event("EV_CH03_L11_DOCUMENT_SCOPE_CONFIRMED", session.source_context()): return false
+	if not session.on_text_finished(id): return false
 	return session.finish_text(id)
+
+func _register_read(id: String, row: Dictionary) -> void:
+	var version := int(row.get("read_version", 1))
+	if id not in state.read_text_ids: state.read_text_ids.append(id)
+	state.read_versions[id] = maxi(int(state.read_versions.get(id, 0)), version)
+	if int(seen_versions.get(id, 0)) < version:
+		seen_versions[id] = version
+		_persist_seen()
+
+func _is_page_group_intermediate(id: String) -> bool:
+	for group in session.config.narrative_bindings("text_page_groups"):
+		var pages: Array = group.get("page_text_refs", [])
+		if id in pages and str(group.get("completion_text_ref", "")) != id: return true
+	return false
 
 func show_control_choices(rows: Array) -> void:
 	# 无正文入口也必须发出新舞台记录，避免点床时还显示大厅的旧对话。
@@ -137,8 +162,9 @@ func _attach_scene_layers(row: Dictionary) -> void:
 	for layer in model.image_layers(session.investigation_view()):
 		var path := str(layer.image_path)
 		# 第0层是调查页替换底图的整屏背景，不是叠加图层。
-		if int(layer.get("draw_layer", 0)) == 0:
+		if int(layer.get("draw_layer", 0)) <= 0 or layer.get("image_role") == "background":
 			row["background_path"] = path
+			row["embedded_actor_refs"] = layer.get("embedded_actor_refs", []).duplicate()
 			continue
 		var who := str(layer.get("object_ref", ""))
 		layers.append({"image_path": path, "x": float(layer.image_x), "y": float(layer.image_y), "w": float(layer.image_w), "h": float(layer.image_h),

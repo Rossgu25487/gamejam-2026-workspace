@@ -133,10 +133,14 @@ func _render() -> void:
 	close_button.visible = stack.size() > 1
 	return_button = Style.button(header_box, service.resolve(KEY_RETURN_REVIEW), button_px, button_h, finish)
 	return_button.name = "ReturnReviewButton"
+	if review.get("final_paper", false):
+		for button in [up_button, close_button, return_button]: Style.paper_button(button, review.get("assets", {}))
 	if level["kind"] == "sources":
 		_render_sources(doc)
 	else:
 		_render_doc(doc)
+	if review.get("final_paper", false):
+		for button in content.find_children("*", "Button", true, false): Style.paper_button(button, review.get("assets", {}))
 	_refresh_error()
 	Style.next_frame(self, _restore.bind(int(level["scroll"])))
 

@@ -1,0 +1,73 @@
+{
+  "source_plans": [
+    "E:/gamejam/策划工作稿/design/ui_20261018/界面与交互统一要求.md",
+    "E:/gamejam/副策划4工作稿/design/basic/volume_settings.json",
+    "E:/gamejam/副策划4工作稿/design/basic/volume_audio.json",
+    "E:/gamejam/副策划4工作稿/design/handbook/handbook_plan.json"
+  ],
+  "routes": [
+    {
+      "operation": "用户将焦点移到另一可操作按钮或菜单项；持续悬停和自动恢复焦点不响",
+      "sound_event": "SND_UI_FOCUS",
+      "resource_key": "SFX_UI_FOCUS"
+    },
+    {
+      "operation": "返回上一级或成功取消当前确认；若整层面板关闭则只用CLOSE",
+      "sound_event": "SND_UI_BACK",
+      "resource_key": "SFX_UI_BACK"
+    },
+    {
+      "operation": "手册、记录、地图、设置、暂停等面板实际打开一次",
+      "sound_event": "SND_UI_OPEN",
+      "resource_key": "SFX_UI_OPEN"
+    },
+    {
+      "operation": "整层面板实际关闭一次；不叠BACK或CLICK",
+      "sound_event": "SND_UI_CLOSE",
+      "resource_key": "SFX_UI_CLOSE"
+    },
+    {
+      "operation": "页码、页签或地图楼层实际切换；同页和越界翻页保持无声",
+      "sound_event": "SND_UI_PAGE",
+      "resource_key": "SFX_UI_PAGE"
+    },
+    {
+      "operation": "设置开关实际变为开启；静音开启遵守零输出",
+      "sound_event": "SND_UI_TOGGLE_ON",
+      "resource_key": "SFX_UI_TOGGLE_ON"
+    },
+    {
+      "operation": "设置开关实际变为关闭；解除静音不补播过去声音",
+      "sound_event": "SND_UI_TOGGLE_OFF",
+      "resource_key": "SFX_UI_TOGGLE_OFF"
+    },
+    {
+      "operation": "已接受操作后收到真实拒绝或文件提交失败；禁用控件本身不响",
+      "sound_event": "SND_UI_INVALID",
+      "resource_key": "SFX_UI_INVALID"
+    }
+  ],
+  "reuse": [
+    {
+      "operation": "普通按钮、列表项、空槽位置选择和显示选项实际改变",
+      "sound_event": "SND_UI_CLICK"
+    },
+    {
+      "operation": "确认操作及实际文件保存成功",
+      "sound_event": "SND_UI_CONFIRM"
+    },
+    {
+      "operation": "设置的试听效果音按钮",
+      "sound_event": "SND_UI_FEEDBACK"
+    }
+  ],
+  "constraints": [
+    "同一次操作只选一个通用声音；卡牌、地图、结果专用声优先，不再叠通用CLICK/CONFIRM。",
+    "持续悬停、同焦点、同页、越界翻页、自动恢复焦点和重绘不播放。",
+    "禁用按钮、模态后方控件和处理中重复请求保持无声；INVALID仅绑定已有业务的真实拒绝/文件失败。",
+    "四条音量滑杆只改变当前声音，不添加调整声；点击试听效果音只播放FEEDBACK。",
+    "静音和各声音分组音量始终生效；静音开关不强播，解除静音不补播旧声音。",
+    "成功关闭整层面板用CLOSE；局部回退用BACK，同次Esc返回不重复两声。",
+    "SFX_CARD_COLLECT按900ms落到当前手牌末位；实时声像参数见trigger_routes，单次操作继续沿原去重条件。"
+  ]
+}

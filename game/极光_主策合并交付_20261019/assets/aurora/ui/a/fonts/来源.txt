@@ -1,0 +1,6 @@
+Dream Han Sans CN / 梦源黑体
+作者项目：Pal3love/dream-han-cjk
+https://github.com/Pal3love/dream-han-cjk
+版本：dream-3.03-sans-2.005-serif-2.003
+随包字体：W12、W16，原始TTF未修改。
+许可证：同目录LICENSE.txt（作者仓库原文）

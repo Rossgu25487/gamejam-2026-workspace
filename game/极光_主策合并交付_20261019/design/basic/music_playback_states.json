@@ -1,0 +1,307 @@
+{
+  "schema": "music-playback-states-v1",
+  "source_workbook": "声音播放系统配置表.xlsx",
+  "source_sheet": "音乐播放状态",
+  "states": [
+    {
+      "id": "MS_HALL_ARRIVAL_MAIN",
+      "resource_key": "BGM_PHASE_HALL_ARRIVAL",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 110.76922916666666,
+      "steady_loop_end_seconds": 147.6923125,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_HALL_ARRIVAL_QUIET",
+      "resource_key": "BGM_PHASE_HALL_ARRIVAL",
+      "first_entry_seconds": 110.76922916666666,
+      "steady_loop_start_seconds": 110.76922916666666,
+      "steady_loop_end_seconds": 147.6923125,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_TABLE_EVENING_MAIN",
+      "resource_key": "BGM_PHASE_TABLE_EVENING",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 102.85714583333333,
+      "steady_loop_end_seconds": 137.14285416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_TABLE_EVENING_QUIET",
+      "resource_key": "BGM_PHASE_TABLE_EVENING",
+      "first_entry_seconds": 102.85714583333333,
+      "steady_loop_start_seconds": 102.85714583333333,
+      "steady_loop_end_seconds": 137.14285416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_HALL_AFTER_ALARM_MAIN",
+      "resource_key": "BGM_PHASE_HALL_AFTER_ALARM",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 100,
+      "steady_loop_end_seconds": 130,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_HALL_AFTER_ALARM_QUIET",
+      "resource_key": "BGM_PHASE_HALL_AFTER_ALARM",
+      "first_entry_seconds": 100,
+      "steady_loop_start_seconds": 100,
+      "steady_loop_end_seconds": 130,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_CRIME_SCENE_OBSERVATION_MAIN",
+      "resource_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 88.69564583333333,
+      "steady_loop_end_seconds": 114.78260416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_CRIME_SCENE_OBSERVATION_QUIET",
+      "resource_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+      "first_entry_seconds": 88.69564583333333,
+      "steady_loop_start_seconds": 88.69564583333333,
+      "steady_loop_end_seconds": 114.78260416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_KITCHEN_RETAINED_MEAL_MAIN",
+      "resource_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 102.85714583333333,
+      "steady_loop_end_seconds": 137.14285416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_KITCHEN_RETAINED_MEAL_QUIET",
+      "resource_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+      "first_entry_seconds": 102.85714583333333,
+      "steady_loop_start_seconds": 102.85714583333333,
+      "steady_loop_end_seconds": 137.14285416666667,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_ARCHIVE_FIRST_READ_MAIN",
+      "resource_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 109.09091666666667,
+      "steady_loop_end_seconds": 141.8181875,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_ARCHIVE_FIRST_READ_QUIET",
+      "resource_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+      "first_entry_seconds": 109.09091666666667,
+      "steady_loop_start_seconds": 109.09091666666667,
+      "steady_loop_end_seconds": 141.8181875,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_QUESTION_MAIN",
+      "resource_key": "BGM_PHASE_QUESTION",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 135,
+      "steady_loop_end_seconds": 165,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_QUESTION_QUIET",
+      "resource_key": "BGM_PHASE_QUESTION",
+      "first_entry_seconds": 135,
+      "steady_loop_start_seconds": 135,
+      "steady_loop_end_seconds": 165,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_PRESSURE_MAIN",
+      "resource_key": "BGM_PHASE_PRESSURE",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 128.27585416666668,
+      "steady_loop_end_seconds": 153.1034375,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_PRESSURE_QUIET",
+      "resource_key": "BGM_PHASE_PRESSURE",
+      "first_entry_seconds": 128.27585416666668,
+      "steady_loop_start_seconds": 128.27585416666668,
+      "steady_loop_end_seconds": 153.1034375,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_FINAL_QUESTION_MAIN",
+      "resource_key": "BGM_PHASE_FINAL_QUESTION",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 141.8181875,
+      "steady_loop_end_seconds": 174.54545833333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_FINAL_QUESTION_QUIET",
+      "resource_key": "BGM_PHASE_FINAL_QUESTION",
+      "first_entry_seconds": 141.8181875,
+      "steady_loop_start_seconds": 141.8181875,
+      "steady_loop_end_seconds": 174.54545833333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_PERSONAL_MEMORY_MAIN",
+      "resource_key": "BGM_PHASE_PERSONAL_MEMORY",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 152.195125,
+      "steady_loop_end_seconds": 187.31708333333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_PERSONAL_MEMORY_QUIET",
+      "resource_key": "BGM_PHASE_PERSONAL_MEMORY",
+      "first_entry_seconds": 152.195125,
+      "steady_loop_start_seconds": 152.195125,
+      "steady_loop_end_seconds": 187.31708333333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_OLD_CASE_MAIN",
+      "resource_key": "BGM_PHASE_OLD_CASE",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 140.4878125,
+      "steady_loop_end_seconds": 175.60977083333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_OLD_CASE_QUIET",
+      "resource_key": "BGM_PHASE_OLD_CASE",
+      "first_entry_seconds": 140.4878125,
+      "steady_loop_start_seconds": 140.4878125,
+      "steady_loop_end_seconds": 175.60977083333333,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_AFTERCARE_MAIN",
+      "resource_key": "BGM_PHASE_AFTERCARE",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 148.57141666666666,
+      "steady_loop_end_seconds": 182.857125,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_AFTERCARE_QUIET",
+      "resource_key": "BGM_PHASE_AFTERCARE",
+      "first_entry_seconds": 148.57141666666666,
+      "steady_loop_start_seconds": 148.57141666666666,
+      "steady_loop_end_seconds": 182.857125,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_FAREWELL_WAIT_MAIN",
+      "resource_key": "BGM_PHASE_FAREWELL_WAIT",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 144,
+      "steady_loop_end_seconds": 180,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_FAREWELL_WAIT_QUIET",
+      "resource_key": "BGM_PHASE_FAREWELL_WAIT",
+      "first_entry_seconds": 144,
+      "steady_loop_start_seconds": 144,
+      "steady_loop_end_seconds": 180,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_ANGER_CONFRONTATION_MAIN",
+      "resource_key": "BGM_PHASE_ANGER_CONFRONTATION",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 130,
+      "steady_loop_end_seconds": 160,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_ANGER_CONFRONTATION_QUIET",
+      "resource_key": "BGM_PHASE_ANGER_CONFRONTATION",
+      "first_entry_seconds": 130,
+      "steady_loop_start_seconds": 130,
+      "steady_loop_end_seconds": 160,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_DAILY_RELIEF_MAIN",
+      "resource_key": "BGM_PHASE_DAILY_RELIEF",
+      "first_entry_seconds": 0,
+      "steady_loop_start_seconds": 130.90908333333334,
+      "steady_loop_end_seconds": 163.63635416666668,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    },
+    {
+      "id": "MS_DAILY_RELIEF_QUIET",
+      "resource_key": "BGM_PHASE_DAILY_RELIEF",
+      "first_entry_seconds": 130.90908333333334,
+      "steady_loop_start_seconds": 130.90908333333334,
+      "steady_loop_end_seconds": 163.63635416666668,
+      "entry_fade_seconds": 0.35,
+      "exit_fade_seconds": 1.5,
+      "dialogue_pause_fade_seconds": 0.8
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "asset": "地图专用人物棋子整版（8枚）",
+  "created_date": "2026-10-19",
+  "generation_tool": "Built-in image_gen.imagegen (functions tools.image_gen__imagegen)",
+  "generation_mode": "reference-based style transfer",
+  "transparent_background": true,
+  "original_output_path": "G:/CodexData/.codex/generated_images/01a15079-a669-7450-a4cb-71caa43bae39/exec-b0450479-be21-4803-823a-0603e053d3be.png",
+  "current_sheet_path": "E:/gamejam/副策划6场景工作稿/assets/map-pawns-20261019/map-pawns-8-sheet.png",
+  "sheet_width": 1499,
+  "sheet_height": 1049,
+  "layout": { "columns": 4, "rows": 2, "order": "每排从左至右，先上排后下排" },
+  "reference_images_sent_to_tool": [
+    { "index": 1, "role": "棋子视角、比例、底座及画风参考", "path": "E:/gamejam/副策划4工作稿/design/map/assets/aurora/maps/棋盘_调查员棋子.png" },
+    { "index": 2, "role": "尼娜服装与发型参考", "path": "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR03.png" },
+    { "index": 3, "role": "薇拉服装与发型参考", "path": "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR05.png" },
+    { "index": 4, "role": "基里尔服装与发型参考", "path": "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR10.png" },
+    { "index": 5, "role": "帕维尔服装与发型参考", "path": "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR11.png" }
+  ],
+  "additional_identity_images_visually_read_for_prompt": [
+    "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR02.png",
+    "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR04.png",
+    "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR06.png",
+    "E:/gamejam/副策划4工作稿/design/map/assets/actors/CHR09.png"
+  ],
+  "reference_note": "工具最多接收5张参考图。全部9张图均已实际查看；成功生成调用传入上述5张，其余4名角色的身份特征写入提示词。",
+  "cells": [
+    { "row": 1, "column": 1, "character_id": "CHR02", "name": "洛恩" },
+    { "row": 1, "column": 2, "character_id": "CHR03", "name": "尼娜" },
+    { "row": 1, "column": 3, "character_id": "CHR04", "name": "伊万" },
+    { "row": 1, "column": 4, "character_id": "CHR05", "name": "薇拉" },
+    { "row": 2, "column": 1, "character_id": "CHR06", "name": "尤里" },
+    { "row": 2, "column": 2, "character_id": "CHR09", "name": "警员" },
+    { "row": 2, "column": 3, "character_id": "CHR10", "name": "基里尔" },
+    { "row": 2, "column": 4, "character_id": "CHR11", "name": "帕维尔" }
+  ],
+  "prompt": "Use case: style-transfer. Create ONE transparent PNG sprite sheet of EXACTLY EIGHT game-map miniature human pawns in a strict 4-column by 2-row equal-cell layout. This is a rapid low-detail usable map-asset pass. Reference image 1 is the EXISTING MAP PAWN and defines the three-quarter slightly overhead viewing angle, compact tabletop figurine proportions, handpainted gouache/watercolor brushwork, dark round low pedestal, and silhouette. References 2-5 define Nina, Vera, Kirill, Pavel clothing and hair respectively. All eight characters are specified below. Transform the characters into purpose-built small chunky human miniatures, with somewhat larger heads and sturdy silhouette, NOT reduced full-height portraits. Head/body proportions and pose readability should work when each asset is later reduced to a 64 by 88 canvas and displayed at 32 by 44. All eight stand individually on IDENTICAL dark brown circular low plinths with the same size, lighting, perspective, scale and orientation. Entire body and entire pedestal visible, generous transparent gutters and no overlap. Place one pawn at the center of each cell, equal cell widths and heights. The exact reading order is: TOP ROW left to right: (1) Lorne/CHR02 young man, curly light-brown hair, white doctor coat over muted blue sweater, taupe trousers; (2) Nina/CHR03 middle-aged woman, short curly blonde hair, black-rim glasses, brown cardigan, pale floral scarf, white apron over blue-gray skirt; (3) Ivan/CHR04 elderly white-haired man, pale-blue shearling-collar short coat and gray trousers; (4) Vera/CHR05 older woman, short curly gray hair, blue-gray sweater, long dark navy scarf, dark gray long skirt. BOTTOM ROW left to right: (5) Yuri/CHR06 middle-aged graying brown-haired man, taupe short coat, rust-red scarf, blue-gray trousers; (6) Police officer/CHR09 young man, dark navy peaked cap and long navy overcoat, black boots; (7) Kirill/CHR10 untidy brown-haired man, worn brown shearling-collar coat, charcoal sweater, brown trousers, holding a brown cap at his waist; (8) Pavel/CHR11 untidy dark-haired man, worn faded blue coat with brown furry collar, dark sweater and brown trousers. Keep muted earth/blue clothing and essential hair/clothing differences from references. Simple sturdy miniature pose, soft painted modeling and broad readable shapes. Do not include the investigator pawn from reference 1. No labels, no numbers, no lettering, no frames, no scenery, no shadow beyond each pedestal, no opaque backdrop, no checkerboard painted into image. Real alpha transparency around every pawn and between the eight cells. Output one cohesive 4x2 sheet, not eight separate image files."
+}

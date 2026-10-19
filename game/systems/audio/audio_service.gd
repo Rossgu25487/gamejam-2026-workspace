@@ -37,6 +37,10 @@ class Track:
 	var fade_base := 1.0
 	var fade_elapsed := 0.0
 	var fade_total := 0.0
+	var pan := 0.0 # 每个播放实例的声像，不改变共享Effect总线。
+	var pan_bus := ""
+	var panner: AudioEffectPanner
+	var preserve_tail := false # 已落定收卡保留120ms自然音尾，不阻下一操作。
 
 	func begin_fade(mode: int, total_ms: float) -> void:
 		fade_mode = mode
@@ -127,6 +131,7 @@ func shutdown() -> void:
 	for slot in _slots.keys():
 		_release(_slots[slot]["active"])
 		_release(_slots[slot]["outgoing"])
+	for track in _track_of.values().duplicate(): _release(track)
 	for player in _idle:
 		if is_instance_valid(player):
 			player.queue_free()
@@ -186,6 +191,8 @@ func effective_linear(slot: String) -> float:
 		return 0.0
 	var db: float = track.player.volume_db
 	db += AudioServer.get_bus_volume_db(AudioServer.get_bus_index(String(track.player.bus)))
+	if not track.pan_bus.is_empty():
+		db += AudioServer.get_bus_volume_db(AudioServer.get_bus_index(BUS_OF_KIND[track.bus_kind]))
 	db += AudioServer.get_bus_volume_db(0)
 	return db_to_linear(db)
 
@@ -319,12 +326,16 @@ func begin_session() -> void:
 	_handled.clear()
 	_handled_order.clear()
 	stop_node_media()
+	for track in _track_of.values().duplicate():
+		if track.preserve_tail: _release(track)
 
 
 func stop_node_media() -> void:
 	# 换节点或离开会话：停止旧的结果／节点声音与配音。
 	_release(_slots["result"]["active"])
 	_release(_slots["voice"]["active"])
+	for track in _track_of.values().duplicate():
+		if track.slot in ["result", "voice"]: _release(track)
 
 func export_narrative_media(key: String) -> Dictionary:
 	var track: Track = _slots["bgm"]["active"]
@@ -374,7 +385,7 @@ func play_sfx(sfx_ref: String, slot := "", instance_id := "", options := {}) -> 
 	var target_slot := slot.strip_edges()
 	if target_slot.is_empty():
 		var entry: Dictionary = catalog.sfx_entry(sfx_ref)
-		target_slot = String(entry.get("bus", "result"))
+		target_slot = String(catalog.resources.get(sfx_ref, entry).get("bus", "result"))
 	if target_slot == "preview":
 		return preview_sfx(sfx_ref)
 	var identity := instance_id
@@ -404,7 +415,7 @@ func _play_dynamic_ui(sfx_ref: String, instance_id: String, options := {}) -> Di
 		_mark_handled(instance_id)
 		result["status"] = "empty"
 		return result
-	var info: Dictionary = catalog.describe(sfx_ref, "", "ui")
+	var info: Dictionary = _dynamic_resource(sfx_ref, "ui")
 	if info["state"] == catalog.STATE_UNBOUND:
 		_mark_handled(instance_id)
 		result["status"] = "unbound"
@@ -414,11 +425,13 @@ func _play_dynamic_ui(sfx_ref: String, instance_id: String, options := {}) -> Di
 		_report("声音资源缺失：SND_SFX_UI（%s）" % info["path"])
 		result["status"] = "missing"
 		return result
-	if final_multiplier(settings, "ui", 1.0, 1.0) <= 0.0:
+	if final_multiplier(settings, "ui", float(options.get("gain", 1.0)), 1.0) <= 0.0:
 		_mark_handled(instance_id)
 		result["status"] = "silent"
 		return result
-	var started := _start_one_shot("ui", String(info["path"]), 1.0, instance_id)
+	var playback: Dictionary = options.duplicate()
+	if sfx_ref == "SFX_CARD_COLLECT": playback.preserve_tail = true
+	var started := _start_one_shot("ui", String(info["path"]), float(options.get("gain", 1.0)), instance_id, playback)
 	_mark_handled(instance_id)
 	result["status"] = started["status"]
 	return result
@@ -467,13 +480,21 @@ func request_media(request: Dictionary) -> Dictionary:
 	if request.get("command") == "stop_node":
 		stop_node_media()
 		return {"status": "stopped"}
+	if request.get("command") == "set_pan":
+		return set_instance_pan(str(request.get("instance", "")), request.get("pan", 0.0))
 	var options := {}
+	# 逐字提示等可丢弃声音不能打断正在播放的剧情声音，也不能排队补播。
+	if request.get("options", {}) is Dictionary and request.get("options", {}).get("drop_if_busy", false) is bool:
+		options["drop_if_busy"] = bool(request.get("options", {}).get("drop_if_busy", false))
 	if request.has("gain"):
 		var request_gain = request.gain
 		if not (request_gain is int or request_gain is float) or not is_finite(float(request_gain)) or request_gain < 0.0 or request_gain > 1.0: return {"status": "invalid_gain"}
 		options["gain"] = float(request_gain)
 	if request.has("session"):
 		options["session"] = request["session"]
+	if request.has("pan"):
+		if not _valid_pan(request.pan): return {"status": "invalid_pan"}
+		options["pan"] = float(request.pan)
 	if request.has("sfx") or String(request.get("event", "")) == "SND_SFX":
 		var ref_key := String(request.get("sfx", request.get("ref", "")))
 		return play_sfx(ref_key, String(request.get("slot", "")), String(request.get("instance", "")), options)
@@ -495,6 +516,11 @@ func request_event(event_key: String, instance_id := "", ref := "", options := {
 		result["status"] = "duplicate" # 同一实例只处理一次。
 		return result
 	var slot: String = String(event["bus"])
+	var active: Track = _slots[slot]["active"]
+	if bool(options.get("drop_if_busy", false)) and active != null and is_instance_valid(active.player) and active.player.playing:
+		_mark_handled(instance_id)
+		result["status"] = "busy"
+		return result
 	if focus_state == Focus.FROZEN or focus_state == Focus.AWAITING_INPUT:
 		result["status"] = "frozen" # 失焦期间的新请求过早，不排队补播。
 		return result
@@ -509,7 +535,7 @@ func request_event(event_key: String, instance_id := "", ref := "", options := {
 		result["status"] = "empty" # 可选引用为空：不建立声音，正文和操作保持完整。
 		return result
 	else:
-		info = catalog.describe(ref, "", slot)
+		info = _dynamic_resource(ref, slot)
 	if info["state"] == catalog.STATE_UNBOUND:
 		_mark_handled(instance_id)
 		result["status"] = "unbound" # 用途已定、素材未采用：当前不发声。
@@ -524,20 +550,63 @@ func request_event(event_key: String, instance_id := "", ref := "", options := {
 		_mark_handled(instance_id)
 		result["status"] = "silent" # 静音或分项为 0：不播放，也不在恢复后补播。
 		return result
-	var started := _start_one_shot(slot, String(info["path"]), gain, instance_id)
+	var playback: Dictionary = options.duplicate()
+	if ref == "SFX_CARD_COLLECT": playback.preserve_tail = true
+	var started := _start_one_shot(slot, String(info["path"]), gain, instance_id, playback)
 	_mark_handled(instance_id)
 	result["status"] = started["status"]
 	return result
 
 
-func _start_one_shot(slot: String, path: String, gain: float, instance_id: String) -> Dictionary:
+func _dynamic_resource(ref: String, slot: String) -> Dictionary:
+	# 交付表的SFX_*是资源逻辑键；先沿声音资源表取实际路径，保留未绑定状态。
+	return catalog.resource_state(ref) if catalog.resources.has(ref) else catalog.describe(ref, "", slot)
+
+
+func _valid_pan(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) >= -1.0 and float(value) <= 1.0
+
+
+func set_instance_pan(instance_id: String, value: Variant) -> Dictionary:
+	# 只更新仍存活的准确声音实例；陈旧的动画不能移动后来开始的声音。
+	if not _valid_pan(value): return {"status": "invalid_pan"}
+	if instance_id.is_empty(): return {"status": "stale"}
+	for track in _track_of.values():
+		if track.instance_id == instance_id:
+			_apply_instance_pan(track, float(value))
+			return {"status": "updated"}
+	return {"status": "stale"}
+
+
+func _apply_instance_pan(track: Track, value: float) -> void:
+	if track.panner == null:
+		# 独立子总线只服务当前实例，回收时删除，不影响其他UI声音。
+		track.pan_bus = "AuroraPan_%d_%d" % [get_instance_id(), track.player.get_instance_id()]
+		AudioServer.add_bus()
+		var index := AudioServer.bus_count - 1
+		AudioServer.set_bus_name(index, track.pan_bus)
+		AudioServer.set_bus_send(index, BUS_OF_KIND[track.bus_kind])
+		track.panner = AudioEffectPanner.new()
+		AudioServer.add_bus_effect(index, track.panner)
+		track.player.bus = track.pan_bus
+	track.pan = clampf(value, -1.0, 1.0)
+	track.panner.pan = track.pan
+
+
+func _start_one_shot(slot: String, path: String, gain: float, instance_id: String, options := {}) -> Dictionary:
 	var stream: AudioStream = catalog.get_stream(path, false)
 	if stream == null:
 		_report("无法读取音频：" + path)
 		return {"status": "missing"}
-	_release(_slots[slot]["active"]) # 同一轨道接受新声音：旧声由新实例替换。
+	var previous: Track = _slots[slot]["active"]
+	if previous != null and previous.preserve_tail:
+		_slots[slot]["active"] = null # 声音实例继续自然结束；不占后续操作的当前轨。
+	else:
+		_release(previous) # 普通一次音仍沿既有替换规则。
 	var track := _create_track(slot, path, stream, gain, false)
 	track.instance_id = instance_id
+	track.preserve_tail = bool(options.get("preserve_tail", false))
+	if options.has("pan"): _apply_instance_pan(track, float(options.pan))
 	_slots[slot]["active"] = track
 	_refresh_volume(track)
 	track.player.play()
@@ -598,7 +667,7 @@ func preview_sfx(sfx_ref: String, gain := 1.0) -> Dictionary:
 		return {"status": "disabled", "reason": "UI_SETTINGS_PREVIEW_UNREADY"}
 	if focus_state == Focus.FROZEN or focus_state == Focus.AWAITING_INPUT:
 		return {"status": "frozen"}
-	var info: Dictionary = catalog.describe(sfx_ref, "", "ui")
+	var info: Dictionary = _dynamic_resource(sfx_ref, "ui")
 	if info["state"] == catalog.STATE_UNBOUND:
 		return {"status": "unbound"}
 	if info["state"] == catalog.STATE_MISSING:
@@ -683,6 +752,7 @@ func track_state(slot: String, outgoing := false) -> Dictionary:
 		"path": track.path, "paused": track.player.stream_paused, "volume_db": track.player.volume_db,
 		"fade": track.fade_value, "loop": track.loop, "instance": track.instance_id, "bus": String(track.player.bus),
 		"event_gain": track.event_gain,
+		"pan": track.pan,
 	}
 
 
@@ -776,6 +846,12 @@ func _release(track: Track) -> void:
 	player.stop()
 	player.stream = null
 	player.stream_paused = false
+	if not track.pan_bus.is_empty():
+		player.bus = BUS_OF_KIND[track.bus_kind]
+		var pan_index := AudioServer.get_bus_index(track.pan_bus)
+		if pan_index >= 0: AudioServer.remove_bus(pan_index)
+		track.panner = null
+		track.pan_bus = ""
 	_track_of.erase(player.get_instance_id())
 	track.player = null
 	var entry: Dictionary = _slots[track.slot]

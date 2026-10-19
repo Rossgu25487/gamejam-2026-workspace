@@ -1,0 +1,319 @@
+{
+  "basis": [
+    "E:/gamejam/副策划2工作稿/玩法策划案.md",
+    "E:/gamejam/策划工作稿/design/ui_20261018/界面与交互统一要求.md"
+  ],
+  "scope": "封包音频绑定建议，沿既有玩法状态及结果判定；不新增判定、计数或游戏规则。由根并入正式声音源，当前未改游戏源码。",
+  "operations": [
+    {
+      "operation": "手牌悬停或键盘焦点切入另一张卡",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_HOVER",
+          "offset_ms": 0,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "实际前景卡身份改变，抬起开始一次",
+      "repeat_policy": "同一卡持续悬停、同一焦点、缩放/位置刷新均不重播；鼠标与键盘同时指向同卡合并一次",
+      "loop": false,
+      "overlap": "悬停声只留一个在播实例；切入另一张卡时结束旧悬停短声，不叠层"
+    },
+    {
+      "operation": "空槽点击",
+      "sounds": [
+        {
+          "audio_id": "SFX_UI_CLICK",
+          "offset_ms": 0,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "仅选定放牌槽位；沿20261018新版，不从空槽打开手册"
+    },
+    {
+      "operation": "手牌点击或键盘确认选入成功",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_PICKUP",
+          "offset_ms": 30,
+          "gain_multiplier": 1
+        },
+        {
+          "audio_id": "SFX_CARD_PLACE",
+          "offset_ms": 160,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "资格复核通过，200ms选入移动开始",
+      "repeat_policy": "仅实际接受这次选入后播放；两槽已满/同身份已在槽中不播放提落；不叠通用UI_CLICK/CONFIRM"
+    },
+    {
+      "operation": "指定槽撤下成功",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_REMOVE",
+          "offset_ms": 30,
+          "gain_multiplier": 1
+        },
+        {
+          "audio_id": "SFX_CARD_PLACE",
+          "offset_ms": 160,
+          "gain_multiplier": 0.65
+        }
+      ],
+      "when": "指定槽实际移除引用并开始200ms归位",
+      "repeat_policy": "空槽、重复撤下请求不播放；只动指定卡的声音"
+    },
+    {
+      "operation": "主动出示",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_PRESENT",
+          "offset_ms": 0,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "玩家点击出示且本次提交被接受",
+      "repeat_policy": "选中、悬停、检视、取消不触发；不叠通用UI_CONFIRM；一次提交只响一次"
+    },
+    {
+      "operation": "普通材料取得或内容更新",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_ACQUIRE",
+          "offset_ms": 0,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "合法取得事件实际提交首次材料或新内容版本，随400ms生成",
+      "repeat_policy": "同版重复、回看、读档不重播；不使用历史逆转铃；不用于推论待收/收下"
+    },
+    {
+      "operation": "主动收下推论",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_COLLECT",
+          "offset_ms": 0,
+          "gain_multiplier": 1
+        }
+      ],
+      "when": "拥有/来源/确认等提交成功，900ms收卡表现开始",
+      "repeat_policy": "待收页面静置、回看、暂停恢复和重复点击不触发；不再叠ACQUIRE、UI_CONFIRM或关键宣告",
+      "pan_note": "落到当前手牌末位；跟随实际卡中心轻微声像变化，示例中间→偏右+0.151。音尾自然结束，不阻塞下一操作。",
+      "runtime_pan_reference": {
+        "mode": "per_playback_instance",
+        "input": "actual_animated_card_center_x / current_viewport_width",
+        "coordinate_space": "视口本地像素；若取屏幕坐标，先减去视口左边界，x与width使用同一坐标空间",
+        "formula": "clamp((x / viewport_width * 2 - 1) * 0.36, -0.25, 0.25)",
+        "reference_viewport": [
+          1600,
+          900
+        ],
+        "reference_start": [
+          800,
+          445
+        ],
+        "reference_end_example": [
+          1135,
+          686
+        ],
+        "example_start_pan": 0,
+        "example_end_pan": 0.15075,
+        "motion_duration_ms": 900,
+        "destination": "当前手牌末位卡牌中心，沿实际画幅、页码和卡数计算",
+        "after_landing": "900ms结束运动后保留声音实例至1.020秒，沿最终声像自然结束；声音不随卡动画节点销毁，也不阻塞下一操作",
+        "note": "原件为中置单声道；左右移动由播放端按实时卡位置实现，不改整个UI总线，不将Y坐标映射音高或音量。",
+        "implementation_status": "参数交接，未在游戏内运行；文件本身没有烘焙固定右移"
+      },
+      "landing_audio_peak_ms": 900
+    },
+    {
+      "operation": "普通按钮/确认/操作反馈和设置试听",
+      "sounds_by_kind": {
+        "click": "SFX_UI_CLICK",
+        "confirm": "SFX_UI_CONFIRM",
+        "feedback_or_preview": "SFX_UI_FEEDBACK"
+      },
+      "repeat_policy": "专用声优先、一次操作一种通用声；详细边界见ui_operation_bindings.json。",
+      "expanded_events": [
+        "SND_UI_FOCUS",
+        "SND_UI_BACK",
+        "SND_UI_OPEN",
+        "SND_UI_CLOSE",
+        "SND_UI_PAGE",
+        "SND_UI_TOGGLE_ON",
+        "SND_UI_TOGGLE_OFF",
+        "SND_UI_INVALID"
+      ]
+    },
+    {
+      "operation": "地图棋子提起与落定",
+      "existing_events": {
+        "SND_MAP_LIFT": "SFX_MAP_LIFT",
+        "SND_MAP_LAND": "SFX_MAP_LAND"
+      },
+      "when": "沿地图已接受操作及首次触板时点；不由帧刷新触发"
+    },
+    {
+      "operation": "逐字对白／时间地点显示",
+      "sounds_by_kind": {
+        "dialogue": "SFX_TEXT_DIALOGUE",
+        "time_location": "SFX_TEXT_TIME_LOCATION"
+      },
+      "when": "沿文字显示系统已经采用的逐字声音开关与节奏，仅对实际新增显示的字符请求",
+      "repeat_policy": "重绘不重播、快显整段不补播积压的声音；使用单次原件，禁止逐字触发5.52秒连续试听"
+    }
+  ],
+  "ordinary_result_routes": [
+    {
+      "result": "支持",
+      "sounds": [
+        {
+          "audio_id": "SFX_CORE_PENCIL",
+          "offset_ms": 80,
+          "gain_multiplier": 1
+        },
+        {
+          "audio_id": "SFX_CARD_PLACE",
+          "offset_ms": 180,
+          "gain_multiplier": 0.65
+        }
+      ]
+    },
+    {
+      "result": "限定/判断收窄",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_HOVER",
+          "offset_ms": 120,
+          "gain_multiplier": 1
+        }
+      ]
+    },
+    {
+      "result": "普通排除",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_PRESENT",
+          "offset_ms": 120,
+          "gain_multiplier": 0.7
+        }
+      ]
+    },
+    {
+      "result": "普通关联且无新卡",
+      "sounds": [
+        {
+          "audio_id": "SFX_CORE_PENCIL",
+          "offset_ms": 80,
+          "gain_multiplier": 1
+        },
+        {
+          "audio_id": "SFX_CARD_PLACE",
+          "offset_ms": 240,
+          "gain_multiplier": 0.65
+        }
+      ]
+    },
+    {
+      "result": "局部成立",
+      "sounds": [
+        {
+          "audio_id": "SFX_CORE_PENCIL",
+          "offset_ms": 80,
+          "gain_multiplier": 0.75
+        },
+        {
+          "audio_id": "SFX_CARD_HOVER",
+          "offset_ms": 180,
+          "gain_multiplier": 1
+        }
+      ]
+    },
+    {
+      "result": "材料不足",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_HOVER",
+          "offset_ms": 70,
+          "gain_multiplier": 0.75
+        }
+      ]
+    },
+    {
+      "result": "有效反证",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_REMOVE",
+          "offset_ms": 90,
+          "gain_multiplier": 0.7
+        }
+      ]
+    },
+    {
+      "result": "重复成果",
+      "sounds": [
+        {
+          "audio_id": "SFX_CARD_HOVER",
+          "offset_ms": 60,
+          "gain_multiplier": 0.75
+        }
+      ]
+    }
+  ],
+  "major_result_routes": [
+    {
+      "result": "关键矛盾击破",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_BREAKTHROUGH",
+      "visual_core_ms": 5600,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "关键灵感涌现",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_INSIGHT",
+      "visual_core_ms": 6800,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "递进推理",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_PROGRESS",
+      "visual_core_ms": 3200,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "普通生成新推论",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_GENERATE",
+      "visual_core_ms": 1600,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "明确错误扣罚",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_ERROR",
+      "visual_core_ms": 750,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "核查失败",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_FAILURE",
+      "visual_core_ms": 1500,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    },
+    {
+      "result": "主动重试",
+      "existing_event": "SND_RESULT",
+      "resolved_resource_key": "SFX_CORE_RETRY",
+      "visual_core_ms": 850,
+      "audio_anchor": "演出开始即播放本文件，文件已移除视频600ms片头，勿再额外延迟600ms"
+    }
+  ],
+  "major_playback": "一次结果沿既有等级选择一个主演出，不同时播放普通结果、递进、击破、涌现；沿已有进度/高潮标识去重。暂停保留演出音频位置，继续不重开；显式跳过停止本次演出声，不影响成果提交。声音自然尾可略长于视觉核心时长。",
+  "bgm": "十一首原配乐不变；相同资源请求续播，UI开关/卡片/地图操作不重置音乐。finale沿SND_ENDING_BGM单次播放。",
+  "gain_note": "资源清单recommended_gain_db是相对已制作文件的起始建议；此处gain_multiplier仅供较轻的复用事件。仍与现有用户总音量/分组音量相乘。",
+  "ui_operation_bindings": "ui_operation_bindings.json"
+}

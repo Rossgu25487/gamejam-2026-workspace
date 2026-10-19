@@ -1,0 +1,616 @@
+{
+  "theme_version": "PAPER_V2_20261018",
+  "default_reference_size_px": [
+    1600,
+    900
+  ],
+  "font_regular": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W12.ttf",
+  "font_emphasis": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W16.ttf",
+  "texture_modulate_rgba": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "colors": {
+    "body": "#34413F",
+    "inner": "#34413F",
+    "speaker": "#3F6B4C",
+    "time_location": "#3F6B4C",
+    "paper_ink": "#34413F",
+    "disabled": "#737B70"
+  },
+  "font_size_default_px": {
+    "dialogue": 28,
+    "speaker": 24,
+    "time_location": 28,
+    "chapter": 44,
+    "controls": 24,
+    "record_body": 28,
+    "record_title": 30
+  },
+  "line_height_default_px": {
+    "body": 43,
+    "speaker": 30,
+    "short_label": 30,
+    "button": 30
+  },
+  "surfaces": {
+    "dialogue": {
+      "asset_id": "PAPER_V2_dialogue_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png",
+      "source_size_px": [
+        1600,
+        300
+      ],
+      "nine_slice_native_ltrb_px": [
+        36,
+        32,
+        36,
+        36
+      ],
+      "content_padding_default_ltrb_px": [
+        64,
+        40,
+        64,
+        44
+      ],
+      "edge_protection_native_ltrb_px": [
+        18,
+        18,
+        18,
+        20
+      ],
+      "minimum_default_size_px": null
+    },
+    "panel": {
+      "asset_id": "PAPER_V2_panel_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png",
+      "source_size_px": [
+        960,
+        640
+      ],
+      "nine_slice_native_ltrb_px": [
+        32,
+        32,
+        32,
+        36
+      ],
+      "content_padding_default_ltrb_px": [
+        48,
+        40,
+        48,
+        44
+      ],
+      "edge_protection_native_ltrb_px": [
+        18,
+        18,
+        18,
+        20
+      ],
+      "minimum_default_size_px": null
+    },
+    "small": {
+      "asset_id": "PAPER_V2_small_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+      "source_size_px": [
+        320,
+        80
+      ],
+      "nine_slice_native_ltrb_px": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "content_padding_default_ltrb_px": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb_px": [
+        16,
+        12,
+        16,
+        12
+      ],
+      "minimum_default_size_px": [
+        100,
+        48
+      ]
+    },
+    "secondary_button": {
+      "asset_id": "PAPER_V2_button_secondary_normal",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "source_size_px": [
+        480,
+        88
+      ],
+      "nine_slice_native_ltrb_px": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "content_padding_default_ltrb_px": [
+        20,
+        9,
+        20,
+        9
+      ],
+      "edge_protection_native_ltrb_px": [
+        16,
+        12,
+        16,
+        16
+      ],
+      "minimum_default_size_px": [
+        64,
+        48
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+      "runtime_uses_full_png": true,
+      "icon_only_size_default_px": [
+        64,
+        48
+      ],
+      "icon_only_padding_default_ltrb_px": [
+        20,
+        12,
+        20,
+        12
+      ],
+      "icon_size_default_px": 24,
+      "icon_label_gap_default_px": 10,
+      "pressed_label_offset_y_default_px": 1,
+      "state_resource_paths": {
+        "normal": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+        "hover": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png",
+        "pressed": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_pressed.png",
+        "disabled": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_disabled.png"
+      }
+    }
+  },
+  "dialogue": {
+    "max_width_default_px": 1600,
+    "height_default_px": 266.667,
+    "line_height_default_px": 43,
+    "default_line_count": 2,
+    "name_rect_default_px": [
+      224,
+      683.333,
+      1183.333,
+      30
+    ],
+    "body_rect_default_px": [
+      224,
+      736.667,
+      1183.333,
+      86
+    ],
+    "avatar_rect_default_px": [
+      80,
+      727,
+      112,
+      112
+    ],
+    "continue_rect_default_px": [
+      1421.333,
+      766,
+      64,
+      48
+    ],
+    "controls_rect_default_px": [
+      224,
+      828,
+      460,
+      48
+    ],
+    "no_avatar_name_rect_default_px": [
+      96,
+      683.333,
+      1311.333,
+      30
+    ],
+    "no_avatar_body_rect_default_px": [
+      96,
+      736.667,
+      1311.333,
+      86
+    ],
+    "controls_surface": "secondary_button",
+    "continue_surface": "secondary_button",
+    "continue_icon": "res://assets/aurora/ui/a/png/icon_next.png",
+    "continue_icon_rect_in_button_default_px": [
+      20,
+      12,
+      24,
+      24
+    ],
+    "control_button_rects_default_px": [
+      [
+        224,
+        828,
+        100,
+        48
+      ],
+      [
+        332,
+        828,
+        136,
+        48
+      ],
+      [
+        476,
+        828,
+        100,
+        48
+      ],
+      [
+        584,
+        828,
+        100,
+        48
+      ]
+    ],
+    "body_baselines_default_px": [
+      770.167,
+      813.167
+    ],
+    "name_baseline_default_px": 708.833
+  },
+  "global_entries": {
+    "handbook_rect_default_px": [
+      1216,
+      820,
+      170,
+      48
+    ],
+    "dialogue_record_rect_default_px": [
+      1398,
+      820,
+      170,
+      48
+    ],
+    "right_margin_default_px": 32,
+    "bottom_margin_default_px": 32,
+    "gap_default_px": 12,
+    "icon_rect_in_button_default_px": [
+      20,
+      12,
+      24,
+      24
+    ],
+    "label_anchor_in_button_default_px": [
+      54,
+      34.5
+    ],
+    "font_size_default_px": 24,
+    "font_resource_path": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W16.ttf",
+    "draw_key": false,
+    "handbook_key_hint": "I",
+    "dialogue_record_key_hint": "L",
+    "handbook_label": "手册",
+    "dialogue_record_label": "对白记录",
+    "handbook_icon": "res://assets/aurora/ui/a/png/icon_archive.png",
+    "dialogue_record_icon": "res://assets/aurora/ui/a/png/icon_records.png",
+    "button_surface": "secondary_button"
+  },
+  "record": {
+    "max_width_default_px": 1120,
+    "panel_rect_default_px": [
+      240,
+      82,
+      1120,
+      736
+    ],
+    "row_height_default_px": 130,
+    "back_rect_default_px": [
+      1180,
+      122,
+      132,
+      48
+    ],
+    "body_color": "#34413F",
+    "button_surface": "secondary_button",
+    "latest_rect_default_px": [
+      1176,
+      726,
+      136,
+      48
+    ]
+  },
+  "scene_info": {
+    "position_default_px": [
+      28,
+      24
+    ],
+    "max_width_default_px": 238,
+    "font_size_default_px": 24,
+    "line_height_default_px": 30,
+    "rect_default_px": [
+      28,
+      24,
+      160,
+      48
+    ]
+  },
+  "choice": {
+    "button_rects_default_px": [
+      [
+        1310,
+        300,
+        220,
+        56
+      ],
+      [
+        1310,
+        372,
+        220,
+        56
+      ],
+      [
+        1310,
+        444,
+        220,
+        56
+      ]
+    ],
+    "left_button_rects_default_px": [
+      [
+        70,
+        300,
+        220,
+        56
+      ],
+      [
+        70,
+        372,
+        220,
+        56
+      ],
+      [
+        70,
+        444,
+        220,
+        56
+      ]
+    ],
+    "right_margin_default_px": 70,
+    "button_step_default_px": 72,
+    "button_gap_default_px": 16,
+    "button_max_width_default_px": 400,
+    "button_height_default_px": 56,
+    "font_size_default_px": 24,
+    "button_surface": "secondary_button",
+    "button_min_width_default_px": 220
+  },
+  "restore": {
+    "rect_default_px": [
+      1340,
+      820,
+      200,
+      54
+    ],
+    "button_surface": "secondary_button"
+  },
+  "short_feedback": {
+    "max_width_default_px": 640,
+    "font_size_default_px": 28,
+    "line_height_default_px": 43
+  },
+  "assets": [
+    {
+      "asset_id": "PAPER_V2_dialogue_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/dialogue_paper.png",
+      "source_size_px": [
+        1600,
+        300
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_panel_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/panel_paper.png",
+      "source_size_px": [
+        960,
+        640
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_small_paper",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/small_paper.png",
+      "source_size_px": [
+        320,
+        80
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_normal",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_normal.png",
+      "source_size_px": [
+        480,
+        88
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_hover",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_hover.png",
+      "source_size_px": [
+        480,
+        88
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_pressed",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_pressed.png",
+      "source_size_px": [
+        480,
+        88
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "PAPER_V2_button_secondary_disabled",
+      "resource_path": "res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_disabled.png",
+      "source_size_px": [
+        480,
+        88
+      ],
+      "skin_revision": "HANDPAINT_BUTTONS_R4_20261018"
+    },
+    {
+      "asset_id": "A03_icon_back",
+      "resource_path": "res://assets/aurora/ui/a/png/icon_back.png",
+      "source_size_px": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset_id": "A03_icon_next",
+      "resource_path": "res://assets/aurora/ui/a/png/icon_next.png",
+      "source_size_px": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset_id": "A03_icon_archive",
+      "resource_path": "res://assets/aurora/ui/a/png/icon_archive.png",
+      "source_size_px": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset_id": "A03_icon_records",
+      "resource_path": "res://assets/aurora/ui/a/png/icon_records.png",
+      "source_size_px": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset_id": "A03_icon_eye",
+      "resource_path": "res://assets/aurora/ui/a/png/icon_eye.png",
+      "source_size_px": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset_id": "A03_DreamHanSansCN-W12",
+      "resource_path": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W12.ttf"
+    },
+    {
+      "asset_id": "A03_DreamHanSansCN-W16",
+      "resource_path": "res://assets/aurora/ui/a/fonts/DreamHanSansCN-W16.ttf"
+    },
+    {
+      "asset_id": "A03_LICENSE",
+      "resource_path": "res://assets/aurora/ui/a/fonts/LICENSE.txt"
+    },
+    {
+      "asset_id": "A03_来源",
+      "resource_path": "res://assets/aurora/ui/a/fonts/来源.txt"
+    }
+  ],
+  "skin_revision": "HANDPAINT_BUTTONS_R4_20261018",
+  "record_notice": {
+    "rect_default_px": [
+      1286,
+      28,
+      264,
+      165
+    ]
+  },
+  "text_playback": {
+    "normal_characters_per_second": 30,
+    "character_fade_max_ms": 60,
+    "punctuation_pause_ms": {
+      "comma": 120,
+      "sentence_end": 260
+    },
+    "read_fast_multiplier": 4,
+    "read_fast_page_delay_ms": 150,
+    "typing_sound_min_interval_ms": 110,
+    "type_bindings": [
+      {
+        "text_kind": "dialogue",
+        "play_mode": "typewriter",
+        "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+        "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "offscreen_dialogue",
+        "play_mode": "typewriter",
+        "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+        "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "inner",
+        "play_mode": "typewriter",
+        "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+        "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "narration",
+        "play_mode": "typewriter",
+        "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+        "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "time_caption",
+        "play_mode": "typewriter",
+        "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+        "typing_sfx_ref": "SFX_TEXT_TIME_LOCATION",
+        "text_style_ref": "TEXT_TIME_PLACE"
+      },
+      {
+        "text_kind": "chapter_title",
+        "play_mode": "fade",
+        "playback_ref": "",
+        "typing_sfx_ref": "",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "option_text",
+        "play_mode": "instant",
+        "playback_ref": "",
+        "typing_sfx_ref": "",
+        "text_style_ref": "TEXT_BODY"
+      },
+      {
+        "text_kind": "ui_text",
+        "play_mode": "instant",
+        "playback_ref": "",
+        "typing_sfx_ref": "",
+        "text_style_ref": "TEXT_BODY"
+      }
+    ]
+  },
+  "text_render_routes": {
+    "time_caption": {
+      "body_layout_ref": "dialogue.no_avatar_body_rect_default_px",
+      "show_name": false,
+      "show_avatar": false,
+      "style_ref": "TEXT_TIME_PLACE"
+    },
+    "inner_CHR01": {
+      "body_layout_ref": "dialogue.no_avatar_body_rect_default_px",
+      "show_name": true,
+      "show_avatar": false,
+      "style_ref": "TEXT_BODY"
+    }
+  }
+}

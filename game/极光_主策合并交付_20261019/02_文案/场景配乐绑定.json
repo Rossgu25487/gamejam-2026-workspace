@@ -1,0 +1,1652 @@
+[
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": ""
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_BEFORE_MEAL_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH01_BEFORE_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_DAILY_RELIEF",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_DAILY_RELIEF_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_TABLE_EVENING",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_TABLE_EVENING_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": ""
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_MEAL_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_MEAL",
+    "bgm_key": "BGM_PHASE_HALL_ARRIVAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_ARRIVAL_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": ""
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH01_AFTER_ALARM_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH01_AFTER_ALARM",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": ""
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_UNSEEN_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_UNSEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_SEEN_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_SEEN",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH02_SCENE_DETAILED_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH02_SCENE_DETAILED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_UNREAD_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_PERSONAL_MEMORY",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_PERSONAL_MEMORY_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_BEFORE_JOINT_LETTER_READ_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH03_BEFORE_JOINT_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_PERSONAL_MEMORY",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_PERSONAL_MEMORY_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH03_AFTER_JOINT_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH03_AFTER_JOINT",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_UNREAD_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_UNREAD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_PERSONAL_MEMORY",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_PERSONAL_MEMORY_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH04_LETTER_READ_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH04_LETTER_READ",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_UNRESOLVED_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH05_UNRESOLVED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_KITCHEN_RETAINED_MEAL",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_KITCHEN_RETAINED_MEAL_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_ARCHIVE_FIRST_READ",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_ARCHIVE_FIRST_READ_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PRIVATE_ADMITTED_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH05_PRIVATE_ADMITTED",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_AFTERCARE",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_AFTERCARE_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_CRIME_SCENE_OBSERVATION",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_CRIME_SCENE_OBSERVATION_MAIN"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH05_PARENTS_TOLD_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH05_PARENTS_TOLD",
+    "bgm_key": "BGM_PHASE_HALL_AFTER_ALARM",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_HALL_AFTER_ALARM_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC01",
+    "context_kind": "scene",
+    "target_ref": "SC01",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC02",
+    "context_kind": "scene",
+    "target_ref": "SC02",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC03",
+    "context_kind": "scene",
+    "target_ref": "SC03",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC04",
+    "context_kind": "scene",
+    "target_ref": "SC04",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC05",
+    "context_kind": "scene",
+    "target_ref": "SC05",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC06",
+    "context_kind": "scene",
+    "target_ref": "SC06",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC07",
+    "context_kind": "scene",
+    "target_ref": "SC07",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC08",
+    "context_kind": "scene",
+    "target_ref": "SC08",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC09",
+    "context_kind": "scene",
+    "target_ref": "SC09",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC10",
+    "context_kind": "scene",
+    "target_ref": "SC10",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  },
+  {
+    "id": "SOUNDSCAPE_CH06_FAREWELL_SC11",
+    "context_kind": "scene",
+    "target_ref": "SC11",
+    "phase_ref": "COND_MUSIC_CH06_FAREWELL",
+    "bgm_key": "BGM_PHASE_FAREWELL_WAIT",
+    "ambient_key": "",
+    "bgm_source_kind": "narrative",
+    "music_state_id": "MS_FAREWELL_WAIT_QUIET"
+  }
+]

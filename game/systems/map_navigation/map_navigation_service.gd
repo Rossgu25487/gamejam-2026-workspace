@@ -14,6 +14,7 @@ const PHASE_CLOSED := "closed"
 const PHASE_BROWSING := "browsing"
 const PHASE_PREPARING := "preparing"
 const PHASE_MOVING := "moving"
+const PHASE_DEPARTURE := "departure"
 const PHASE_ARRIVAL_HOLD := "arrival_hold"
 const PHASE_TRANSITIONING := "transitioning"
 const PHASE_FAILURE := "failure"
@@ -79,10 +80,12 @@ func scene_name(scene_id: String) -> String:
 	var scene: Dictionary = locations.get(scene_id, {})
 	if core != null:
 		scene = core.catalog.data.get("scenes", {}).get(scene_id, scene)
+		var display_name := str(scene.get("display_name", ""))
+		if not display_name.is_empty(): return display_name
 		var name_ref := str(scene.get("name", scene.get("name_text_id", scene_id)))
 		var translated: String = core.catalog.text(name_ref)
 		return translated if not translated.is_empty() else name_ref
-	return str(scene.get("name", scene.get("name_text_id", scene_id)))
+	return str(scene.get("display_name", scene.get("name", scene.get("name_text_id", scene_id))))
 
 func location_records() -> Array:
 	# 节点和列表共用这一份运行时记录；只展示当前地点与已公开的出发连接。
@@ -92,7 +95,12 @@ func location_records() -> Array:
 		"reason": "已在当前地点", "node": locations.get(current, {}).get("node", {})}]
 	var seen := {current: true}
 	for item in available_transitions():
-		if seen.has(item.to_scene): continue
+		if seen.has(item.to_scene):
+			if item.to_scene == current and is_spatial() and core != null and str(core.state.get("current_view_id", "")) != str(locations.get(current, {}).get("default_view_id", "")):
+				item["current"] = false
+				item["title"] = scene_name(current) + "（前门）"
+				result[0] = item
+			continue
 		seen[item.to_scene] = true
 		item["current"] = false
 		item["title"] = scene_name(str(item.to_scene))
@@ -214,6 +222,15 @@ func complete_preparation(request_id: String) -> bool:
 		_fail("目的地状态已变化，已保留原地点")
 		return false
 	if not _validate_prepare(row, request.from_scene, request.to_scene): return false
+	if core.has_method("prepare_departure"):
+		# 挂起地图，让原地点离场对白独占输入；成功回执后才启动棋子。
+		state.phase = PHASE_DEPARTURE
+		var departure: String = core.prepare_departure(str(request.link_id))
+		if departure == "waiting":
+			state.open = false
+			_changed()
+			return true
+		if departure == "failed": _fail("离场内容尚未就绪，已保留原地点"); return false
 	state.phase = PHASE_MOVING
 	state.arrival_progress = 0.0
 	_changed()
@@ -268,7 +285,8 @@ func begin_transition() -> bool:
 	return true
 
 func _validate_prepare(row: Dictionary, from_scene: String, to_scene: String) -> bool:
-	if from_scene.is_empty() or to_scene.is_empty() or from_scene == to_scene:
+	var same_view := from_scene == to_scene and (not is_spatial() or core == null or str(core.state.get("current_view_id", "")) == str(locations.get(to_scene, {}).get("default_view_id", "")))
+	if from_scene.is_empty() or to_scene.is_empty() or same_view:
 		_fail("目标地点无效")
 		return false
 	if not locations.is_empty() and not locations.has(to_scene):
@@ -281,6 +299,9 @@ func _validate_prepare(row: Dictionary, from_scene: String, to_scene: String) ->
 	if not preparation.ok:
 		_fail(preparation.reason)
 		return false
+	if is_spatial() and movement_path().is_empty():
+		_fail("目的地通路尚未就绪，已保留原地点")
+		return false
 	return true
 
 func prepare_scene(scene_id: String) -> Dictionary:
@@ -288,6 +309,7 @@ func prepare_scene(scene_id: String) -> Dictionary:
 	var scene: Dictionary = locations.get(scene_id, {})
 	if scene.is_empty(): return {"ok": false, "reason": "目标地点尚未配置。"}
 	for field in ["background_ref", "scene_resource_ref"]:
+		if scene.get(field) == null: continue
 		var ref := str(scene.get(field, ""))
 		if ref.is_empty(): continue
 		var resource: Dictionary = map_definition.get("resources", {}).get(ref, {})
@@ -341,6 +363,18 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 func _on_core_changed() -> void:
 	if state.is_empty() or core == null: return
 	state.current_scene_id = str(core.state.get("current_scene_id", state.current_scene_id))
+	if state.get("phase") == PHASE_DEPARTURE and core.has_method("departure_status"):
+		var request: Dictionary = state.get("active_request", {})
+		var status: String = core.departure_status(str(request.get("to_scene", "")))
+		if status == "ready":
+			state.open = true
+			state.phase = PHASE_MOVING
+			_changed()
+			if not visual_controller_bound and finish_movement(): begin_transition(); finish_transition()
+			return
+		if status == "cancelled":
+			_fail("已取消离场，保留原地点")
+			return
 	# 公开性变化时选择同组首个已知项，不保留已经消失的预览。
 	if state.get("open", false) and state.get("phase") in [PHASE_BROWSING, PHASE_FAILURE]:
 		var records := location_records()
@@ -358,6 +392,7 @@ func display_value(key: String, fallback: float) -> float:
 
 func movement_path() -> Array[Vector2]:
 	var request: Dictionary = state.get("active_request", {})
+	if is_spatial(): return _spatial_path(str(request.get("from_scene", current_scene_id())), str(request.get("to_scene", "")))
 	var from_node: Dictionary = locations.get(request.get("from_scene", current_scene_id()), {}).get("node", {})
 	var to_node: Dictionary = locations.get(request.get("to_scene", ""), {}).get("node", {})
 	if from_node.is_empty() or to_node.is_empty(): return []
@@ -373,6 +408,116 @@ func movement_path() -> Array[Vector2]:
 		cursor.y += signf(end.y - cursor.y)
 		path.append(cursor)
 	return path
+
+func is_spatial() -> bool:
+	return map_definition.get("schema") == "map-spatial-v2"
+
+func node_point(node: Dictionary) -> Vector2:
+	if not is_spatial(): return Vector2(int(node.get("grid_col", 0)), int(node.get("grid_row", 0)))
+	return waypoint_point(str(node.get("waypoint_id", "")))
+
+func waypoint_point(id: String) -> Vector2:
+	var row: Dictionary = map_definition.get("waypoints", {}).get(id, {})
+	return project_world(Vector3(float(row.get("world_x", 0)), float(row.get("world_y", 0)), float(row.get("world_z", 0))))
+
+func project_world(world: Vector3) -> Vector2:
+	var projection: Dictionary = map_definition.get("projection", {})
+	var right = projection.get("right_basis", [1, 0, 0])
+	var up = projection.get("up_basis", [0, 1, 0])
+	var origin = projection.get("origin_px", [0, 0])
+	var scale_value := float(projection.get("pixels_per_metre", 1))
+	var point := Vector2(float(origin[0]), float(origin[1])) + Vector2(world.dot(Vector3(right[0], right[1], right[2])), -world.dot(Vector3(up[0], up[1], up[2]))) * scale_value
+	# PNG 的二楼已经展开偏移，世界坐标只在投影后加一次同一偏移。
+	if world.z > 1.6:
+		var offset = projection.get("floor_2_display_offset_px", [0, 0])
+		point += Vector2(float(offset[0]), float(offset[1]))
+	return point
+
+func current_pawn_point() -> Vector2:
+	if is_spatial() and core != null:
+		var view: Dictionary = map_definition.get("view_points", {}).get(str(core.state.get("current_view_id", "")), {})
+		if not view.is_empty(): return waypoint_point(str(view.waypoint_id))
+	return node_point(locations.get(current_scene_id(), {}).get("node", {}))
+
+func confirmed_actor_records() -> Array:
+	var result: Array = []
+	if core == null: return result
+	var confirmed = core.state.get("confirmed_actor_locations", [])
+	if not confirmed is Array: return result
+	for item in confirmed:
+		if not item is Dictionary: continue
+		var actor := str(item.get("actor_id", ""))
+		var scene := str(item.get("scene_id", ""))
+		var piece: Dictionary = map_definition.get("actor_pieces", {}).get(actor, {})
+		var node: Dictionary = locations.get(scene, {}).get("node", {})
+		if piece.is_empty() or node.is_empty(): continue
+		var label := str(core.public_actor_label(actor)) if core.has_method("public_actor_label") else str(piece.get("public_name", "已知位置"))
+		result.append({"actor_id": actor, "scene_id": scene, "group_id": node.get("group_id", ""),
+			"point": node_point(node), "image_ref": piece.get("image_ref", ""), "public_name": label})
+	result.sort_custom(func(a, b): return str(a.actor_id) < str(b.actor_id))
+	return result
+
+func _spatial_path(from_scene: String, to_scene: String) -> Array[Vector2]:
+	var from_node: Dictionary = locations.get(from_scene, {}).get("node", {})
+	var to_node: Dictionary = locations.get(to_scene, {}).get("node", {})
+	var source := str(from_node.get("waypoint_id", ""))
+	if core != null:
+		var view: Dictionary = map_definition.get("view_points", {}).get(str(core.state.get("current_view_id", "")), {})
+		if str(view.get("scene_id", "")) == from_scene: source = str(view.get("waypoint_id", source))
+	var target := str(to_node.get("waypoint_id", ""))
+	if source.is_empty() or target.is_empty(): return []
+	var distance := {source: 0.0}
+	var previous := {}
+	var visited := {}
+	while true:
+		var closest := ""
+		var best := INF
+		for id in distance:
+			if not visited.has(id) and float(distance[id]) < best: closest = id; best = float(distance[id])
+		if closest.is_empty(): return []
+		if closest == target: break
+		visited[closest] = true
+		for edge in map_definition.get("edges", {}).values():
+			var next := ""
+			var reverse := false
+			if str(edge.get("from_waypoint", "")) == closest: next = str(edge.to_waypoint)
+			elif edge.get("bidirectional", false) and str(edge.get("to_waypoint", "")) == closest: next = str(edge.from_waypoint); reverse = true
+			if next.is_empty(): continue
+			var points: Array = edge.get("polyline_world_m", [])
+			var cost := 0.0
+			for index in range(1, points.size()): cost += _world(points[index]).distance_to(_world(points[index - 1]))
+			var candidate: float = best + cost
+			if candidate < float(distance.get(next, INF)):
+				distance[next] = candidate
+				previous[next] = {"from": closest, "edge": edge, "reverse": reverse}
+	var edge_chain: Array = []
+	var cursor := target
+	while cursor != source:
+		var step: Dictionary = previous[cursor]
+		edge_chain.push_front(step)
+		cursor = str(step.from)
+	var world_points: Array[Vector3] = []
+	for step in edge_chain:
+		var points: Array = step.edge.polyline_world_m.duplicate(true)
+		if step.reverse: points.reverse()
+		for point in points:
+			var value := _world(point)
+			if world_points.is_empty() or not value.is_equal_approx(world_points.back()): world_points.append(value)
+	# 合并同方向的连续段；只在真实转折处落子，不把路点逐个演成一格。
+	var simplified: Array[Vector3] = []
+	for point in world_points:
+		while simplified.size() >= 2:
+			var before := (simplified[-1] - simplified[-2]).normalized()
+			var after := (point - simplified[-1]).normalized()
+			if before.dot(after) < 0.9999: break
+			simplified.pop_back()
+		simplified.append(point)
+	var result: Array[Vector2] = []
+	for point in simplified: result.append(project_world(point))
+	return result
+
+func _world(value: Array) -> Vector3:
+	return Vector3(float(value[0]), float(value[1]), float(value[2]))
 
 func cross_group() -> bool:
 	var request: Dictionary = state.get("active_request", {})

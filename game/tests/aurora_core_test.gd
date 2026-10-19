@@ -18,6 +18,8 @@ func _run() -> void:
 		session.pending_result.clear()
 		session.response_active = false
 		session.question = ""
+		session.question_reading.clear()
+		session.active_slot = -1
 		session.narrative.state = {}
 		_condition(str(relation.get("condition_ref", "")))
 		var q := str(relation.question_ref)
@@ -30,7 +32,12 @@ func _run() -> void:
 		session.return_context = {"kind": "scene", "scene": scene, "view": session.case_state.data.view}
 		session.active_entry = str(round.entry_ref)
 		session.case_state.data.texts[str(round.target_text_ref)] = true
+		for ref in session.question_binding(q).get("statement_refs", []): session.case_state.data.texts[str(ref)] = true
 		_check(session.open_question(q), "打开问题" + q)
+		# 最终轮次可包含多个原句；每条关系必须选择其明确声明的目标，不能沿用轮次首句。
+		var target := str(relation.get("target_text_ref", round.target_text_ref))
+		session.case_state.data.texts[target] = true
+		session.current_statement = target
 		_check(session.select_target(), "选择目标" + q)
 		for field in ["a_content_ref", "b_content_ref", "basis_content_ref"]:
 			var content := str(relation.get(field, ""))
@@ -45,6 +52,8 @@ func _run() -> void:
 		count += 1
 	# 明确禁止同一材料不同版本同时占两槽；拒绝尚未取得内容。
 	session.case_state.reset()
+	session.question_reading.clear()
+	for ref in session.question_binding("L15_R04").get("statement_refs", []): session.case_state.data.texts[str(ref)] = true
 	session.open_question("L15_R04")
 	session.case_state.grant("E04_V1", {})
 	session.case_state.grant("E04_V2", {})
@@ -67,6 +76,7 @@ func _condition(id: String) -> void:
 		match str(term.kind):
 			"event": session.case_state.data.events[ref] = expected
 			"text": session.case_state.data.texts[ref] = expected
+			"content": if expected: session.case_state.grant(ref, {"fixture": id})
 			"entry": session.case_state.data.entries[ref] = expected
 			"chapter": if expected: session.case_state.data.chapter = ref
 			"current_scene": if expected: session.case_state.data.scene = ref

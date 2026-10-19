@@ -5,6 +5,7 @@ signal closed
 
 const UI = preload("res://pages/core/page_controls.gd")
 const BoardScript = preload("res://pages/map_navigation/map_board.gd")
+const PolygonButton = preload("res://pages/map_navigation/map_polygon_button.gd")
 var service: Node
 var refresh_queued := false
 var return_focus: Control
@@ -18,6 +19,7 @@ var movement_request := ""
 var reduced := false
 var selected_group := ""
 var cross_switched := false
+var movement_from_group := ""
 
 func bind(value: Node) -> void:
 	service = value
@@ -42,6 +44,7 @@ func close() -> void:
 func _ready() -> void:
 	hide()
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	resized.connect(_queue_render)
 
 func _queue_render(force: bool = false) -> void:
 	# 状态和阶段信号可能在同一按钮回调中连续发出，每帧只重建一次。
@@ -53,6 +56,9 @@ func _queue_render(force: bool = false) -> void:
 func _render() -> void:
 	refresh_queued = false
 	if not is_inside_tree() or service == null or not visible: return
+	if service.is_spatial() and service.map_definition.has("ui_layout"):
+		_render_spatial()
+		return
 	# 旧按钮先脱离树再延迟释放，避免同帧重叠触区和发信号时释放自身。
 	UI.clear(self)
 	var center := CenterContainer.new()
@@ -61,6 +67,9 @@ func _render() -> void:
 	panel = PanelContainer.new()
 	panel.name = "MapPanel"
 	panel.custom_minimum_size = Vector2(720, 560)
+	if service.is_spatial():
+		var effective := get_viewport_rect().size
+		panel.custom_minimum_size = Vector2(minf(effective.x - 32, 1400), minf(effective.y - 32, 820))
 	panel.add_theme_stylebox_override("panel", _opaque_panel())
 	center.add_child(panel)
 	var margin := MarginContainer.new()
@@ -78,6 +87,7 @@ func _render() -> void:
 	var groups := HBoxContainer.new()
 	box.add_child(groups)
 	var known_groups: Array[String] = []
+	if service.is_spatial(): known_groups.append("overview")
 	for item in records:
 		var group := str(item.node.get("group_id", ""))
 		if not group.is_empty() and group not in known_groups: known_groups.append(group)
@@ -86,7 +96,8 @@ func _render() -> void:
 		var region: String = service.core.ui(str(record.get("region_name_text_id", "")))
 		var floor_name: String = service.core.ui(str(record.get("floor_name_text_id", "")))
 		var title := str(record.get("name", group)) if region.is_empty() else region + (" / " + floor_name if not floor_name.is_empty() else "")
-		UI.button(groups, title, _select_group.bind(group), not busy)
+		if service.is_spatial(): title = "两层总览" if group == "overview" else str(record.get("region_label", "货运站")) + " / " + str(record.get("floor_label", group))
+		UI.button(groups, title, _select_group.bind(group), not busy).set_meta("tutorial_target", "map.view_" + group.to_lower())
 	var content := HBoxContainer.new()
 	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 16)
@@ -95,7 +106,11 @@ func _render() -> void:
 	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_child(board)
 	UI.label(board, "地点节点", 20)
-	var board_scroll := _scroll(board)
+	var board_scroll: Control = _scroll(board) if not service.is_spatial() else Control.new()
+	if service.is_spatial():
+		board.add_child(board_scroll)
+		board_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		board_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	board_scroll.custom_minimum_size.y = 300
 	var current_node: Dictionary = service.locations.get(service.current_scene_id(), {}).get("node", {})
 	var group_id := selected_group
@@ -103,12 +118,14 @@ func _render() -> void:
 	var nodes: Control
 	if has_board:
 		board_view = BoardScript.new()
-		board_view.custom_minimum_size = Vector2(420, 300)
+		board_view.custom_minimum_size = Vector2(360, 300)
 		board_view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		board_view.configure_art(service.map_definition, group_id)
 		board_view.setup(records, service.map_definition.boards[group_id], group_id)
-		board_view.set_pawn(Vector2(int(current_node.grid_col), int(current_node.grid_row)), 0)
-		board_view.pawn_visible = group_id == str(current_node.get("group_id", "")) or not animation_phase.is_empty()
+		board_view.set_pawn(service.current_pawn_point(), 0)
+		board_view.pawn_visible = group_id == "overview" or group_id == str(current_node.get("group_id", "")) or not animation_phase.is_empty()
+		board_view.confirmed_actors = service.confirmed_actor_records()
+		board_view.display_scale = clampf(get_viewport_rect().size.y / 900.0, 0.6, 2.0)
 		nodes = board_view
 	else:
 		board_view = null
@@ -118,6 +135,7 @@ func _render() -> void:
 		grid.add_theme_constant_override("v_separation", 12)
 		nodes = grid
 	board_scroll.add_child(nodes)
+	if service.is_spatial() and has_board: nodes.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var sidebar := VBoxContainer.new()
 	sidebar.custom_minimum_size.x = 220
 	content.add_child(sidebar)
@@ -130,10 +148,11 @@ func _render() -> void:
 	var selected_button: Button
 	var last_list_group := ""
 	for item in records:
+		if service.is_spatial() and group_id != "overview" and str(item.node.get("group_id", "")) != group_id: continue
 		var scene_id := str(item.to_scene)
 		var status := "当前位置" if item.current else ("可前往" if item.available else "暂不可前往")
 		for target in [nodes, list]:
-			if target == nodes and has_board and item.node.get("group_id", "") != group_id: continue
+			if target == nodes and has_board and group_id != "overview" and item.node.get("group_id", "") != group_id: continue
 			# 侧栏地点列表按楼层分区，每组前插入楼层标题（反馈#20）。
 			if target == list:
 				var list_group := str(item.node.get("group_id", ""))
@@ -145,11 +164,22 @@ func _render() -> void:
 					var gtitle := str(gdef.get("name", list_group)) if gregion.is_empty() else gregion + (" / " + gfloor if not gfloor.is_empty() else "")
 					UI.label(list, gtitle, 18)
 			# 已公开但不可达的地点仍可选中查看原因，只有前往动作受资格限制。
-			var button := UI.button(target, str(item.title) + "\n" + status, service.select_scene.bind(scene_id), not busy)
+			var button: Button
+			if target == nodes and has_board and service.is_spatial():
+				button = PolygonButton.new()
+				target.add_child(button)
+				button.disabled = busy
+				button.pressed.connect(service.select_scene.bind(scene_id))
+				button.flat = true
+				var polygon := PackedVector2Array()
+				for point in item.node.get("hit_polygon_px", []): polygon.append(Vector2(float(point[0]), float(point[1])))
+				button.set_meta("source_polygon", polygon)
+				for style_name in ["normal", "hover", "pressed", "focus", "disabled"]: button.add_theme_stylebox_override(style_name, StyleBoxEmpty.new())
+			else: button = UI.button(target, str(item.title) + "\n" + status, service.select_scene.bind(scene_id), not busy)
 			button.set_meta("scene_id", scene_id)
 			button.set_meta("map_role", "node" if target == nodes else "list")
 			button.custom_minimum_size = Vector2(160 if target == nodes else 200, 64)
-			if target == nodes and has_board:
+			if target == nodes and has_board and not service.is_spatial():
 				button.custom_minimum_size = Vector2(76, 48)
 				button.size = Vector2(76, 48)
 				button.add_theme_font_size_override("font_size", 14)
@@ -165,6 +195,11 @@ func _render() -> void:
 			button.tooltip_text = str(item.title) + "\n" + (str(item.reason) if not item.available else "点击预览，再点击前往")
 			if item.selected and target == nodes: selected_button = button
 	var preview: Dictionary = service.preview_scene(str(service.state.get("selected_scene_id", "")))
+	if service.is_spatial():
+		var actor_names: Array[String] = []
+		for actor in service.confirmed_actor_records():
+			if actor.scene_id == service.state.get("selected_scene_id", ""): actor_names.append(str(actor.public_name))
+		if not actor_names.is_empty(): UI.label(box, "已知位置：" + "、".join(actor_names), 16)
 	UI.label(box, "预览：" + str(preview.get("title", "请选择地点")), 20)
 	var reason: String = service.travel_disabled_reason()
 	if phase == "failure": reason = "切换失败：" + str(service.state.get("failure_reason", "请重新选择地点"))
@@ -173,8 +208,9 @@ func _render() -> void:
 	actions.add_theme_constant_override("separation", 12)
 	box.add_child(actions)
 	var travel_button := UI.button(actions, "前往", service.travel, service.travel_disabled_reason().is_empty())
+	travel_button.set_meta("tutorial_target", "map.travel")
 	travel_button.tooltip_text = service.travel_disabled_reason()
-	UI.button(actions, "取消准备" if phase == "preparing" else "返回调查", close, not busy or phase == "preparing")
+	UI.button(actions, "取消准备" if phase == "preparing" else "返回调查", close, not busy or phase == "preparing").set_meta("tutorial_target", "map.return")
 	if has_board: board_view.call_deferred("_layout_buttons")
 	if is_instance_valid(selected_button) and not selected_button.disabled: selected_button.grab_focus()
 
@@ -192,14 +228,21 @@ func _scroll(parent: Control) -> ScrollContainer:
 	return scroll
 
 func _on_phase_changed(phase: String) -> void:
+	if phase == "departure":
+		animation_phase = ""
+		hide()
+		return
 	if phase == "moving" and movement_request != str(service.state.active_request.get("request_id", "")):
+		show()
 		movement_request = str(service.state.active_request.request_id)
 		route = service.movement_path()
 		animation_phase = "cross" if service.cross_group() else "lift"
+		if animation_phase == "cross" and route.size() > 1: route = [route.front(), route.back()]
 		animation_ms = 0.0
 		cross_switched = false
 		animation_step = 1
 		selected_group = str(service.locations.get(service.state.active_request.from_scene, {}).get("node", {}).get("group_id", ""))
+		movement_from_group = selected_group
 		service.pawn_sound("lift")
 		_queue_render(true)
 	else: _queue_render()
@@ -249,6 +292,7 @@ func _process(delta: float) -> void:
 				if service.finish_movement(): animation_phase = "final_land"; cross_switched = false
 				else:
 					animation_phase = ""
+					selected_group = movement_from_group
 					_queue_render(true)
 			else: animation_phase = "land"
 		"land": animation_step += 1; animation_phase = "lift"
@@ -274,3 +318,172 @@ func _hide_map(restore_focus: bool) -> void:
 	hide()
 	if restore_focus and is_instance_valid(return_focus) and return_focus.is_visible_in_tree(): return_focus.grab_focus()
 	closed.emit()
+
+func _render_spatial() -> void:
+	# 最终地图布局取本册记录；模型、点击区、棋子共用同一个 contain/crop。
+	UI.clear(self)
+	var phase := str(service.state.get("phase", "closed"))
+	var busy := phase in ["preparing", "moving", "arrival_hold", "transitioning"]
+	var layout_state := "floor_two" if selected_group == "MAP02" else ("overview" if selected_group == "overview" else "browse")
+	panel = PanelContainer.new()
+	panel.name = "MapPanel"
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override("panel", _spatial_style("PAPER_V2_panel_paper"))
+	add_child(panel)
+	_place_spatial(panel, "map.panel_surface_1", layout_state)
+	var title := _spatial_label("地图", 30)
+	_place_spatial(title, "map.text_map_title_1", layout_state)
+	# 地点信息只占自己的文字区域，避免把模型宽度当成文字的最小尺寸。
+	var current := _spatial_label("当前位置：" + service.scene_name(service.current_scene_id()), 18)
+	current.position = Vector2(300, 28) * _spatial_scale()
+	current.size = Vector2(maxf(200, size.x / _spatial_scale() - 540), 44) * _spatial_scale()
+	for group in ["overview", "MAP01", "MAP02"]:
+		var has_group: bool = group == "overview"
+		for item in service.location_records():
+			if item.node.get("group_id", "") == group: has_group = true
+		if not has_group: continue
+		var label := "两层总览" if group == "overview" else ("一楼与站外" if group == "MAP01" else "二楼")
+		var tab := _spatial_button(label, _select_group.bind(group), not busy)
+		_place_spatial(tab, "map.view_" + group.to_lower(), layout_state)
+		if group == selected_group: tab.add_theme_color_override("font_color", Color("3f6b4c"))
+	board_view = BoardScript.new()
+	board_view.name = "SpatialBoard"
+	add_child(board_view)
+	_place_spatial(board_view, "UI_MAP_MODEL", layout_state)
+	board_view.configure_art(service.map_definition, selected_group)
+	board_view.display_scale = _spatial_scale()
+	board_view.confirmed_actors = service.confirmed_actor_records()
+	board_view.setup(service.location_records(), service.map_definition.boards[selected_group], selected_group)
+	board_view.set_pawn(service.current_pawn_point(), 0)
+	var current_group := str(service.locations.get(service.current_scene_id(), {}).get("node", {}).get("group_id", ""))
+	board_view.pawn_visible = selected_group == "overview" or selected_group == current_group or not animation_phase.is_empty()
+	for item in service.location_records():
+		if selected_group != "overview" and item.node.get("group_id", "") != selected_group: continue
+		var hotspot := PolygonButton.new()
+		hotspot.disabled = busy
+		hotspot.set_meta("scene_id", str(item.to_scene))
+		hotspot.set_meta("map_role", "node")
+		hotspot.tooltip_text = str(item.title) + (" · 当前位置" if item.current else (" · 点击预览" if item.available else " · 暂不可前往"))
+		var polygon := PackedVector2Array()
+		for point in item.node.get("hit_polygon_px", []): polygon.append(Vector2(float(point[0]), float(point[1])))
+		hotspot.set_meta("source_polygon", polygon)
+		for style_name in ["normal", "hover", "pressed", "focus", "disabled"]: hotspot.add_theme_stylebox_override(style_name, StyleBoxEmpty.new())
+		hotspot.pressed.connect(service.select_scene.bind(str(item.to_scene)))
+		board_view.add_child(hotspot)
+	var list_panel := PanelContainer.new()
+	list_panel.add_theme_stylebox_override("panel", _spatial_style("PAPER_V2_panel_paper"))
+	add_child(list_panel)
+	_place_spatial(list_panel, "map.panel_surface_2", layout_state)
+	var list_margin := MarginContainer.new()
+	for edge in ["left", "right", "top", "bottom"]: list_margin.add_theme_constant_override("margin_" + edge, int(16 * _spatial_scale()))
+	list_panel.add_child(list_margin)
+	var list_box := VBoxContainer.new()
+	list_margin.add_child(list_box)
+	var list_title := Label.new()
+	list_title.text = "站内地点"
+	list_title.add_theme_color_override("font_color", Color("34413f"))
+	list_box.add_child(list_title)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	list_box.add_child(scroll)
+	var rows_box := VBoxContainer.new()
+	rows_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(rows_box)
+	var previous_group := ""
+	var selected_button: Button
+	for item in service.location_records():
+		var group := str(item.node.get("group_id", ""))
+		if selected_group != "overview" and group != selected_group: continue
+		if group != previous_group:
+			previous_group = group
+			var floor_label := Label.new()
+			floor_label.text = "二楼" if group == "MAP02" else "一楼与站外"
+			floor_label.add_theme_color_override("font_color", Color("3f6b4c"))
+			rows_box.add_child(floor_label)
+		var row := _spatial_button(str(item.title), service.select_scene.bind(str(item.to_scene)), not busy, rows_box)
+		row.set_meta("scene_id", str(item.to_scene))
+		row.set_meta("map_role", "list")
+		row.custom_minimum_size = Vector2(0, 50 * _spatial_scale())
+		row.clip_text = true
+		row.tooltip_text = str(item.reason)
+		if item.selected: selected_button = row
+	if is_instance_valid(selected_button): scroll.call_deferred("ensure_control_visible", selected_button)
+	var destination := PanelContainer.new()
+	destination.add_theme_stylebox_override("panel", _spatial_style("PAPER_V2_panel_paper"))
+	add_child(destination)
+	_place_spatial(destination, "map.panel_surface_3", layout_state)
+	var preview: Dictionary = service.preview_scene(str(service.state.get("selected_scene_id", "")))
+	var preview_title := _spatial_label("目的地：" + str(preview.get("title", "请选择地点")), 20)
+	_place_spatial(preview_title, "map.text_map_destination_1", layout_state)
+	var detail: String = service.travel_disabled_reason()
+	if phase == "failure": detail = str(service.state.get("failure_reason", "请重新选择地点"))
+	var actor_names: Array[String] = []
+	for actor in service.confirmed_actor_records():
+		if actor.scene_id == service.state.get("selected_scene_id", ""): actor_names.append(str(actor.public_name))
+	if not actor_names.is_empty(): detail += ("\n" if not detail.is_empty() else "") + "已知位置：" + "、".join(actor_names)
+	var hint := _spatial_label(detail, 16)
+	_place_spatial(hint, "map.text_region_6", layout_state)
+	hint.size.y = 106 * _spatial_scale()
+	var travel := _spatial_button("前往", service.travel, detail.is_empty() or service.travel_disabled_reason().is_empty())
+	travel.tooltip_text = service.travel_disabled_reason()
+	_place_spatial(travel, "map.travel", layout_state)
+	var back := _spatial_button("取消准备" if phase == "preparing" else "返回调查", close, not busy or phase == "preparing")
+	_place_spatial(back, "map.return", layout_state)
+	board_view.call_deferred("_layout_buttons")
+	if is_instance_valid(selected_button) and not busy: selected_button.grab_focus()
+
+func _spatial_scale() -> float:
+	return size.y / 900.0
+
+func _place_spatial(control: Control, id: String, state_name: String) -> void:
+	control.set_meta("tutorial_target", id)
+	var extent := size
+	var ratio := extent.x / maxf(1, extent.y)
+	var aspect := 1 if absf(ratio - 16.0 / 9) < 0.05 else (2 if absf(ratio - 1.6) < 0.05 else (3 if ratio < 1.5 else 4))
+	var row := {}
+	for item in service.map_definition.ui_layout.get("records", []):
+		if item.control_id == id and item.state_id == state_name and int(item.aspect_ratio) == aspect: row = item; break
+	if row.is_empty(): return
+	var scale_value := _spatial_scale()
+	var dimensions := Vector2(float(row.width), float(row.height)) * scale_value
+	var anchor := int(row.anchor) - 1
+	var column := anchor % 3
+	var line := int(anchor / 3)
+	var anchor_point := Vector2(extent.x * column / 2.0, extent.y * line / 2.0)
+	var alignment := Vector2(dimensions.x * column / 2.0, dimensions.y * line / 2.0)
+	control.position = anchor_point + Vector2(float(row.offset_x), float(row.offset_y)) * scale_value - alignment
+	control.size = dimensions
+
+func _spatial_label(value: String, font_size: int) -> Label:
+	var label := Label.new()
+	label.text = value
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.add_theme_font_size_override("font_size", maxi(12, int(font_size * _spatial_scale())))
+	label.add_theme_color_override("font_color", Color("34413f"))
+	add_child(label)
+	return label
+
+func _spatial_button(value: String, callback: Callable, enabled: bool, parent: Node = self) -> Button:
+	var button := Button.new()
+	button.text = value
+	button.disabled = not enabled
+	button.pressed.connect(callback)
+	button.add_theme_font_size_override("font_size", maxi(12, int(20 * _spatial_scale())))
+	for state_name in ["normal", "hover", "pressed", "disabled"]: button.add_theme_stylebox_override(state_name, _spatial_style("PAPER_V2_button_secondary_" + state_name))
+	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]: button.add_theme_color_override(color_name, Color("34413f"))
+	button.add_theme_color_override("font_disabled_color", Color("8e9186"))
+	parent.add_child(button)
+	return button
+
+func _spatial_style(asset_id: String) -> StyleBox:
+	var path := str(service.map_definition.get("ui_assets", {}).get(asset_id, ""))
+	if not path.is_empty() and ResourceLoader.exists(path):
+		var style := StyleBoxTexture.new()
+		style.texture = load(path)
+		style.set_texture_margin_all(10)
+		return style
+	var fallback := StyleBoxFlat.new()
+	fallback.bg_color = Color("eee7d3")
+	return fallback

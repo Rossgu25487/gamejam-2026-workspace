@@ -17,3 +17,6 @@
 *.zip binary
 # Imported originals must keep byte identity across Windows/Linux checkouts.
 planning/inbox/** -text
+# Adopted final delivery is retained verbatim for planning and resource provenance.
+game/极光_主策合并交付_20261019/** -text
+game/极光_主策合并交付_20261019/** whitespace=-blank-at-eol

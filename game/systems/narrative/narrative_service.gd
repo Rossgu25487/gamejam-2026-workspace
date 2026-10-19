@@ -8,6 +8,7 @@ signal text_finished(record: Dictionary)
 signal event_started(record: Dictionary)
 signal performance_requested(events: Array)
 signal notice(message: String)
+signal typing_sound_requested(resource_ref: String) # 仅实际新增正文字符请求一次声音，不为快显或重绘补播。
 
 const CatalogScript = preload("res://systems/narrative/narrative_catalog.gd")
 const WorkbookLoader = preload("res://systems/narrative/narrative_workbook_loader.gd")
@@ -15,6 +16,11 @@ const SNAPSHOT_VERSION := 1
 var catalog: RefCounted = CatalogScript.new()
 var state: Dictionary = {}
 var typewriter_speed := 30.0
+var normal_characters_per_second := 30.0
+var read_fast_multiplier := 4.0
+var read_fast_page_delay := 0.15
+var typing_sound_min_interval := 0.11
+var _typing_sound_elapsed := 0.11
 var punctuation_pause := {"，": 0.12, "、": 0.12, "；": 0.12, "。": 0.26, "！": 0.26, "？": 0.26, "…": 0.26}
 var hidden := false
 var reading_log := false
@@ -26,6 +32,20 @@ var _page_ends: Array[int] = []
 var seen_storage_path := "" # 独立已看文件；空路径用于纯内存测试。
 var seen_versions := {}
 var stage_wait_left := 0.0 # 明确演出时长；隐藏、记录和暂停时不推进。
+
+func configure_playback(parameters: Dictionary) -> void:
+	# 正式文案公参是唯一标准值；玩家偏好只乘倍率，不改标点停顿和演出时长。
+	normal_characters_per_second = maxf(1, float(parameters.get("normal_characters_per_second", 30)))
+	typewriter_speed = normal_characters_per_second
+	read_fast_multiplier = maxf(1, float(parameters.get("read_fast_multiplier", 4)))
+	read_fast_page_delay = maxf(0, float(parameters.get("read_fast_page_delay_ms", 150)) / 1000.0)
+	typing_sound_min_interval = maxf(0, float(parameters.get("typing_sound_min_interval_ms", 110)) / 1000.0)
+	var pauses: Dictionary = parameters.get("punctuation_pause_ms", {})
+	for mark in ["，", "、", "；", "："]: punctuation_pause[mark] = float(pauses.get("comma", 120)) / 1000.0
+	for mark in ["。", "！", "？", "…"]: punctuation_pause[mark] = float(pauses.get("sentence_end", 260)) / 1000.0
+
+func set_text_speed(level: int) -> void:
+	typewriter_speed = normal_characters_per_second * {1: 0.5, 2: 1.0, 3: 1.5}.get(level, 1.0)
 
 func load_seen_registry(path: String) -> bool:
 	seen_storage_path = path
@@ -107,7 +127,12 @@ func _begin_text(id: String) -> void:
 	_page_ends = [current_text().length()]
 	_elapsed = 0.0
 	_page_wait = 0.0
+	_typing_sound_elapsed = typing_sound_min_interval
 	stage_wait_left = maxf(0, float(row.get("stage_duration_ms", 0)) / 1000.0)
+	# 界面短字和章节名整页呈现；普通对白、心声、旁白与时地沿逐字参数。
+	if str(row.get("text_kind", row.get("text_type", ""))) in ["option_text", "ui_text", "chapter_title", "章节字幕"]:
+		state.visible_characters = current_text().length()
+		state.typing = false
 	if not state.seen_at_start or not catalog.choices_from_text(id).is_empty(): stop_fast_read()
 	text_started.emit(row.duplicate(true))
 	_changed()
@@ -149,8 +174,15 @@ func advance() -> bool:
 	if not fast_mode.is_empty():
 		stop_fast_read()
 		return true
-	# 首次观看的点击只等待，不把整页瞬间补齐。
-	if is_typing(): return false
+	# 本次点击只快显当前页，不跨页、不登记已读，也不提交文本结束事件。
+	if is_typing():
+		state.visible_characters = page_end()
+		state.typing = false
+		_elapsed = 0.0
+		_page_wait = 0.0
+		_progressed()
+		return true
+	if stage_wait_left > 0: return false
 	if bool(state.get("waiting_for_choice", false)): return false
 	if page_end() < current_text().length():
 		state.page_start = page_end()
@@ -164,6 +196,7 @@ func advance() -> bool:
 
 func tick(delta: float) -> void:
 	if state.is_empty() or hidden or reading_log or not is_finite(delta) or delta <= 0: return
+	_typing_sound_elapsed += delta
 	if stage_wait_left > 0:
 		var remaining := maxf(0, delta - stage_wait_left)
 		stage_wait_left = maxf(0, stage_wait_left - delta)
@@ -174,9 +207,10 @@ func tick(delta: float) -> void:
 		state.typing = false
 		_progressed()
 	elif is_typing():
-		_elapsed += delta * (4.0 if fast_mode == "accelerate" else 1.0)
+		_elapsed += delta * (read_fast_multiplier if fast_mode == "accelerate" else 1.0)
 		var value := current_text()
 		var breaks := TextServerManager.get_primary_interface().string_get_character_breaks(value)
+		var before := int(state.visible_characters)
 		while int(state.visible_characters) < page_end():
 			var index := int(state.visible_characters)
 			var duration := 1.0 / typewriter_speed
@@ -197,10 +231,11 @@ func tick(delta: float) -> void:
 		if state.visible_characters >= page_end():
 			state.typing = false
 			_page_wait = 0.0
+		_request_typing_sound(value.substr(before, int(state.visible_characters) - before))
 		_progressed()
 	if not is_typing() and not fast_mode.is_empty():
 		_page_wait += delta
-		if _page_wait >= 0.15:
+		if _page_wait >= read_fast_page_delay:
 			var mode := fast_mode
 			fast_mode = ""
 			if page_end() < current_text().length():
@@ -208,6 +243,20 @@ func tick(delta: float) -> void:
 				fast_mode = mode
 			else:
 				_fast_next(mode)
+
+func _request_typing_sound(added: String) -> void:
+	# 声音忙时直接丢弃；一帧积累多个字符也只请求一次，不能排队补播。
+	if not fast_mode.is_empty() or _typing_sound_elapsed < typing_sound_min_interval: return
+	var audible := false
+	for character in added:
+		if not character.strip_edges().is_empty() and not "，。、；：！？…—·“”‘’（）()[]【】《》〈〉「」『』.,;:!?-\"'".contains(character):
+			audible = true
+			break
+	if not audible: return
+	var kind := str(current_record().get("text_kind", current_record().get("text_type", "")))
+	if kind in ["option_text", "ui_text", "chapter_title", "章节字幕"]: return
+	_typing_sound_elapsed = 0
+	typing_sound_requested.emit("SFX_TEXT_TIME_LOCATION" if kind in ["time_caption", "时间字幕"] else "SFX_TEXT_DIALOGUE")
 
 func fast_read_available() -> bool:
 	return not state.is_empty() and bool(state.get("seen_at_start", false)) and not state.get("finished", false) and not state.get("waiting_for_choice", false) and not hidden and not reading_log and catalog.choices_from_text(str(state.current_text_id)).is_empty()

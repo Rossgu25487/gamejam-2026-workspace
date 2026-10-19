@@ -5,6 +5,7 @@ var reviewing := false
 var docs := {}
 var routes := {}
 var serial := 0
+var parent_mode := ""
 
 func bind(value: Node) -> void:
 	session = value
@@ -33,6 +34,8 @@ func objective_snapshot() -> Dictionary:
 					bases[id] = {"id": id, "kind": "material", "name": info.name, "version_text": "第%d版" % int(info.version), "has_original": true, "has_source": not sources.is_empty()}
 					refs.append(id)
 			var route: Dictionary = session.check_objective_route(row)
+			if reviewing and parent_mode != "investigation":
+				route = {"ok": false, "reason": "请先返回调查主视图，再前往核对。"}
 			var entry := {}
 			if not str(row.get("target_ref", "")).is_empty():
 				routes[str(row.item_id)] = row
@@ -42,14 +45,17 @@ func objective_snapshot() -> Dictionary:
 	return {}
 
 func prepare_review() -> Variant:
-	if reviewing or session.mode != "investigation" or session.processing: return false
+	if reviewing or session.mode not in ["investigation", "selection", "narrative", "result", "failure", "material"] or session.processing: return false
 	reviewing = true
+	parent_mode = str(session.mode)
 	docs.clear()
 	serial = 0
+	objective_changed.emit()
 	return true
 
 func end_review() -> void:
 	reviewing = false
+	parent_mode = ""
 	docs.clear()
 
 func read_basis(id: String) -> Variant:
@@ -90,10 +96,12 @@ func _register(doc: Dictionary) -> Dictionary:
 	return {"id": id, "title": doc.title}
 
 func recheck_entry(id: String) -> Dictionary:
+	if parent_mode != "investigation" or session.mode != "investigation": return {"available": false, "reason": "请先返回调查主视图，再前往核对。"}
 	var route: Dictionary = session.check_objective_route(routes.get(id, {}))
 	return {"available": route.ok, "reason": route.reason}
 
 func go_entry(id: String) -> Dictionary:
+	if parent_mode != "investigation" or session.mode != "investigation": return {"ok": false, "reason": "请先返回调查主视图，再前往核对。"}
 	var row: Dictionary = routes.get(id, {})
 	if not session.go_objective(row): return {"ok": false, "reason": str(row.get("public_reason", "当前还不能前往。"))}
 	end_review()

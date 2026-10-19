@@ -81,7 +81,8 @@ func narrative_checks() -> void:
 	root.add_child(service)
 	var data := {"texts": {"A": {"text": "甲，乙。丙丁", "speaker_name": "男人", "next_text_id": "B", "read_version": 1}, "B": {"text": "新句", "speaker_name": "甲", "read_version": 1}}, "chapters": {}, "scenes": {}, "events": {}, "transitions": {}, "performance_events": {}}
 	check(service.initialize(data) and service.start("A"), "文案夹具准备")
-	check(not service.advance() and service.visible_text().is_empty(), "首读继续不瞬间补齐")
+	check(service.advance() and service.visible_text() == "甲，乙。丙丁" and service.can_read_again("A"), "首读点击快显本页而不登记完成")
+	service.start("A") # 节奏断言重新从首字开始，快显不改变本档已读资格。
 	service.tick(0.0)
 	check(service.visible_text().is_empty(), "零时间不凭帧数出现字符")
 	service.tick(0.034)
@@ -375,15 +376,19 @@ func narrative_input_checks() -> void:
 	check(service.hidden, "H隐藏对白")
 	await press_key(KEY_ENTER)
 	check(not service.hidden and service.visible_text() == visible_before, "恢复对白的Enter不同时翻页")
-	# 开始第二次阅读后，Tab应进入跳过，不能被默认UI焦点导航吞掉。
+	# 最终共用输入：Tab只移动焦点，剧情跳过使用独立点击入口。
 	service.seen_versions["A"] = 1
 	service.start("A")
 	await frames(8)
 	page.fast_button.grab_focus()
 	await press_key(KEY_TAB)
-	check(service.fast_mode == "skip", "正文Tab启动跳过已看")
+	check(service.fast_mode.is_empty(), "正文Tab只移动焦点")
 	await press_key(KEY_TAB)
-	check(service.fast_mode.is_empty(), "再次Tab停止跳过")
+	check(service.fast_mode.is_empty(), "再次Tab不执行跳过")
+	page.skip_button.pressed.emit()
+	check(service.fast_mode == "skip", "独立按钮启动跳过已看")
+	page.skip_button.pressed.emit()
+	check(service.fast_mode.is_empty(), "独立按钮停止跳过")
 	await send_key(KEY_CTRL, true)
 	check(service.fast_mode == "accelerate", "Ctrl按下进入四倍加速")
 	await send_key(KEY_CTRL, false)

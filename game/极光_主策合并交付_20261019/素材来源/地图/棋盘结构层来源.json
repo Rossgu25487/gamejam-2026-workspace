@@ -1,0 +1,29 @@
+{
+  "identity": "prototype_structure_wrapper",
+  "final_hand_painted_art": false,
+  "canvas_px": [
+    2400,
+    1800
+  ],
+  "source_geometry": "design/map/model_20261018/source_spatial.json",
+  "source_renderer_reference": "美术7 render_map.py/choose_components、floor裁切及truck display proxy",
+  "projection_source": "design/map/runtime/map_runtime.json/projection",
+  "contains_nodes_or_labels": false,
+  "replace_contract": "同画布同原点替换每层base/grid；mask为制作源，不是游戏资格。",
+  "geometry_checks": [
+    {
+      "floor": 1,
+      "coverage_pixels": 679058,
+      "coverage_mismatch_pixels": 0,
+      "visible_floor_pixels": 323305,
+      "grid_outside_mask": 0
+    },
+    {
+      "floor": 2,
+      "coverage_pixels": 189070,
+      "coverage_mismatch_pixels": 0,
+      "visible_floor_pixels": 26762,
+      "grid_outside_mask": 0
+    }
+  ]
+}

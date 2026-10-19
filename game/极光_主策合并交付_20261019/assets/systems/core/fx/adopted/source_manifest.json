@@ -1,0 +1,117 @@
+{
+  "operation": "原样解码已交base64 PNG；不重绘、不修改原型或原件",
+  "version": "core-artb-20261018-2",
+  "assets": [
+    {
+      "file": "fx_flying_pages_01.png",
+      "render_size": [
+        512,
+        586
+      ],
+      "sha256": "B6FA1C9C73792E106FD9A1900B498AD65E7CB1B6AED4D80A8BE421BAF04CBE02",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_flying_pages_01",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_flying_pages_01.png"
+    },
+    {
+      "file": "fx_flying_pages_02.png",
+      "render_size": [
+        512,
+        592
+      ],
+      "sha256": "483123665FD3E214E15AE57C7C13CE24CD901F2B58BCABD10DC0135829A592B3",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_flying_pages_02",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_flying_pages_02.png"
+    },
+    {
+      "file": "fx_flying_pages_03.png",
+      "render_size": [
+        512,
+        460
+      ],
+      "sha256": "E16CD4F6E6CAD1AC0598A1D40C18E8D0F5266784873991291AE1D5882F16754B",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_flying_pages_03",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_flying_pages_03.png"
+    },
+    {
+      "file": "fx_flying_pages_04.png",
+      "render_size": [
+        512,
+        577
+      ],
+      "sha256": "63FFFBDFE128739BF903600309A53CC04DB0AFC764D6EA1F8467053A527B78AB",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_flying_pages_04",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_flying_pages_04.png"
+    },
+    {
+      "file": "fx_flying_pages_05.png",
+      "render_size": [
+        512,
+        551
+      ],
+      "sha256": "532D8244D033F775995C11E0BCB2DD84CF7B20DC8F45108B925BB1F282932D6B",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_flying_pages_05",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_flying_pages_05.png"
+    },
+    {
+      "file": "fx_brass_clip.png",
+      "render_size": [
+        232,
+        768
+      ],
+      "sha256": "53DF6B83018AFF90A1704210907DC688C807DCA1B401EEA86269749A73F790EB",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_brass_clip",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_brass_clip.png"
+    },
+    {
+      "file": "fx_stamp_inspiration.png",
+      "render_size": [
+        1024,
+        255
+      ],
+      "sha256": "B53647E94E1B68389C1131EAB9DF242036AFE60C561319C42221A655F903630F",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "fx_stamp_inspiration",
+      "source_member": "ArtB_双演出_演示与素材_20261018/01_核心玩法/灵感涌现/PNG素材/fx_stamp_inspiration.png"
+    },
+    {
+      "file": "paper_portrait.png",
+      "render_size": [
+        510,
+        768
+      ],
+      "sha256": "D0633F65BF5D0C738922B03E0CC8167288EED2D5B00559570EA2AB08E2AB0783",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "paper_portrait",
+      "source_member": "ArtB_双演出_演示与素材_20261018/00_通用素材/PNG素材/paper_portrait.png"
+    },
+    {
+      "file": "paper_landscape.png",
+      "render_size": [
+        512,
+        338
+      ],
+      "sha256": "683ECFA4889D2FE7DF2F2108BD3230777B50CA99A1C5322627181E2D29E51733",
+      "source_archive": "ArtB_双演出_演示与素材_20261018.zip",
+      "id": "paper_landscape",
+      "source_member": "ArtB_双演出_演示与素材_20261018/00_通用素材/PNG素材/paper_landscape.png"
+    },
+    {
+      "file": "progress_circle.png",
+      "render_size": [
+        659,
+        221
+      ],
+      "sha256": "AC543B8A58FBD265EE383A97B31D1FFE368B1E21149519BEE98E180F063EF135",
+      "source_archive": "ArtB_v4_素材预览交接_按系统_20261016.zip",
+      "id": "progress_circle",
+      "source_member": null
+    }
+  ],
+  "source": "12_联合新手引导/原型/assets/effects/core-effect.browser.js"
+}

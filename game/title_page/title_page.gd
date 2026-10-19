@@ -19,6 +19,40 @@ signal exit_requested
 @onready var detail: Label = $PanelContainer/VBoxContainer/Detail
 var scan_complete := false # 存档扫描是否完成。
 var has_progress := false # 是否存在可以继续的有效存档。
+var formal_layout: RefCounted
+var formal_canvas: Control
+var formal_menu: Panel
+
+func configure_formal(config: RefCounted) -> void:
+	formal_layout = preload("res://pages/aurora/aurora_entry_layout.gd").new()
+	formal_layout.bind(config)
+	formal_canvas = Control.new()
+	formal_canvas.name = "TitleLayout"
+	formal_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	formal_canvas.theme = formal_layout.theme
+	add_child(formal_canvas)
+	formal_menu = formal_layout.panel(formal_canvas)
+	for node in [heading, status, continue_button, new_game_button, load_button, settings_button, exit_button, detail]: node.reparent(formal_canvas, false)
+	panel.hide()
+	for button in [continue_button, new_game_button, load_button, settings_button, exit_button]: formal_layout.button_style(button, button == continue_button)
+	heading.add_theme_font_size_override("font_size", 52)
+	status.add_theme_font_size_override("font_size", 24)
+	detail.add_theme_font_size_override("font_size", 22)
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	resized.connect(_layout_formal)
+	_layout_formal()
+
+func _layout_formal() -> void:
+	if not is_instance_valid(formal_canvas) or size.y <= 0: return
+	var factor := size.y / 900.0
+	formal_canvas.scale = Vector2.ONE * factor
+	formal_canvas.size = size / factor
+	var ratio: int = formal_layout.ratio_for(formal_canvas.size.x)
+	for pair in [[formal_menu, "title.menu_surface_1"], [heading, "title.text_region_1"], [continue_button, "title.continue"], [new_game_button, "title.new"], [load_button, "title.load"], [settings_button, "title.settings"], [exit_button, "title.exit"], [status, "title.text_region_2"], [detail, "title.text_region_3"]]:
+		formal_layout.place(pair[0], formal_layout.row_for(pair[1], "normal", ratio), formal_canvas.size)
+	# 完整实际存档摘要可换行留在菜单底部，不因长地点名称绘制到纸面外。
+	detail.size.y = 78
+	detail.clip_contents = true
 func bind_images(core: Node) -> void:
 	preload("res://pages/core/story_image_layer.gd").bind_page(self, core, "title")
 	var buttons := {"new_game": new_game_button, "continue": continue_button, "load": load_button, "settings": settings_button, "exit": exit_button}
@@ -43,7 +77,7 @@ func apply_navigation(rows: Array, text_of: Callable) -> void:
 		if row.page != "title" or not buttons.has(row.action): continue
 		var button: Button = buttons[row.action]
 		button.text = str(text_of.call(str(row.label_key)))
-		button.get_parent().move_child(button, index)
+		if formal_canvas == null: button.get_parent().move_child(button, index)
 		index += 1
 
 func set_developer_tools_enabled(enabled: bool) -> void:

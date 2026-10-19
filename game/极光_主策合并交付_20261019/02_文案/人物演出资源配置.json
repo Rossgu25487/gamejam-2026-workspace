@@ -1,0 +1,1190 @@
+{
+  "default_reference_size_px": [
+    1600,
+    900
+  ],
+  "head_top_ratio": 0.2777777777777778,
+  "bottom_cut_ratio": 1,
+  "slot_center_x_ratio": {
+    "left": 0.2,
+    "center": 0.5,
+    "right": 0.8
+  },
+  "assets": [
+    {
+      "character_id": "CHR01",
+      "resource_path": "res://assets/aurora/characters/1000001/erin_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000001/erin_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        263,
+        28,
+        799,
+        1505
+      ],
+      "visible_head_top_y_px": 29,
+      "dialogue_anchor_px": [
+        520,
+        1085
+      ],
+      "facing_direction": "right"
+    },
+    {
+      "character_id": "CHR02",
+      "resource_path": "res://assets/aurora/characters/1000002/lorne_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000002/lorne_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        257,
+        16,
+        767,
+        1512
+      ],
+      "visible_head_top_y_px": 16,
+      "dialogue_anchor_px": [
+        510,
+        1040
+      ],
+      "facing_direction": "near_front"
+    },
+    {
+      "character_id": "CHR03",
+      "resource_path": "res://assets/aurora/characters/1000003/nina_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000003/nina_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        270,
+        21,
+        798,
+        1509
+      ],
+      "visible_head_top_y_px": 21,
+      "dialogue_anchor_px": [
+        532,
+        1050
+      ],
+      "facing_direction": "near_front"
+    },
+    {
+      "character_id": "CHR04",
+      "resource_path": "res://assets/aurora/characters/1000004/伊万_常态站姿.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000004/伊万_常态头像.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        191,
+        68,
+        835,
+        1493
+      ],
+      "visible_head_top_y_px": 68,
+      "dialogue_anchor_px": [
+        513,
+        1040
+      ],
+      "facing_direction": "left"
+    },
+    {
+      "character_id": "CHR05",
+      "resource_path": "res://assets/aurora/characters/1000005/薇拉_常态站姿.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000005/薇拉_常态头像.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        271,
+        20,
+        734,
+        1520
+      ],
+      "visible_head_top_y_px": 20,
+      "dialogue_anchor_px": [
+        503,
+        1050
+      ],
+      "facing_direction": "front"
+    },
+    {
+      "character_id": "CHR06",
+      "resource_path": "res://assets/aurora/characters/1000006/yuri_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000006/yuri_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        251,
+        34,
+        781,
+        1514
+      ],
+      "visible_head_top_y_px": 34,
+      "dialogue_anchor_px": [
+        515,
+        1075
+      ],
+      "facing_direction": "near_front"
+    },
+    {
+      "character_id": "CHR07",
+      "resource_path": "res://assets/aurora/characters/1000007/grant_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000007/grant_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        269,
+        15,
+        800,
+        1501
+      ],
+      "visible_head_top_y_px": 15,
+      "dialogue_anchor_px": [
+        520,
+        1050
+      ],
+      "facing_direction": "right"
+    },
+    {
+      "character_id": "CHR08",
+      "resource_path": "res://assets/aurora/characters/1000008/leon_neutral.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000008/leon_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        224,
+        33,
+        847,
+        1489
+      ],
+      "visible_head_top_y_px": 33,
+      "dialogue_anchor_px": [
+        495,
+        1030
+      ],
+      "facing_direction": "near_front"
+    },
+    {
+      "character_id": "CHR09",
+      "resource_path": "res://assets/aurora/characters/1000009/CHR09_警员_常态.png",
+      "avatar_resource_path": "",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "alpha_16_bbox": [
+        259,
+        9,
+        835,
+        1526
+      ],
+      "visible_head_top_y_px": 9,
+      "dialogue_anchor_px": [
+        520,
+        1190
+      ],
+      "facing_direction": "right"
+    },
+    {
+      "character_id": "CHR10",
+      "resource_path": "res://assets/aurora/characters/1000010/1000010_基里尔_常态立绘.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000010/1000010_基里尔_平常.png",
+      "source_size_px": [
+        420,
+        896
+      ],
+      "alpha_16_bbox": [
+        37,
+        9,
+        411,
+        888
+      ],
+      "visible_head_top_y_px": 9,
+      "dialogue_anchor_px": [
+        216,
+        610
+      ],
+      "facing_direction": "right"
+    },
+    {
+      "character_id": "CHR11",
+      "resource_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_常态立绘.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000011/1000011_帕维尔_平常.png",
+      "source_size_px": [
+        420,
+        896
+      ],
+      "alpha_16_bbox": [
+        35,
+        27,
+        411,
+        888
+      ],
+      "visible_head_top_y_px": 27,
+      "dialogue_anchor_px": [
+        222,
+        610
+      ],
+      "facing_direction": "left"
+    },
+    {
+      "character_id": "CHR01",
+      "resource_path": "res://assets/aurora/characters/1000001/艾琳_亮证稳住众人.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000001/erin_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "visible_head_top_y_px": 27,
+      "dialogue_anchor_px": [
+        500,
+        1016
+      ],
+      "facing_direction": "front"
+    },
+    {
+      "character_id": "CHR03",
+      "resource_path": "res://assets/aurora/characters/1000003/尼娜_侧身护住丈夫.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000003/nina_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "visible_head_top_y_px": 13,
+      "dialogue_anchor_px": [
+        480,
+        1014
+      ],
+      "facing_direction": "right"
+    },
+    {
+      "character_id": "CHR07",
+      "resource_path": "res://assets/aurora/characters/1000007/格兰特_迎客_提取.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000007/grant_reaction.png",
+      "source_size_px": [
+        968,
+        1625
+      ],
+      "visible_head_top_y_px": 10,
+      "dialogue_anchor_px": [
+        540,
+        1080
+      ],
+      "facing_direction": "left"
+    },
+    {
+      "character_id": "CHR07",
+      "resource_path": "res://assets/aurora/characters/1000007/格兰特_阅信抬眼.png",
+      "avatar_resource_path": "res://assets/aurora/characters/1000007/grant_reaction.png",
+      "source_size_px": [
+        1024,
+        1536
+      ],
+      "visible_head_top_y_px": 8,
+      "dialogue_anchor_px": [
+        580,
+        1014
+      ],
+      "facing_direction": "right"
+    }
+  ],
+  "embedded_character_views": [
+    {
+      "scene_id": "SC02",
+      "view_id": "VIEW_SC02_MAIN",
+      "character_id": "CHR03",
+      "actual_scene_id": "SC03",
+      "visible_background_ref": "BG_SC02_NINA_VISIBLE",
+      "visible_background_path": "res://assets/aurora/scenes/backgrounds/SC02_大厅_基础.png",
+      "conversation_background_ref": "BG_SC02_KITCHEN_EMPTY",
+      "conversation_background_path": "res://assets/aurora/scenes/backgrounds/SC02_大厅_厨房无人.png",
+      "native_size_px": [
+        1672,
+        941
+      ],
+      "hotspot_ref": "HS_SC02_NINA_VISIBLE",
+      "hotspot_rect_default_px": [
+        745,
+        318,
+        67,
+        130
+      ],
+      "hotspot_rect_native_ltrb_px": [
+        778,
+        333,
+        848,
+        468
+      ],
+      "dialogue_actor_resource_path": "res://assets/aurora/characters/1000003/nina_neutral.png",
+      "dialogue_position": "center",
+      "parent_entry_ref": "ENTRY_SC02_NINA_VISIBLE",
+      "conversation_entry_ref": "ENTRY_CH01_SIDE_SCARF",
+      "busy_entry_ref": "ENTRY_SC02_NINA_BUSY"
+    },
+    {
+      "scene_id": "SC02",
+      "view_id": "VIEW_SC02_COUNTER",
+      "character_id": "CHR03",
+      "actual_scene_id": "SC03",
+      "visible_background_ref": "BG_SC02_NINA_VISIBLE_COUNTER",
+      "visible_background_path": "res://assets/aurora/scenes/backgrounds/SC02_柜台交接_空.png",
+      "conversation_background_ref": "BG_SC02_KITCHEN_EMPTY_COUNTER",
+      "conversation_background_path": "res://assets/aurora/scenes/backgrounds/SC02_柜台交接_厨房无人.png",
+      "native_size_px": [
+        1344,
+        756
+      ],
+      "hotspot_ref": "HS_SC02_NINA_VISIBLE_COUNTER",
+      "hotspot_rect_default_px": [
+        1090.476,
+        0,
+        166.667,
+        197.619
+      ],
+      "hotspot_rect_native_ltrb_px": [
+        916,
+        0,
+        1056,
+        166
+      ],
+      "dialogue_actor_resource_path": "res://assets/aurora/characters/1000003/nina_neutral.png",
+      "dialogue_position": "center",
+      "parent_entry_ref": "ENTRY_SC02_NINA_VISIBLE",
+      "conversation_entry_ref": "ENTRY_CH01_SIDE_SCARF",
+      "busy_entry_ref": "ENTRY_SC02_NINA_BUSY"
+    }
+  ],
+  "scene_background_bindings": {
+    "source_ref": "INV_SCENE_PRESENTATION_CONFIG",
+    "entry_bindings": [
+      {
+        "entry_ref": "ENTRY_CH01_TEA_PARENTS",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_TEA_PARENTS_FIRST",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_TEA_PARENTS_REPEAT",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_TEA",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_READ_E01",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_E01_READER",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_AFTER_E01_READ",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_GLOVES_WET",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "TALK_CH01_MAIN_3",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_OLD_RAILWAY_MAP",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_LORNE_UNREAD",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_WARM_GLOVES",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_MEDICAL_BAG",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR02_CH01_0287",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR02_CH01_0289",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_LORNE_BUSY",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR02_SC06",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC06_GLOVES",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC06_TEA",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC06_WORK_ITEMS",
+        "group_refs": [
+          "CBG_SC06_LORNE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_COUPLE_INITIAL_TOGETHER",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_COUPLE_INITIAL_SEPARATED",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_COUPLE_INITIAL_END",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_FIRST_PHOTO",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_FIRST_PHOTO_UNKNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_FIRST_PHOTO_KNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_HANDKERCHIEF",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_HANDKERCHIEF_FIRST",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_HANDKERCHIEF_REPEAT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_WRENCH",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_WRENCH_FIRST",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_WRENCH_REPEAT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "TALK_CH02_YURI_CURRENT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_SEPARATED_START",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_TOGETHER_START",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_FIRST_QUESTION",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_QUESTION",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_RESPONSE_E11",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_RESPONSE_E12",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_FIRST_ADMISSION",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_WRENCH_UNKNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_WRENCH_KNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_CURRENT_ACTIONS",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_E11_HELD",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_E11_NOT_HELD",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_HANDKERCHIEF_ACCOUNT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_VERA_LEAVES_OLD_UNKNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_VERA_LEAVES_OLD_KNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_BAG_ACCOUNT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_E12_HELD",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_E12_NOT_HELD",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_BAG_REPLACEMENT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_LEAVE_SEEN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_LEAVE_B03_KNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_LEAVE_UNSEEN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_CORRIDOR_ACCOUNT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_END",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_END_KNIFE_KNOWN",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_RETURN_TOGETHER",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_RETURN_SEPARATED",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_YURI_BAG_IDENTIFICATION",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_YURI_BAG_BEFORE_B02",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_YURI_BAG_AFTER_B02",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH02_L01_NONHIT",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "INV_SC07_NEEDLE",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR05_SC07",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02",
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR06_SC07",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02",
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC07_BED",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02",
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC07_HANDKERCHIEF",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02",
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC07_TRAVEL_BAG",
+        "group_refs": [
+          "CBG_SC07_COUPLE",
+          "CBG_SC07_VERA_ALONE_CH02",
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_YURI_1957",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_DISPATCH",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_FIRST",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_WRENCH",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_MONEY",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_BLANKET",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_COMPARE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_WAIT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_L07_PROMISE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_PAPERS",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_NOTEBOOK",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_KEEP_BOOK",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_STATEMENT_OPEN",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_STATEMENT_ANSWER",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_LETTERS",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_E20_READER",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_LETTERS_AFTER_READ",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_YURI_MEMORY",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_MEMORY_SHORT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_YURI_MEMORY_CURRENT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_MEMORY_AFTER_STRIKE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_MEMORY_HELP_VOICE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_MEMORY_CLOSE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_VERA_REPORT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH03_AFTER_VERA",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH04_VERA_AFTER_COAT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "TALK_CH06_YURI_RESULT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_COUPLE_FIRST",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_COUPLE_REVISIT",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_VERA_LETTERS",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_DEPART_COUPLE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_DEPART_COUPLE_LINE",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR05_CH03_1093",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR05_CH03_1369",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR05_CH04_1455",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR05_CH06_1781",
+        "group_refs": [
+          "CBG_SC07_VERA_LETTERS"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_SIDE_PAVEL",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_TOOLBOX_CLEAN",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_CABINET_EMPTY",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH01_FROST_WINDOW",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR11_CH01_0357",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR11_CH01_0359",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR10_SC10",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CLICK_CHR11_SC10",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC10_BAG",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC10_TOOLBOX",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_INSPECT_MENU_SC10_WINDOW_BENCH",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_BAG_SELECT_SC10",
+        "group_refs": [
+          "CBG_SC10_PAVEL_PRECASE",
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "TALK_CH06_TWINS_RESULT",
+        "group_refs": [
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_TWINS_FIRST",
+        "group_refs": [
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_TWINS_REVISIT",
+        "group_refs": [
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_DEPART_TWINS",
+        "group_refs": [
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      },
+      {
+        "entry_ref": "ENTRY_CH06_DEPART_TWINS_LINE",
+        "group_refs": [
+          "CBG_SC10_TWINS_TELLING"
+        ]
+      }
+    ],
+    "observation_bindings": [
+      {
+        "entry_ref": "ENTRY_CLICK_CHR11_CH06_1717",
+        "presentation_ref": "BG_SC10_TWINS_AFTER"
+      }
+    ],
+    "temporary_cues": [
+      {
+        "entry_ref": "ENTRY_CH06_COUPLE_FIRST",
+        "group_ref": "CBG_SC05_YURI_DOOR",
+        "text_ref": "TXT_CH06_0109",
+        "exit_before_text_ref": "TXT_CH06_0111"
+      }
+    ]
+  }
+}

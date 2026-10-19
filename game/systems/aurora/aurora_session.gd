@@ -22,6 +22,7 @@ var active_entry := ""
 var return_context := {}
 var reader := {}
 var question := ""
+var current_statement := ""
 var selected_target := false
 var slots: Array = ["", ""]
 var pending_result := {}
@@ -46,6 +47,13 @@ var page_snapshot_provider: Callable
 var page_snapshot := {}
 var media_snapshot_provider: Callable
 var ending_media := {}
+var requested_destination := ""
+var departure_ready_destination := ""
+var departure_managed := false
+var question_reading := {}
+var arrival_pending := false
+var active_slot := -1
+var contextual_presentation := {}
 # 由本包剧情明确要求的到达短场；资格直接引用原入口条件，不复制条件表达式。
 const ARRIVAL_ENTRIES := {
 	"SC02": ["ENTRY_CH01_RECEPTION", "ENTRY_CH01_HALL_RETURN", "ENTRY_CH04_HALL_RETURN", "ENTRY_CH06_PHONE"],
@@ -81,6 +89,8 @@ func new_game() -> bool:
 	response_active = false
 	return_context.clear()
 	question = ""
+	current_statement = ""
+	selected_target = false
 	slots = ["", ""]
 	elapsed_seconds = 0
 	initial_saved = false
@@ -89,6 +99,13 @@ func new_game() -> bool:
 	autosave_failed = false
 	page_snapshot.clear()
 	ending_media.clear()
+	requested_destination = ""
+	departure_ready_destination = ""
+	departure_managed = false
+	question_reading.clear()
+	arrival_pending = false
+	contextual_presentation.clear()
+	active_slot = -1
 	run_id = "%s-%s" % [Time.get_unix_time_from_system(), Time.get_ticks_usec()]
 	last_bgm = ""
 	# 起始人物结果有自己的事件身份，先建立初始状态，再进入唯一开始入口。
@@ -138,10 +155,34 @@ func close_local_context() -> void:
 	return_context = {"kind": "scene", "scene": case_state.data.scene, "view": case_state.data.view}
 	if (save_due or stage_dirty) and can_save(): _write_auto()
 
+func present_material_to(actor_id: String, content_id: String) -> bool:
+	# 普通交谈的实物出示独立于核查题，必须核对人物、现场和准确内容版本。
+	if mode != "investigation" or processing or not case_state.owns(content_id): return false
+	if str(case_state.data.npc.get(actor_id, {}).get("scene_id", "")) != str(case_state.data.scene): return false
+	for binding in config.narrative_bindings("material_presentation_bindings"):
+		if str(binding.get("scene_id", "")) != str(case_state.data.scene): continue
+		if str(binding.get("actor_id", "")) != actor_id or str(binding.get("content_id", "")) != content_id: continue
+		if not condition(str(binding.get("condition_ref", ""))): continue
+		var before := export_snapshot()
+		contextual_presentation = binding.duplicate(true)
+		if activate_entry(str(binding.get("response_entry_ref", "")), return_context): return true
+		contextual_presentation.clear()
+		restore_snapshot(before)
+		return false
+	return _notice("这份材料当前没有可向该人物出示的回应。")
+
 func prepare_scene(id: String) -> bool:
 	if not config.scenes.has(id): return false
 	var ref := str(config.scenes[id].get("background_ref", ""))
 	var path := str(config.resources.get(ref, {}).get("path", ""))
+	# 最终地图表只维护空间与场景身份，调查背景归调查的资源需求表所有。
+	# 空的旧版 background_ref 不能导致所有正式场景无法启动。
+	if path.is_empty():
+		var view_id := str(config.scenes[id].get("default_view_id", ""))
+		for resource in config.rows("investigation", "资源需求"):
+			if str(resource.get("view_id", "")) == view_id and resource.get("view_kind") in ["fixed_view", "scene_background"]:
+				path = str(resource.get("resource_or_text_ref", ""))
+				break
 	# 成品保留导入资源映射，原 PNG 不一定作为普通文件存在。
 	return not path.is_empty() and ResourceLoader.exists(path)
 
@@ -181,6 +222,8 @@ func activate_entry(id: String, context: Dictionary = {}, depth: int = 0) -> boo
 			if response_active:
 				pending_result["continuation"] = {"target_kind": "entry", "target_ref": id}
 				return finish_response()
+			var enter_event := str(row.get("enter_event_id", ""))
+			if not enter_event.is_empty() and not case_state.event(enter_event, source_context()): return false
 			return open_question(str(row.call_ref))
 	var first := str(row.get("first_text_id", ""))
 	# 调查反馈按当前状态选同一观察的阶段差分；回访只读该差分的repeat_text。
@@ -196,6 +239,9 @@ func activate_entry(id: String, context: Dictionary = {}, depth: int = 0) -> boo
 		var repeat_text := str(feedback.get("repeat_text_id", ""))
 		if not initial.is_empty(): first = repeat_text if case_state.data.texts.get(initial, false) and not repeat_text.is_empty() else initial
 	if not first.is_empty():
+		if not narrative.catalog.data.texts.has(first): return _notice("入口正文未就绪：" + first)
+		var enter_event := str(row.get("enter_event_id", ""))
+		if not enter_event.is_empty() and not case_state.event(enter_event, source_context()): return _notice("入口状态尚未就绪：" + enter_event)
 		mode = "narrative"
 		var started: bool = narrative.show_text(first)
 		changed.emit()
@@ -203,6 +249,8 @@ func activate_entry(id: String, context: Dictionary = {}, depth: int = 0) -> boo
 	return resolve_source(id, depth + 1)
 
 func _entry_condition(row: Dictionary) -> bool:
+	for binding in config.narrative_bindings("material_presentation_bindings"):
+		if str(binding.get("response_entry_ref", "")) == str(row.get("entry_id", "")) and contextual_presentation.is_empty(): return false
 	var gate := str(row.get("condition_id", ""))
 	if condition(gate):
 		# 原件必须在其完成事件可接受回执时才开放，避免能打开却永远读不完。
@@ -230,7 +278,30 @@ func _apply_music(row: Dictionary) -> void:
 		music_requested.emit(key)
 
 func finish_text(id: String) -> bool:
+	if not question_reading.is_empty() and question_reading.get("kind") in ["statement", "hint"]:
+		var refs: Array = question_reading.get("texts", [])
+		var index := int(question_reading.get("index", 0)) + 1
+		if index < refs.size():
+			question_reading.index = index
+			return narrative.show_text(str(refs[index]))
+		return _finish_question_reading()
 	return resolve_source(id)
+
+func on_text_finished(id: String) -> bool:
+	# 最终包的分页与证言绑定只在实际读完对应正文时提交完成事件。
+	for group in config.narrative_bindings("text_page_groups"):
+		if str(group.get("text_id", "")) == id and str(group.get("completion_text_ref", id)) != id:
+			return true
+	for binding in config.narrative_bindings("statement_bindings"):
+		var pages: Array = binding.get("text_refs", [])
+		if pages.is_empty() or str(pages.back()) != id: continue
+		var event_id := str(binding.get("read_completion_event_ref", ""))
+		if not event_id.is_empty() and not case_state.event(event_id, source_context()): return false
+	for binding in config.narrative_bindings("arrival_bindings"):
+		if str(binding.get("text_id", "")) != id: continue
+		var arrival_event := str(binding.get("completion_event_ref", ""))
+		if not arrival_event.is_empty() and not case_state.event(arrival_event, source_context()): return false
+	return true
 
 func valid_jumps(source: String, timing: String = "") -> Array:
 	var candidates: Array = []
@@ -252,6 +323,7 @@ func resolve_source(source: String, depth: int = 0) -> bool:
 		var next := str(row.get("next_text_id", ""))
 		if not next.is_empty(): return follow({"target_kind": "text", "target_ref": next}, depth + 1)
 		if not _complete_entry(): return false
+		if question_reading.get("kind") == "press": return _finish_question_reading()
 		return return_to_context()
 	var choices: Array = candidates.filter(func(row): return row.get("trigger") in ["choice", "question"])
 	if not choices.is_empty():
@@ -285,6 +357,9 @@ func follow(jump: Dictionary, depth: int = 0) -> bool:
 		if not _complete_entry(): return false
 		return finish_response()
 	if not event_id.is_empty() and not case_state.event(event_id, source_context()): return _notice("结果提交条件不满足：" + event_id)
+	if not question_reading.is_empty() and question_reading.get("kind") == "press" and kind in ["return", "question"]:
+		if not _complete_entry(): return false
+		return _finish_question_reading()
 	if jump.get("location_mode") == "fixed" and not str(jump.get("scene_id", "")).is_empty():
 		if not set_scene(str(jump.scene_id)): return false
 	# 连续供述可以直接接下一问或地图；先结束本次结果回执，玩家继续后才进入后继。
@@ -340,10 +415,36 @@ func return_to_context() -> bool:
 		active_entry = str(frame.entry)
 		return_context = frame.context.duplicate(true)
 		return resolve_source(active_entry)
+	if question_reading.get("kind") == "press": return _finish_question_reading()
+	if not contextual_presentation.is_empty():
+		var event_id := str(contextual_presentation.get("completion_event_ref", ""))
+		if not event_id.is_empty() and not case_state.event(event_id, source_context()): return false
+		contextual_presentation.clear()
 	# 固定回忆/短场临时使用其他画面，结束后恢复调用者的真实地点和视图。
 	if config.scenes.has(str(return_context.get("scene", ""))):
 		case_state.data.scene = str(return_context.scene)
 		case_state.data.view = str(return_context.get("view", config.scenes[return_context.scene].default_view_id))
+	# 离场短场完成后，沿玩家原先明确请求的目的地继续；短场中途取消时保留当前地点。
+	if not requested_destination.is_empty() and not response_active:
+		var destination := requested_destination
+		requested_destination = ""
+		if departure_managed:
+			departure_managed = false
+			departure_ready_destination = destination
+			mode = "investigation"
+			active_entry = ""
+			narrative.end_reading()
+			changed.emit()
+			return true
+		if scene_status(destination).available and set_scene(destination):
+			return_context = {"kind": "scene", "scene": destination, "view": case_state.data.view}
+			mode = "investigation"
+			active_entry = ""
+			narrative.end_reading()
+			arrival_pending = true
+			_continue_arrival()
+			changed.emit()
+			return true
 	# 允许提前供述的路线中，家庭段可能先于旧案/餐食段完成。最后一项
 	# 真实操作归还时重验全案条件；不在载表或恢复存档时自动执行结果。
 	if condition("COND_CASE_REQUIRED_COMPLETE") and not case_state.data.events.get("EV_CH06_ENTER", false):
@@ -353,6 +454,7 @@ func return_to_context() -> bool:
 	active_entry = ""
 	reader.clear()
 	narrative.end_reading()
+	if arrival_pending and _continue_arrival(): return true
 	changed.emit()
 	returned.emit(return_context.duplicate(true))
 	# 初档只在真正归还可操作调查时写；之后仅明确的完成操作发普通自动档。
@@ -361,13 +463,19 @@ func return_to_context() -> bool:
 
 func material_read_complete() -> bool:
 	if mode != "material" or reader.is_empty(): return false
+	var previous_reader := reader.duplicate(true)
 	reader.read_complete = true
 	var entry_id := str(reader.entry)
 	if not _complete_entry():
 		reader.read_complete = false
 		return false
 	reader.clear()
-	return resolve_source(entry_id)
+	if resolve_source(entry_id): return true
+	# 读后接续失败也保留可操作阅读器；已经提交的材料由事件幂等保证不会重复获得。
+	if mode == "material" and reader.is_empty():
+		reader = previous_reader
+		changed.emit()
+	return false
 
 func cancel_material() -> bool:
 	if mode != "material": return false
@@ -384,6 +492,13 @@ func set_scene(id: String) -> bool:
 	return true
 
 func scene_status(id: String) -> Dictionary:
+	if not config.scenes.has(id): return {"known": false, "available": false, "reason": "地点不存在"}
+	if case_state.data.chapter == "CH01" and not config.rows("map", "首章可达绑定").is_empty():
+		var permitted := id == str(case_state.data.scene)
+		for binding in config.rows("map", "首章可达绑定"):
+			if str(binding.get("chapter_ref", "")) != "CH01" or str(binding.get("source_scene_ref", "")) != str(case_state.data.scene): continue
+			if str(binding.get("destination_scene_ref", "")) == id and condition(str(binding.get("condition_ref", ""))): permitted = true
+		return {"known": true, "available": permitted, "reason": "当前路线尚未开放" if not permitted else ""}
 	var known := false
 	var available := false
 	if case_state.data.chapter != "CH01":
@@ -400,7 +515,51 @@ func scene_status(id: String) -> Dictionary:
 
 func travel(id: String) -> bool:
 	if not can_save() or not scene_status(id).available: return false
+	if not prepare_scene(id): return _notice("目的地资源未就绪，已保留原地点。")
+	# 正式离场绑定要求先完成离场对白；目的地只保存为玩家请求，不在对白开始时传送。
+	for binding in config.narrative_bindings("scene_exit_bindings"):
+		if str(binding.get("scene_ref", "")) != str(case_state.data.scene): continue
+		if not condition(str(binding.get("condition_ref", ""))): continue
+		var exit_entry := str(binding.get("entry_ref", ""))
+		if exit_entry.is_empty(): continue
+		requested_destination = id
+		if activate_entry(exit_entry, {"kind": "scene", "scene": case_state.data.scene, "view": case_state.data.view}): return true
+		requested_destination = ""
+		return false
 	if not set_scene(id): return false
+	return_context = {"kind": "scene", "scene": id, "view": case_state.data.view}
+	_apply_music({"chapter_id": case_state.data.chapter})
+	changed.emit()
+	return true
+
+func prepare_departure(id: String) -> String:
+	# 地图准备先播放离场对白；实际地点与棋子只在对白完成并移动成功后提交。
+	if not can_save() or not scene_status(id).available or not prepare_scene(id): return "failed"
+	departure_ready_destination = ""
+	for binding in config.narrative_bindings("scene_exit_bindings"):
+		if str(binding.get("scene_ref", "")) != str(case_state.data.scene) or not condition(str(binding.get("condition_ref", ""))): continue
+		var exit_entry := str(binding.get("entry_ref", ""))
+		if exit_entry.is_empty(): continue
+		requested_destination = id
+		departure_managed = true
+		if activate_entry(exit_entry, {"kind": "scene", "scene": case_state.data.scene, "view": case_state.data.view}): return "waiting"
+		requested_destination = ""
+		departure_managed = false
+		return "failed"
+	return "ready"
+
+func cancel_departure() -> bool:
+	if requested_destination.is_empty() or processing or response_active: return false
+	requested_destination = ""
+	departure_ready_destination = ""
+	departure_managed = false
+	call_stack.clear()
+	return return_to_context()
+
+func commit_prepared_departure(id: String) -> bool:
+	if departure_ready_destination != id or not can_save() or not scene_status(id).available: return false
+	if not set_scene(id): return false
+	departure_ready_destination = ""
 	return_context = {"kind": "scene", "scene": id, "view": case_state.data.view}
 	_apply_music({"chapter_id": case_state.data.chapter})
 	changed.emit()
@@ -464,13 +623,35 @@ func go_objective(row: Dictionary) -> bool:
 	return ok
 
 func arrive() -> bool:
-	# 地图叠化结束才开放短场；读档、新游戏重建不调用此方法。
+	# 只有实际到达才启动队列，地图预览、读档和局部返回不算到达。
 	if mode != "investigation" or paused: return false
+	arrival_pending = true
+	return _continue_arrival()
+
+func _continue_arrival() -> bool:
+	# 同一到达先播放时地，再按优先级完成地点短场，不丢掉后续剧情。
+	for binding in config.narrative_bindings("arrival_bindings"):
+		if str(binding.get("scene_id", "")) != str(case_state.data.scene): continue
+		if not condition(str(binding.get("condition_ref", ""))): continue
+		var arrival_entry := str(binding.get("entry_ref", ""))
+		if arrival_entry.is_empty() or case_state.data.texts.get(str(binding.get("text_id", "")), false): continue
+		return activate_entry(arrival_entry, return_context)
+	var scene_entries: Array = config.narrative_bindings("scene_entry_bindings")
+	scene_entries.sort_custom(func(a, b): return int(a.get("priority", 100)) < int(b.get("priority", 100)))
+	for binding in scene_entries:
+		if str(binding.get("scene_ref", "")) != str(case_state.data.scene): continue
+		var scene_entry := str(binding.get("entry_ref", ""))
+		if scene_entry.is_empty() or case_state.data.entries.get(scene_entry, false): continue
+		if not condition(str(binding.get("condition_ref", ""))): continue
+		var entry_event := str(binding.get("event_ref", ""))
+		if not entry_event.is_empty() and not case_state.event(entry_event, source_context()): return false
+		return activate_entry(scene_entry, return_context)
 	for id in ARRIVAL_ENTRIES.get(str(case_state.data.scene), []):
 		var row: Dictionary = config.entries.get(id, {})
 		if row.is_empty() or case_state.data.entries.get(id, false): continue
 		if str(row.get("chapter_id", "")) != str(case_state.data.chapter): continue
 		if condition(str(row.get("condition_id", ""))): return activate_entry(id, return_context)
+	arrival_pending = false
 	return false
 
 func display_scene() -> String:
@@ -485,11 +666,12 @@ func investigation_view() -> String:
 	return str(case_state.data.view)
 
 func can_cancel_inspection() -> bool:
-	return not processing and not response_active and mode == "narrative" and return_context.get("kind") == "inspection" and config.entries.get(active_entry, {}).get("location_mode", "caller") == "caller"
+	return not processing and not response_active and mode == "narrative" and (not requested_destination.is_empty() or (return_context.get("kind") == "inspection" and config.entries.get(active_entry, {}).get("location_mode", "caller") == "caller"))
 
 func cancel_inspection() -> bool:
 	# 提前返回只结束阅读，不执行入口完成事件，也不把未读完的观察记成已查。
 	if not can_cancel_inspection(): return false
+	if not requested_destination.is_empty(): return cancel_departure()
 	call_stack.clear()
 	return return_to_context()
 
@@ -539,11 +721,18 @@ func _notice(message: String) -> bool:
 	return false
 
 func open_question(id: String) -> bool:
+	if not question_reading.is_empty() and question_reading.get("kind") == "press" and id == question:
+		return _finish_question_reading()
 	if not config.questions.has(id): return false
 	question = id
+	current_statement = ""
 	narrative.end_reading()
 	var round: Dictionary = config.questions[id]
 	var draft: Dictionary = case_state.data.drafts.get(id, {})
+	current_statement = str(draft.get("current_statement", ""))
+	if current_statement.is_empty():
+		var binding := question_binding(id)
+		current_statement = str(round.get("target_text_ref", binding.get("target_text_ref", "")))
 	pending_result.clear()
 	selected_target = draft.get("target", round.get("interaction_kind") == "reasoning") == true
 	slots = draft.get("slots", ["", ""]).duplicate()
@@ -552,6 +741,11 @@ func open_question(id: String) -> bool:
 	if case_state.data.results.has(id):
 		pending_result = case_state.data.results[id].duplicate(true)
 		mode = "result"
+	if mode == "selection":
+		var targets: Array = question_binding().get("statement_refs", []).duplicate()
+		if targets.is_empty() and round.get("interaction_kind") == "statement": targets.append(current_statement)
+		if targets.any(func(ref): return not case_state.data.texts.get(str(ref), false)):
+			return _read_question_texts(targets, "statement")
 	changed.emit()
 	return true
 
@@ -586,15 +780,134 @@ func store_browsing(value: Dictionary) -> void:
 	case_state.data.drafts[question]["browse"] = value.duplicate(true)
 
 func target_text() -> String:
-	var row: Dictionary = config.questions.get(question, {})
-	return config.text(str(row.get("target_text_ref", "")))
+	var ref := current_statement
+	if ref.is_empty():
+		var row: Dictionary = config.questions.get(question, {})
+		ref = str(row.get("target_text_ref", ""))
+	return config.text(ref)
+
+func question_binding(id: String = "") -> Dictionary:
+	if id.is_empty(): id = question
+	for row in config.narrative_bindings("question_bindings"):
+		if str(row.get("question_id", "")) == id: return row
+	return {}
+
+func statement_options() -> Array:
+	var result: Array = []
+	var binding := question_binding()
+	for ref in binding.get("statement_refs", []):
+		var id := str(ref)
+		if id.is_empty() or not config.texts.has(id): continue
+		result.append({"id": id, "text": config.text(id), "heard": bool(case_state.data.texts.get(id, false)), "selected": id == current_statement})
+	return result
+
+func select_statement(id: String) -> bool:
+	if mode != "selection" or not question_binding().get("statement_refs", []).has(id): return false
+	if not case_state.data.texts.get(id, false): return _notice("只能选定实际听过的原话。")
+	current_statement = id
+	selected_target = false
+	_store_draft()
+	changed.emit()
+	return true
+
+func read_statement(id: String) -> bool:
+	var targets: Array = question_binding().get("statement_refs", []).duplicate()
+	if targets.is_empty(): targets.append(str(config.questions.get(question, {}).get("target_text_ref", "")))
+	if mode != "selection" or id not in targets: return false
+	current_statement = id
+	selected_target = false
+	return _read_question_texts([id], "statement")
+
+func _read_question_texts(targets: Array, kind: String) -> bool:
+	# 证言按配置逐句、逐页播放；原句并非只显示在按钮上便算实际听过。
+	var refs: Array = []
+	for target in targets:
+		var pages: Array = [target]
+		if kind == "statement":
+			for binding in config.narrative_bindings("statement_bindings"):
+				if binding.get("question_id") == question and binding.get("target_text_ref") == target:
+					pages = binding.get("text_refs", [target])
+					break
+		for page_ref in pages:
+			if not config.texts.has(str(page_ref)): return _notice("证言正文缺失：" + str(page_ref))
+			if page_ref not in refs: refs.append(page_ref)
+	if refs.is_empty(): return false
+	_store_draft()
+	question_reading = {"kind": kind, "texts": refs, "index": 0, "entry": active_entry, "context": return_context.duplicate(true)}
+	mode = "narrative"
+	var ok: bool = narrative.show_text(str(refs[0]))
+	changed.emit()
+	return ok
+
+func read_question_hint() -> bool:
+	if mode != "selection": return false
+	return _read_question_texts(question_binding().get("hint_text_refs", []), "hint")
+
+func press_statement() -> bool:
+	if mode != "selection" or not case_state.data.texts.get(current_statement, false): return false
+	var binding := question_binding()
+	var refs: Array = binding.get("statement_refs", [])
+	var presses: Array = binding.get("press_entry_refs", [])
+	var index := refs.find(current_statement)
+	if index < 0 or index >= presses.size(): return false
+	_store_draft()
+	var old_entry := active_entry
+	var old_context := return_context.duplicate(true)
+	question_reading = {"kind": "press", "entry": old_entry, "context": old_context, "statement": current_statement, "press_entry": str(presses[index])}
+	if activate_entry(str(presses[index])): return true
+	question_reading.clear()
+	active_entry = old_entry
+	return_context = old_context
+	mode = "selection"
+	return false
+
+func _finish_question_reading() -> bool:
+	var reading := question_reading.duplicate(true)
+	if reading.get("kind") == "press":
+		for binding in config.narrative_bindings("statement_bindings"):
+			if binding.get("question_id") != question or binding.get("target_text_ref") != reading.get("statement"): continue
+			var event_id := str(binding.get("press_completion_event_ref", ""))
+			if not event_id.is_empty() and not case_state.event(event_id, source_context()): return false
+	question_reading.clear()
+	active_entry = str(reading.get("entry", active_entry))
+	return_context = reading.get("context", return_context).duplicate(true)
+	mode = "selection"
+	narrative.end_reading()
+	_store_draft()
+	changed.emit()
+	return true
+
+func can_continue_question() -> bool:
+	var binding := question_binding()
+	return mode == "selection" and not str(binding.get("continue_entry_ref", "")).is_empty() and condition(str(binding.get("continue_condition_ref", "")))
+
+func continue_question() -> bool:
+	if not can_continue_question(): return false
+	return activate_entry(str(question_binding().continue_entry_ref))
+
+func complete_cat_interaction() -> bool:
+	var binding: Dictionary = config.narrative_data.get("cat_reward_binding", {})
+	var key := str(binding.get("count_state_key", "cat_pet_completed_count"))
+	var count := mini(int(binding.get("count_cap", 5)), int(case_state.data.get(key, 0)) + 1)
+	case_state.data[key] = count
+	if count < int(binding.get("threshold", 5)): return false
+	var entry_id := str(binding.get("reward_entry_ref", ""))
+	if not entry_id.is_empty() and config.entries.has(entry_id) and not case_state.data.entries.get(entry_id, false):
+		return activate_entry(entry_id, {"kind": "scene", "scene": case_state.data.scene, "view": case_state.data.view})
+	return true
 
 func select_target() -> bool:
 	if mode != "selection": return false
-	var id := str(config.questions[question].get("target_text_ref", ""))
+	var id := current_statement if not current_statement.is_empty() else str(config.questions[question].get("target_text_ref", ""))
 	if config.questions[question].interaction_kind == "statement" and not case_state.data.texts.get(id, false): return _notice("只能选定实际听过的原话。")
 	selected_target = true
 	_store_draft()
+	changed.emit()
+	return true
+
+func select_slot(index: int) -> bool:
+	if mode != "selection" or index not in [0, 1]: return false
+	active_slot = index
 	changed.emit()
 	return true
 
@@ -604,9 +917,11 @@ func select_content(id: String, slot: int = -1) -> bool:
 	for i in range(slots.size()):
 		if not str(slots[i]).is_empty() and config.contents[slots[i]].material_id == material:
 			return _notice("这份材料已入槽，请先撤下再切换版本。")
+	if slot < 0 and active_slot in [0, 1]: slot = active_slot
 	if slot < 0: slot = slots.find("")
 	if slot < 0 or slot > 1: return _notice("两处引用夹位已满，请先撤下一张。")
 	slots[slot] = id
+	active_slot = -1
 	_store_draft()
 	changed.emit()
 	return true
@@ -620,7 +935,7 @@ func clear_slot(index: int) -> void:
 func _store_draft() -> void:
 	if question.is_empty(): return
 	var draft: Dictionary = case_state.data.drafts.get(question, {})
-	draft.merge({"target": selected_target, "slots": slots.duplicate()}, true)
+	draft.merge({"target": selected_target, "current_statement": current_statement, "slots": slots.duplicate()}, true)
 	case_state.data.drafts[question] = draft
 
 func collapse_question() -> bool:
@@ -635,11 +950,13 @@ func retry_question() -> bool:
 	return open_question(question)
 
 func present() -> bool:
-	if processing or mode != "selection" or not selected_target or slots.all(func(id): return str(id).is_empty()): return false
+	if processing or mode != "selection" or not selected_target: return false
+	if not question_binding().get("requires_actual_presentation", true) or slots.all(func(id): return str(id).is_empty()): return false
 	var selected: Array = slots.filter(func(id): return not str(id).is_empty())
 	var matches: Array = []
 	for row in config.relations:
 		if row.question_ref != question or not condition(str(row.get("condition_ref", ""))): continue
+		if not current_statement.is_empty() and str(row.get("target_text_ref", "")) != current_statement: continue
 		var refs: Array = []
 		for key in ["a_content_ref", "b_content_ref"]:
 			if not str(row.get(key, "")).is_empty(): refs.append(str(row[key]))
@@ -657,6 +974,7 @@ func present() -> bool:
 		# 明确错误单独配置，禁用模板已由读表器剔除；默认不足不扣次数。
 		for error in config.rows("core", "错误出示"):
 			if str(error.get("question_ref", "")) != question or not condition(str(error.get("condition_ref", ""))): continue
+			if not str(error.get("target_text_ref", "")).is_empty() and str(error.get("target_text_ref")) != current_statement: continue
 			var refs: Array = []
 			for key in ["a_content_ref", "b_content_ref"]:
 				if not str(error.get(key, "")).is_empty(): refs.append(str(error[key]))
@@ -683,7 +1001,8 @@ func present() -> bool:
 		var climax := str(result.get("climax_key", ""))
 		if pending_result.complete and not case_state.data.completed_questions.has(question) and (climax.is_empty() or not case_state.data.climaxes.has(climax)):
 			pending_result["presentation"] = config.presentation(result)
-			result_presentation_requested.emit(pending_result.presentation)
+			# B07必须先听完承认知情，再碎屏，最后进入共同供述。
+			if climax != "B07": _play_result_effect(pending_result.presentation)
 	mode = "result"
 	_store_draft()
 	changed.emit()
@@ -697,7 +1016,7 @@ func _freeze_sources(refs: Array) -> Array:
 	return result
 
 func read_result_response() -> bool:
-	if mode != "result" or pending_result.is_empty(): return false
+	if processing or mode != "result" or pending_result.is_empty() or pending_result.get("effect_pending", false): return false
 	if pending_result.get("response_after_accept", false) and not pending_result.get("accepted", false): return false
 	var entry := str(pending_result.get("response", ""))
 	if entry.is_empty(): return finish_response()
@@ -718,11 +1037,33 @@ func finish_response() -> bool:
 	if case_state.data.results.has(question): case_state.data.results[question] = pending_result.duplicate(true)
 	mode = "result"
 	narrative.end_reading()
+	var completed_result: Dictionary = config.results.get(pending_result.get("result", ""), {})
+	if completed_result.get("climax_key") == "B07" and not pending_result.get("effect_played", false):
+		_play_result_effect(config.presentation(completed_result))
 	changed.emit()
+	# 先播完的演出也要在回应末尾兑现接续，不额外停在已经完成的结果页。
+	if not pending_result.get("effect_pending", false) and not str(completed_result.get("after_effect_entry_ref", "")).is_empty():
+		continue_result()
 	return true
 
+func _play_result_effect(data: Dictionary) -> void:
+	pending_result["effect_pending"] = true
+	pending_result["effect_played"] = true
+	result_presentation_requested.emit(data)
+
+func finish_result_effect() -> void:
+	# 表现结束只兑现已经成立的接续；未收下的推论绝不在这里取得。
+	processing = false
+	if pending_result.is_empty() or not pending_result.get("effect_pending", false): return
+	pending_result["effect_pending"] = false
+	var result: Dictionary = config.results.get(pending_result.get("result", ""), {})
+	var after_accept := str(result.get("after_accept_entry_ref", ""))
+	var after_effect := str(result.get("after_effect_entry_ref", ""))
+	if pending_result.get("response_read", false) and ((pending_result.get("accepted", false) and not after_accept.is_empty()) or not after_effect.is_empty()):
+		continue_result()
+
 func accept_inference() -> bool:
-	if processing or mode != "result" or pending_result.is_empty() or pending_result.get("accepted", false): return false
+	if processing or mode != "result" or pending_result.is_empty() or pending_result.get("effect_pending", false) or pending_result.get("accepted", false): return false
 	var result: Dictionary = config.results.get(pending_result.get("result", ""), {})
 	if str(result.get("inference_content_ref", "")).is_empty() or (not pending_result.get("response_read", false) and not pending_result.get("response_after_accept", false)): return false
 	var before: Dictionary = case_state.data.duplicate(true)
@@ -734,7 +1075,7 @@ func accept_inference() -> bool:
 			return false
 	pending_result.accepted = true
 	case_state.data.results[question] = pending_result.duplicate(true)
-	result_presentation_requested.emit({"feedback_key": "collect", "duration_ms": 900, "effect_level": "collect", "content_id": str(result.get("inference_content_ref", ""))})
+	_play_result_effect({"feedback_key": "collect", "duration_ms": 900, "effect_level": "collect", "content_id": str(result.get("inference_content_ref", ""))})
 	changed.emit()
 	return true
 
@@ -759,7 +1100,7 @@ func _commit_result(result: Dictionary) -> bool:
 	return true
 
 func continue_result() -> bool:
-	if processing or mode != "result" or pending_result.is_empty(): return false
+	if processing or mode != "result" or pending_result.is_empty() or pending_result.get("effect_pending", false): return false
 	var result: Dictionary = config.results.get(pending_result.get("result", ""), {})
 	if pending_result.get("complete", false):
 		if pending_result.get("response_after_accept", false) and not pending_result.get("accepted", false): return false
@@ -767,11 +1108,21 @@ func continue_result() -> bool:
 		if not str(result.get("inference_content_ref", "")).is_empty() and not pending_result.get("accepted", false): return false
 		var continuation: Dictionary = pending_result.get("continuation", {}).duplicate(true)
 		var accepted := not str(result.get("inference_content_ref", "")).is_empty()
+		var explicit_after := str(result.get("after_accept_entry_ref", "")) if accepted else ""
+		if explicit_after.is_empty(): explicit_after = str(result.get("after_effect_entry_ref", ""))
+		# 后续入口也可能因资源或条件暂时不可用；失败时保留已读回应与待继续结果。
+		# 不能先清空结果再返回false，否则会留下无法继续、也无法存读的空结果页。
+		var before := export_snapshot() if not explicit_after.is_empty() else {}
 		save_due = true
 		pending_result.clear()
 		slots = ["", ""]
 		selected_target = false
 		case_state.data.drafts.erase(question)
+		if not explicit_after.is_empty():
+			if activate_entry(explicit_after): return true
+			var reason := last_notice
+			restore_snapshot(before)
+			return _notice(reason if not reason.is_empty() else "后续内容尚未就绪，当前核查结果已保留。")
 		if not continuation.is_empty(): return follow(continuation)
 		if accepted:
 			var candidates := valid_jumps(active_entry, "on_accept")
@@ -798,11 +1149,13 @@ func export_snapshot() -> Dictionary:
 	return {"format": "aurora_session_v1", "content_revision": config.content_revision, "state_revision": state.revision,
 		"run_id": run_id, "elapsed_seconds": elapsed_seconds, "case_state": state,
 		"mode": mode, "active_entry": active_entry, "return_context": return_context.duplicate(true), "reader": reader.duplicate(true),
-		"question": question, "selected_target": selected_target, "slots": slots.duplicate(), "pending_result": pending_result.duplicate(true),
+		"question": question, "current_statement": current_statement, "selected_target": selected_target, "slots": slots.duplicate(), "pending_result": pending_result.duplicate(true),
 		"response_active": response_active, "response_after": response_after.duplicate(true), "call_stack": call_stack.duplicate(true),
+		"question_reading": question_reading.duplicate(true), "arrival_pending": arrival_pending,
+		"contextual_presentation": contextual_presentation.duplicate(true), "active_slot": active_slot,
 		"narrative": narrative.export_snapshot() if not narrative.state.is_empty() else {}, "bgm": last_bgm,
 		"stage_dirty": stage_dirty, "save_due": save_due, "page_snapshot": page_snapshot.duplicate(true),
-		"ending_media": ending_media.duplicate(true), "ending_status": "completed" if state.ending_completed else ("active" if state.ending_started else ""),
+		"ending_media": ending_media.duplicate(true), "requested_destination": requested_destination, "ending_status": "completed" if state.ending_completed else ("active" if state.ending_started else ""),
 		"progress_summary": {"scene": config.text(str(config.scenes[state.scene].name_text_id)), "phase": str(config.chapters[state.chapter].name), "question": target_text() if not question.is_empty() else ""}}
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
@@ -816,9 +1169,41 @@ func validate_snapshot(snapshot: Dictionary) -> bool:
 	if not entry.is_empty() and not config.entries.has(entry): return false
 	var q := str(snapshot.get("question", ""))
 	if not q.is_empty() and not config.questions.has(q): return false
+	var statement := str(snapshot.get("current_statement", ""))
+	if not statement.is_empty() and not config.texts.has(statement): return false
+	var reading = snapshot.get("question_reading", {})
+	if not reading is Dictionary: return false
+	if not reading.is_empty():
+		if reading.get("kind") not in ["statement", "hint", "press"] or q.is_empty(): return false
+		if not config.entries.has(str(reading.get("entry", ""))) or not _valid_context(reading.get("context", {})): return false
+		if snapshot.mode != "narrative": return false
+		if reading.kind == "press":
+			if not config.texts.has(str(reading.get("statement", ""))) or not config.entries.has(str(reading.get("press_entry", ""))): return false
+			var binding := question_binding(q)
+			var statements: Array = binding.get("statement_refs", [])
+			var presses: Array = binding.get("press_entry_refs", [])
+			var press_index := statements.find(str(reading.statement))
+			if press_index < 0 or press_index >= presses.size() or str(presses[press_index]) != str(reading.press_entry): return false
+		else:
+			var refs = reading.get("texts")
+			var read_index = reading.get("index")
+			if not refs is Array or refs.is_empty(): return false
+			if not (read_index is int or read_index is float) or not is_finite(float(read_index)) or float(read_index) != floorf(float(read_index)): return false
+			if int(read_index) < 0 or int(read_index) >= refs.size(): return false
+			for text_id in refs:
+				if not text_id is String or not config.texts.has(text_id): return false
+	var slot_index = snapshot.get("active_slot", -1)
+	if not (slot_index is int or slot_index is float) or not is_finite(float(slot_index)) or float(slot_index) != floorf(float(slot_index)) or int(slot_index) not in [-1, 0, 1]: return false
+	if not snapshot.get("arrival_pending", false) is bool: return false
+	var presentation = snapshot.get("contextual_presentation", {})
+	if not presentation is Dictionary: return false
+	if not presentation.is_empty():
+		if not config.actors.has(str(presentation.get("actor_id", ""))) or not case_state._incoming_owns(snapshot.case_state, str(presentation.get("content_id", ""))): return false
+		if not config.events.has(str(presentation.get("completion_event_ref", ""))): return false
 	if not snapshot.get("slots") is Array or snapshot.slots.size() != 2: return false
 	if not snapshot.get("selected_target") is bool or not snapshot.get("response_active") is bool: return false
 	if not snapshot.get("run_id") is String or str(snapshot.run_id).is_empty(): return false
+	if not snapshot.get("requested_destination", "") is String or (not str(snapshot.get("requested_destination", "")).is_empty() and not config.scenes.has(str(snapshot.requested_destination))): return false
 	if not snapshot.get("call_stack", []) is Array: return false
 	for frame in snapshot.get("call_stack", []):
 		if not frame is Dictionary or not config.entries.has(str(frame.get("entry", ""))) or not _valid_context(frame.get("context")): return false
@@ -834,6 +1219,7 @@ func validate_snapshot(snapshot: Dictionary) -> bool:
 	if not snapshot.get("narrative", {}).is_empty() and not narrative.validate_snapshot(snapshot.narrative): return false
 	if snapshot.mode == "narrative" and snapshot.narrative.is_empty(): return false
 	if snapshot.mode in ["selection", "result", "failure"] and q.is_empty(): return false
+	if not statement.is_empty() and q.is_empty(): return false
 	if not snapshot.reader.is_empty() and (not config.contents.has(snapshot.reader.get("content", "")) or not config.entries.has(snapshot.reader.get("entry", ""))): return false
 	var pending: Dictionary = snapshot.pending_result
 	if snapshot.mode == "result" and pending.is_empty(): return false
@@ -844,9 +1230,34 @@ func validate_snapshot(snapshot: Dictionary) -> bool:
 		for id in pending.get("refs", []):
 			if not case_state._incoming_owns(snapshot.case_state, str(id)): return false
 		if pending.has("relation") and not config.relations.any(func(row): return row.id == pending.relation and row.question_ref == q): return false
-	if not _valid_sources(snapshot.get("page_snapshot", {}), snapshot.case_state): return false
+	if not _valid_page_snapshot(snapshot.get("page_snapshot", {}), snapshot.case_state): return false
 	if not snapshot.get("ending_media", {}) is Dictionary: return false
 	if not _valid_sources(pending.get("sources", []), snapshot.case_state): return false
+	return true
+
+func _valid_page_snapshot(value, incoming: Dictionary) -> bool:
+	# 页面状态来自存档文件，先完整检查形状，再调用页面的强类型恢复接口。
+	if not value is Dictionary or not _valid_sources(value, incoming): return false
+	if not value.has("reader"): return true
+	var page = value.reader
+	if not page is Dictionary: return false
+	for key in ["visible", "entry", "selectable", "star", "filters_open"]:
+		if page.has(key) and not page[key] is bool: return false
+	for key in ["content", "person", "selected_material", "tab", "category", "sort"]:
+		if page.has(key) and not page[key] is String: return false
+	for key in ["positions", "library_positions", "library_pages"]:
+		if not page.get(key, {}) is Dictionary: return false
+		for amount in page.get(key, {}).values():
+			if not (amount is int or amount is float) or not is_finite(float(amount)) or float(amount) < 0: return false
+	if not page.get("document", {}) is Dictionary or not page.get("stack", []) is Array or not page.get("new_list", []) is Array: return false
+	var index = page.get("new_index", 0)
+	if not (index is int or index is float) or not is_finite(float(index)) or float(index) != floorf(float(index)) or float(index) < 0: return false
+	for content_id in page.get("new_list", []):
+		if not content_id is String or not case_state._incoming_owns(incoming, content_id): return false
+	var selected = page.get("selected_material", "")
+	if not str(selected).is_empty() and not case_state._incoming_owns(incoming, selected): return false
+	for frame in page.get("stack", []):
+		if not frame is Dictionary or not frame.get("content", "") is String or not frame.get("selectable", false) is bool or not frame.get("document", {}) is Dictionary: return false
 	return true
 
 func _valid_context(value) -> bool:
@@ -854,7 +1265,11 @@ func _valid_context(value) -> bool:
 	if value.is_empty(): return true
 	if value.get("kind", "scene") not in ["scene", "topics", "inspection", "scene_items", "reasoning"]: return false
 	if not config.scenes.has(str(value.get("scene", ""))): return false
-	return str(value.get("view", "")) == str(config.scenes[value.scene].default_view_id)
+	var view_id := str(value.get("view", ""))
+	if view_id == str(config.scenes[value.scene].default_view_id): return true
+	for resource in config.rows("investigation", "资源需求"):
+		if str(resource.get("scene_id", "")) in ["", str(value.scene)] and str(resource.get("view_id", "")) == view_id: return true
+	return false
 
 func _valid_sources(value, incoming: Dictionary, depth: int = 0) -> bool:
 	# 冻结来源与页面栈只保存数据；拒绝坏引用、对象和过深递归，避免半恢复。
@@ -882,11 +1297,16 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	return_context = snapshot.return_context.duplicate(true)
 	reader = snapshot.reader.duplicate(true)
 	question = str(snapshot.question)
+	current_statement = str(snapshot.get("current_statement", ""))
 	selected_target = bool(snapshot.selected_target)
 	slots = snapshot.slots.duplicate()
 	pending_result = snapshot.pending_result.duplicate(true)
 	response_active = bool(snapshot.response_active)
 	response_after = snapshot.response_after.duplicate(true)
+	question_reading = snapshot.get("question_reading", {}).duplicate(true)
+	arrival_pending = bool(snapshot.get("arrival_pending", false))
+	contextual_presentation = snapshot.get("contextual_presentation", {}).duplicate(true)
+	active_slot = int(snapshot.get("active_slot", -1))
 	call_stack = snapshot.get("call_stack", []).duplicate(true)
 	elapsed_seconds = float(snapshot.elapsed_seconds)
 	run_id = str(snapshot.run_id)
@@ -896,6 +1316,9 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	autosave_failed = false
 	page_snapshot = snapshot.get("page_snapshot", {}).duplicate(true)
 	ending_media = snapshot.get("ending_media", {}).duplicate(true)
+	requested_destination = str(snapshot.get("requested_destination", ""))
+	departure_ready_destination = ""
+	departure_managed = false
 	if snapshot.narrative.is_empty(): narrative.state = {}
 	else: narrative.restore_snapshot(snapshot.narrative)
 	last_bgm = str(snapshot.get("bgm", ""))

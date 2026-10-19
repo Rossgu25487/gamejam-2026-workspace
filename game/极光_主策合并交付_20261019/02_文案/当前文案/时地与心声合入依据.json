@@ -1,0 +1,4190 @@
+{
+  "meta": {
+    "purpose": "时地正文与艾琳心声显示增量，合入所属文案及UI数据后使用",
+    "rules_source": "新手引导/剧情补文.md 第9至11节",
+    "base_narrative_path": "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案接入数据.json",
+    "base_narrative_sha256": "a16a6775a4f4ad6bd4f8179756cdca08325b78eb213ce6d72e8145f98ef16051",
+    "base_ui_path": "E:\\gamejam\\副策划3工作稿\\outputs\\01a102bd-212a-7bb3-8817-88bf47e8ae10\\文案系统\\文案UI资源配置.json",
+    "base_ui_sha256": "cd719c041283cfc33b69002e0a9a1903613f4995493a167bea7a67b6ff27e46a",
+    "integration_status": "本增量未写入生产源；arrival_bindings与新sequence须由实际到达流程消费，未接线时不视为可运行包"
+  },
+  "text": [
+    {
+      "id": "TXT_CAPTION_CH01_1987_ARRIVAL",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n货运站·站外",
+      "read_version": 2,
+      "chapter_id": "CH01",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_CH01_START",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": "TXT_CH01_0317"
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC02",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC03",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC04",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC05",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC06",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC07",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC08",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC09",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC10",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ARRIVAL_SC11",
+      "type": "时间字幕",
+      "text": "1987年冬 18:30\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC01",
+      "type": "时间字幕",
+      "text": "当日 20:35\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC02",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC03",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC04",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC05",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC06",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC07",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC08",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC09",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC10",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC11",
+      "type": "时间字幕",
+      "text": "当日 20:35\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC01",
+      "type": "时间字幕",
+      "text": "次日 00:00\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC02",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC03",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC04",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC05",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC06",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC07",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_CAPTION_CH01_MIDNIGHT",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内二楼·艾琳房间",
+      "read_version": 2,
+      "chapter_id": "CH01",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_CH01_ALARM",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": "TXT_CH01_0483"
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC09",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC10",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH01_ALARM_SC11",
+      "type": "时间字幕",
+      "text": "次日 00:00\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH01",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH01_ALARM_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC01",
+      "type": "时间字幕",
+      "text": "次日 00:15\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC02",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC03",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC04",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC05",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC06",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC07",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC08",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC09",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC10",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC11",
+      "type": "时间字幕",
+      "text": "次日 00:15\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH02",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC01",
+      "type": "时间字幕",
+      "text": "次日 02:00\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC02",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC03",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC04",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC05",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC06",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC07",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC08",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC09",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC10",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH03_OLD_CASE_SC11",
+      "type": "时间字幕",
+      "text": "次日 02:00\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH03",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC01",
+      "type": "时间字幕",
+      "text": "次日 04:00\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC02",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC03",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC04",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC05",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC06",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC07",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC08",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC09",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC10",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH04_RECHECK_SC11",
+      "type": "时间字幕",
+      "text": "次日 04:00\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH04",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH04_RECHECK_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC01",
+      "type": "时间字幕",
+      "text": "次日 04:40\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC02",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC03",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC04",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC05",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC06",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC07",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC08",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC09",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC10",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH05_FINAL_SC11",
+      "type": "时间字幕",
+      "text": "次日 04:40\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH05",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH05_FINAL_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC01",
+      "type": "时间字幕",
+      "text": "次日 05:20\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC02",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC03",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC04",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC05",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC06",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC07",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC08",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC09",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC10",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_WRAPUP_SC11",
+      "type": "时间字幕",
+      "text": "次日 05:20\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC01",
+      "type": "时间字幕",
+      "text": "次日 05:50\n货运站·站外",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC01",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC01",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC02",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内一楼·大厅",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC02",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC02",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC03",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内一楼·厨房",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC03",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC03",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC04",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内一楼·档案间",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC04",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC04",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC05",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内二楼·走廊",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC05",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC05",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC06",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内二楼·公共休息室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC06",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC06",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC07",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内二楼·夫妇客房",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC07",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC07",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC08",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内二楼·艾琳房间",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC08",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC08",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC09",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内二楼·站长室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC09",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC09",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC10",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站内一楼·空值班室",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC10",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC10",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    },
+    {
+      "id": "TXT_ARRIVAL_CH06_DEPARTURE_SC11",
+      "type": "时间字幕",
+      "text": "次日 05:50\n站外·货运卡车",
+      "read_version": 1,
+      "chapter_id": "CH06",
+      "scene_id": "SC11",
+      "fragment_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC11",
+      "actor_id": "",
+      "speaker": "",
+      "display_name": "",
+      "actor_path": "",
+      "avatar_id": "",
+      "position": "",
+      "font_color": "#3F6B4C",
+      "next_text_id": ""
+    }
+  ],
+  "arrival_bindings": [
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC01",
+      "text_id": "TXT_CAPTION_CH01_1987_ARRIVAL",
+      "sequence_id": "SEQ_CH01_START"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC02"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC03"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC04"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC05"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC06"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC07"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC08"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC09"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC10"
+    },
+    {
+      "stage_ref": "TP_CH01_ARRIVAL",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH01_ARRIVAL_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ARRIVAL_SC11"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC01"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC02"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC03"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC04"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC05"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC06"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC07"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC08"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC09"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC10"
+    },
+    {
+      "stage_ref": "TP_CH01_AFTER_DINNER",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH01_AFTER_DINNER_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH01_AFTER_DINNER_SC11"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC01"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC02"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC03"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC04"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC05"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC06"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC07"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC08",
+      "text_id": "TXT_CAPTION_CH01_MIDNIGHT",
+      "sequence_id": "SEQ_CH01_ALARM"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC09"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC10"
+    },
+    {
+      "stage_ref": "TP_CH01_ALARM",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH01_ALARM_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH01_ALARM_SC11"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC01"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC02"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC03"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC04"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC05"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC06"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC07"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC08"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC09"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC10"
+    },
+    {
+      "stage_ref": "TP_CH02_INVESTIGATION",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH02_INVESTIGATION_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH02_INVESTIGATION_SC11"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC01"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC02"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC03"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC04"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC05"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC06"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC07"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC08"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC09"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC10"
+    },
+    {
+      "stage_ref": "TP_CH03_OLD_CASE",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH03_OLD_CASE_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH03_OLD_CASE_SC11"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC01"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC02"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC03"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC04"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC05"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC06"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC07"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC08"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC09"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC10"
+    },
+    {
+      "stage_ref": "TP_CH04_RECHECK",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH04_RECHECK_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH04_RECHECK_SC11"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC01"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC02"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC03"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC04"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC05"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC06"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC07"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC08"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC09"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC10"
+    },
+    {
+      "stage_ref": "TP_CH05_FINAL",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH05_FINAL_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH05_FINAL_SC11"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC01"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC02"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC03"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC04"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC05"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC06"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC07"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC08"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC09"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC10"
+    },
+    {
+      "stage_ref": "TP_CH06_WRAPUP",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH06_WRAPUP_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH06_WRAPUP_SC11"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC01",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC01",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC01"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC02",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC02",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC02"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC03",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC03",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC03"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC04",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC04",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC04"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC05",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC05",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC05"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC06",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC06",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC06"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC07",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC07",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC07"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC08",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC08",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC08"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC09",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC09",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC09"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC10",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC10",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC10"
+    },
+    {
+      "stage_ref": "TP_CH06_DEPARTURE",
+      "scene_id": "SC11",
+      "text_id": "TXT_ARRIVAL_CH06_DEPARTURE_SC11",
+      "sequence_id": "SEQ_ARRIVAL_CH06_DEPARTURE_SC11"
+    }
+  ],
+  "text_field_updates": [
+    {
+      "id": "TXT_CH01_0321",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0326",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0483",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0388",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0450",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0451",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0454",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0455",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0458",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0461",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0462",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0463",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0464",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0467",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0470",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0471",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0493",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0494",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0495",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0505",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0510",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0511",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0557",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0560",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0661",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0662",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0663",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0671",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0676",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0679",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0777",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0778",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0779",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0780",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0781",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0782",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0783",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0750",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0751",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_B06_E24_INSUFFICIENT",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I01",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I03",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I04",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I05",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I06",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_QUESTION_I02",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0317",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0318",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0320",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0323",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8001",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0325",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8003",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0330",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0338",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0341",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0349",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0352",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8009",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0360",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8011",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0358",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0415",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8019",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0422",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0475",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0476",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0477",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0482",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_0488",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8001",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8002",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0469",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0689",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0736",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0752",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0753",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_0754",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8020",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0489",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0565",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0577",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0604",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0605",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_0644",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_0149",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_0150",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_0222",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH05_0248",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH05_0250",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH05_0251",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH05_0305",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH05_0320",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH06_0106",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8035",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8036",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8023",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8024",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8010",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8014",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8037",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8038",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8026",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8015",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8039",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8040",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8027",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8028",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8011",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8016",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8041",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8042",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8012",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8013",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8017",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH06_8002",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8043",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8044",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8014",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8015",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8018",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8045",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8046",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8029",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8030",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8016",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH03_8017",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH06_8003",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8047",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8048",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8031",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8032",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH02_8033",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH06_8004",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH04_8019",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    },
+    {
+      "id": "TXT_CH01_8049",
+      "expected": {
+        "actor_id": "CHR01",
+        "type": "内心",
+        "avatar_id": "res://assets/aurora/characters/1000001/erin_reaction.png",
+        "display_name": "艾琳"
+      },
+      "set": {
+        "avatar_id": "",
+        "display_name": "艾琳（心声）"
+      }
+    }
+  ],
+  "ui_field_removals": [
+    {
+      "key": "time_location",
+      "expected": {
+        "max_width_default_px": 640,
+        "text_center_default_px": [
+          800,
+          450
+        ],
+        "continue_rect_default_px": [
+          112,
+          820,
+          126,
+          54
+        ],
+        "menu_rect_default_px": [
+          250,
+          820,
+          110,
+          54
+        ],
+        "button_surface": "secondary_button",
+        "panel_rect_default_px": [
+          692.5,
+          419.5,
+          215,
+          61
+        ],
+        "text_baseline_default_px": [
+          800,
+          462
+        ]
+      }
+    }
+  ],
+  "preserved_ui_keys": [
+    "scene_info",
+    "dialogue",
+    "colors",
+    "font_size_default_px",
+    "line_height_default_px"
+  ],
+  "text_playback": [
+    {
+      "id": "TEXT_PLAYBACK_DEFAULT",
+      "normal_characters_per_second": 30,
+      "character_fade_max_ms": 60,
+      "comma_pause_ms": 120,
+      "sentence_end_pause_ms": 260,
+      "read_fast_multiplier": 4,
+      "read_fast_page_delay_ms": 150,
+      "typing_sound_min_interval_ms": 110
+    }
+  ],
+  "text_type_bindings": [
+    {
+      "text_kind": "dialogue",
+      "play_mode": "typewriter",
+      "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+      "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "offscreen_dialogue",
+      "play_mode": "typewriter",
+      "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+      "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "inner",
+      "play_mode": "typewriter",
+      "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+      "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "narration",
+      "play_mode": "typewriter",
+      "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+      "typing_sfx_ref": "SFX_TEXT_DIALOGUE",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "time_caption",
+      "play_mode": "typewriter",
+      "playback_ref": "TEXT_PLAYBACK_DEFAULT",
+      "typing_sfx_ref": "SFX_TEXT_TIME_LOCATION",
+      "text_style_ref": "TEXT_TIME_PLACE"
+    },
+    {
+      "text_kind": "chapter_title",
+      "play_mode": "fade",
+      "playback_ref": "",
+      "typing_sfx_ref": "",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "option_text",
+      "play_mode": "instant",
+      "playback_ref": "",
+      "typing_sfx_ref": "",
+      "text_style_ref": "TEXT_BODY"
+    },
+    {
+      "text_kind": "ui_text",
+      "play_mode": "instant",
+      "playback_ref": "",
+      "typing_sfx_ref": "",
+      "text_style_ref": "TEXT_BODY"
+    }
+  ],
+  "ui_field_updates": [
+    {
+      "key": "text_playback",
+      "set": {
+        "normal_characters_per_second": 30,
+        "character_fade_max_ms": 60,
+        "punctuation_pause_ms": {
+          "comma": 120,
+          "sentence_end": 260
+        },
+        "read_fast_multiplier": 4,
+        "read_fast_page_delay_ms": 150,
+        "typing_sound_min_interval_ms": 110
+      }
+    }
+  ]
+}

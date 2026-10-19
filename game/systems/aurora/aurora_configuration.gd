@@ -1,7 +1,7 @@
 extends RefCounted
-## 正式十一册配置的唯一读取入口。原工作簿只读；不使用参考JSON替代策划填写的数据。
+## 正式十二册配置的唯一读取入口。原工作簿只读；不使用参考JSON替代策划填写的数据。
 const Reader = preload("res://systems/config/workbook_reader.gd")
-const DEFAULT_ROOT := "res://极光_六稿文本配置完整交付_20261017"
+const DEFAULT_ROOT := "res://极光_主策合并交付_20261019"
 const BOOKS := {
 	"core": "01_核心玩法/玩法策划案.xlsx", "narrative": "02_文案/文案配置表.xlsx",
 	"investigation": "03_调查与场景交互/调查与场景交互系统配置表.xlsx",
@@ -9,6 +9,7 @@ const BOOKS := {
 	"objective": "06_目标导航/目标导航系统配置表.xlsx", "start": "07_初始化与开始/游戏初始化与开始系统配置表.xlsx",
 	"save": "08_存读档/存读档系统配置表.xlsx", "settings": "09_游戏设置/游戏设置系统配置表.xlsx",
 	"audio": "10_声音播放/声音播放系统配置表.xlsx", "cat": "11_撸猫/撸猫系统配置表.xlsx",
+	"tutorial": "12_联合新手引导/联合新手引导配置表.xlsx",
 }
 var definition := {"root": DEFAULT_ROOT}
 var errors: Array[String] = []
@@ -32,14 +33,9 @@ var questions := {}
 var results := {}
 var relations: Array = []
 var path_migrations := {}
-var content_revision := "AVG_20261017_01"
-
-# 正式表中的场景姿态仍由策划维护。当前素材包尚未交付伊万大厅坐姿图，
-# 先把这一条明确登记为临时资源回退，避免图片加载失败后整个人物图层被静默跳过。
-# 交付坐姿 PNG 后删除该项即可恢复正式表中的原路径。
-const SCENE_IMAGE_FALLBACKS := {
-	"res://assets/aurora/characters/1000004/伊万_坐姿_提取.png": "res://assets/aurora/characters/1000004/伊万_常态站姿.png",
-}
+var narrative_data: Dictionary = {}
+var tutorial_data: Dictionary = {}
+var content_revision := "AVG_20261019_FINAL_SCRIPT_MERGED_01"
 
 func load_package(root: String = DEFAULT_ROOT) -> bool:
 	definition.root = root
@@ -51,6 +47,8 @@ func load_package(root: String = DEFAULT_ROOT) -> bool:
 	jumps.clear()
 	questions.clear()
 	path_migrations.clear()
+	narrative_data.clear()
+	tutorial_data.clear()
 	for key in BOOKS:
 		var reader := Reader.new()
 		if not reader.open(root.path_join(BOOKS[key])):
@@ -106,8 +104,149 @@ func load_package(root: String = DEFAULT_ROOT) -> bool:
 		var id := str(row.get("question_ref", ""))
 		if not id.is_empty() and not questions.has(id): questions[id] = row
 	_relocate_resources()
+	_load_final_json_bindings(root)
+	# 最终首章迁入连续场后，阅读回执仍要求“已展示回信”；实际递交时补交既有事件。
+	for jump in jumps.get("TXT_PLANNER_LETTER_002", []):
+		if jump.get("target_ref") == "ENTRY_PLANNER_LETTER_DOCUMENT" and str(jump.get("event_id", "")).is_empty():
+			jump.event_id = "EV_IVAN_HOSPITAL_LETTER_SHOWN"
+	# 薇拉已在本段实际拿出家信；原表漏了展示回执，必须在读原件前提交。
+	for jump in jumps.get("TXT_F7_CH03_ENTRY_CH03_VERA_LETTERS_004", []):
+		if jump.get("target_ref") == "ENTRY_CH03_E20_READER" and str(jump.get("event_id", "")).is_empty():
+			jump.event_id = "EV_VERA_LETTERS_SHOWN"
+	# 无主笔记已支持在空值班室与档案间阅读，艾琳的读后观察沿同一地点返回。
+	if entries.has("ENTRY_CH03_NOTEBOOK_RESPONSE"):
+		entries.ENTRY_CH03_NOTEBOOK_RESPONSE.allowed_scene_ids = "SC04;SC10"
+	for id in ["ENTRY_CH03_LEDGER_DISTRIBUTION_RESPONSE", "ENTRY_CH03_LEDGER_RECENT_RESPONSE"]:
+		if entries.has(id): entries[id].allowed_scene_ids = "SC04;SC10"
+	_repair_final_register_receipts()
+	_repair_final_counter_topic()
+	# 正式第四章的厨房质询在旧案对证结束后开启；若第二章提前启动，
+	# 完整回应会撞上仍未满足的还衣接续。入口与公开话题共用真实章节门槛。
+	for id in ["COND_TOPIC_NINA_MEAL", "COND_CH04_MEAL_OBSERVATIONS_READY"]:
+		for terms in conditions.get(id, {}).values():
+			terms.append({"kind": "chapter", "ref": "CH04", "expected": true})
+			terms.append({"kind": "event", "ref": "EV_CH03_JOINT_SCENE_FINISHED", "expected": true})
+	# 结婚钱关联以实际听完尼娜分款口述为提示；原表误用尚未开启的
+	# 推理题目自身作“已读”门槛，造成P02与旧案共同对证永远无法公开。
+	for row in rows("core", "关卡轮次"):
+		if row.get("question_ref") == "L08_R03":
+			row.trigger_text_ref = "TXT_F7_CH03_ENTRY_CH03_L08_NINA_OPEN_008"
+	# “回档案间”末句从空值班室承接；原表只切章，漏了进入标题前的实际移场。
+	for jump in jumps.get("TXT_F7_CH04_ENTRY_F7_CH04_TO_CH05_001", []):
+		if jump.get("target_ref") == "ENTRY_CH05_TITLE":
+			jump["location_mode"] = "fixed"
+			jump["scene_id"] = "SC04"
+	# I06唯一正式两槽关系漏写其已配置题目，不能把空目标当作实际选中原话。
+	for relation in relations:
+		if relation.get("id") == "L15_R00_P04_T07" and str(relation.get("target_text_ref", "")).is_empty():
+			relation.target_text_ref = "TXT_QUESTION_L15_R00"
+	# 电话接完后沿正式“到站外接人”选项集合众人；原末句只返回大厅，
+	# 留下这个没有任何前驱的选项。既有读档也可再次点电话进入该选项。
+	for jump in jumps.get("TXT_F7_CH06_PHONE_003", []):
+		if jump.get("target_kind") == "map" and jump.get("target_ref") == "SC02":
+			jump.target_kind = "entry"
+			jump.target_ref = "ACTION_CH06_LEAVE"
+	conditions["COND_FINAL_PHONE_DEPARTURE"] = {"1": [
+		{"kind": "chapter", "ref": "CH06", "expected": true},
+		{"kind": "event", "ref": "EV_CH06_RECORDS_READY", "expected": true},
+		{"kind": "event", "ref": "EV_CH06_PHONE_RECEIVED", "expected": true},
+		{"kind": "event", "ref": "EV_CH06_GUESTS_GATHERED", "expected": false}]}
+	for text_id in ["TXT_SC02_PHONE_FIRST_PAGE_02", "TXT_SC02_PHONE_REPEAT", "TXT_SC02_PHONE_CASE_FIRST", "TXT_SC02_PHONE_CASE_REPEAT", "TXT_SC02_PHONE_OLD_FIRST_PAGE_02", "TXT_SC02_PHONE_OLD_REPEAT"]:
+		jumps[text_id].append({"source_text_id": text_id, "target_kind": "entry", "target_ref": "ACTION_CH06_LEAVE",
+			"condition_id": "COND_FINAL_PHONE_DEPARTURE", "event_id": "", "timing": "after_text", "trigger": "condition"})
+	# 最终包把L01三个旧分支入口都改成无正文、无事件、同一ROUTE的别名，
+	# 但仍保留同时成立的三个跳转。归一成同一既有别名，不跳过ROUTE内正式逐轮正文。
+	for jump in jumps.get("TALK_CH02_YURI_CURRENT", []):
+		if jump.get("target_ref") in ["ENTRY_CH02_L01_TOGETHER_START", "ENTRY_CH02_L01_SEPARATED_START"]:
+			jump.target_ref = "ENTRY_CH02_L01_QUESTION"
+	if entries.has("ENTRY_CH03_READ_E13_RESPONSE"):
+		entries.ENTRY_CH03_READ_E13_RESPONSE.allowed_scene_ids = "SC04;SC10;SC02"
 	_validate()
 	return errors.is_empty()
+
+func _repair_final_counter_topic() -> void:
+	# 正式正文已有伊万的完整对单口述与末句回执，话题表漏挂了公开入口。
+	# 只补回本地点实际两人都在场时的话题，不提前授予T04/T05。
+	conditions["COND_FINAL_IVAN_COUNTER_TOPIC"] = {"1": [
+		{"kind": "chapter", "ref": "CH02", "expected": true},
+		{"kind": "current_scene", "ref": "SC02", "expected": true},
+		{"kind": "npc_scene", "ref": "CHR04", "scene_id": "SC02", "expected": true},
+		{"kind": "npc_scene", "ref": "CHR10", "scene_id": "SC02", "expected": true},
+		{"kind": "event", "ref": "EV_CASE_INVESTIGATION_OPEN", "expected": true},
+		{"kind": "entry", "ref": "ENTRY_CH02_IVAN_T04_FIRST", "expected": true}]}
+	rows("investigation", "话题显示").append({
+		"topic_ref": "TOPIC_FINAL_IVAN_COUNTER_ACCOUNT", "kind": "topic", "data_scope": "runtime",
+		"list_entry_ref": "TOPICS_1000004_SC02", "person_ref": "CHR04",
+		"entry_ref": "ENTRY_CH02_IVAN_T04_FIRST", "condition_ref": "COND_FINAL_IVAN_COUNTER_TOPIC",
+		"public_name": "从厨房出来后在柜台对货单", "focus_order": 3, "interactive": true,
+		"public_reason": "", "question_ref": ""})
+	var read_terms: Array = []
+	for number in range(1, 7):
+		read_terms.append({"kind": "text", "ref": "F7_CH02_IVAN_T04_FIRST_%03d" % number, "expected": true})
+	conditions["COND_FINAL_COUNTER_ACCOUNT_READ"] = {"1": read_terms}
+	for action in events.get("EV_SIXTH_COUNTER_CLAIMS_HEARD", []):
+		action["condition_id"] = "COND_FINAL_COUNTER_ACCOUNT_READ"
+	# 未先发现皮包时L02会留兄弟在大厅；之后的公开邀约仍需先读
+	# “两位，跟我去空值班室”，再由该句原有事件移动人物和接入L03。
+	for jump in jumps.get("ENTRY_CH02_L03_INVITE_KIRILL", []):
+		if jump.get("target_ref") == "F7_CH02_L03_ROUTE":
+			jump.target_ref = "F7_CH02_L02_BAG_KNOWN"
+	# 运费结清单属于正式唯一“木柜台与交接单据”调查点；原表虽保留
+	# 阅读入口，却漏掉了从该父物件接入的边。读完柜台观察后接已有正文。
+	conditions["COND_FINAL_COUNTER_E09_BEFORE_CASE"] = {"1": [
+		{"kind": "entry", "ref": "ENTRY_CH01_READ_E09", "expected": true},
+		{"kind": "event", "ref": "EV_CASE_INVESTIGATION_OPEN", "expected": false},
+		{"kind": "event", "ref": "EV_E09_READ", "expected": false}]}
+	conditions["COND_FINAL_COUNTER_E09_AFTER_CASE"] = {"1": [
+		{"kind": "event", "ref": "EV_CASE_INVESTIGATION_OPEN", "expected": true},
+		{"kind": "event", "ref": "EV_E09_READ", "expected": false}]}
+	for text_id in ["TXT_SC02_COUNTER_FIRST", "TXT_SC02_COUNTER_REPEAT"]:
+		for pair in [["COND_FINAL_COUNTER_E09_BEFORE_CASE", "ENTRY_CH01_READ_E09"], ["COND_FINAL_COUNTER_E09_AFTER_CASE", "ENTRY_CH02_FREIGHT_READ"]]:
+			jumps[text_id].append({"source_text_id": text_id, "target_kind": "entry", "target_ref": pair[1],
+				"condition_id": pair[0], "event_id": "", "timing": "after_text", "trigger": "condition"})
+
+func _repair_final_register_receipts() -> void:
+	# 最终正文L09直接以E13中盖毯/死讯击破登记，不再强制先听尤里旧案口述。
+	# 所有回执仍等证言③及完整九句回应实际结束；不把“听过尤里”补成既成事实。
+	var read_terms: Array = [
+		{"kind": "event", "ref": "EV_E13_READ", "expected": true},
+		{"kind": "event", "ref": "EV_E17_READ", "expected": true},
+		{"kind": "text", "ref": "TXT_F7_CH03_ENTRY_F7_CH03_L09_R01_S3_001", "expected": true},
+		{"kind": "text", "ref": "TXT_F7_CH03_ENTRY_F7_CH03_L09_RESPONSE_009", "expected": true}]
+	conditions["COND_FINAL_L09_RESPONSE_READ"] = {"1": read_terms}
+	var complete_terms: Array = read_terms.duplicate(true)
+	complete_terms.append({"kind": "event", "ref": "EV_CH03_REGISTER_ACCOUNT_HEARD", "expected": true})
+	conditions["COND_CH03_REGISTER_ACCOUNT_COMPLETE"] = {"1": complete_terms}
+	# 父回执先登记本段已听完，再递归提交依赖它的确认；原表相反次序会原子回滚。
+	var actions: Array = events.get("EV_F7_CH03_REGISTER", [])
+	for action in actions:
+		action["condition_id"] = "COND_FINAL_L09_RESPONSE_READ"
+		if action.get("kind") == "complete_event":
+			action["order"] = {"EV_CH03_REGISTER_ACCOUNT_HEARD": 1, "EV_REGISTER_AUTHOR_CONFIRMED": 2, "EV_REGISTER_ACCOUNT_CONFIRMED": 3}.get(str(action.get("ref", "")), int(action.get("order", 0)))
+	actions.sort_custom(func(a, b): return int(a.order) < int(b.order))
+	# 调卷发生在当面核实假登记之后；以实际完成回执开题，不复制旧门槛。
+	for branch in conditions.get("COND_TOPIC_IVAN_LATER_FILES", {}).values():
+		branch.append({"kind": "event", "ref": "EV_REGISTER_ACCOUNT_CONFIRMED", "expected": true})
+
+func _load_final_json_bindings(root: String) -> void:
+	# 最终包把逐句追问、到达绑定和分页放在 JSON 中；正文、条件和事件仍以工作簿为唯一来源。
+	var narrative_path := root.path_join("02_文案/文案接入数据.json")
+	var narrative_file := FileAccess.open(narrative_path, FileAccess.READ)
+	if narrative_file != null:
+		var parsed = JSON.parse_string(narrative_file.get_as_text())
+		if parsed is Dictionary: narrative_data = parsed
+		else: warnings.append("文案接入数据不是有效JSON：" + narrative_path)
+	else: warnings.append("未找到最终文案绑定数据：" + narrative_path)
+	var tutorial_path := root.path_join("12_联合新手引导/引导接入数据.json")
+	var tutorial_file := FileAccess.open(tutorial_path, FileAccess.READ)
+	if tutorial_file != null:
+		var tutorial = JSON.parse_string(tutorial_file.get_as_text())
+		if tutorial is Dictionary: tutorial_data = tutorial
+		else: warnings.append("引导接入数据不是有效JSON：" + tutorial_path)
+
+func narrative_bindings(key: String) -> Array:
+	var value = narrative_data.get(key, [])
+	return value if value is Array else []
 
 func rows(book: String, sheet: String) -> Array:
 	return tables.get(book, {}).get(sheet, [])
@@ -122,6 +261,9 @@ func index(book: String, sheet: String, field: String) -> Dictionary:
 
 func resource_path(path: String) -> String:
 	if path.is_empty(): return ""
+	# shared_layout、配置JSON和逻辑引用由对应系统解析，不是资源文件路径。
+	if path.begins_with("shared_layout:") or path.ends_with(".json") and not path.begins_with("res://"):
+		return path
 	# 本包地图仍引用上一版backgrounds目录；仅采用这一条已核实的目录迁移，不模糊搜索同名文件。
 	var relative := path.trim_prefix("res://")
 	if relative.begins_with("assets/aurora/backgrounds/"):
@@ -145,19 +287,8 @@ func _relocate_resources() -> void:
 	for row in rows("narrative", "片段地点关联"): row.background_path = resource_path(str(row.get("background_path", "")))
 
 func _scene_image_path(raw_path: String) -> String:
-	var resolved := resource_path(raw_path)
-	# PNG 导出后由 .import 映射到内部纹理；用资源加载器检查，兼容编辑器与 PCK 成品。
-	if ResourceLoader.exists(resolved): return resolved
-	var fallback := str(SCENE_IMAGE_FALLBACKS.get(raw_path, ""))
-	if fallback.is_empty():
-		return resolved
-	var fallback_path := resource_path(fallback)
-	if not ResourceLoader.exists(fallback_path):
-		return resolved
-	path_migrations[resolved] = fallback_path
-	var message := "场景图片缺失，临时使用替代资源：%s → %s" % [resolved, fallback_path]
-	if message not in warnings: warnings.append(message)
-	return fallback_path
+	# 姿态是策划内容；缺少坐姿时由可见交谈视角承接，不用站姿冒充场景坐姿。
+	return resource_path(raw_path)
 
 func text(id: String) -> String:
 	# 导航label_key先引用界面绑定，再引用唯一功能文字，不能把绑定ID显示给玩家。
@@ -166,16 +297,26 @@ func text(id: String) -> String:
 	return str(texts.get(id, {}).get("text", ui_texts.get(id, {}).get("text", id)))
 
 func audio_definition() -> Dictionary:
+	# resource_path 是实际文件路径；resource_ref/resource_key 是配置逻辑 ID，
+	# 不能把逻辑 ID 当作文件名拼到交付包目录，否则声音表会被错误迁移。
 	var audio_resources := rows("audio", "声音资源").duplicate(true)
 	for row in audio_resources:
-		for field in ["resource_path", "resource_ref"]:
-			if not str(row.get(field, "")).is_empty(): row[field] = resource_path(str(row[field]))
-	return {"control": rows("audio", "声音总控")[0], "resources": audio_resources,
-		"events": rows("audio", "声音事件"), "soundscapes": rows("audio", "场景音景")}
+		var path := str(row.get("resource_path", ""))
+		if not path.is_empty(): row.resource_path = resource_path(path)
+	var music_states := rows("audio", "音乐播放状态").duplicate(true)
+	return {"control": rows("audio", "声音总控")[0] if not rows("audio", "声音总控").is_empty() else {},
+		"resources": audio_resources, "events": rows("audio", "声音事件"),
+		"soundscapes": rows("audio", "场景音景"), "music_states": music_states}
 
 func map_definition() -> Dictionary:
 	var data := {}
-	for pair in [["display", "地图显示参数", "id"], ["boards", "棋盘布局", "group_id"], ["groups", "地图分组", "group_id"], ["nodes", "地点节点", "node_id"], ["pawn", "棋子表现", "id"]]:
+	# 地图旧版棋盘布局已由最终包的图层、投影、空间路点和连线取代；
+	# 同时保留旧键名，兼容尚未迁移的地图页面。
+	for pair in [["display", "地图显示参数", "id"], ["boards", "棋盘布局", "group_id"],
+		["groups", "地图分组", "group_id"], ["nodes", "地点节点", "node_id"], ["pawn", "棋子表现", "id"],
+		["layers", "地图图层", "id"], ["views", "地图视图", "id"], ["projection", "地图投影", "id"],
+		["waypoints", "空间路点", "id"], ["edges", "空间连线", "id"], ["view_points", "视图落点", "view_id"],
+		["reachability", "首章可达绑定", "id"]]:
 		data[pair[0]] = index("map", pair[1], pair[2])
 	data["scenes"] = scenes
 	data["resources"] = resources
@@ -195,6 +336,23 @@ func objective_definition() -> Dictionary:
 		if key.begins_with("review_"): result.review[key.trim_prefix("review_")] = value
 		else: result.hud[key] = value
 	for row in rows("objective", "功能文字引用"): result.texts[str(row.binding_key)] = str(row.text_id)
+	# 最终表使用语义参数，旧导航页使用组件参数；只在此边界映射，进度仍来自原提供方。
+	if result.hud.has("reference_width"):
+		var source: Dictionary = result.hud.duplicate(true)
+		var review_source: Dictionary = result.review.duplicate(true)
+		result["final_paper"] = true
+		result["assets"] = {}
+		for row in rows("objective", "界面资源"): result.assets[str(row.binding_key)] = resource_path(str(row.resource_path))
+		result.hud.merge({"final_paper": true, "assets": result.assets, "panel_opacity": 1.0, "header_opacity": 1.0,
+			"main_color": source.get("paper_text_color", "#34413F"), "body_color": source.get("paper_text_color", "#34413F"), "reason_color": source.get("paper_meta_color", "#5D6864"),
+			"header_font_px": source.get("hud_title_font_px", 24), "main_font_px": source.get("hud_goal_font_px", 24), "body_font_px": source.get("hud_hint_font_px", 28), "reason_font_px": 20,
+			"body_line_height_px": source.get("hud_line_height_px", 43), "main_line_height_px": source.get("hud_line_height_px", 43),
+			"fold_width_px": source.get("hud_fold_max_width_px", 240), "header_height_px": source.get("hud_fold_min_height_px", 48),
+			"visible_item_limit": source.get("hud_visible_item_limit", 1), "panel_max_height_px": source.get("hud_expand_max_height_px", 430), "compact_max_height_px": source.get("hud_expand_max_height_px", 430), "update_glow_ms": 300}, true)
+		result.review.merge({"final_paper": true, "assets": result.assets, "viewport": [1600, 900], "main_rect": [48, 154, 330, 530], "pending_rect": [420, 190, 772, 500], "progress_rect": [420, 190, 772, 500],
+			"main_font_px": review_source.get("item_font_px", 28), "button_font_px": review_source.get("label_font_px", 24), "button_height_px": 48,
+			"main_line_height_px": review_source.get("body_line_height_px", 43), "item_line_height_px": review_source.get("body_line_height_px", 43), "meta_line_height_px": 36,
+			"modal_dimmer_opacity": source.get("modal_dimmer_opacity", 0.32)}, true)
 	return result
 
 func presentation(result: Dictionary, repeat_result: bool = false) -> Dictionary:
@@ -236,7 +394,11 @@ func _validate() -> void:
 			_check_ref(contents, content, "出示版本", str(row.id))
 			if not content.is_empty() and contents.has(content) and contents[content].material_id != row.get(slot + "_material_ref"): errors.append("出示材料与版本不一致：" + str(row.id))
 	for id in resources:
-		if resources[id].get("required", false) and not ResourceLoader.exists(str(resources[id].path)): errors.append("地图必需资源缺失：%s / %s" % [id, resources[id].path])
+		var path := str(resources[id].path)
+		# Headless 校验时 PNG 可能尚未生成 .import；原文件存在即可通过结构检查，
+		# 运行时由 Godot 导入器负责建立纹理资源。
+		if resources[id].get("required", false) and not ResourceLoader.exists(path) and not FileAccess.file_exists(path):
+			errors.append("地图必需资源缺失：%s / %s" % [id, path])
 
 func _check_ref(target: Dictionary, id: String, purpose: String, owner: String) -> void:
 	if not id.is_empty() and not target.has(id): errors.append("%s引用不存在：%s → %s" % [purpose, owner, id])
@@ -263,7 +425,8 @@ func _register_navigation_conditions() -> void:
 				conditions[id] = {"1": [{"kind": "event", "ref": id.trim_prefix("COND_"), "expected": true}]}
 	for index in range(1, 4):
 		conditions["COND_CH1_MAIN_%d" % index] = {"1": [{"kind": "event", "ref": "EV_CH01_MAIN_%d_DONE" % index, "expected": true}]}
-	var aliases := {"COND_BAG_DIRECTION_PUBLIC": "COND_BAG_DOCUMENT_MENU_READY", "COND_OLD_RECORDS_PUBLIC": "COND_AVG_EV_BAG_DOCUMENTS_VIEWED_Y", "COND_OLD_CASE_JOINT_READY": "COND_CH03_JOINT_READY"}
+	# 清单桌面图的资格沿首章饭前调查；其自身 EV_E01_READ=false 控制已读后收起。
+	var aliases := {"COND_CHECKLIST_ON_TABLE": "COND_CH01_PRE_MEAL", "COND_BAG_DIRECTION_PUBLIC": "COND_BAG_DOCUMENT_MENU_READY", "COND_OLD_RECORDS_PUBLIC": "COND_AVG_EV_BAG_DOCUMENTS_VIEWED_Y", "COND_OLD_CASE_JOINT_READY": "COND_CH03_JOINT_READY"}
 	conditions["COND_OLD_RECORDS_PUBLIC"] = {"1": [{"kind": "event", "ref": "EV_BAG_DOCUMENTS_VIEWED", "expected": true}]}
 	for id in aliases:
 		if not conditions.has(id) and conditions.has(aliases[id]): conditions[id] = conditions[aliases[id]].duplicate(true)

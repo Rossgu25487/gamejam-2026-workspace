@@ -12,6 +12,11 @@ const ObjectiveProvider = preload("res://systems/aurora/aurora_objective_provide
 const CatPage = preload("res://pages/aurora/aurora_cat_page.gd")
 const ResultEffect = preload("res://pages/aurora/aurora_result_effect.gd")
 const EndingPage = preload("res://pages/aurora/aurora_ending_page.gd")
+const ContextPresentPage = preload("res://pages/aurora/aurora_context_present_page.gd")
+const TutorialService = preload("res://systems/aurora/aurora_tutorial.gd")
+const TutorialPage = preload("res://pages/aurora/aurora_tutorial_page.gd")
+const CardAudio = preload("res://systems/aurora/aurora_card_audio.gd")
+const AcquisitionFeedback = preload("res://pages/aurora/aurora_acquisition_feedback.gd")
 signal menu_requested
 signal ending_completed
 var session: Node
@@ -30,13 +35,23 @@ var handbook_overlay := false
 var queued := false
 var result_effect: Control
 var ending_page: Control
+var context_present_page: Control
+var tutorial: Node
+var tutorial_page: Control
+var card_audio: Node
+var acquisition_feedback: Control
+var previous_mode := ""
+var tool_kind := ""
+var tool_views := {}
 
 func bind(value: Node, map_service: Node) -> void:
 	session = value
 	scene_page = _page(ScenePage, "InvestigationPage")
 	card_page = _page(CardPage, "CardPage")
 	narrative_page = _page(NarrativePage, "NarrativePage")
+	narrative_page.shared_tools_managed = true
 	objective_page = _page(ObjectivePage, "ObjectivePage")
+	objective_page.shared_tools_managed = true
 	objective_hud = _page(ObjectiveHUD, "ObjectiveHUD")
 	map_page = _page(MapPage, "MapPage")
 	cat_page = _page(CatPage, "CatPage")
@@ -47,6 +62,15 @@ func bind(value: Node, map_service: Node) -> void:
 	ending_page.completed.connect(ending_completed.emit)
 	result_effect = _page(ResultEffect, "ResultEffect")
 	result_effect.bind(session)
+	result_effect.menu_requested.connect(menu_requested.emit)
+	result_effect.media_requested.connect(session.media_requested.emit)
+	card_audio = CardAudio.new()
+	add_child(card_audio)
+	card_audio.bind(session)
+	card_audio.media_requested.connect(session.media_requested.emit)
+	context_present_page = _page(ContextPresentPage, "ContextPresentationPage")
+	context_present_page.bind(session)
+	context_present_page.closed.connect(refresh)
 	for page in [scene_page, card_page, reader_page, cat_page]: page.bind(session)
 	objectives = ObjectiveService.new()
 	add_child(objectives)
@@ -57,8 +81,8 @@ func bind(value: Node, map_service: Node) -> void:
 	objectives.bind_provider(objective_provider)
 	objective_hud.bind(objectives)
 	objective_page.bind(objectives)
-	objective_hud.review_requested.connect(objectives.request_review)
-	objectives.review_state_changed.connect(func(_state): refresh())
+	objective_hud.review_requested.connect(open_objectives)
+	objectives.review_state_changed.connect(_review_changed)
 	objectives.refresh("initial")
 	narrative_page.bind(session.narrative)
 	map_page.bind(map_service)
@@ -68,21 +92,39 @@ func bind(value: Node, map_service: Node) -> void:
 	scene_page.context_changed.connect(refresh)
 	scene_page.menu_requested.connect(menu_requested.emit)
 	scene_page.handbook_requested.connect(open_handbook)
-	scene_page.map_requested.connect(map_page.open)
-	scene_page.objectives_requested.connect(objectives.request_review)
+	scene_page.records_requested.connect(open_records)
+	scene_page.material_presentation_requested.connect(context_present_page.open_for_actor)
+	scene_page.map_requested.connect(_open_map)
+	scene_page.objectives_requested.connect(open_objectives)
 	scene_page.cat_requested.connect(cat_page.open)
 	card_page.menu_requested.connect(menu_requested.emit)
 	card_page.handbook_requested.connect(open_handbook)
+	card_page.log_requested.connect(open_records)
+	card_page.action_requested.connect(card_audio.trigger)
 	card_page.material_requested.connect(_open_content)
 	cat_page.menu_requested.connect(menu_requested.emit)
 	cat_page.closed.connect(refresh)
 	narrative_page.menu_requested.connect(menu_requested.emit)
+	narrative_page.handbook_requested.connect(open_handbook)
+	narrative_page.records_requested.connect(open_records)
 	narrative_page.inspection_close_requested.connect(session.cancel_inspection)
 	reader_page.closed.connect(_reader_closed)
 	reader_page.content_selected.connect(session.select_content)
 	session.changed.connect(refresh)
 	session.narrative.changed.connect(refresh)
 	session.page_snapshot_provider = _export_pages
+	acquisition_feedback = _page(AcquisitionFeedback, "AcquisitionFeedback")
+	acquisition_feedback.bind(session)
+	acquisition_feedback.media_requested.connect(session.media_requested.emit)
+	for modal in [objective_page, cat_page, context_present_page]:
+		modal.visibility_changed.connect(func():
+			if modal.visible: acquisition_feedback.cancel())
+	# 引导观察真实页面及状态，覆盖层最后添加，以便先过滤非法输入。
+	tutorial = TutorialService.new()
+	add_child(tutorial)
+	tutorial_page = _page(TutorialPage, "JointTutorial")
+	tutorial_page.bind(tutorial)
+	tutorial.bind(session, self, map_service)
 	refresh()
 
 func _page(script: Script, label: String) -> Control:
@@ -101,12 +143,15 @@ func refresh() -> void:
 func _refresh() -> void:
 	queued = false
 	if session == null: return
+	if previous_mode != session.mode:
+		card_audio.leave_page()
+		previous_mode = str(session.mode)
 	scene_page.visible = session.mode in ["investigation", "cat"]
 	card_page.visible = session.mode in ["selection", "result", "failure"]
 	narrative_page.visible = session.mode == "narrative"
 	narrative_page.set_inspection_close_available(session.can_cancel_inspection())
 	if reader_page.visible: reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
-	if session.mode == "material" and (not reader_page.visible or reader_page.reading_content != str(session.reader.content)): reader_page.open_content(str(session.reader.content), true)
+	if session.mode == "material" and tool_kind.is_empty() and (not reader_page.visible or reader_page.reading_content != str(session.reader.content)): reader_page.open_content(str(session.reader.content), true)
 	elif not handbook_overlay: reader_page.hide()
 	if card_page.visible: card_page.refresh()
 	if scene_page.visible: scene_page.refresh()
@@ -118,52 +163,128 @@ func set_active(value: bool) -> void:
 	active = value
 	if session == null: return
 	session.paused = not value
+	if not value and is_instance_valid(acquisition_feedback): acquisition_feedback.cancel()
 	session.activity_enabled = value
 	objectives.set_paused(not value)
 	visible = value
 	process_mode = Node.PROCESS_MODE_INHERIT if value else Node.PROCESS_MODE_DISABLED
 
 func set_preferences(values: Dictionary) -> void:
+	if is_instance_valid(card_page): card_page.set_preferences(values)
+	if is_instance_valid(tutorial_page): tutorial_page.set_preferences(values)
 	if is_instance_valid(result_effect): result_effect.set_preferences(values)
 	if is_instance_valid(cat_page): cat_page.set_preferences(values)
 	if is_instance_valid(map_page): map_page.set_preferences(values)
-	if is_instance_valid(narrative_page.stage): narrative_page.stage.reduced = bool(values.get("reduce_motion", false))
+	if is_instance_valid(narrative_page): narrative_page.set_preferences(values)
+	if is_instance_valid(card_audio): card_audio.set_preferences(values)
+	if is_instance_valid(acquisition_feedback): acquisition_feedback.set_preferences(values)
+	# 主显示容器已经应用有效区域，调查页以该区域为客户端，避免再次缩窄。
+	var local_values := values.duplicate()
+	local_values["aspect_ratio"] = 0
+	if is_instance_valid(scene_page): scene_page.set_preferences(local_values)
 	if objectives != null: objectives.set_reduce_motion(bool(values.get("reduce_motion", false)))
 
 func open_handbook() -> void:
-	if session.processing or session.mode == "cat" or objective_page.visible: return
-	handbook_overlay = true
-	session.narrative.set_log_open(true)
+	if not _prepare_tool("handbook"): return
 	reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
-	reader_page.open_library()
+	if tool_views.has("handbook"): reader_page.restore_view(tool_views.handbook)
+	else:
+		reader_page.tab = "materials"
+		reader_page.open_library()
+	refresh()
+
+func open_records() -> void:
+	if not _prepare_tool("records"): return
+	reader_page.set_compact_mode(false)
+	if tool_views.has("records"): reader_page.restore_view(tool_views.records)
+	else: reader_page.open_records()
+	refresh()
+
+func open_objectives() -> void:
+	if not _prepare_tool("objectives"): return
+	if objectives.review_state == "open": objective_page.show()
+	elif objectives.request_review() != "opened": _finish_tool()
+	refresh()
+
+func _tools_allowed() -> bool:
+	if not active or session.processing or session.mode not in ["investigation", "selection", "narrative", "result", "failure", "material"]: return false
+	if cat_page.visible or context_present_page.visible or result_effect.active: return false
+	if is_instance_valid(narrative_page.cutin) and narrative_page.cutin.is_blocking(): return false
+	if map_page.visible and map_page.service.state.get("phase", "") not in ["browsing", "failure"]: return false
+	return true
+
+func _prepare_tool(kind: String) -> bool:
+	if not _tools_allowed(): return false
+	if tool_kind in ["handbook", "records"] and reader_page.visible:
+		tool_views[tool_kind] = reader_page.export_view()
+		reader_page.hide()
+	if objective_page.visible: objective_page.hide() # 同父状态内切工具保留回顾的子页和滚动。
+	if map_page.visible:
+		map_page.close()
+		if map_page.visible: return false
+	acquisition_feedback.cancel()
+	tool_kind = kind
+	handbook_overlay = kind in ["handbook", "records"]
+	session.narrative.set_log_open(true)
+	return true
+
+func _review_changed(state: String) -> void:
+	if state == "closed" and tool_kind == "objectives": _finish_tool()
+	refresh()
+
+func _finish_tool() -> void:
+	tool_kind = ""
+	handbook_overlay = false
+	if objectives.review_state == "open": objectives.close_review()
+	session.narrative.set_log_open(false)
 	refresh()
 
 func _open_content(id: String) -> void:
 	if id.is_empty(): return
-	handbook_overlay = true
-	session.narrative.set_log_open(true)
+	if not _prepare_tool("handbook"): return
 	reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 	reader_page.open_content(id, false, session.mode == "selection" and not objective_page.visible)
 
 func _reader_closed() -> void:
+	if tool_kind in ["handbook", "records"]:
+		var view: Dictionary = reader_page.export_view()
+		view.visible = true
+		tool_views[tool_kind] = view
+	_finish_tool()
+
+func _open_map() -> void:
+	if session.mode != "investigation" or scene_page.has_context() or not _tools_allowed(): return
+	if tool_kind in ["handbook", "records"] and reader_page.visible:
+		tool_views[tool_kind] = reader_page.export_view()
+		reader_page.hide()
+	if objectives.review_state == "open": objectives.close_review()
+	tool_kind = ""
 	handbook_overlay = false
 	session.narrative.set_log_open(false)
-	refresh()
+	acquisition_feedback.cancel()
+	map_page.open()
 
 func reset_page() -> void:
 	handbook_overlay = false
-	result_effect.stop()
+	tool_kind = ""
+	tool_views.clear()
+	result_effect.stop(false)
 	ending_page.reset_page()
 	cat_page.discard()
 	reader_page.reset_session()
 	card_page.reset_session()
-	for page in [reader_page, objective_page, cat_page, map_page]: page.hide()
+	card_audio.reset()
+	acquisition_feedback.reset()
+	previous_mode = str(session.mode)
+	for page in [reader_page, objective_page, cat_page, map_page, context_present_page]: page.hide()
 	narrative_page.reset_stage()
 	scene_page.current_context = session.return_context.duplicate(true) if session.return_context.get("kind") in ["topics", "inspection", "scene_items", "reasoning"] else {}
 	if not session.page_snapshot.is_empty():
 		reader_page.set_compact_mode(session.mode in ["selection", "result", "failure"])
 		reader_page.restore_view(session.page_snapshot.get("reader", {}))
 		handbook_overlay = reader_page.visible and session.mode != "material"
+		if handbook_overlay: tool_kind = "records" if reader_page.tab == "records" else "handbook"
+	session.narrative.set_log_open(handbook_overlay)
 	objectives.reset()
 	objectives.refresh("restore")
 	refresh()
@@ -172,21 +293,53 @@ func _export_pages() -> Dictionary:
 	return {"reader": reader_page.export_view()}
 
 func can_save() -> bool:
-	return session.can_save() and not handbook_overlay and not objective_page.visible and not cat_page.visible and scene_page.current_context.get("kind", "scene") not in ["inspection", "topics", "scene_items"]
+	return session.can_save() and tutorial.feedback_left <= 0 and not handbook_overlay and not objective_page.visible and not cat_page.visible and not context_present_page.visible and scene_page.current_context.get("kind", "scene") not in ["inspection", "topics", "scene_items"]
+
+func can_pause() -> bool:
+	# 数据写入是同步事务，纯视觉演出可以暂停并原位继续。
+	return not session.processing or result_effect.active
 
 func handle_window_focus_loss() -> void:
 	if active:
 		session.narrative.stop_fast_read()
 		menu_requested.emit()
 
+func _input(event: InputEvent) -> void:
+	# 工具键由容器统一分发，页面只处理自己的推进、选择和返回。
+	if not active or not is_visible_in_tree() or not event is InputEventKey or not event.pressed or event.echo: return
+	if event.keycode not in [KEY_I, KEY_L, KEY_J, KEY_M]: return
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus is LineEdit or focus is TextEdit: return
+	if not _tools_allowed(): get_viewport().set_input_as_handled(); return
+	if event.keycode == KEY_I:
+		if tool_kind == "handbook" and reader_page.visible: reader_page.close_page()
+		else: open_handbook()
+	elif event.keycode == KEY_L:
+		if tool_kind == "records" and reader_page.visible: reader_page.close_page()
+		else: open_records()
+	elif event.keycode == KEY_J:
+		if tool_kind == "objectives" and objective_page.visible: objectives.close_review()
+		else: open_objectives()
+	elif event.keycode == KEY_M:
+		if map_page.visible: map_page.close()
+		else: _open_map()
+	get_viewport().set_input_as_handled()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not active or not event is InputEventKey or not event.pressed or event.echo: return
-	if event.keycode == KEY_I:
-		if objective_page.visible or map_page.visible: get_viewport().set_input_as_handled(); return
-		if reader_page.visible: reader_page.close_page()
-		else: open_handbook()
+	if get_viewport().gui_get_focus_owner() is LineEdit and event.keycode != KEY_ESCAPE: return
+	if event.keycode == KEY_Q:
+		if not handbook_overlay and not objective_page.visible and not map_page.visible and not context_present_page.visible and card_page.visible: card_page.toggle_library()
+	elif event.keycode == KEY_BACKSPACE:
+		if reader_page.visible: reader_page.handle_escape()
+		elif objective_page.visible: objective_page.handle_escape()
+		elif context_present_page.visible: context_present_page.handle_escape()
+		elif map_page.visible: map_page.close()
+		elif card_page.visible: card_page.handle_back()
+		elif scene_page.visible: scene_page.handle_escape()
 	elif event.keycode == KEY_ESCAPE:
-		if reader_page.handle_escape(): pass
+		if context_present_page.handle_escape(): pass
+		elif reader_page.handle_escape(): pass
 		elif objective_page.visible: objectives.close_review()
 		elif map_page.visible: map_page.close()
 		elif narrative_page.visible and narrative_page.handle_escape(): pass

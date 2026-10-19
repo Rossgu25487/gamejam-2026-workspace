@@ -1,0 +1,10 @@
+{
+  "role": "用于当前同画风按钮接入的手绘母件；具体运行状态、尺寸、九切与文字由共同UI规格提供。",
+  "tool": "built-in imagegen",
+  "transparent_background": true,
+  "source_reference": "E:/gamejam/副策划6场景工作稿/assets/revised-20261018-cards/controls/button_primary_normal.png",
+  "generated_source": "G:/CodexData/.codex/generated_images/01a0a9c9-ef9d-7f61-82ea-af6bc33a656d/exec-78c1ee99-00a3-4538-988c-9e825e742fca.png",
+  "design_direction": "保留原A水彩笔触、纸纹与暖灰米色，只收整轮廓、增加手绘细边及轻微厚度；形状完整且可按压。",
+  "prompt": "Make a very small production cleanup of this single watercolor button. Preserve the entire existing ivory watercolor face, paper grain, hand-painted fine brown-grey contour, irregular but coherent horizontal outline, proportions and quiet soft palette. Reduce the dark grey extrusion / drop shadow underneath by about 70 percent: the final button should feel like a thin sturdy painted paperboard control, with just a thin attached lower edge and a short soft contact shadow, not a thick stone or cushion. Keep the thin hand-painted upper highlight. Clean every tiny bright red or saturated yellow fringe pixel around the silhouette; all edge pixels must remain neutral ivory, muted warm grey-brown or naturally transparent. Preserve genuine clean alpha, do not paint a matte background. No text or symbols, no additional decorations, no mechanical smooth bevel, no new UI design. One single complete textless horizontal button, same layout and aspect ratio, entirely visible with transparent margins.",
+  "alpha_note": "RGBA。生成器预览中彩色边缘位于alpha<=10，不应按非预乘RGB直接显示；采用正常透明合成，定位使用有意义的可见alpha范围，避免极低alpha噪点算入控件尺寸。"
+}

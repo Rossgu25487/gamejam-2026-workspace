@@ -7,6 +7,7 @@ func validate(definition: Dictionary) -> Array[String]:
 		if not definition.get(section, {}) is Dictionary: errors.append("地图段必须为字典：" + section)
 	if not definition.get("transitions", []) is Array: errors.append("地点连接必须为列表")
 	if not errors.is_empty(): return errors
+	if definition.get("schema") == "map-spatial-v2": return _validate_spatial(definition)
 	var boards: Dictionary = definition.get("boards", {})
 	var scenes: Dictionary = definition.get("scenes", {})
 	var occupied := {}
@@ -58,6 +59,41 @@ func validate(definition: Dictionary) -> Array[String]:
 		for key in ["background_ref", "scene_resource_ref"]:
 			var ref := str(scene.get(key, ""))
 			if not ref.is_empty() and not definition.get("resources", {}).has(ref): errors.append("场景资源引用缺失：%s / %s" % [id, ref])
+	return errors
+
+func _validate_spatial(definition: Dictionary) -> Array[String]:
+	# 空间地图使用真实路点和多边形，不能再要求旧棋盘的整数行列。
+	var errors: Array[String] = []
+	for key in ["views", "layers", "waypoints", "edges", "projection"]:
+		if not definition.get(key) is Dictionary: errors.append("空间地图段必须为字典：" + key)
+	if not errors.is_empty(): return errors
+	var occupied := {}
+	for id in definition.nodes:
+		var node = definition.nodes[id]
+		if not node is Dictionary: errors.append("地点节点格式无效：" + str(id)); continue
+		var scene := str(node.get("scene_id", ""))
+		if not definition.scenes.has(scene): errors.append("地点节点场景缺失：" + str(id))
+		if occupied.has(scene): errors.append("同场景存在多个地点节点：" + scene)
+		occupied[scene] = true
+		if not definition.groups.has(str(node.get("group_id", ""))): errors.append("地点节点分组缺失：" + str(id))
+		if not definition.waypoints.has(str(node.get("waypoint_id", ""))): errors.append("地点节点路点缺失：" + str(id))
+		var polygon = node.get("hit_polygon_px", [])
+		if not polygon is Array or polygon.size() < 3: errors.append("地点点击多边形无效：" + str(id))
+		elif polygon.any(func(point): return not point is Array or point.size() != 2 or not _number(point[0], -INF) or not _number(point[1], -INF)):
+			errors.append("地点点击多边形坐标无效：" + str(id))
+	for id in definition.views:
+		var view: Dictionary = definition.views[id]
+		if not _number(view.get("crop_width"), 1) or not _number(view.get("crop_height"), 1): errors.append("地图视图裁切尺寸无效：" + str(id))
+	for id in definition.layers:
+		var layer: Dictionary = definition.layers[id]
+		if not definition.views.has(str(layer.get("map_view_id", ""))): errors.append("地图图层视图缺失：" + str(id))
+		if not definition.resources.has(str(layer.get("image_ref", ""))): errors.append("地图图层资源缺失：" + str(id))
+	for id in definition.edges:
+		var edge: Dictionary = definition.edges[id]
+		for field in ["from_waypoint", "to_waypoint"]:
+			if not definition.waypoints.has(str(edge.get(field, ""))): errors.append("空间连线端点缺失：%s / %s" % [id, field])
+		var points = edge.get("polyline_world_m", [])
+		if not points is Array or points.size() < 2: errors.append("空间连线路径无效：" + str(id))
 	return errors
 
 func _number(value, minimum: float) -> bool:

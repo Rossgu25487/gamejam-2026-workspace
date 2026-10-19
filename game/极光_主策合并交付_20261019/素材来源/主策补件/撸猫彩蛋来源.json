@@ -1,0 +1,14 @@
+{
+  "method": "内置 imagegen",
+  "purpose": "撸猫第五次奖励的同机位短特写，第三帧同时作为E27卡图",
+  "files": [
+    "CAT_WATER_01.png",
+    "CAT_WATER_02.png",
+    "CAT_WATER_03.png"
+  ],
+  "prompts": [
+    "Create a single 16:9 in-game close-up cut-in for a hand-painted watercolor narrative adventure set in a modest 1987 northern railway station. Fixed overhead-oblique camera looking at worn warm brown wooden floorboards beside a stove; only a subtle dark iron stove foot at the far upper-left edge, warm amber lamplight and soft cool blue shadows. At exact center, a small shallow cream enamel water dish with a thin dark blue rim, partly filled with clear water, flat on the wooden floor. Entire floor is dry in this first state. Dish is fully visible; leave generous space around it. Soft realistic watercolor brushwork and paper texture matching a restrained illustrated winter-station interior, credible material detail, natural perspective. No writing, no labels, no interface, no arrows, no puzzle marks, no people, no cat, no hands, no evidence props, no blood, no crime imagery. This is the before-state of a three-image observation sequence; aim for simple clean composition and an easily identifiable dish footprint. Opaque background.",
+    "Edit this image into the second frame of the SAME fixed-camera in-game observation sequence. Preserve the exact camera, every floorboard, stove, lighting, palette, watercolor rendering, and the bowl's exact position, shape and scale. Change ONLY the water state: a little clear water has spilled over the rim, forming a shallow irregular wet patch around the base of the bowl, with subtly darker wet wood and a few restrained warm reflections. The bowl stays firmly in the same spot and still contains water. Keep the footprint underneath the bowl protected and unseen. No moving the bowl, no ring painted on top, no extra props, no cat, no hands, no text, no arrows, no interface. The amount of water should read as a small everyday spill.",
+    "Correct ONLY the dry footprint in this third-frame image. The dry region is currently too large and too far upward. Keep the entire camera, stove, floorboards, light and wet spill exactly unchanged. Make most of the currently light oval wet again, matching the adjacent dark wet wood, and leave a much smaller dry contact oval centered at approximately (850,545) in the 1672x941 image: about 260 pixels wide and 65 pixels high, running roughly from x720 to980 and y512 to577. Preserve wood grain through it. This should be the protected flat bottom footprint of the previously removed water dish, not its wide rim or projected silhouette. No drawn border, no symbols, no text, no new objects. Natural subtle wet-versus-dry contrast, still clearly readable."
+  ]
+}

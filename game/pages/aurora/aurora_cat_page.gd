@@ -20,6 +20,9 @@ func bind(value: Node) -> void:
 
 func open() -> bool:
 	if session.mode != "investigation" or session.case_state.data.scene != "SC02": return false
+	var reward: Dictionary = session.config.narrative_data.get("cat_reward_binding", {})
+	if int(session.case_state.data.get("cat_pet_completed_count", 0)) >= int(reward.get("threshold", 5)) and not session.case_state.owns(str(reward.get("content_ref", "E27_V1"))):
+		return session.activate_entry(str(reward.get("reward_entry_ref", "ENTRY_CAT_DRY_MARK")), {"kind": "scene", "scene": session.case_state.data.scene, "view": session.case_state.data.view})
 	var row: Dictionary = session.config.rows("cat", "猫互动")[0]
 	var path: String = session.config.resource_path("res://assets/aurora/cat/animation.json")
 	var descriptor = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -109,9 +112,12 @@ func set_preferences(values: Dictionary) -> void:
 
 func finish() -> void:
 	session.case_state.data.cat_first_seen = cat.first_seen
+	# 只有整段2800ms互动实际完成才累加次数；提前返回不会发放奖励。
+	var completed: bool = cat.touching and cat.elapsed >= cat.total_ms
 	cat.finish()
 	hide()
 	session.mode = "investigation"
+	if completed: session.complete_cat_interaction()
 	closed.emit()
 	session.changed.emit()
 

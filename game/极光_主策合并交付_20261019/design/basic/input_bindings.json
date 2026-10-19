@@ -1,0 +1,192 @@
+{
+  "schema": "shared-input-bindings-v1",
+  "owner": "游戏初始化与开始系统",
+  "source_workbook": "游戏初始化与开始系统配置表.xlsx",
+  "source_sheet": "输入绑定",
+  "bindings": [
+    {
+      "id": "INPUT_TOOL_MAP",
+      "key": "M",
+      "activation": 1,
+      "help_group": "map",
+      "label_text_id": "MAP_TITLE",
+      "help_text_id": "UI_INPUT_HELP_MAP"
+    },
+    {
+      "id": "INPUT_TOOL_HANDBOOK",
+      "key": "I",
+      "activation": 1,
+      "help_group": "handbook",
+      "label_text_id": "UI_HANDBOOK_ENTRY",
+      "help_text_id": "UI_INPUT_HELP_HANDBOOK"
+    },
+    {
+      "id": "INPUT_TOOL_DIALOGUE_LOG",
+      "key": "L",
+      "activation": 1,
+      "help_group": "dialogue_log",
+      "label_text_id": "UI_HANDBOOK_RECORDS",
+      "help_text_id": "UI_INPUT_HELP_DIALOGUE_LOG"
+    },
+    {
+      "id": "INPUT_TOOL_OBJECTIVE_REVIEW",
+      "key": "J",
+      "activation": 1,
+      "help_group": "objective_review",
+      "label_text_id": "UI_OBJECTIVE_REVIEW",
+      "help_text_id": "UI_INPUT_HELP_OBJECTIVE_REVIEW"
+    },
+    {
+      "id": "INPUT_FOCUS_NEXT",
+      "key": "Tab",
+      "activation": 1,
+      "help_group": "focus",
+      "label_text_id": "UI_INPUT_FOCUS",
+      "help_text_id": "UI_INPUT_HELP_FOCUS"
+    },
+    {
+      "id": "INPUT_FOCUS_PREVIOUS",
+      "key": "Shift+Tab",
+      "activation": 1,
+      "help_group": "focus",
+      "label_text_id": "UI_INPUT_FOCUS",
+      "help_text_id": "UI_INPUT_HELP_FOCUS"
+    },
+    {
+      "id": "INPUT_CONFIRM_ENTER",
+      "key": "Enter",
+      "activation": 1,
+      "help_group": "confirm",
+      "label_text_id": "UI_INPUT_CONFIRM",
+      "help_text_id": "UI_INPUT_HELP_CONFIRM"
+    },
+    {
+      "id": "INPUT_CONFIRM_SPACE",
+      "key": "Space",
+      "activation": 1,
+      "help_group": "confirm",
+      "label_text_id": "UI_INPUT_CONFIRM",
+      "help_text_id": "UI_INPUT_HELP_CONFIRM"
+    },
+    {
+      "id": "INPUT_BACK",
+      "key": "Esc",
+      "activation": 1,
+      "help_group": "back",
+      "label_text_id": "UI_COMMON_BACK",
+      "help_text_id": "UI_INPUT_HELP_BACK"
+    },
+    {
+      "id": "INPUT_FAST_READ",
+      "key": "Ctrl",
+      "activation": 2,
+      "help_group": "fast_read",
+      "label_text_id": "UI_INPUT_FAST_READ",
+      "help_text_id": "UI_INPUT_HELP_FAST_READ"
+    },
+    {
+      "id": "INPUT_HIDE_DIALOGUE",
+      "key": "H",
+      "activation": 1,
+      "help_group": "hide_dialogue",
+      "label_text_id": "UI_INPUT_HIDE",
+      "help_text_id": "UI_INPUT_HELP_HIDE_DIALOGUE"
+    }
+  ],
+  "help_groups": [
+    {
+      "id": "map",
+      "binding_ids": [
+        "INPUT_TOOL_MAP"
+      ],
+      "label_text_id": "MAP_TITLE",
+      "help_text_id": "UI_INPUT_HELP_MAP"
+    },
+    {
+      "id": "handbook",
+      "binding_ids": [
+        "INPUT_TOOL_HANDBOOK"
+      ],
+      "label_text_id": "UI_HANDBOOK_ENTRY",
+      "help_text_id": "UI_INPUT_HELP_HANDBOOK"
+    },
+    {
+      "id": "dialogue_log",
+      "binding_ids": [
+        "INPUT_TOOL_DIALOGUE_LOG"
+      ],
+      "label_text_id": "UI_HANDBOOK_RECORDS",
+      "help_text_id": "UI_INPUT_HELP_DIALOGUE_LOG"
+    },
+    {
+      "id": "objective_review",
+      "binding_ids": [
+        "INPUT_TOOL_OBJECTIVE_REVIEW"
+      ],
+      "label_text_id": "UI_OBJECTIVE_REVIEW",
+      "help_text_id": "UI_INPUT_HELP_OBJECTIVE_REVIEW"
+    },
+    {
+      "id": "focus",
+      "binding_ids": [
+        "INPUT_FOCUS_NEXT",
+        "INPUT_FOCUS_PREVIOUS"
+      ],
+      "label_text_id": "UI_INPUT_FOCUS",
+      "help_text_id": "UI_INPUT_HELP_FOCUS"
+    },
+    {
+      "id": "confirm",
+      "binding_ids": [
+        "INPUT_CONFIRM_ENTER",
+        "INPUT_CONFIRM_SPACE"
+      ],
+      "label_text_id": "UI_INPUT_CONFIRM",
+      "help_text_id": "UI_INPUT_HELP_CONFIRM"
+    },
+    {
+      "id": "back",
+      "binding_ids": [
+        "INPUT_BACK"
+      ],
+      "label_text_id": "UI_COMMON_BACK",
+      "help_text_id": "UI_INPUT_HELP_BACK"
+    },
+    {
+      "id": "fast_read",
+      "binding_ids": [
+        "INPUT_FAST_READ"
+      ],
+      "label_text_id": "UI_INPUT_FAST_READ",
+      "help_text_id": "UI_INPUT_HELP_FAST_READ"
+    },
+    {
+      "id": "hide_dialogue",
+      "binding_ids": [
+        "INPUT_HIDE_DIALOGUE"
+      ],
+      "label_text_id": "UI_INPUT_HIDE",
+      "help_text_id": "UI_INPUT_HELP_HIDE_DIALOGUE"
+    }
+  ],
+  "texts": {
+    "MAP_TITLE": "地图",
+    "UI_INPUT_HELP_MAP": "仅可操作调查主视图；再次按下收起，前往锁定时禁用。",
+    "UI_HANDBOOK_ENTRY": "手册",
+    "UI_INPUT_HELP_HANDBOOK": "允许的稳定父状态内只读查阅；再次按下关闭，保留浏览位置。",
+    "UI_HANDBOOK_RECORDS": "对白记录",
+    "UI_INPUT_HELP_DIALOGUE_LOG": "独立查阅已实际显示的原话；关闭回原句，不补已看或重播。",
+    "UI_OBJECTIVE_REVIEW": "目标回顾",
+    "UI_INPUT_HELP_OBJECTIVE_REVIEW": "查看当前公开目标；前往继续受原父状态资格限制。",
+    "UI_INPUT_FOCUS": "焦点导航",
+    "UI_INPUT_HELP_FOCUS": "在当前最上层顺序移动焦点，跳过禁用项；不执行剧情跳过。",
+    "UI_INPUT_CONFIRM": "推进／确认",
+    "UI_INPUT_HELP_CONFIRM": "执行当前焦点；正文允许继续时推进一页，长按不连发。",
+    "UI_COMMON_BACK": "返回",
+    "UI_INPUT_HELP_BACK": "逐层退出；隐藏或快读先恢复／停止。无待关层的普通对白或调查按Esc暂停。",
+    "UI_INPUT_FAST_READ": "已看加速",
+    "UI_INPUT_HELP_FAST_READ": "仅已看普通阅读；按住加速、松开停止，遇新内容或选项即停。",
+    "UI_INPUT_HIDE": "隐藏／恢复对白",
+    "UI_INPUT_HELP_HIDE_DIALOGUE": "普通阅读隐藏或恢复；恢复输入只显示原文，不翻页。"
+  }
+}

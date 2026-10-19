@@ -1,0 +1,22 @@
+{
+  "method": "内置 imagegen",
+  "files": [
+    "MEMORY_MONEY_NOTEBOOK.png",
+    "MEMORY_HAND_WRENCH.png",
+    "MEMORY_WRENCH_IMPACT.png"
+  ],
+  "prompts": [
+    [
+      "MEMORY_MONEY_NOTEBOOK",
+      "Keep the composition, canvas bag, money, notebook, stove, watercolor texture and every interior object exactly as in the reference. Correct only the exterior visible through the upper-left window: this memory occurs on a winter NIGHT. Make the outside snowy station view dark and low-contrast, with no daylight or bright pale sky. Keep a faint suggestion of snowy buildings and lamplight at night, in the same faded sepia monochrome memory palette. Do not change any object, text marks, framing or interior lighting."
+    ],
+    [
+      "MEMORY_HAND_WRENCH",
+      "Make one 16:9 narrative adventure game CG cut-in, restrained hand-painted watercolor and pencil grain. It is a brief memory from a modest 1957 northern railway station. Use faded black-and-white with warm aged-paper sepia, cropped close-up, expressive object-focused framing. No lettering, no UI, no logos, no recognizable faces. Extreme close-up beside an old wooden bench: the right hand of an adult mechanic in a worn winter work coat, oil and grease on the fingers, gripping a short heavy steel repair wrench. The wrench is visibly a repair tool, not a blade. Tension in the grip, stove-side shadow, natural anatomy. Only hand, sleeve, bench edge and wrench. No other person, no injury or blood."
+    ],
+    [
+      "MEMORY_WRENCH_IMPACT",
+      "Make one 16:9 narrative adventure game CG cut-in, restrained hand-painted watercolor and pencil grain. It is a brief memory from a modest 1957 northern railway station. Use faded black-and-white with warm aged-paper sepia, cropped close-up, expressive object-focused framing. No lettering, no UI, no logos, no recognizable faces. A stylized brief impact cut-in: the same kind of grease-stained adult mechanic's hand and short steel repair wrench sweep sharply downward across the frame; the person struck is entirely outside the image. A red-and-ivory flash and rough ink motion streaks communicate a single sudden blow, with a small blurred notebook slipping off a wooden table at the bottom edge. Non-graphic, no body, no face, no wounds, no blood. Keep the watercolor paper texture; red is purely a theatrical flash effect."
+    ]
+  ]
+}

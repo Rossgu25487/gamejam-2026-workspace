@@ -1,0 +1,23 @@
+当前正式调用记录：本目录record.json。播放SFZ已固定到E:/GameAssets/Audio/SSO-Chorus/choral_sustain.sfz；下文保留准备阶段记录与验证说明。
+
+Sonatina Symphonic Orchestra Mixed Chorus：本地新接入 choral_sustain
+
+来源：原作者 Mattias Westlund；持续循环由 Signal Experiments 制作；当前维护者 Peter Eastman 与 SSO contributors。
+维护仓库说明已取得原作者许可：https://github.com/peastman/sso
+固定版本：32bbdb169aef636b8216029a2e056424ba7c2abb
+许可：CC Sampling Plus 1.0，原库 LICENSE 原文随本目录保留。
+完整条款：https://creativecommons.org/licenses/sampling+/1.0/legalcode.en
+Signal Experiments 对循环修改与署名的说明：https://sig-ex.com/2017/03/12/sso-se-looped-sso-instruments/
+
+使用边界：已阅读许可第 3 条。它允许对采样进行具有实质创作性的重组，制作和发行商业或非商业衍生音乐；单纯把原录音放到画面上不构成该许可所要求的改编。此任务将采样用于原创多声部乐谱并混入其他乐器，属于该创作使用场景。原始 WAV 库保持在本机 GameAssets；公开试听或游戏交付使用完整原创混音，不打包该合唱原样采样或仅为了复刻音源而制作的干声。发布配乐与游戏时保留作者、库名、来源链接、许可链接及改编说明。广告用途仅限推广衍生作品及其作者，不能转作无关商品广告。
+
+可直接使用的署名：
+合唱采样：Sonatina Symphonic Orchestra（Mattias Westlund；循环处理 Signal Experiments；持续维护 Peter Eastman 与 SSO contributors）。来源 https://github.com/peastman/sso ，CC Sampling Plus 1.0：https://creativecommons.org/licenses/sampling+/1.0/ 。本作将采样用于原创乐谱演奏与混音；SFZ 改为数字音高和本地绝对路径，原采样字节未修改。
+
+音域：MIDI 43—84，男声 43—66、女声 67—84，逐半音 42 个双声道采样。用户需求的 48—76 完整覆盖。此区分来自原库文件与键位映射，并未新增独立录制的 SATB 音色。
+音长：loop_continuous，可持续超过原录音 7—9 秒；谱面仍应写换气与休止，不能无限平铺。
+包络：保留原库起音 0.6 秒、力度对起音的 -0.4 秒影响、释音 1.25 秒；CC11 由本机渲染器连续调度。
+能力边界：无词合唱持续音色，无歌词、音节切换、独立 ah/oh 切换、实录音程连奏；声部厚度应由和声进行、音域、进入顺序与力度塑造。
+
+接入：choral_sustain_record.json 符合 engine.prepare 的现有 record 格式。choral_sustain.sfz 指向 E:/GameAssets/Audio/SSO-Chorus/samples/；原始42个采样不复制进项目。choir_bank.py 提供 load_record() 与 attach(context)；PROGRAM=52。复制到 sources/choir 后如需改变 record.path/playback_path，可将 path 指向仓库内 SFZ，playback_path 保持当前全 ASCII 外部路径；只要 SFZ 字节不变就复用 sha256。
+验证：verify_choir.py 使用本机真实 sfizz 渲染两个六音和弦，包含10秒长音超过原文件长度；具体结果见 validation.json。此模型没有完成听感验收。

@@ -37,6 +37,7 @@ var fit_queued := false
 var scroll_target := {"mode": "keep", "item": ""}
 var keep_scroll := 0
 var first_offset := 0.0
+var rendered_direction_signature := "" # 正式纸面还需响应入口可用性变化；它不一定改变目标正文版本。
 
 
 func _ready() -> void:
@@ -47,9 +48,11 @@ func _ready() -> void:
 func bind(objective_service: Node) -> void:
 	service = objective_service
 	hud = service.config.get("hud", {})
+	if hud.get("final_paper", false): service.model.expanded = bool(hud.get("hud_default_expanded", false))
 	_build()
 	service.changed.connect(_refresh)
 	get_viewport().size_changed.connect(_refresh)
+	resized.connect(_refresh)
 	_refresh()
 
 
@@ -106,10 +109,15 @@ func _build() -> void:
 	review_button = Style.button(inner, "", int(hud["header_font_px"]), 32.0, func(): review_requested.emit())
 	review_button.name = "ReviewButton"
 	set_process(false)
+	if hud.get("final_paper", false):
+		panel.add_theme_stylebox_override("panel", Style.paper(hud.get("assets", {}), "hud_paper", PAD))
+		body.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		Style.paper_button(header, hud.get("assets", {}))
+		Style.paper_button(review_button, hud.get("assets", {}), true)
 
 
 func _viewport_size() -> Vector2:
-	return viewport_override if viewport_override != Vector2.ZERO else get_viewport_rect().size
+	return viewport_override if viewport_override != Vector2.ZERO else (size if hud.get("final_paper", false) and size.x > 0 and size.y > 0 else get_viewport_rect().size)
 
 
 func reserved_width() -> float:
@@ -123,7 +131,16 @@ func _refresh() -> void:
 	if service == null or header == null:
 		return
 	var view: Dictionary = service.hud_view()
-	visible = bool(view["shown"])
+	if hud.get("final_paper", false):
+		# HUD只呈现一条当前合法入口；完整的已公开事项仍由同一服务保留在回顾。
+		view = view.duplicate()
+		var directions: Array = []
+		for item in service.review_view().get("pending", []):
+			if bool(item.get("entry", {}).get("available", false)):
+				directions.append({"id": item["id"], "text": item["text"], "reason": item["reason"]})
+				break
+		view["items"] = directions
+	visible = bool(view["shown"]) and (not hud.get("final_paper", false) or service.review_state == "closed")
 	if not visible:
 		set_process(false)
 		return
@@ -131,7 +148,9 @@ func _refresh() -> void:
 	layout_info = Layout.hud_layout(_viewport_size(), hud)
 	max_height = float(layout_info["max_height"])
 	panel.position = Vector2(float(layout_info["left"]), float(layout_info["top"]))
-	panel.custom_minimum_size.x = float(layout_info["width"]) if expanded else float(hud["fold_width_px"])
+	var factor := _viewport_size().y / 900.0 if hud.get("final_paper", false) else 1.0
+	panel.custom_minimum_size.x = float(layout_info["width"]) if expanded else float(hud["fold_width_px"]) * factor
+	if hud.get("final_paper", false): panel.position.x = _viewport_size().x - float(hud.get("safe_margin_px", 24)) * factor - panel.custom_minimum_size.x
 	header.text = (ARROW_OPEN if expanded else ARROW_FOLDED) + service.label("label_current_goal")
 	if bool(view["marker"]):
 		tag.text = service.label("label_update")
@@ -146,7 +165,7 @@ func _refresh() -> void:
 	error_label.text = error_text
 	error_label.visible = not error_text.is_empty()
 	if expanded:
-		if int(view["content_revision"]) != rendered_revision:
+		if int(view["content_revision"]) != rendered_revision or (hud.get("final_paper", false) and rendered_direction_signature != JSON.stringify(view["items"])):
 			_rebuild(view)
 		fit_key = "%s|%s|%s|%s" % [panel.custom_minimum_size.x, max_height, view["content_revision"], error_text]
 		if fit_key != rendered_fit_key:
@@ -158,6 +177,7 @@ func _refresh() -> void:
 
 func _rebuild(view: Dictionary) -> void:
 	rendered_revision = int(view["content_revision"])
+	rendered_direction_signature = JSON.stringify(view["items"])
 	scroll_target = service.take_scroll()
 	keep_scroll = list.scroll_vertical
 	var content: VBoxContainer = list.content
