@@ -59,6 +59,18 @@ func set_inspection_close_available(value: bool) -> void:
 	inspection_close_available = value
 	_queue_render()
 
+func resume_after_shared_tool() -> void:
+	## 共享手册/回顾关闭后强制恢复对白舞台并安排一次完整重绘。
+	##
+	## 打开目标回顾时 narrative_page 可能仍处在 reading_log 状态；此状态下
+	## _render() 会暂时保留现有控件。如果同一帧又切换到新的对白入口，原先
+	## 排队的渲染可能已经返回，导致舞台继续隐藏，表现为黑屏，直到 Esc 再次
+	## 触发刷新。该公开方法由页面容器在关闭共享工具后调用，避免跨页直接
+	## 修改本页的私有控件。
+	if is_instance_valid(stage): stage.show()
+	render_queued = false
+	_queue_render()
+
 func bind(value: Node) -> void:
 	service = value
 	_load_formal_ui()

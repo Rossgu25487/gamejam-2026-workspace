@@ -58,6 +58,10 @@ func run() -> void:
 	if records_button == null: quit(1); return
 	await click(records_button)
 	check(page.tool_kind == "records" and page.reader_page.visible and session.narrative.reading_log, "实际点击记录进入独立记录并冻结正文")
+	check(not page.reader_page.z_as_relative and page.reader_page.z_index > page.narrative_page.z_index, "对白记录模态层位于对白框之上")
+	page._finish_tool()
+	await frames(2)
+	check(not session.narrative.reading_log and page.narrative_page.stage.visible, "共享工具关闭后恢复对白舞台")
 	await key(KEY_ESCAPE)
 	check(not page.reader_page.visible and session.narrative.state.current_text_id == current, "记录按钮打开后Esc返回原句")
 	await key(KEY_L)

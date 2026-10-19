@@ -56,6 +56,13 @@ func bind(value: Node, map_service: Node) -> void:
 	map_page = _page(MapPage, "MapPage")
 	cat_page = _page(CatPage, "CatPage")
 	reader_page = _page(ReaderPage, "HandbookPage")
+	# 手册是全局模态工具，必须盖在对白页内部的舞台/对话框之上。
+	# 对话页使用独立逻辑画布（z_index=20），仅依靠兄弟节点顺序无法保证
+	# 后打开的手册可见，因此给手册容器明确的最高层级。
+	# 关闭相对层级后，手册的层级直接相对于当前画布计算，不会被对白页
+	# 或其他页面容器的局部 z_index 抵消。
+	reader_page.z_as_relative = false
+	reader_page.z_index = 1000
 	ending_page = _page(EndingPage, "EndingPage")
 	ending_page.bind(session)
 	ending_page.menu_requested.connect(menu_requested.emit)
@@ -237,6 +244,10 @@ func _finish_tool() -> void:
 	handbook_overlay = false
 	if objectives.review_state == "open": objectives.close_review()
 	session.narrative.set_log_open(false)
+	# 目标回顾/手册关闭后，对白页可能因 reading_log 提前返回过渲染；
+	# 明确恢复舞台并在下一帧重绘，避免快速前往入口后出现黑屏。
+	if is_instance_valid(narrative_page) and narrative_page.has_method("resume_after_shared_tool"):
+		narrative_page.resume_after_shared_tool()
 	refresh()
 
 func _open_content(id: String) -> void:
