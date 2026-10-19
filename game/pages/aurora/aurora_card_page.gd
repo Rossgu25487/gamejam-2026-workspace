@@ -83,6 +83,11 @@ func _render() -> void:
 		focus_content = str(browse.get("focus_content", ""))
 		library_focus = str(browse.get("library_focus", ""))
 		scroll_positions = browse.get("positions", {}).duplicate(true)
+	# 每次重绘先作废选材控件引用。结果/失败页不会再调用_selection，
+	# 不能等下一次选材才清数组，否则延后焦点回调会访问已释放的手牌。
+	card_buttons.clear()
+	hand_area = null
+	card_scroll = null
 	for child in get_children():
 		if child == core_stage: continue
 		remove_child(child)
@@ -156,8 +161,8 @@ func _render() -> void:
 	log_button.tooltip_text = "L 打开对白记录"
 	_apply_action_icon(log_button, "dialogue_log")
 	if not detail_content.is_empty(): _render_detail()
-	elif not (library_focus if grid_mode else focus_content).is_empty(): call_deferred("_restore_card_focus")
-	if grid_mode and detail_content.is_empty(): call_deferred("_restore_library_focus")
+	elif session.mode == "selection" and not (library_focus if grid_mode else focus_content).is_empty(): call_deferred("_restore_card_focus")
+	if session.mode == "selection" and grid_mode and detail_content.is_empty(): call_deferred("_restore_library_focus")
 
 func _selection() -> void:
 	# 核查页分成上下两个明确区域：上方是当前问题和操作，下方固定保留牌区。
@@ -478,8 +483,9 @@ func _show_preview(id: String) -> void:
 
 func _restore_card_focus() -> void:
 	# 本地详情独占焦点；重绘不能把键盘送回仍在后方的浅扇或展开层。
-	if not detail_content.is_empty(): return
+	if session.mode != "selection" or not is_visible_in_tree() or not detail_content.is_empty(): return
 	for card in card_buttons:
+		if not is_instance_valid(card) or card.is_queued_for_deletion() or not card.is_inside_tree(): continue
 		var identity := str(card.get("content_id")) if not grid_mode else str(card.get_meta("content_id", ""))
 		if identity == (library_focus if grid_mode else focus_content) and card.is_visible_in_tree() and not card.disabled:
 			restoring_focus = true
@@ -630,7 +636,7 @@ func _restore_detail_focus() -> void:
 	if owner == null or not detail_overlay.is_ancestor_of(owner): buttons[-1].grab_focus()
 
 func _restore_library_focus() -> void:
-	if not grid_mode or not detail_content.is_empty() or not is_instance_valid(page_canvas): return
+	if session.mode != "selection" or not is_visible_in_tree() or not grid_mode or not detail_content.is_empty() or not is_instance_valid(page_canvas): return
 	var overlay := page_canvas.find_child("MaterialLibrary", true, false)
 	if overlay == null: return
 	var controls: Array[Control] = []
