@@ -389,6 +389,17 @@ func _reading() -> void:
 		for source in (frozen_sources if frozen_sources is Array else record.versions[reading_content]): _source(source_actions, source)
 	scroll.set_deferred("scroll_vertical", int(read_positions.get(reading_content, 0)))
 	scroll.get_v_scroll_bar().value_changed.connect(func(value): read_positions[reading_content] = value)
+	if reading_entry:
+		# 回执仍在全文底部；固定提示让玩家知道原件尚可滚动，不能因按钮暂未露出误以为卡住。
+		var hint := UI.label(root_box, "", 20)
+		hint.name = "OriginalReadingHint"
+		hint.custom_minimum_size.y = 52
+		hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var bar := scroll.get_v_scroll_bar()
+		bar.value_changed.connect(func(_value): _update_original_reading_hint(scroll, hint))
+		bar.changed.connect(func(): _update_original_reading_hint(scroll, hint))
+		_update_original_reading_hint.call_deferred(scroll, hint)
 	var actions := HFlowContainer.new()
 	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.custom_minimum_size.x = _reading_content_width()
@@ -407,6 +418,13 @@ func _reading() -> void:
 		_reading_button(controls, "前一项", _new_move.bind(-1), new_index > 0)
 		UI.label(controls, "%d / %d" % [new_index + 1, new_list.size()])
 		_reading_button(controls, "后一项", _new_move.bind(1), new_index + 1 < new_list.size())
+
+func _update_original_reading_hint(scroll: ScrollContainer, hint: Label) -> void:
+	# 等容器重排后仍以真实滚动范围判断；恢复阅读位置、改变窗口尺寸也会同步提示。
+	if not is_instance_valid(scroll) or not is_instance_valid(hint): return
+	var bar := scroll.get_v_scroll_bar()
+	var remaining := bar.max_value - bar.page - bar.value
+	hint.text = "↓ 正文下方还有内容，请用滚轮向下阅读；“已读完这份原件”按钮在全文底部。" if remaining > 1.0 else "已到原件底部，请点击上方的“已读完这份原件”完成阅读。"
 
 func _source(parent: Control, source: Dictionary) -> void:
 	var label := str(source.get("entry", source.get("question", "实际调查")))

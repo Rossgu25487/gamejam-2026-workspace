@@ -105,6 +105,7 @@ func load_package(root: String = DEFAULT_ROOT) -> bool:
 		if not id.is_empty() and not questions.has(id): questions[id] = row
 	_relocate_resources()
 	_load_final_json_bindings(root)
+	_repair_lorne_click_routes()
 	# 最终首章迁入连续场后，阅读回执仍要求“已展示回信”；实际递交时补交既有事件。
 	for jump in jumps.get("TXT_PLANNER_LETTER_002", []):
 		if jump.get("target_ref") == "ENTRY_PLANNER_LETTER_DOCUMENT" and str(jump.get("event_id", "")).is_empty():
@@ -259,6 +260,27 @@ func _load_final_json_bindings(root: String) -> void:
 		var tutorial = JSON.parse_string(tutorial_file.get_as_text())
 		if tutorial is Dictionary: tutorial_data = tutorial
 		else: warnings.append("引导接入数据不是有效JSON：" + tutorial_path)
+
+func _repair_lorne_click_routes() -> void:
+	# 第一章饭前点击洛恩应直接进入已有对白；旧接入只显示心声，读完后没有开谈入口。
+	# 运行时按E01阅读状态分流，饭后及后续章节继续使用原有话题条件。
+	var source := "ENTRY_CLICK_CHR02_SC06"
+	if not jumps.has(source): return
+	var retained: Array = []
+	for jump in jumps[source]:
+		if str(jump.get("target_ref", "")) in ["ENTRY_CLICK_CHR02_CH01_0287", "ENTRY_CLICK_CHR02_CH01_0289"]: continue
+		retained.append(jump)
+	conditions["COND_FINAL_CH01_LORNE_UNREAD_CLICK"] = {"1": [
+		{"kind": "chapter", "ref": "CH01", "expected": true},
+		{"kind": "event", "ref": "EV_E01_READ", "expected": false},
+		{"kind": "event", "ref": "EV_CH01_REST_SELECTED", "expected": false}]}
+	conditions["COND_FINAL_CH01_LORNE_BUSY_CLICK"] = {"1": [
+		{"kind": "chapter", "ref": "CH01", "expected": true},
+		{"kind": "event", "ref": "EV_E01_READ", "expected": true},
+		{"kind": "event", "ref": "EV_CH01_REST_SELECTED", "expected": false}]}
+	retained.push_front({"source_entry_id": source, "trigger": "continue", "condition_id": "COND_FINAL_CH01_LORNE_BUSY_CLICK", "target_kind": "entry", "target_ref": "ENTRY_CH01_LORNE_BUSY", "timing": "after_text"})
+	retained.push_front({"source_entry_id": source, "trigger": "continue", "condition_id": "COND_FINAL_CH01_LORNE_UNREAD_CLICK", "target_kind": "entry", "target_ref": "ENTRY_CH01_LORNE_UNREAD", "timing": "after_text"})
+	jumps[source] = retained
 
 func narrative_bindings(key: String) -> Array:
 	var value = narrative_data.get(key, [])
