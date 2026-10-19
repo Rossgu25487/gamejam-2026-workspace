@@ -171,7 +171,7 @@ func _first_press_step() -> Dictionary:
 func _succeeded(step: Dictionary) -> bool:
 	var ref := str(step.get("completion_ref", ""))
 	match str(step.get("completion_kind", "")):
-		"observation_opened": return session.mode == "narrative" and str(session.active_entry) == ref and not session.narrative.state.is_empty()
+		"observation_opened": return session.mode == "narrative" and not session.narrative.state.is_empty() and _observation_entry_opened(ref)
 		"floor_selected":
 			var page: Control = gameplay.get("map_page")
 			return is_instance_valid(page) and page.visible and str(page.get("selected_group")) == ref
@@ -189,6 +189,18 @@ func _succeeded(step: Dictionary) -> bool:
 		"presentation_succeeded": return session.pending_result.get("question") == ref and session.pending_result.get("complete", false) and session.pending_result.get("feedback") in ["support", "exclude", "inference"]
 		"inference_accepted": return session.case_state.owns(ref) and not session.processing and not session.pending_result.get("effect_pending", false)
 		"press_response_completed_and_returned": return session.case_state.data.events.get(ref, false) and session.mode == "selection" and session.question_reading.is_empty()
+	return false
+
+func _observation_entry_opened(entry_id: String, visited: Array[String] = []) -> bool:
+	# 正式观察父入口按首次/复查路由到实际正文，active_entry会变为子入口。
+	# 只追踪当前条件成立的无选择入口边；同场景的其他观察不能误完成教学。
+	if entry_id == str(session.active_entry): return true
+	if entry_id.is_empty() or entry_id in visited or visited.size() >= 48: return false
+	visited.append(entry_id)
+	var entry: Dictionary = session.config.entries.get(entry_id, {})
+	if entry.get("call_kind") == "entry" and _observation_entry_opened(str(entry.get("call_ref", "")), visited.duplicate()): return true
+	for jump in session.valid_jumps(entry_id):
+		if jump.get("target_kind") == "entry" and jump.get("trigger") not in ["choice", "question"] and _observation_entry_opened(str(jump.get("target_ref", "")), visited.duplicate()): return true
 	return false
 
 func _group(id: String) -> Array:

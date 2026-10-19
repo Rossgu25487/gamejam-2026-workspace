@@ -55,9 +55,11 @@ func run() -> void:
 	gameplay.scene_page.add_child(sign)
 	check(tutorial.target_control() == sign, "目标绑定真实节点")
 	check(not tutorial.completed(tutorial.current_step), "出现引导不自动完成")
-	session.mode = "narrative"
-	session.active_entry = "ENTRY_CH01_SIGN"
-	session.narrative.state = {"current_text_id": "TXT_CH01_0001"}
+	check(session.activate_entry("ENTRY_CH01_NOTICE"), "实际打开同场景另一物件")
+	tutorial.refresh()
+	check(not session.case_state.data.tutorial_completed_steps.has("TUT_INV_SIGN:1"), "其他观察正文不误完成站名牌引导")
+	check(session.activate_entry("ENTRY_CH01_SIGN"), "实际打开正式站名牌父入口")
+	check(session.active_entry == "ENTRY_CH01_SIGN_FIRST", "父入口路由到首次观察正文")
 	tutorial.refresh()
 	check(session.case_state.data.tutorial_completed_steps.has("TUT_INV_SIGN:1"), "观察正文真正出现才完成")
 	check(tutorial.current_step.is_empty(), "阅读开始立即撤去调查引导")

@@ -36,6 +36,7 @@ func configure_formal(config: RefCounted) -> void:
 	panel.hide()
 	for button in [continue_button, new_game_button, load_button, settings_button, exit_button]: formal_layout.button_style(button, button == continue_button)
 	heading.add_theme_font_size_override("font_size", 52)
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	status.add_theme_font_size_override("font_size", 24)
 	detail.add_theme_font_size_override("font_size", 22)
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -50,6 +51,11 @@ func _layout_formal() -> void:
 	var ratio: int = formal_layout.ratio_for(formal_canvas.size.x)
 	for pair in [[formal_menu, "title.menu_surface_1"], [heading, "title.text_region_1"], [continue_button, "title.continue"], [new_game_button, "title.new"], [load_button, "title.load"], [settings_button, "title.settings"], [exit_button, "title.exit"], [status, "title.text_region_2"], [detail, "title.text_region_3"]]:
 		formal_layout.place(pair[0], formal_layout.row_for(pair[1], "normal", ratio), formal_canvas.size)
+	# 保留正式表的面板内部间距，将整组菜单放到当前有效画面的正中央。
+	# 每次先按表重新布局再平移，窗口缩放与返回标题不会累计偏移。
+	var center_offset := formal_canvas.size / 2 - (formal_menu.position + formal_menu.size / 2)
+	for control in [formal_menu, heading, continue_button, new_game_button, load_button, settings_button, exit_button, status, detail]:
+		control.position += center_offset
 	# 完整实际存档摘要可换行留在菜单底部，不因长地点名称绘制到纸面外。
 	detail.size.y = 78
 	detail.clip_contents = true
