@@ -135,6 +135,12 @@ func _render() -> void:
 	return_button.name = "ReturnReviewButton"
 	if review.get("final_paper", false):
 		for button in [up_button, close_button, return_button]: Style.paper_button(button, review.get("assets", {}))
+	# 长标题不再把操作按钮挤成无字竖条：标题限两行并省略，按钮保持完整文字、不换行。
+	title.max_lines_visible = 2
+	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	for button in [up_button, close_button, return_button]:
+		button.autowrap_mode = TextServer.AUTOWRAP_OFF
+		button.custom_minimum_size.x = 120.0
 	if level["kind"] == "sources":
 		_render_sources(doc)
 	else:

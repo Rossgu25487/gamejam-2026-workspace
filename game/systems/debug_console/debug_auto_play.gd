@@ -187,6 +187,11 @@ func _conclude(reached: bool) -> Dictionary:
 	var errors := 0
 	for item in report.anomalies:
 		if str(item.severity) == "error": errors += 1
+	# 停止时补充未满足前置，便于在超时、循环等非“走不下去”的失败里也能看到卡点；取消与已到达不附加。
+	if not reached and session != null and not cancelled:
+		var unmet := _stuck_report()
+		if not unmet.is_empty() and unmet != "无未完成关卡" and not failure.contains(unmet):
+			failure = failure + "（未满足前置：" + unmet + "）"
 	var snapshot_ok := true
 	if reached and session != null and isolated:
 		var snapshot: Dictionary = session.export_snapshot()
@@ -602,6 +607,12 @@ func _step_result() -> int:
 
 ## 推进一次结果界面：先提交待收推论或读回应，再收下推论，最后继续；失败时记录原因。
 func _advance_result() -> int:
+	# 结果演出先收尾再读回应：隔离模式没有界面播放演出，直接按“跳过表现”结束，
+	# 否则 effect_pending 一直为 true、read_result_response() 永远失败（“回应无法开始”）。
+	# 实机模式走到这里时演出已由界面收尾（effect_pending 已为 false），不会误触发。
+	if session.pending_result.get("effect_pending", false):
+		session.finish_result_effect()
+		return CONTINUE
 	var result: Dictionary = session.config.results.get(session.pending_result.get("result", ""), {})
 	var step := ""
 	var ok := true
@@ -670,31 +681,16 @@ func _external() -> Array:
 	for scene in session.config.scenes:
 		if not session.scene_status(scene).available: continue
 		session.case_state.data.scene = scene
-		session.case_state.data.view = session.config.scenes[scene].default_view_id
-		for item in _model.scene_options():
-			ids[str(item.entry_ref)] = true
-			_entry_scenes[str(item.entry_ref)] = scene
-		for hotspot in _model.hotspots():
-			var candidates: Array = _model.observation_options(str(hotspot.object_ref)) if hotspot.object_kind != "character" else _model.topics(str(hotspot.get("topic_entry_ref", "")))
-			candidates.append({"entry_ref": hotspot.get("inspect_entry_ref", "")})
-			for item in candidates:
-				var id := str(item.entry_ref)
-				if session.config.entries.has(id):
-					ids[id] = true
-					_entry_scenes[id] = scene
+		_scan_view(str(session.config.scenes[scene].default_view_id), scene, ids, {})
 		for item in session.available_reasoning():
-			ids[str(item.entry)] = true
-			_entry_scenes[str(item.entry)] = scene
+			_add_entry(str(item.entry), scene, ids)
 		session.case_state.data.scene = old_scene
 		session.case_state.data.view = old_view
 	for row in session.config.rows("objective", "正式事项"):
 		var goals: Array = session.config.rows("objective", "正式目标").filter(func(goal_row): return goal_row.goal_id == row.goal_id and session.condition(str(goal_row.get("condition_id", ""))))
 		if goals.is_empty() or not session.condition(str(row.get("condition_id", ""))): continue
 		if not str(row.get("completion_condition_id", "")).is_empty() and session.condition(str(row.completion_condition_id)): continue
-		var id := str(row.get("target_ref", ""))
-		if session.config.entries.has(id):
-			ids[id] = true
-			_entry_scenes[id] = str(row.get("scene_id", ""))
+		_add_entry(str(row.get("target_ref", "")), str(row.get("scene_id", "")), ids)
 	var ordered: Array = ids.keys()
 	if strategy == "random":
 		var ranks := {}
@@ -703,6 +699,48 @@ func _external() -> Array:
 	else:
 		ordered.sort_custom(func(a, b): return int(_visits.get(a, 0)) < int(_visits.get(b, 0)))
 	return ordered
+
+## 登记一个可达入口及其所在场景（空或未登记入口一律忽略）。
+func _add_entry(id: String, scene: String, ids: Dictionary) -> void:
+	if id.is_empty() or not session.config.entries.has(id): return
+	ids[id] = true
+	_entry_scenes[id] = scene
+
+## 沿真实玩家路径扫描某地点一个视图可达的入口：本视图热区、交谈候选与话题、可达机位，
+## 以及容器子视图。容器只有在“开箱”入口读完（页面 _open_view 的完成回执）后才打开，
+## 空入口的局部视图立即可达；进入子视图后继续递归扫它的热区与嵌套容器。
+func _scan_view(view: String, scene: String, ids: Dictionary, visited: Dictionary) -> void:
+	var path: String = scene + "/" + view
+	if visited.has(path): return
+	visited[path] = true
+	session.case_state.data.view = view
+	for item in _model.scene_options():
+		_add_entry(str(item.entry_ref), scene, ids)
+	for hotspot in _model.hotspots(view):
+		_add_entry(str(hotspot.get("inspect_entry_ref", "")), scene, ids)
+		if str(hotspot.object_kind) == "character":
+			for topic in _model.topics(str(hotspot.get("topic_entry_ref", ""))):
+				_add_entry(str(topic.entry_ref), scene, ids)
+		else:
+			for option in _model.observation_options(str(hotspot.object_ref)):
+				_add_entry(str(option.entry_ref), scene, ids)
+		var detail := str(hotspot.get("detail_view_ref", ""))
+		if not detail.is_empty():
+			var opener := str(hotspot.get("inspect_entry_ref", ""))
+			if opener.is_empty() or session.case_state.data.entries.get(opener, false):
+				_scan_view(detail, scene, ids, visited)
+	# 递归进入子视图会改动 data.view，恢复本视图后才看交谈候选（仅默认视图有近景人物）。
+	session.case_state.data.view = view
+	for candidate in _model.conversation_candidates():
+		_add_entry(str(candidate.get("inspect_entry_ref", "")), scene, ids)
+		for topic in _model.topics(str(candidate.get("topic_entry_ref", ""))):
+			_add_entry(str(topic.entry_ref), scene, ids)
+	# 机位切换按钮指向的视图同样可达，扫描其热区与容器。
+	for control in _model.interface_layout.get("view_switch_controls", []):
+		if str(control.get("scene_id", "")) != scene or str(control.get("view_id", "")) != view: continue
+		var target := str(control.get("target_view_ref", ""))
+		if not target.is_empty():
+			_scan_view(target, scene, ids, visited)
 
 # ---------- 异常采集 ----------
 

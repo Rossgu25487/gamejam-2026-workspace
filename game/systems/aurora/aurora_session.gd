@@ -65,6 +65,7 @@ func initialize(root: String = ConfigScript.DEFAULT_ROOT, shared_config: RefCoun
 	elif not config.load_package(root): return false
 	case_state.bind(config)
 	case_state.commit_guard = _prepare_event_commit
+	case_state.content_updated.connect(_on_content_updated)
 	case_state.reset()
 	narrative = NarrativeScript.new()
 	add_child(narrative)
@@ -73,6 +74,10 @@ func initialize(root: String = ConfigScript.DEFAULT_ROOT, shared_config: RefCoun
 	narrative.notice.connect(_notice)
 	return true
 
+func _on_content_updated(content_id: String) -> void:
+	# 材料内容真正授予/更新后，把无头像“手册已更新”提示排入下方对白，等当前文本结束再显示。
+	narrative.queue_manual_update(content_id)
+
 func new_game() -> bool:
 	var nav: Array = config.rows("start", "导航总控")
 	var start_id := str(nav[0].get("start_entry_id", "")) if nav.size() == 1 else ""
@@ -80,6 +85,7 @@ func new_game() -> bool:
 	var old := export_snapshot() if not run_id.is_empty() else {}
 	case_state.reset()
 	narrative.state = {}
+	narrative.clear_manual_updates()
 	active_entry = ""
 	mode = "investigation"
 	reader.clear()
@@ -709,6 +715,19 @@ func entry_label(id: String) -> String:
 	var label := str(config.entries.get(id, {}).get("name", id))
 	return "继续" if label.begins_with("ENTRY_") or label.begins_with("SEQ_") else label
 
+func scene_name(scene_id: String) -> String:
+	# 共用地点名称解析：有效 name_text_id 优先，空 ID 或未解析时回退 display_name；
+	# 两者都缺时记录校验错误并给出玩家可理解文案，不显示内部 ID。
+	var scene: Dictionary = config.scenes.get(scene_id, {})
+	var name_ref := str(scene.get("name_text_id", ""))
+	if not name_ref.is_empty():
+		var translated: String = config.text(name_ref)
+		if translated != name_ref: return translated
+	var display := str(scene.get("display_name", ""))
+	if not display.is_empty(): return display
+	config.errors.append("场景名称缺失：" + scene_id)
+	return "未知地点"
+
 func choice_label(row: Dictionary) -> String:
 	var label := str(row.get("option_text", ""))
 	if not label.is_empty(): return label
@@ -717,7 +736,7 @@ func choice_label(row: Dictionary) -> String:
 	if config.entries.has(operation): return entry_label(operation)
 	if not operation.is_empty() and not operation.begins_with("ENTRY_"): return operation
 	var target := str(row.get("target_ref", ""))
-	if config.scenes.has(target): return config.text(str(config.scenes[target].get("name_text_id", "")))
+	if config.scenes.has(target): return scene_name(target)
 	return entry_label(target)
 
 func can_save() -> bool:
@@ -1110,7 +1129,7 @@ func accept_inference() -> bool:
 			return false
 	pending_result.accepted = true
 	case_state.data.results[question] = pending_result.duplicate(true)
-	_play_result_effect({"feedback_key": "collect", "duration_ms": 900, "effect_level": "collect", "content_id": str(result.get("inference_content_ref", ""))})
+	_play_result_effect({"feedback_key": "collect", "duration_ms": 900.0 / 0.75, "effect_level": "collect", "content_id": str(result.get("inference_content_ref", ""))})
 	changed.emit()
 	return true
 
@@ -1191,7 +1210,7 @@ func export_snapshot() -> Dictionary:
 		"narrative": narrative.export_snapshot() if not narrative.state.is_empty() else {}, "bgm": last_bgm,
 		"stage_dirty": stage_dirty, "save_due": save_due, "page_snapshot": page_snapshot.duplicate(true),
 		"ending_media": ending_media.duplicate(true), "requested_destination": requested_destination, "ending_status": "completed" if state.ending_completed else ("active" if state.ending_started else ""),
-		"progress_summary": {"scene": config.text(str(config.scenes[state.scene].name_text_id)), "phase": str(config.chapters[state.chapter].name), "question": target_text() if not question.is_empty() else ""}}
+		"progress_summary": {"scene": scene_name(str(state.scene)), "phase": str(config.chapters[state.chapter].name), "question": target_text() if not question.is_empty() else ""}}
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
 	if snapshot.get("format") != "aurora_session_v1" or snapshot.get("content_revision") != config.content_revision: return false

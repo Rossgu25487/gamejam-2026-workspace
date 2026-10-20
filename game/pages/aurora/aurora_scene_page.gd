@@ -35,6 +35,8 @@ var render_hotspots: Array = []
 var render_layers: Array = []
 var preferences := {"aspect_ratio": 0}
 var pending_focus := ""
+var _keyboard_nav := true
+var hud_reserve: Callable = Callable() # 目标HUD展开时返回需让出的屏幕宽度；机位按钮据此避让
 var last_completed_text := ""
 var conversation_view: Control
 
@@ -209,6 +211,7 @@ func _hotspot(row: Dictionary) -> void:
 	button.pressed.connect(_inspect.bind(row))
 	button.focus_entered.connect(_focus_hotspot.bind(row))
 	button.mouse_entered.connect(_cursor.bind(row))
+	button.gui_input.connect(_note_pointer_input)
 	world.add_child(button)
 	hotspot_buttons[str(row.hotspot_id)] = button
 
@@ -277,7 +280,7 @@ func _screen_button(text: String, rect: Rect2, action: Callable) -> Button:
 	return button
 
 func _draw_tools() -> void:
-	var name_label := UI.label(canvas, session.config.text(str(session.config.scenes[session.case_state.data.scene].name_text_id)), 24)
+	var name_label := UI.label(canvas, session.scene_name(str(session.case_state.data.scene)), 24)
 	name_label.add_theme_stylebox_override("normal", _paper_style("small_paper"))
 	name_label.position = Vector2(32, 28 if not _is_local() else 96)
 	name_label.size = Vector2(480, 48)
@@ -294,11 +297,13 @@ func _draw_tools() -> void:
 		_screen_button("重试自动保存", Rect2(32, 820, 240, 48), session.retry_autosave)
 
 func _draw_view_switches(view: String) -> void:
+	# 目标HUD展开时右侧为它让出区域；机位按钮左移同样宽度，保证鼠标命中不被HUD遮挡。
+	var reserve: float = (hud_reserve.call() if hud_reserve.is_valid() else 0.0) / maxf(canvas.scale.x, 0.0001)
 	for row in model.interface_layout.get("view_switch_controls", []):
 		if str(row.scene_id) != str(session.case_state.data.scene) or str(row.view_id) != view: continue
 		var rect: Array = row.get("rect_default_px", [1408, 28, 160, 64])
 		var width := float(rect[2])
-		_screen_button(str(row.label), Rect2(canvas.size.x - 32 - width, float(rect[1]), width, float(rect[3])), func(): _open_view(str(row.target_view_ref), str(row.get("target_focus_ref", ""))))
+		_screen_button(str(row.label), Rect2(canvas.size.x - 32 - width - reserve, float(rect[1]), width, float(rect[3])), func(): _open_view(str(row.target_view_ref), str(row.get("target_focus_ref", ""))))
 
 func _draw_pan_controls() -> void:
 	if float(view_transform.maximum) <= 0: return
@@ -539,7 +544,20 @@ func handle_escape() -> bool:
 	if _is_local(): _back_view(); return true
 	return false
 
+func _note_pointer_input(event: InputEvent) -> void:
+	# 热点按钮会消费鼠标事件；在按钮层直接识别指针操作，避免金框随点查返回残留。
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		_keyboard_nav = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		_keyboard_nav = true
+	elif event is InputEventMouseMotion and event.relative.length() > 0.5:
+		_keyboard_nav = false
+
 func _restore_focus(id: String) -> void:
+	# 鼠标点查返回后不重新抢占焦点，避免物件金色 focus 框残留；键盘导航仍保留可见焦点。
+	if not _keyboard_nav: return
 	var button := find_child(id, true, false) as BaseButton
 	if button != null and button.is_inside_tree() and button.is_visible_in_tree() and not button.disabled: button.grab_focus()
 

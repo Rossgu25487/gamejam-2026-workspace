@@ -10,7 +10,7 @@ var current_content := ""
 var elapsed_ms := 0.0
 var generation := 0
 var reduced := false
-var duration_ms := 400.0
+var duration_ms := 400.0 / 0.75 # 普通取得按0.75倍速：400ms÷0.75≈533ms
 var card: Control
 var _pending: Array[String] = []
 var _seen := {}

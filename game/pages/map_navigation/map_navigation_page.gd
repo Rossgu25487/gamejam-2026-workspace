@@ -425,6 +425,12 @@ func _render_spatial() -> void:
 	var hint := _spatial_label(detail, 16)
 	_place_spatial(hint, "map.text_region_6", layout_state)
 	hint.size.y = 106 * _spatial_scale()
+	# 目的地标题会随长地名换行，配置盒高度不够；按真实换行高度把状态提示下移，不遮地名末字。
+	if preview_title.size.x > 0:
+		var title_font: Font = preview_title.get_theme_font("font")
+		var title_wrapped := title_font.get_multiline_string_size(preview_title.text, HORIZONTAL_ALIGNMENT_LEFT, preview_title.size.x, preview_title.get_theme_font_size("font_size")).y
+		var title_bottom := preview_title.position.y + maxf(preview_title.size.y, title_wrapped)
+		if hint.position.y < title_bottom: hint.position.y = title_bottom + 6.0 * _spatial_scale()
 	var travel := _spatial_button("前往", service.travel, detail.is_empty() or service.travel_disabled_reason().is_empty())
 	travel.tooltip_text = service.travel_disabled_reason()
 	_place_spatial(travel, "map.travel", layout_state)

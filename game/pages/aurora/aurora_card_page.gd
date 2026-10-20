@@ -610,12 +610,16 @@ func _render_detail() -> void:
 	prose.add_theme_color_override("default_color", Color("34413f"))
 	prose.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	prose_box.add_child(prose)
+	var seen_sources := {}
 	for source in record.versions.get(detail_content, []):
 		var source_text := str(source.get("text", ""))
-		var source_label: Label
-		if session.config.texts.has(source_text): source_label = UI.label(prose_box, "取得记录：" + session.config.text(source_text), 18)
-		elif source.has("entry"): source_label = UI.label(prose_box, "取得记录：" + session.entry_label(str(source.entry)), 18)
-		if source_label != null: source_label.add_theme_color_override("font_color", Color("34413f"))
+		var display := ""
+		if session.config.texts.has(source_text): display = "取得记录：" + session.config.text(source_text)
+		elif source.has("entry"): display = "取得记录：" + session.entry_label(str(source.entry))
+		if display.is_empty() or seen_sources.has(display): continue
+		seen_sources[display] = true
+		var source_label: Label = UI.label(prose_box, display, 18)
+		source_label.add_theme_color_override("font_color", Color("34413f"))
 	scroll.set_deferred("scroll_vertical", detail_scroll)
 	scroll.get_v_scroll_bar().value_changed.connect(func(value): detail_scroll = int(value))
 	var versions := HFlowContainer.new()
@@ -816,6 +820,11 @@ func _result() -> void:
 	result_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	result_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(result_scroll)
+	# 结果标题、原话、反馈与依据统一垫不透明纸面，避免压过场景底色后难读。
+	var result_panel := PanelContainer.new()
+	result_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	result_panel.add_theme_stylebox_override("panel", _paper_panel_style())
+	result_scroll.add_child(result_panel)
 	var result_box := VBoxContainer.new()
 	result_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# 结果正文必须锁定在核查页的实际可视宽度内；否则长按钮或长文会
@@ -823,7 +832,7 @@ func _result() -> void:
 	result_box.custom_minimum_size.x = maxf(1.0, work_size.x - 48.0)
 	result_box.add_theme_constant_override("separation", 8)
 	result_box.clip_contents = true
-	result_scroll.add_child(result_box)
+	result_panel.add_child(result_box)
 	var feedback_label := UI.label(result_box, {"support": "得到支持", "exclude": "排除原说法", "inference": "发现新的关联", "insufficient": "材料尚不足", "incorrect": "这项出示有误"}.get(pending.get("feedback", ""), "核查结果"), 28)
 	feedback_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_result_prose(result_box, session.target_text())

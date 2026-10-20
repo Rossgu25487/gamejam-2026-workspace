@@ -1,6 +1,7 @@
 extends RefCounted
 ## 所有系统共同读取的案件状态。条件为“分支或、分支内且”，反条件严格保留false。
 signal actor_location_confirmed
+signal content_updated(content_id: String) # 材料当前版真正前进（新取得或更高版本）后发出，同版重复授予不发。
 var config: RefCounted
 var data := {}
 var errors: Array[String] = []
@@ -8,6 +9,7 @@ var _executing := {}
 var _transaction_depth := 0
 var _checking := {}
 var commit_guard: Callable
+var _pending_updates: Array[String] = []
 
 func bind(value: RefCounted) -> void:
 	config = value
@@ -20,6 +22,7 @@ func reset() -> void:
 		"confirmed_actor_locations": [], "tutorial_completed_steps": [], "cat_pet_completed_count": 0}
 	errors.clear()
 	_executing.clear()
+	_pending_updates.clear()
 
 func condition(id: String) -> bool:
 	if id.is_empty(): return true
@@ -76,6 +79,9 @@ func event(id: String, source: Dictionary = {}) -> bool:
 		success = bool(commit_guard.call(id, before, candidate))
 		if success: data = candidate
 	if not success: data = before
+	if _transaction_depth == 0:
+		if success: _flush_content_updates()
+		else: _pending_updates.clear()
 	return success
 
 func _apply_event(id: String, source: Dictionary) -> bool:
@@ -140,6 +146,7 @@ func grant(content_id: String, source: Dictionary) -> bool:
 	if not config.contents.has(content_id): return false
 	var content: Dictionary = config.contents[content_id]
 	var id := str(content.material_id)
+	var old_current := str(data.materials.get(id, {}).get("current", ""))
 	if not data.materials.has(id):
 		data.materials[id] = {"order": data.next_acquisition, "current": content_id, "versions": {}, "read": {}, "star": false}
 		data.next_acquisition = int(data.next_acquisition) + 1
@@ -149,7 +156,15 @@ func grant(content_id: String, source: Dictionary) -> bool:
 	# 推论来源在首次形成冻结；普通材料同版可以追加另一个真实取得路径。
 	if sources.is_empty() or (config.materials[id].type != "inference" and source not in sources): sources.append(source.duplicate(true))
 	if int(content.version) > int(config.contents[record.current].version): record.current = content_id
+	# 只有当前版真正前进（新取得或更高版本）才提示；同版重复授予不重复入队。
+	if str(record.current) != old_current and config.materials[id].type != "inference" and content_id not in _pending_updates:
+		_pending_updates.append(content_id)
+	if _transaction_depth == 0: _flush_content_updates()
 	return true
+
+func _flush_content_updates() -> void:
+	for content_id in _pending_updates: content_updated.emit(content_id)
+	_pending_updates.clear()
 
 func set_confirmed_actor_location(actor_id: String, scene_id: String) -> void:
 	# 公开位置由实际呈现页回执；后台人物移动不能调用此接口公开新地点。

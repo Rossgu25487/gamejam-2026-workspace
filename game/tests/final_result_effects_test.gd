@@ -136,11 +136,11 @@ func _run() -> void:
 	check(not page.play_acquisition("E01_V1"), "未取得内容不能假播成卡")
 	session.case_state.grant("E01_V1", {"entry": "ENTRY_CH01_READ_E01"})
 	check(page.play_acquisition("E01_V1", 2000), "实际已取得E01可以播放普通成卡")
-	check(page.kind == "acquire" and page.duration_ms == 2400 and not page.skippable, "首次取得400ms成卡加2000ms提示，无确认")
+	check(page.kind == "acquire" and is_equal_approx(page.duration_ms, 400.0 / 0.75 + 2000.0) and not page.skippable, "首次取得400ms/0.75成卡加2000ms提示，无确认")
 	var acquisition_hint := page.find_child("AcquisitionHint", true, false) as Label
 	check(acquisition_hint != null and not acquisition_hint.text.is_empty(), "首次材料提示读取公共功能文案")
 	var acquired_before: Dictionary = session.case_state.data.duplicate(true)
-	page._process(2.4)
+	page._process(2.5334)
 	check(session.case_state.data == acquired_before, "普通成卡不再次入库")
 	page.play({"effect_level": "collect", "duration_ms": 900, "content_id": "P06_V1"})
 	var expected_center := page._to_reference(Vector2(1053, 709.5))

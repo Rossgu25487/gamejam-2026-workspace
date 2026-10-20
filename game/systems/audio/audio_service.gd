@@ -29,6 +29,7 @@ class Track:
 	var bus_kind := ""
 	var player: AudioStreamPlayer
 	var path := ""
+	var resource_key := "" # 逻辑曲目键（如 BGM_PHASE_*、BGM_FINALE_CREDITS_ENTRY），用于按真实实例记录完成；一次性音为空。
 	var loop := false
 	var event_gain := 1.0
 	var instance_id := ""
@@ -122,6 +123,11 @@ func setup_package(package: RefCounted) -> bool:
 	catalog = CatalogScript.new()
 	catalog.asset_root = str(package.definition.root)
 	for key in package.definition.get("resources", {}): catalog.ref_table[key] = package.resource_path(str(key))
+	# 正式包（aurora）额外消费1020资源清单的 resource_overrides：把 MAP_PAWN_LAND/LIFT 等
+	# 逻辑键登记到实际音频路径，而不是把逻辑键拼成路径。旧包无此方法时保持不变。
+	if package.has_method("audio_resource_overrides"):
+		var overrides: Dictionary = package.audio_resource_overrides()
+		for key in overrides: catalog.ref_table[key] = overrides[key]
 	var ok: bool = catalog.configure(package.audio_definition())
 	config_errors = catalog.errors.duplicate()
 	return ok
@@ -218,12 +224,13 @@ func stop_soundscape() -> void:
 
 func set_narrative_soundscape(bgm_key: String, rebuild: bool = false) -> void:
 	# 章场已在配置层解析；相同曲目沿现有轨道延续，空引用明确停曲。
+	# 调查与片尾 BGM 均为单次播放，播完后同阶段不重起；环境循环由 ambient 槽独立维护。
 	if catalog == null or not settings_ready: return
 	_wanted = {}
 	var ending := bgm_key == "BGM_FINALE_CREDITS_ENTRY"
 	if rebuild: _completed_narrative_tracks.erase(bgm_key)
-	if ending and _completed_narrative_tracks.has(bgm_key): return
-	_set_loop("bgm", bgm_key, rebuild, not ending)
+	if _completed_narrative_tracks.has(bgm_key): return
+	_set_loop("bgm", bgm_key, rebuild, false)
 	var track: Track = _slots["bgm"]["active"]
 	if track != null: track.klass = "world" if ending else "music"; _apply_pause(track)
 	_set_loop("ambient", "", false)
@@ -268,20 +275,20 @@ func _set_loop(slot: String, resource_key: String, rebuild: bool, looping: bool 
 		_report("音景资源缺失：%s（%s）" % [resource_key, info["path"]])
 		return "missing"
 	var path: String = info["path"]
-	if active != null and active.path == path and not rebuild:
+	if active != null and active.path == path and active.loop == looping and not rebuild:
 		return "same"
 	var stream: AudioStream = catalog.get_stream(path, looping)
 	if stream == null:
 		_report("无法读取音频：" + path)
 		return "missing"
-	_start_loop(slot, path, stream, _event_gain(slot), looping)
+	_start_loop(slot, path, stream, _event_gain(slot), looping, resource_key)
 	return "started"
 
 
-func _start_loop(slot: String, path: String, stream: AudioStream, gain: float, looping: bool = true) -> void:
+func _start_loop(slot: String, path: String, stream: AudioStream, gain: float, looping: bool = true, resource_key: String = "") -> void:
 	var fade_ms := _fade_ms(slot)
 	_retire_active(slot, fade_ms)
-	var track := _create_track(slot, path, stream, gain, looping)
+	var track := _create_track(slot, path, stream, gain, looping, resource_key)
 	if fade_ms > 0:
 		track.fade_value = 0.0
 		track.begin_fade(1, float(fade_ms))
@@ -812,12 +819,13 @@ func _has_runnable_fade() -> bool:
 	return false
 
 
-func _create_track(slot: String, path: String, stream: AudioStream, gain: float, looping: bool) -> Track:
+func _create_track(slot: String, path: String, stream: AudioStream, gain: float, looping: bool, resource_key: String = "") -> Track:
 	var track := Track.new()
 	track.slot = slot
 	track.klass = SLOT_CLASS[slot]
 	track.bus_kind = SLOT_BUS[slot]
 	track.path = path
+	track.resource_key = resource_key
 	track.loop = looping
 	track.event_gain = gain
 	var player := _acquire_player()
@@ -873,7 +881,8 @@ func _on_player_finished(player: AudioStreamPlayer) -> void:
 	if track.loop:
 		player.play()
 	else:
-		if track.slot == "bgm" and not track.loop: _completed_narrative_tracks["BGM_FINALE_CREDITS_ENTRY"] = true
+		if track.slot == "bgm" and not track.resource_key.is_empty():
+			_completed_narrative_tracks[track.resource_key] = true
 		_release(track)
 
 

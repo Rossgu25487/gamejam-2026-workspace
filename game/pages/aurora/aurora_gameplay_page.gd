@@ -90,6 +90,9 @@ func bind(value: Node, map_service: Node) -> void:
 	objective_page.bind(objectives)
 	objective_hud.review_requested.connect(open_objectives)
 	objectives.review_state_changed.connect(_review_changed)
+	# 机位按钮与目标HUD共享右侧区域：HUD展开/收起时调查页同步重排机位按钮避让。
+	scene_page.hud_reserve = Callable(objective_hud, "reserved_width")
+	objectives.changed.connect(scene_page.refresh)
 	objectives.refresh("initial")
 	narrative_page.bind(session.narrative)
 	map_page.bind(map_service)

@@ -36,6 +36,7 @@ var path_migrations := {}
 var narrative_data: Dictionary = {}
 var tutorial_data: Dictionary = {}
 var content_revision := "AVG_20261019_FINAL_SCRIPT_MERGED_01"
+var _audio_overrides := {} # 1020资源清单 resource_overrides 的音频别名缓存：逻辑键 → 实际 res:// 路径。
 
 func load_package(root: String = DEFAULT_ROOT) -> bool:
 	definition.root = root
@@ -49,6 +50,7 @@ func load_package(root: String = DEFAULT_ROOT) -> bool:
 	path_migrations.clear()
 	narrative_data.clear()
 	tutorial_data.clear()
+	_audio_overrides.clear()
 	for key in BOOKS:
 		var reader := Reader.new()
 		if not reader.open(root.path_join(BOOKS[key])):
@@ -345,6 +347,28 @@ func audio_definition() -> Dictionary:
 	return {"control": rows("audio", "声音总控")[0] if not rows("audio", "声音总控").is_empty() else {},
 		"resources": audio_resources, "events": rows("audio", "声音事件"),
 		"soundscapes": rows("audio", "场景音景"), "music_states": music_states}
+
+func audio_resource_overrides() -> Dictionary:
+	# 1020资源清单给出 resource_overrides 别名契约：逻辑键（如 MAP_PAWN_LAND）→ 实际音频文件。
+	# 运行时读一次并沿包 root 迁移实际路径；不能把逻辑键拼成路径，也不能只靠备用库模糊找文件。
+	if not _audio_overrides.is_empty(): return _audio_overrides
+	var manifest_path := str(definition.root).path_join("资源清单.json")
+	var file := FileAccess.open(manifest_path, FileAccess.READ)
+	if file == null: return {}
+	var parsed = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary: return {}
+	var result := {}
+	for entry in parsed.get("resources", []):
+		if not entry is Dictionary or str(entry.get("mapping_reference", "")) != "resource_overrides": continue
+		var runtime := str(entry.get("runtime_path", ""))
+		if not runtime.contains("/audio/"): continue
+		var resolved := resource_path(runtime)
+		if resolved.is_empty(): continue
+		for key in entry.get("resource_ids", []):
+			var id := str(key)
+			if not id.is_empty(): result[id] = resolved
+	_audio_overrides = result
+	return result
 
 func map_definition() -> Dictionary:
 	var data := {}

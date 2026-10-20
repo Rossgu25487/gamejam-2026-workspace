@@ -1,21 +1,24 @@
 extends "res://systems/narrative/narrative_service.gd"
 ## 沿用逐字、分页、记录、快读与已看登记；正式接续交由同一会话执行器处理。
 const InvestigationScript = preload("res://systems/aurora/aurora_investigation.gd")
+const MANUAL_UPDATE_ID := "__MANUAL_UPDATE__"
 var session: Node
 var available_choices: Array = []
 var conversation: RefCounted
+var _pending_manual_updates: Array[String] = [] # 已提交的材料更新提示，等待当前文本结束后按序入正文。
+var _manual_update_continuation := "" # 提示播完后继续的真实文本。
 
 func _begin_text(id: String) -> void:
 	# 无正文菜单只承担操作，不能变成听过的原话或污染跨重启快读登记。
 	super._begin_text(id)
-	if id == "__CONTROL__":
+	if id in ["__CONTROL__", MANUAL_UPDATE_ID]:
 		state.history.erase(id)
 		if not state.visible_history.is_empty(): state.visible_history.pop_back()
 	if session != null and session.case_state.data.ending_started:
 		session.ending_checkpoint_requested.emit()
 
 func _progressed() -> void:
-	if state.get("current_text_id") == "__CONTROL__": progressed.emit(visible_text(), is_typing())
+	if state.get("current_text_id") in ["__CONTROL__", MANUAL_UPDATE_ID]: progressed.emit(visible_text(), is_typing())
 	else: super._progressed()
 
 func export_snapshot() -> Dictionary:
@@ -37,6 +40,7 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	if not validate_snapshot(snapshot): return false
 	available_choices = snapshot.get("choices", []).duplicate(true)
 	var restored := super.restore_snapshot(snapshot)
+	clear_manual_updates()
 	if restored and state.get("waiting_for_choice", false): show_choices(available_choices)
 	return restored
 
@@ -56,6 +60,13 @@ func configure_formal(value: Node) -> void:
 
 func show_text(id: String) -> bool:
 	if not catalog.data.texts.has(id): return false
+	# 材料更新提示先于真实正文排入，按序逐个显示后再接原剧情。
+	if not _pending_manual_updates.is_empty():
+		_manual_update_continuation = id
+		return _begin_manual_update_hint()
+	return _show_text(id)
+
+func _show_text(id: String) -> bool:
 	var row: Dictionary = catalog.data.texts[id]
 	row.scene_id = session.display_scene()
 	var background: String = session.background_path()
@@ -74,10 +85,49 @@ func show_text(id: String) -> bool:
 	_begin_text(id)
 	return true
 
+func queue_manual_update(content_id: String) -> void:
+	# 真实授予/更新提交成功后，把“【手册已更新：材料名】”排入下方正文，无头像。
+	if session == null or not session.config.contents.has(content_id): return
+	if content_id in _pending_manual_updates: return
+	_pending_manual_updates.append(content_id)
+
+func clear_manual_updates() -> void:
+	_pending_manual_updates.clear()
+	_manual_update_continuation = ""
+	catalog.data.texts.erase(MANUAL_UPDATE_ID)
+
+func _begin_manual_update_hint() -> bool:
+	var content_id: String = _pending_manual_updates.pop_front()
+	catalog.data.texts[MANUAL_UPDATE_ID] = _manual_update_record(content_id)
+	if state.is_empty(): return start(MANUAL_UPDATE_ID)
+	_begin_text(MANUAL_UPDATE_ID)
+	return true
+
+func _manual_update_record(content_id: String) -> Dictionary:
+	# 无头像提示沿用当前舞台与序列身份，插入时不清理人物、不更换背景。
+	var row := {"text_id": MANUAL_UPDATE_ID, "text": "【手册已更新：" + str(session.config.contents[content_id].name) + "】",
+		"text_type": "narration", "read_version": 1, "clear_positions": false,
+		"scene_id": session.display_scene(), "background_path": session.background_path()}
+	if not state.is_empty():
+		var previous: Dictionary = current_record()
+		for key in ["sequence_id", "scene_layers", "embedded_actor_refs", "background_path"]:
+			if previous.has(key): row[key] = previous[key]
+	return row
+
+func _finish_manual_update_hint() -> bool:
+	var continuation := _manual_update_continuation
+	_manual_update_continuation = ""
+	if continuation.is_empty() or not catalog.data.texts.has(continuation):
+		state.finished = true
+		_changed()
+		return false
+	return show_text(continuation)
+
 func _finish_current_text() -> bool:
 	if state.get("finished", false): return false
-	var row := current_record()
 	var id := str(state.current_text_id)
+	if id == MANUAL_UPDATE_ID: return _finish_manual_update_hint()
+	var row := current_record()
 	if not session.config.texts.has(id): return false
 	# 原ID可能同时是分页第一段；该身份的全局已看也要等待末页，不能快显便提前登记。
 	if not _is_page_group_intermediate(id): _register_read(id, row)
@@ -193,6 +243,8 @@ func choose_transition(index: int) -> bool:
 	return session.follow(jump)
 
 func end_reading() -> void:
+	# 离开对白后不再排入更新提示，避免把本次对话的提示带到无关的下一段正文。
+	clear_manual_updates()
 	if state.is_empty(): return
 	state.finished = true
 	state.typing = false

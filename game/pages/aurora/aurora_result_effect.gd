@@ -82,7 +82,7 @@ func play_acquisition(content_id: String, hold_ms: int = 0) -> bool:
 	# 所属系统仅在实际grant提交后调用。动画不补发材料，不新增保存时机。
 	if session == null or active or not session.case_state.owns(content_id): return false
 	play({"effect_level": "acquire", "feedback_key": "acquire", "content_id": content_id,
-		"duration_ms": 400 + maxi(0, hold_ms), "animation_ms": 400, "hold_ms": maxi(0, hold_ms)})
+		"duration_ms": 400.0 / 0.75 + maxi(0, hold_ms), "animation_ms": 400.0 / 0.75, "hold_ms": maxi(0, hold_ms)})
 	return true
 
 func _effect_kind(data: Dictionary) -> String:
@@ -344,14 +344,14 @@ func _update_visuals() -> void:
 		paper.modulate.a = 1.0 if reduced else _unit(t, 0, 160)
 		title.modulate.a = paper.modulate.a
 	if is_instance_valid(result_card):
-		var u := _unit(t, 0, 900) if kind == "collect" else _unit(t, 0, float(effect.get("animation_ms", 400)))
+		var u := _unit(t, 0, duration_ms) if kind == "collect" else _unit(t, 0, float(effect.get("animation_ms", 400)))
 		var travel := 0.0 if reduced or kind == "acquire" else _ease_out(u)
 		var card_scale := 1.0 if reduced else lerpf(1.0 if kind == "collect" else 0.82, 0.56 if kind == "collect" else 1.0, travel if kind == "collect" else _ease_out(u))
 		result_card.scale = Vector2.ONE * card_scale
 		result_card.position = collection_start.lerp(collection_target, travel) - result_card.size * card_scale / 2.0
 		result_card.modulate.a = 1.0 if reduced else _unit(t, 0, 100)
 		title.position.y = 110 if kind == "collect" else 720
-		if kind == "collect" and t <= 900 and not _collection_sound_instance.is_empty():
+		if kind == "collect" and t <= duration_ms and not _collection_sound_instance.is_empty():
 			var global_center := result_card.get_global_transform_with_canvas() * (result_card.size / 2.0)
 			var local_center := get_global_transform_with_canvas().affine_inverse() * global_center
 			media_requested.emit({"command": "set_pan", "instance": _collection_sound_instance,
