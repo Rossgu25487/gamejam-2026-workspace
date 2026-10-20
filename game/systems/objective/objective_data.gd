@@ -38,7 +38,16 @@ static func normalize(raw: Dictionary) -> Dictionary:
 		return {"ok": false, "errors": errors, "goal": {}}
 	# 顺序由提供方给出；按顺序号排列，顺序号相同的情形已在上面报错。
 	items.sort_custom(func(a, b): return int(a["order"]) < int(b["order"]))
-	return {"ok": true, "errors": errors, "goal": {"goal_id": goal_id, "goal_text": goal_text, "items": items, "bases": bases}}
+	var progress: Dictionary = raw.get("progress", {}) if raw.get("progress", {}) is Dictionary else {}
+	return {"ok": true, "errors": errors, "goal": {"goal_id": goal_id, "goal_text": goal_text, "items": items, "bases": bases,
+		"progress": {"done": int(progress.get("done", _count_checked(items))), "total": int(progress.get("total", items.size())), "text": String(progress.get("text", "%02d/%02d" % [int(progress.get("done", _count_checked(items))), int(progress.get("total", items.size()))]))},
+		"current_scene_id": String(raw.get("current_scene_id", ""))}}
+
+static func _count_checked(items: Array) -> int:
+	var count := 0
+	for item in items:
+		if String(item.get("status", "")) == "checked": count += 1
+	return count
 
 
 static func _normalize_item(source: Dictionary, position: int, bases: Dictionary, errors: Array[String]) -> Dictionary:
@@ -68,6 +77,8 @@ static func _normalize_item(source: Dictionary, position: int, bases: Dictionary
 	return {
 		"id": id, "order": int(source.get("order", position)), "text": text, "status": status,
 		"reason": String(source.get("reason", "")), "basis": refs, "entry": entry,
+		"scene_id": String(source.get("scene_id", "")), "view_id": String(source.get("view_id", "")),
+		"target_kind": String(source.get("target_kind", "")), "target_ref": String(source.get("target_ref", "")),
 	}
 
 

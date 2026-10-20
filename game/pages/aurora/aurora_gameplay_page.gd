@@ -307,7 +307,11 @@ func _export_pages() -> Dictionary:
 	return {"reader": reader_page.export_view()}
 
 func can_save() -> bool:
-	return session.can_save() and tutorial.feedback_left <= 0 and not handbook_overlay and not objective_page.visible and not cat_page.visible and not context_present_page.visible and scene_page.current_context.get("kind", "scene") not in ["inspection", "topics", "scene_items"]
+	# 选材页允许保存稳定草稿；材料详情是临时阅读层，交给卡牌页拒绝写盘。
+	var card_ready := true
+	if session.mode == "selection" and card_page != null and card_page.has_method("can_save"):
+		card_ready = bool(card_page.can_save())
+	return session.can_save() and card_ready and tutorial.feedback_left <= 0 and not handbook_overlay and not objective_page.visible and not cat_page.visible and not context_present_page.visible and scene_page.current_context.get("kind", "scene") not in ["inspection", "topics", "scene_items"]
 
 func can_pause() -> bool:
 	# 数据写入是同步事务，纯视觉演出可以暂停并原位继续。
@@ -320,7 +324,13 @@ func handle_window_focus_loss() -> void:
 
 func _input(event: InputEvent) -> void:
 	# 工具键由容器统一分发，页面只处理自己的推进、选择和返回。
-	if not active or not is_visible_in_tree() or not event is InputEventKey or not event.pressed or event.echo: return
+	if not active or not is_visible_in_tree(): return
+	# 引导遮罩使用 _input 过滤真实点击；页面自身不能在同一事件上先行吞掉它。
+	if event is InputEventMouse and is_instance_valid(tutorial):
+		if not tutorial.input_allowed(event):
+			get_viewport().set_input_as_handled()
+			return
+	if not event is InputEventKey or not event.pressed or event.echo: return
 	if event.keycode not in [KEY_I, KEY_L, KEY_J, KEY_M]: return
 	var focus := get_viewport().gui_get_focus_owner()
 	if focus is LineEdit or focus is TextEdit: return

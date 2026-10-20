@@ -745,7 +745,11 @@ func _show_display_confirmation() -> void:
 func _display_confirmation_text(seconds: int) -> String:
 	var before: Dictionary = settings_service.display_restore_values
 	var after: Dictionary = settings_service.display_candidate
-	return "原显示：%s %d×%d，比例%d\n当前：%s %d×%d，比例%d\n剩余%d秒，倒计时结束后恢复原显示。" % ["窗口" if before.display_mode == 1 else "全屏", before.window_width, before.window_height, before.aspect_ratio, "窗口" if after.display_mode == 1 else "全屏", after.window_width, after.window_height, after.aspect_ratio, seconds]
+	return "原显示：%s %d×%d，比例%s\n当前：%s %d×%d，比例%s\n剩余%d秒，倒计时结束后恢复原显示。" % ["窗口" if before.display_mode == 1 else "全屏", before.window_width, before.window_height, _aspect_label(int(before.aspect_ratio)), "窗口" if after.display_mode == 1 else "全屏", after.window_width, after.window_height, _aspect_label(int(after.aspect_ratio)), seconds]
+
+func _aspect_label(value: int) -> String:
+	var labels := ["自动", "16:9", "16:10", "4:3", "21:9"]
+	return str(labels[value]) if value >= 0 and value < labels.size() else "自动"
 
 func _keep_display() -> void:
 	if not settings_service.display_preview_active: return

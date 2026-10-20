@@ -119,7 +119,7 @@ func _register() -> void:
 	_add("give", "物品", "give <物品ID|all|evidence|testimony|inference> [-a]", "获得材料；材料 ID 取最新版，具体版本用内容 ID（如 E02_V3），-a 取全部版本", _cmd_give, ["get"],
 		"give E01        获得 E01 的最新版本。\ngive E02_V3     获得指定版本。\ngive E02 -a     获得 E02 的全部版本。\ngive evidence   获得全部证物（testimony 证言、inference 推论、all 全部）。\n可一次写多个：give E01 T01 P01。")
 	_add("take", "物品", "take <物品ID|all>", "移除材料（材料 ID 移除全部版本，内容 ID 移除单个版本）", _cmd_take, ["drop"])
-	_add("chances", "调试", "chances [关卡ID|all 次数]", "查看或设置关卡剩余机会（0-3）", _cmd_chances)
+	_add("chances", "调试", "chances [关卡ID|all 次数]", "查看或设置关卡剩余机会（0-999）", _cmd_chances)
 	_add("speed", "调试", "speed [倍率]", "设置游戏时间倍率 0.1-8，speed 1 恢复", _cmd_speed)
 	_add("hud", "调试", "hud [on|off]", "显示或隐藏屏幕角落的状态信息与帧率", _cmd_hud)
 
@@ -279,7 +279,7 @@ func _cmd_levels(_args: PackedStringArray) -> void:
 		var row: Dictionary = config.questions[id]
 		var entry: Dictionary = config.entries.get(str(row.get("entry_ref", "")), {})
 		var kind := "说法质询" if row.get("interaction_kind") == "statement" else "自主推理"
-		_out("  %-8s %s  %s  %s  机会 %d" % [id, entry.get("chapter_id", "-"), kind, _level_status(str(id)), int(session.case_state.data.chances.get(id, 3))])
+		_out("  %-8s %s  %s  %s  机会 %d" % [id, entry.get("chapter_id", "-"), kind, _level_status(str(id)), int(session.case_state.data.chances.get(id, 999))])
 	_out("jump <关卡ID> 跳到关卡刚开放时；也可写关卡组如 L07。", "dim")
 
 func _cmd_scenes(_args: PackedStringArray) -> void:
@@ -857,12 +857,12 @@ func _remove_content(content_id: String) -> void:
 func _cmd_chances(args: PackedStringArray) -> void:
 	if args.is_empty():
 		for id in config.questions:
-			_out("  %-8s 机会 %d%s" % [id, int(session.case_state.data.chances.get(id, 3)), "  已完成" if session.case_state.data.completed_questions.has(id) else ""])
+			_out("  %-8s 机会 %d%s" % [id, int(session.case_state.data.chances.get(id, 999)), "  已完成" if session.case_state.data.completed_questions.has(id) else ""])
 		return
 	if args.size() != 2 or not args[1].is_valid_int():
-		_err("用法：chances <关卡ID|all> <0-3>")
+		_err("用法：chances <关卡ID|all> <0-999>")
 		return
-	var value := clampi(int(args[1]), 0, 3)
+	var value := clampi(int(args[1]), 0, 999)
 	if args[0].to_upper() == "ALL":
 		for id in config.questions: session.case_state.data.chances[id] = value
 		_ok("全部关卡机会设为 %d。" % value)

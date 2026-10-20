@@ -15,10 +15,10 @@
     {
       "id": "MISTAKE_DEFAULT",
       "data_scope": "runtime",
-      "initial_chances": 3,
+      "initial_chances": 999,
       "error_cost": 1,
       "failure_at": 0,
-      "retry_chances": 3,
+      "retry_chances": 999,
       "retry_text_ref": "UI_COMMON_RETRY"
     }
   ],

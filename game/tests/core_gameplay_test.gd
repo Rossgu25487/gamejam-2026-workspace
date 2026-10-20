@@ -43,6 +43,7 @@ func settle(core: Node) -> void:
 func _run() -> void:
 	var session := new_session()
 	var core: Node = session.core
+	var max_chances: int = int(core.initial_chances())
 	expect(core.store.entities.is_empty() and core.state.drafts.is_empty(), "新案件为空集合和空草稿")
 	expect(not core.open_card_session("Q1"), "未听目标不能进入")
 	expect(not core.open_card_session("Q2"), "后问不能提前开放")
@@ -160,14 +161,14 @@ func _run() -> void:
 	open_question(single)
 	single.select_material(ref(single,"OTHER1")); single.select_material(ref(single,"A2"))
 	var one: Dictionary = single.present_materials()
-	expect(one.get("relation_id") == "R_ONE" and one.used_sources.size() == 1 and int(single.state.chances.Q1) == 3, "单份充分忽略无关第二张且不扣次")
+	expect(one.get("relation_id") == "R_ONE" and one.used_sources.size() == 1 and int(single.state.chances.Q1) == max_chances, "单份充分忽略无关第二张且不扣次")
 	var partial_session := new_session()
 	var partial: Node = partial_session.core
 	acquire_entry(partial,"INSPECT"); acquire_entry(partial,"TALK")
 	open_question(partial)
 	partial.select_material(ref(partial,"A1"))
 	var p: Dictionary = partial.present_materials()
-	expect(p.get("feedback") == "partial" and int(partial.state.chances.Q1) == 3, "局部不扣次不完成")
+	expect(p.get("feedback") == "partial" and int(partial.state.chances.Q1) == max_chances, "局部不扣次不完成")
 	settle(partial)
 	var supplement: Dictionary = partial.supplement_source("B1")
 	expect(supplement.get("feedback") == "full" and partial.state.mode == "pending", "玩家主动补入实际版本后重新匹配")
@@ -176,11 +177,13 @@ func _run() -> void:
 	acquire_entry(error_core,"INSPECT"); acquire_entry(error_core,"TALK")
 	open_question(error_core)
 	error_core.select_material(ref(error_core,"EXTRA11"))
-	expect(error_core.present_materials().get("feedback") == "insufficient" and int(error_core.state.chances.Q1) == 3, "默认不足不扣容错")
+	expect(error_core.present_materials().get("feedback") == "insufficient" and int(error_core.state.chances.Q1) == max_chances, "默认不足不扣容错")
 	settle(error_core)
 	error_core.continue_result("reselect")
 	error_core.withdraw_material()
 	error_core.select_material(ref(error_core,"OTHER1"))
+	# 正式规则为999；这里显式缩短夹具次数，仅验证扣次、失败和重试事务。
+	error_core.state.chances.Q1 = 3
 	for i in range(3):
 		var attempt := "error-%d" % i
 		var e: Dictionary = error_core.present_materials(attempt)
@@ -199,7 +202,7 @@ func _run() -> void:
 	var entity_count: int = error_core.store.entities.size()
 	expect(error_core.retry_question(), "主动重试")
 	settle(error_core)
-	expect(int(error_core.state.chances.Q1) == 3 and error_core.draft().slots == [null,null] and not error_core.draft().target_selected and error_core.store.entities.size() == entity_count, "重试仅恢复本题并保留库存")
+	expect(int(error_core.state.chances.Q1) == error_core.retry_chances() and error_core.draft().slots == [null,null] and not error_core.draft().target_selected and error_core.store.entities.size() == entity_count, "重试仅恢复本题并保留库存")
 	# 文件保存与元数据，故意损坏文件不应覆盖当前会话。
 	var save := Save.new()
 	root.add_child(save); services.append(save)

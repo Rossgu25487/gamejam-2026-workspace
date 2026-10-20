@@ -39,6 +39,7 @@ var _keyboard_nav := true
 var hud_reserve: Callable = Callable() # 目标HUD展开时返回需让出的屏幕宽度；机位按钮据此避让
 var last_completed_text := ""
 var conversation_view: Control
+var rendered_scene_id := "" # 上一次实际绘制的地点，用来识别地图切换并丢弃旧的交谈近景。
 
 func bind(value: Node) -> void:
 	session = value
@@ -73,7 +74,13 @@ func _effective_area() -> Rect2:
 func _render() -> void:
 	queued = false
 	if session == null or size.x <= 0 or size.y <= 0: return
+	var scene_id := str(session.case_state.data.scene)
+	var scene_changed := not rendered_scene_id.is_empty() and rendered_scene_id != scene_id
 	_prune_context()
+	if scene_changed:
+		# 地图切换只恢复新的场景主视图，不把旧地点的交谈人物、话题或局部视角带过去。
+		current_context.clear()
+		session.return_context = {"kind": "scene", "scene": scene_id, "view": str(session.case_state.data.view)}
 	UI.clear(self)
 	overlay = null
 	conversation_view = null
@@ -97,7 +104,12 @@ func _render() -> void:
 	view_transform = model.view_transform(view, canvas.size, saved_offset)
 	_apply_transform()
 	var candidates: Array = model.conversation_candidates()
-	var talking := bool(current_context.get("conversation_view", false)) and not candidates.is_empty()
+	# 有可交谈人物时，进入地点默认先显示交谈近景；返回调查视角时显式写入 false。
+	# 这样到达人物地点后不会要求玩家再找一次“交谈视角”按钮。
+	var talking := (bool(current_context.get("conversation_view", false)) or (current_context.is_empty() and not candidates.is_empty() and not scene_changed)) and not candidates.is_empty()
+	if talking and not current_context.get("conversation_view", false):
+		current_context["conversation_view"] = true
+		current_context["conversation_actor"] = str(candidates[0].object_ref)
 	if talking:
 		var actor := str(current_context.get("conversation_actor", ""))
 		if not candidates.any(func(row): return str(row.object_ref) == actor):
@@ -131,6 +143,7 @@ func _render() -> void:
 		context_changed.emit()
 	# 只在真实可见且已经绘出的调查页确认背景人物，后台选图不发布位置。
 	if is_visible_in_tree(): call_deferred("_confirm_visible_actors", str(session.run_id), str(session.case_state.data.scene), view)
+	rendered_scene_id = scene_id
 
 func _apply_transform() -> void:
 	view_offset_x = float(view_transform.offset)
@@ -209,11 +222,22 @@ func _hotspot(row: Dictionary) -> void:
 	focus.set_border_width_all(2)
 	button.add_theme_stylebox_override("focus", focus)
 	button.pressed.connect(_inspect.bind(row))
+	# 自定义多边形按钮在部分 Godot 输入路径中只收到 gui_input，BaseButton
+	# 不一定发出 pressed；鼠标点击直接走同一调查入口，键盘仍沿 pressed 信号。
+	button.gui_input.connect(_hotspot_gui_input.bind(row))
 	button.focus_entered.connect(_focus_hotspot.bind(row))
 	button.mouse_entered.connect(_cursor.bind(row))
 	button.gui_input.connect(_note_pointer_input)
 	world.add_child(button)
 	hotspot_buttons[str(row.hotspot_id)] = button
+
+func _hotspot_gui_input(event: InputEvent, row: Dictionary) -> void:
+	if not event is InputEventMouseButton or not event.pressed or event.button_index != MOUSE_BUTTON_LEFT: return
+	var point: Vector2 = Vector2(float(row.x), float(row.y)) + event.position
+	if session.mode != "investigation" or _picked_hotspot(point) != str(row.hotspot_id):
+		return
+	_inspect(row)
+	get_viewport().set_input_as_handled()
 
 func _picked_hotspot(point: Vector2) -> String:
 	if session.mode != "investigation" or current_context.get("kind") in ["topics", "reasoning"]: return ""
@@ -548,6 +572,15 @@ func _note_pointer_input(event: InputEvent) -> void:
 	# 热点按钮会消费鼠标事件；在按钮层直接识别指针操作，避免金框随点查返回残留。
 	if event is InputEventMouseButton or event is InputEventMouseMotion:
 		_keyboard_nav = false
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			# Godot 可能在鼠标按下后把焦点交给热点按钮；延后一帧清理，
+			# 避免调查结束返回场景时留下键盘导航用的金色矩形。
+			call_deferred("_release_pointer_focus")
+
+func _release_pointer_focus() -> void:
+	if _keyboard_nav: return
+	var owner := get_viewport().gui_get_focus_owner()
+	if owner is Control and is_ancestor_of(owner): owner.release_focus()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -607,11 +640,15 @@ func _paper_style(kind: String) -> StyleBox:
 	return style
 
 func _paper_button(button: Button) -> void:
-	for state in ["normal", "hover", "pressed", "disabled"]:
-		button.add_theme_stylebox_override(state, _paper_style("button_secondary_" + state))
+	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var asset_state: String = state
+		var path: String = session.config.resource_path("res://assets/aurora/ui/art7/paper_v2/controls/button_secondary_%s.png" % asset_state)
+		if state == "hover_pressed" and not ResourceLoader.exists(path): asset_state = "pressed"
+		button.add_theme_stylebox_override(state, _paper_style("button_secondary_" + asset_state))
 	button.add_theme_color_override("font_color", Color("34413f"))
 	button.add_theme_color_override("font_hover_color", Color("34413f"))
 	button.add_theme_color_override("font_pressed_color", Color("34413f"))
+	button.add_theme_color_override("font_hover_pressed_color", Color("34413f"))
 	button.add_theme_color_override("font_focus_color", Color("34413f"))
 	button.add_theme_color_override("font_disabled_color", Color("737b70"))
 	button.add_theme_font_size_override("font_size", 24)

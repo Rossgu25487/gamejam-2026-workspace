@@ -345,8 +345,10 @@ func stop_node_media() -> void:
 		if track.slot in ["result", "voice"]: _release(track)
 
 func export_narrative_media(key: String) -> Dictionary:
+	# 只导出请求曲目的真实轨道位置；切曲淡出期间不能把另一首曲目的游标写进存档。
 	var track: Track = _slots["bgm"]["active"]
-	return {"key": key, "position": track.player.get_playback_position() if track != null else 0.0,
+	var same_track := track != null and track.player != null and track.resource_key == key
+	return {"key": key, "position": track.player.get_playback_position() if same_track else 0.0,
 		"completed": _completed_narrative_tracks.has(key)}
 
 func restore_narrative_media(data: Dictionary) -> void:

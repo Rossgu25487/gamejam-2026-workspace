@@ -44,8 +44,11 @@ func button_style(button: Button, primary := false) -> void:
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.add_theme_font_size_override("font_size", 24)
 	var family := "primary" if primary else "secondary"
-	for state in ["normal", "hover", "pressed", "disabled"]:
-		var path: String = config.resource_path("res://assets/aurora/ui/art7/paper_v2/controls/button_%s_%s.png" % [family, state])
+	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var asset_state: String = state
+		var path: String = config.resource_path("res://assets/aurora/ui/art7/paper_v2/controls/button_%s_%s.png" % [family, asset_state])
+		if state == "hover_pressed" and not ResourceLoader.exists(path):
+			path = config.resource_path("res://assets/aurora/ui/art7/paper_v2/controls/button_%s_pressed.png" % family)
 		var skin := StyleBoxTexture.new()
 		if ResourceLoader.exists(path): skin.texture = load(path)
 		for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:

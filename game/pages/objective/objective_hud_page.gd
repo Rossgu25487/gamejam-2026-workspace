@@ -186,6 +186,10 @@ func _rebuild(view: Dictionary) -> void:
 	block_styles.clear()
 	content.add_theme_constant_override("separation", 8)
 	main_label = Style.label(content, String(view["goal_text"]), int(hud["main_font_px"]), colors["main"], int(hud["main_line_height_px"]))
+	var progress: Dictionary = view.get("progress_summary", {}) if view.get("progress_summary", {}) is Dictionary else {}
+	if not progress.is_empty():
+		var progress_label := Style.label(content, "当前调查进度 " + String(progress.get("text", "")), int(hud["reason_font_px"]), colors["reason"], int(hud["body_line_height_px"]) - 6)
+		progress_label.name = "ProgressSummary"
 	for item in view["items"]:
 		var block := PanelContainer.new() # 条目提亮用底色变化表现，不影响文字布局
 		block.mouse_filter = Control.MOUSE_FILTER_IGNORE

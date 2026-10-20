@@ -119,7 +119,7 @@ func apply_core(catalog: RefCounted) -> bool:
 	for sheet in ["核心总控", "容错策略", "判定顺序", "普通反馈", "表现规则", "槽位模板", "错误出示"]: rules[sheet] = rows("core", sheet)
 	catalog.rules = rules
 	# 以下是当前玩法协议，改结构需要同步槽位、判定和存档，不能只改Excel而静默无效。
-	var fixed := {"核心总控": {"slot_count": 2, "bar_page_size": 5, "grid_columns": 6, "grid_visible_rows": 2, "single_material_sufficient": true, "material_consumed": false}, "容错策略": {"initial_chances": 3, "error_cost": 1, "failure_at": 0, "retry_chances": 3}}
+	var fixed := {"核心总控": {"slot_count": 2, "bar_page_size": 5, "grid_columns": 6, "grid_visible_rows": 2, "single_material_sufficient": true, "material_consumed": false}, "容错策略": {"initial_chances": 999, "error_cost": 1, "failure_at": 0, "retry_chances": 999}}
 	for sheet in fixed:
 		if rules[sheet].size() != 1: errors.append(sheet + "必须只有一条有效记录"); continue
 		for key in fixed[sheet]:

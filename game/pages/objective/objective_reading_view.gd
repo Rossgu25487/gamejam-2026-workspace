@@ -16,7 +16,7 @@ const ERROR_TINT := Color(0.97, 0.74, 0.62)
 var service: Node
 var review: Dictionary = {}
 var stack: Array = [] # 层栈：{"kind": "doc" / "sources", "doc": 依据, "scroll": 阅读位置}
-var header_box: HBoxContainer
+var header_box: VBoxContainer
 var content: VBoxContainer
 var error_label: Label
 var up_button: Button
@@ -42,8 +42,10 @@ func setup(objective_service: Node) -> void:
 	var hud: Dictionary = service.config.get("hud", {})
 	colors = {"main": Style.color(String(hud.get("main_color", "#DDC89B"))), "body": Style.color(String(hud.get("body_color", "#EEE9DE"))), "reason": Style.color(String(hud.get("reason_color", "#D6CFC2")))}
 	add_theme_constant_override("separation", 12)
-	header_box = HBoxContainer.new()
-	header_box.add_theme_constant_override("separation", 12)
+	# 标题单独占一行，操作按钮放在独立横向操作栏。
+	# 长标题不能再把【上一级】【关闭来源】【返回回顾】挤成竖条。
+	header_box = VBoxContainer.new()
+	header_box.add_theme_constant_override("separation", 8)
 	add_child(header_box)
 	content = VBoxContainer.new()
 	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -125,13 +127,18 @@ func _render() -> void:
 	title.name = "Title"
 	if level["kind"] == "sources":
 		title.text = service.resolve(KEY_SOURCE)
-	up_button = Style.button(header_box, service.resolve(KEY_UP_LEVEL), button_px, button_h, back)
+	var actions := HBoxContainer.new()
+	actions.name = "Actions"
+	actions.add_theme_constant_override("separation", 10)
+	actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_box.add_child(actions)
+	up_button = Style.button(actions, service.resolve(KEY_UP_LEVEL), button_px, button_h, back)
 	up_button.name = "UpButton"
 	up_button.visible = stack.size() > 1
-	close_button = Style.button(header_box, service.resolve(KEY_CLOSE_SOURCE), button_px, button_h, close_source)
+	close_button = Style.button(actions, service.resolve(KEY_CLOSE_SOURCE), button_px, button_h, close_source)
 	close_button.name = "CloseSourceButton"
 	close_button.visible = stack.size() > 1
-	return_button = Style.button(header_box, service.resolve(KEY_RETURN_REVIEW), button_px, button_h, finish)
+	return_button = Style.button(actions, service.resolve(KEY_RETURN_REVIEW), button_px, button_h, finish)
 	return_button.name = "ReturnReviewButton"
 	if review.get("final_paper", false):
 		for button in [up_button, close_button, return_button]: Style.paper_button(button, review.get("assets", {}))
@@ -147,6 +154,10 @@ func _render() -> void:
 		_render_doc(doc)
 	if review.get("final_paper", false):
 		for button in content.find_children("*", "Button", true, false): Style.paper_button(button, review.get("assets", {}))
+	# 纸面主题的默认按钮允许换行；来源标题栏必须保持横向完整文字。
+	for button in header_box.find_children("*", "Button", true, false):
+		button.autowrap_mode = TextServer.AUTOWRAP_OFF
+		button.custom_minimum_size.x = maxf(120.0, button.custom_minimum_size.x)
 	_refresh_error()
 	Style.next_frame(self, _restore.bind(int(level["scroll"])))
 
@@ -159,7 +170,10 @@ func _render_doc(doc: Dictionary) -> void:
 	body.name = "Body"
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.custom_minimum_size.y = 300.0
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.focus_mode = Control.FOCUS_ALL
+	body.scroll_active = true
+	body.fit_content = false
 	body.text = String(doc.get("body", ""))
 	Style.style_text(body, button_px, colors["body"])
 	content.add_child(body)

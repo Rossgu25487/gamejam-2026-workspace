@@ -14,7 +14,7 @@ func click(point: Vector2) -> void:
 		var event := InputEventMouseButton.new()
 		event.position = point; event.global_position = point
 		event.button_index = MOUSE_BUTTON_LEFT; event.pressed = down
-		root.push_input(event)
+		root.push_input(event, true)
 		await process_frame
 	await frames()
 func run() -> void:

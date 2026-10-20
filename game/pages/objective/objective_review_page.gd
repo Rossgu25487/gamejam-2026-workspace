@@ -284,6 +284,8 @@ func _rebuild(first_open: bool) -> void:
 		_fill(progress_list, [], "empty_progress", content_ids["progress"])
 	else:
 		Style.label(main_list.content, String(view["goal_text"]), int(review["main_font_px"]), colors["main"], int(review["main_line_height_px"]))
+		var progress: Dictionary = view.get("progress_summary", {}) if view.get("progress_summary", {}) is Dictionary else {}
+		if not progress.is_empty(): Style.label(main_list.content, "当前调查进度 " + String(progress.get("text", "")), int(review["meta_font_px"]), colors["reason"], int(review["meta_line_height_px"]))
 		_fill(pending_list, view["pending"], "empty_pending", content_ids["pending"])
 		_fill(progress_list, view["progress"], "empty_progress", content_ids["progress"])
 	last_ids = content_ids

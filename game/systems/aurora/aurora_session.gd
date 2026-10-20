@@ -4,6 +4,7 @@ const ConfigScript = preload("res://systems/aurora/aurora_configuration.gd")
 const StateScript = preload("res://systems/aurora/aurora_case_state.gd")
 const InvestigationScript = preload("res://systems/aurora/aurora_investigation.gd")
 const NarrativeScript = preload("res://systems/aurora/aurora_narrative.gd")
+const CHANCES_MIGRATION_VERSION := 1
 signal changed
 signal notice(message: String)
 signal autosave_requested(snapshot: Dictionary)
@@ -46,6 +47,7 @@ var autosave_failed := false
 var page_snapshot_provider: Callable
 var page_snapshot := {}
 var media_snapshot_provider: Callable
+var narrative_media := {} # 普通调查存档也保存当前叙事音乐的播放位置/完成状态。
 var ending_media := {}
 var requested_destination := ""
 var departure_ready_destination := ""
@@ -54,6 +56,7 @@ var question_reading := {}
 var arrival_pending := false
 var active_slot := -1
 var contextual_presentation := {}
+const DEFAULT_QUESTION_CHANCES := 999
 # 由本包剧情明确要求的到达短场；资格直接引用原入口条件，不复制条件表达式。
 const ARRIVAL_ENTRIES := {
 	"SC02": ["ENTRY_CH01_RECEPTION", "ENTRY_CH01_HALL_RETURN", "ENTRY_CH04_HALL_RETURN", "ENTRY_CH06_PHONE"],
@@ -105,6 +108,7 @@ func new_game() -> bool:
 	autosave_failed = false
 	page_snapshot.clear()
 	ending_media.clear()
+	narrative_media.clear()
 	requested_destination = ""
 	departure_ready_destination = ""
 	departure_managed = false
@@ -773,8 +777,8 @@ func open_question(id: String) -> bool:
 	pending_result.clear()
 	selected_target = draft.get("target", round.get("interaction_kind") == "reasoning") == true
 	slots = draft.get("slots", ["", ""]).duplicate()
-	if not case_state.data.chances.has(id): case_state.data.chances[id] = 3
-	mode = "failure" if int(case_state.data.chances[id]) == 0 else "selection"
+	if not case_state.data.chances.has(id): case_state.data.chances[id] = DEFAULT_QUESTION_CHANCES
+	mode = "failure" if int(case_state.data.chances[id]) <= 0 else "selection"
 	if case_state.data.results.has(id):
 		pending_result = case_state.data.results[id].duplicate(true)
 		mode = "result"
@@ -875,7 +879,12 @@ func read_statement(id: String) -> bool:
 func _read_question_texts(targets: Array, kind: String) -> bool:
 	# 证言按配置逐句、逐页播放；原句并非只显示在按钮上便算实际听过。
 	var refs: Array = []
-	for target in targets:
+	# 思考提示在正式配置中以二维页组表示（每个内层数组是一组连续页面）。
+	# 旧实现把内层 Array 转成字符串后查文案，导致点击“思考提示”没有任何结果。
+	# 展平时保留配置顺序，并去除重复页面；证言仍沿 statement_bindings 的分页规则处理。
+	var normalized_targets: Array = []
+	_flatten_text_refs(targets, normalized_targets)
+	for target in normalized_targets:
 		var pages: Array = [target]
 		if kind == "statement":
 			for binding in config.narrative_bindings("statement_bindings"):
@@ -892,6 +901,16 @@ func _read_question_texts(targets: Array, kind: String) -> bool:
 	var ok: bool = narrative.show_text(str(refs[0]))
 	changed.emit()
 	return ok
+
+func _flatten_text_refs(value, output: Array) -> void:
+	# 将一维/二维文案页引用统一为有序的一维 ID 列表。
+	if value is Array:
+		for item in value:
+			_flatten_text_refs(item, output)
+		return
+	var ref := str(value)
+	if not ref.is_empty() and ref not in output:
+		output.append(ref)
 
 func read_question_hint() -> bool:
 	if mode != "selection": return false
@@ -999,7 +1018,7 @@ func collapse_question() -> bool:
 
 func retry_question() -> bool:
 	if mode != "failure": return false
-	case_state.data.chances[question] = 3
+	case_state.data.chances[question] = DEFAULT_QUESTION_CHANCES
 	case_state.data.drafts.erase(question)
 	return open_question(question)
 
@@ -1190,7 +1209,7 @@ func continue_result() -> bool:
 	# 不足／局部／错误的专用回应可看完再选材，原目标和精确版本不丢失。
 	if not str(pending_result.get("response", "")).is_empty() and not pending_result.get("response_read", false): return read_result_response()
 	pending_result.clear()
-	mode = "failure" if int(case_state.data.chances.get(question, 3)) == 0 else "selection"
+	mode = "failure" if int(case_state.data.chances.get(question, DEFAULT_QUESTION_CHANCES)) <= 0 else "selection"
 	changed.emit()
 	return true
 
@@ -1199,7 +1218,11 @@ func export_snapshot() -> Dictionary:
 	_store_draft()
 	state = case_state.data.duplicate(true)
 	if page_snapshot_provider.is_valid(): page_snapshot = page_snapshot_provider.call()
-	if case_state.data.ending_started and media_snapshot_provider.is_valid(): ending_media = media_snapshot_provider.call()
+	# 音乐播放进度属于会话状态。普通调查、手动存档、自动存档和结局续播都
+	# 使用同一份快照，避免读档后调查曲从头重播；旧档仍可缺少该字段。
+	if media_snapshot_provider.is_valid():
+		narrative_media = media_snapshot_provider.call()
+		if case_state.data.ending_started: ending_media = narrative_media.duplicate(true)
 	return {"format": "aurora_session_v1", "content_revision": config.content_revision, "state_revision": state.revision,
 		"run_id": run_id, "elapsed_seconds": elapsed_seconds, "case_state": state,
 		"mode": mode, "active_entry": active_entry, "return_context": return_context.duplicate(true), "reader": reader.duplicate(true),
@@ -1209,8 +1232,9 @@ func export_snapshot() -> Dictionary:
 		"contextual_presentation": contextual_presentation.duplicate(true), "active_slot": active_slot,
 		"narrative": narrative.export_snapshot() if not narrative.state.is_empty() else {}, "bgm": last_bgm,
 		"stage_dirty": stage_dirty, "save_due": save_due, "page_snapshot": page_snapshot.duplicate(true),
-		"ending_media": ending_media.duplicate(true), "requested_destination": requested_destination, "ending_status": "completed" if state.ending_completed else ("active" if state.ending_started else ""),
-		"progress_summary": {"scene": scene_name(str(state.scene)), "phase": str(config.chapters[state.chapter].name), "question": target_text() if not question.is_empty() else ""}}
+		"narrative_media": narrative_media.duplicate(true), "ending_media": ending_media.duplicate(true), "requested_destination": requested_destination, "ending_status": "completed" if state.ending_completed else ("active" if state.ending_started else ""),
+		"progress_summary": {"scene": scene_name(str(state.scene)), "phase": str(config.chapters[state.chapter].name), "question": target_text() if not question.is_empty() else ""},
+		"chances_migration_version": int(case_state.data.get("chances_migration_version", CHANCES_MIGRATION_VERSION))}
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
 	if snapshot.get("format") != "aurora_session_v1" or snapshot.get("content_revision") != config.content_revision: return false
@@ -1286,7 +1310,22 @@ func validate_snapshot(snapshot: Dictionary) -> bool:
 		if pending.has("relation") and not config.relations.any(func(row): return row.id == pending.relation and row.question_ref == q): return false
 	if not _valid_page_snapshot(snapshot.get("page_snapshot", {}), snapshot.case_state): return false
 	if not snapshot.get("ending_media", {}) is Dictionary: return false
+	# narrative_media 是后续扩展字段；旧版本存档可以缺少它，由 restore_snapshot 迁移补齐。
+	if snapshot.has("narrative_media") and not snapshot.get("narrative_media", {}) is Dictionary: return false
+	for media in [snapshot.get("ending_media", {}), snapshot.get("narrative_media", {})]:
+		if not _valid_media_snapshot(media): return false
 	if not _valid_sources(pending.get("sources", []), snapshot.case_state): return false
+	return true
+
+func _valid_media_snapshot(value) -> bool:
+	# 音频游标是存档数据，不允许把对象、NaN 或负位置传入播放器。
+	if not value is Dictionary: return false
+	if value.is_empty(): return true
+	if value.has("key") and not value.key is String: return false
+	if value.has("completed") and not value.completed is bool: return false
+	if value.has("position"):
+		var position = value.position
+		if not (position is int or position is float) or not is_finite(float(position)) or float(position) < 0.0: return false
 	return true
 
 func _valid_page_snapshot(value, incoming: Dictionary) -> bool:
@@ -1344,7 +1383,12 @@ func _valid_sources(value, incoming: Dictionary, depth: int = 0) -> bool:
 	return true
 
 func restore_snapshot(snapshot: Dictionary) -> bool:
-	if not validate_snapshot(snapshot) or not prepare_scene(str(snapshot.case_state.scene)): return _notice("档案版本或完整性不符，当前调查已保留。")
+	# 999 次容错上线后的旧档仍可读取：在副本上一次性迁移未完成题，
+	# 不触碰已完成题、结果待收或叙事中的其他状态；迁移标记随新档保存，避免重复补满。
+	var candidate := snapshot.duplicate(true)
+	_migrate_legacy_chances(candidate)
+	if not validate_snapshot(candidate) or not prepare_scene(str(candidate.case_state.scene)): return _notice("档案版本或完整性不符，当前调查已保留。")
+	snapshot = candidate
 	case_state.data = snapshot.case_state.duplicate(true)
 	mode = str(snapshot.mode)
 	active_entry = str(snapshot.active_entry)
@@ -1370,6 +1414,8 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	autosave_failed = false
 	page_snapshot = snapshot.get("page_snapshot", {}).duplicate(true)
 	ending_media = snapshot.get("ending_media", {}).duplicate(true)
+	# 旧存档没有 narrative_media 时沿用结局字段；普通旧档则由入口重新建立音景。
+	narrative_media = snapshot.get("narrative_media", ending_media).duplicate(true)
 	requested_destination = str(snapshot.get("requested_destination", ""))
 	departure_ready_destination = ""
 	departure_managed = false
@@ -1382,3 +1428,25 @@ func restore_snapshot(snapshot: Dictionary) -> bool:
 	music_requested.emit(last_bgm)
 	changed.emit()
 	return true
+
+func _migrate_legacy_chances(snapshot: Dictionary) -> void:
+	if not snapshot is Dictionary or int(snapshot.get("chances_migration_version", 0)) >= CHANCES_MIGRATION_VERSION: return
+	# 旧版本未保存普通调查音乐进度，补空快照后仍允许读取；入口会从当前曲目合法起点恢复。
+	if not snapshot.has("narrative_media") or not snapshot.get("narrative_media") is Dictionary:
+		snapshot.narrative_media = snapshot.get("ending_media", {}).duplicate(true) if snapshot.get("ending_media", {}) is Dictionary else {}
+	var incoming = snapshot.get("case_state", null)
+	if not incoming is Dictionary or not incoming.get("chances", {}) is Dictionary: return
+	var chances: Dictionary = incoming.chances
+	for id in chances.keys():
+		if not config.questions.has(str(id)) or str(id) in incoming.get("completed_questions", {}): continue
+		var value := int(chances[id])
+		if value < DEFAULT_QUESTION_CHANCES: chances[id] = DEFAULT_QUESTION_CHANCES
+	# 旧 failure 只表示题目机会耗尽；迁移后恢复到可操作的选材页。
+	if str(snapshot.get("mode", "")) == "failure":
+		var q := str(snapshot.get("question", ""))
+		if not q.is_empty() and not incoming.get("completed_questions", {}).has(q):
+			snapshot.mode = "selection"
+			snapshot.pending_result = {}
+			snapshot.selected_target = false
+			snapshot.slots = ["", ""]
+	snapshot.chances_migration_version = CHANCES_MIGRATION_VERSION

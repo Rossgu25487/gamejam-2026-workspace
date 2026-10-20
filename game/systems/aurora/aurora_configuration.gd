@@ -216,7 +216,9 @@ func _repair_final_register_receipts() -> void:
 		{"kind": "event", "ref": "EV_E13_READ", "expected": true},
 		{"kind": "event", "ref": "EV_E17_READ", "expected": true},
 		{"kind": "text", "ref": "TXT_F7_CH03_ENTRY_F7_CH03_L09_R01_S3_001", "expected": true},
-		{"kind": "text", "ref": "TXT_F7_CH03_ENTRY_F7_CH03_L09_RESPONSE_009", "expected": true}]
+		# 1020正式脚本文本将本轮回应末句稳定编号为005；不要引用旧版009，
+		# 否则条件永远无法满足，登记回执及T18/E17更新不会提交。
+		{"kind": "text", "ref": "TXT_F7_CH03_ENTRY_F7_CH03_L09_RESPONSE_005", "expected": true}]
 	conditions["COND_FINAL_L09_RESPONSE_READ"] = {"1": read_terms}
 	var complete_terms: Array = read_terms.duplicate(true)
 	complete_terms.append({"kind": "event", "ref": "EV_CH03_REGISTER_ACCOUNT_HEARD", "expected": true})

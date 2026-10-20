@@ -51,7 +51,7 @@ func render(core: Node) -> void:
 			UI.label(content, core.catalog.text(c.title), 24)
 			_result_text(content, core.catalog.text(c.body))
 		UI.button(self, core.ui("UI_CORE_REVIEW_BASIS"), basis_requested.emit.bind(result.used_sources))
-	UI.label(self, "%s：%d / 3" % [core.ui("UI_CORE_CHANCES_LABEL"), int(core.state.chances[core.state.question_id])], 18)
+	UI.label(self, "%s：%d / %d" % [core.ui("UI_CORE_CHANCES_LABEL"), int(core.state.chances[core.state.question_id]), core.initial_chances()], 18)
 	var enabled: bool = not core.presenting
 	if core.state.mode == "pending":
 		UI.button(self, core.ui("UI_CORE_COLLECT_INFERENCE"), core.collect_inference.bind(result.result_id, result.inference_content_id), enabled)

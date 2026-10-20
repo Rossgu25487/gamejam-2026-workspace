@@ -265,13 +265,14 @@ func review_view() -> Dictionary:
 	var goal: Dictionary = model.goal
 	if not integration_errors.is_empty():
 		return {"open": review_state == "open", "invalid": true, "empty": true, "goal_id": "", "goal_text": "", "pending": [], "progress": []}
-	var view := {"open": review_state == "open", "invalid": false, "empty": goal.is_empty(), "goal_id": goal.get("goal_id", ""), "goal_text": goal.get("goal_text", ""), "pending": [], "progress": []}
+	var view := {"open": review_state == "open", "invalid": false, "empty": goal.is_empty(), "goal_id": goal.get("goal_id", ""), "goal_text": goal.get("goal_text", ""), "pending": [], "progress": [], "progress_summary": goal.get("progress", {}), "current_scene_id": goal.get("current_scene_id", "")}
 	for item in goal.get("items", []):
 		var entry: Dictionary = (item["entry"] as Dictionary).duplicate()
 		var bases: Array = []
 		for id in item["basis"]:
 			bases.append((goal["bases"][id] as Dictionary).duplicate())
-		var row := {"id": item["id"], "text": item["text"], "status": item["status"], "reason": item["reason"], "entry": entry, "bases": bases}
+		var row := {"id": item["id"], "text": item["text"], "status": item["status"], "reason": item["reason"], "entry": entry, "bases": bases,
+			"scene_id": String(item.get("scene_id", "")), "view_id": String(item.get("view_id", "")), "target_kind": String(item.get("target_kind", "")), "target_ref": String(item.get("target_ref", ""))}
 		(view["pending"] if item["status"] == "pending" else view["progress"]).append(row)
 	return view
 

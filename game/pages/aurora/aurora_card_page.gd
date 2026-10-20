@@ -43,6 +43,11 @@ var restoring_focus := false
 var adopted_assets := {}
 var preferences := {}
 
+func can_save() -> bool:
+	# 稳定选材与材料详情是两个不同状态：牌库网格可保存草稿，
+	# 详情页属于临时检视层，必须先关闭详情再写入存档，避免恢复后丢失阅读上下文。
+	return detail_content.is_empty()
+
 func library_capacity() -> int:
 	return 4 if size.x / maxf(size.y, 1.0) <= 1.4 else 6
 
@@ -139,10 +144,17 @@ func _render() -> void:
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for edge in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 24 if edge != "bottom" else 80)
 	page_canvas.add_child(margin)
+	# 核查正文使用固定不透明纸面承载，避免半透明场景遮罩让深色文字失去对比度。
+	var content_surface := PanelContainer.new()
+	content_surface.name = "CoreContentSurface"
+	content_surface.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content_surface.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content_surface.add_theme_stylebox_override("panel", _paper_panel_style())
+	margin.add_child(content_surface)
 	body = VBoxContainer.new()
 	body.add_theme_constant_override("separation", 14)
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	margin.add_child(body)
+	content_surface.add_child(body)
 	var top := HBoxContainer.new()
 	top.custom_minimum_size.y = 44
 	top.add_theme_constant_override("separation", 10)
@@ -201,7 +213,8 @@ func _selection() -> void:
 	upper.add_child(question_head)
 	var question_title := UI.label(question_head, "核查 · 当前原话", 24)
 	question_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var chances := UI.label(question_head, "复核机会：%d / 3" % int(session.case_state.data.chances.get(session.question, 3)), 22)
+	var max_chances := int(session.initial_chances()) if session.has_method("initial_chances") else 999
+	var chances := UI.label(question_head, "复核机会：%d / %d" % [int(session.case_state.data.chances.get(session.question, max_chances)), max_chances], 22)
 	chances.autowrap_mode = TextServer.AUTOWRAP_OFF
 	chances.size_flags_horizontal = Control.SIZE_SHRINK_END
 	var target_scroll := ScrollContainer.new()
@@ -751,8 +764,12 @@ func _paper_button_theme() -> Theme:
 	result.set_color("font_pressed_color", "Button", Color("34413f"))
 	result.set_color("font_focus_color", "Button", Color("34413f"))
 	result.set_color("font_disabled_color", "Button", Color("737b70"))
-	for state in ["normal", "hover", "pressed", "disabled"]:
-		var path := str(session.config.definition.root).path_join("assets/aurora/ui/art7/paper_v2/controls/button_secondary_" + state + ".png")
+	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var asset_state: String = state
+		var path := str(session.config.definition.root).path_join("assets/aurora/ui/art7/paper_v2/controls/button_secondary_" + asset_state + ".png")
+		if state == "hover_pressed" and not ResourceLoader.exists(path):
+			asset_state = "pressed"
+			path = str(session.config.definition.root).path_join("assets/aurora/ui/art7/paper_v2/controls/button_secondary_" + asset_state + ".png")
 		if not ResourceLoader.exists(path): continue
 		var style := StyleBoxTexture.new()
 		style.texture = load(path)

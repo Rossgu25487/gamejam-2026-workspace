@@ -28,13 +28,34 @@ func export_snapshot() -> Dictionary:
 	return result
 
 func validate_snapshot(snapshot: Dictionary) -> bool:
-	if not snapshot.get("choices", []) is Array: return false
-	if snapshot.get("state", {}).get("current_text_id") == "__CONTROL__":
+	# 坏档校验必须先确认容器类型；不能对 Array、String 或 null 直接调用 get。
+	# 这一层在进入父类校验前拦截合成档常见的类型破坏，保证当前会话不被半恢复。
+	if not snapshot is Dictionary: return false
+	var incoming_state = snapshot.get("state", null)
+	if not incoming_state is Dictionary: return false
+	var current_text_id = incoming_state.get("current_text_id", "")
+	if not current_text_id is String: return false
+	var choices = snapshot.get("choices", null)
+	if not choices is Array: return false
+	var control_label = snapshot.get("control_label", "")
+	if not control_label is String: return false
+	for jump in choices:
+		if not jump is Dictionary: return false
+		if not jump.has("target_kind") or not jump.has("target_ref"): return false
+		if not jump.target_kind is String or not jump.target_ref is String: return false
+
+	# 控制页没有正式文案记录。父类仍需看到临时记录才能校验文本 ID，
+	# 但验证结束后必须恢复原目录，避免坏档验证污染当前文案目录。
+	var had_control: bool = catalog.data.get("texts", {}).has("__CONTROL__")
+	var previous_control: Variant = catalog.data.texts.get("__CONTROL__") if had_control else null
+	if current_text_id == "__CONTROL__":
 		catalog.data.texts["__CONTROL__"] = _control_record()
-		catalog.data.texts["__CONTROL__"].text = str(snapshot.get("control_label", ""))
-	for jump in snapshot.get("choices", []):
-		if not jump is Dictionary or not jump.has("target_kind") or not jump.has("target_ref"): return false
-	return super.validate_snapshot(snapshot)
+		catalog.data.texts["__CONTROL__"].text = control_label
+	var valid: bool = super.validate_snapshot(snapshot)
+	if current_text_id == "__CONTROL__":
+		if had_control: catalog.data.texts["__CONTROL__"] = previous_control
+		else: catalog.data.texts.erase("__CONTROL__")
+	return valid
 
 func restore_snapshot(snapshot: Dictionary) -> bool:
 	if not validate_snapshot(snapshot): return false
@@ -239,8 +260,25 @@ func show_choices(rows: Array) -> void:
 func choose_transition(index: int) -> bool:
 	if not state.get("waiting_for_choice", false) or index < 0 or index >= available_choices.size(): return false
 	var jump: Dictionary = available_choices[index].duplicate(true)
+	# 选择是一个可恢复事务：先暂时锁住当前选项，接续失败时必须恢复原菜单。
+	# 旧实现只在 follow 前清 waiting_for_choice，失败后按钮仍可见但永远不会再进入此分支。
+	var previous_choices: Array = available_choices.duplicate(true)
+	var before: Dictionary = session.export_snapshot() if session != null and session.has_method("export_snapshot") else {}
 	state.waiting_for_choice = false
-	return session.follow(jump)
+	var ok: bool = session.follow(jump)
+	if not ok:
+		# follow 可能已经写入事件、入口或地点后才报告失败；完整回滚到选择前快照，
+		# 防止出现“按钮恢复但剧情已半推进”的坏状态。
+		if not before.is_empty() and session.has_method("restore_snapshot"):
+			session.restore_snapshot(before)
+		available_choices = previous_choices
+		state.waiting_for_choice = true
+		# follow 失败可能清空了临时转场目录；重建按钮对应的跳转，保证鼠标/键盘仍可重试。
+		catalog.data.transitions.clear()
+		for i in range(available_choices.size()):
+			catalog.data.transitions[str(i)] = {"source_text_id": state.current_text_id, "transition_type": "choice", "choice_text": session.choice_label(available_choices[i])}
+		_changed()
+	return ok
 
 func end_reading() -> void:
 	# 离开对白后不再排入更新提示，避免把本次对话的提示带到无关的下一段正文。

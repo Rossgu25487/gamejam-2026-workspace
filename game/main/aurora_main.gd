@@ -174,7 +174,10 @@ func _loaded(snapshot: Dictionary) -> void:
 	gameplay_page.reset_page()
 	map_service.initialize(str(session.case_state.data.scene))
 	audio_service.begin_session()
-	if not session.ending_media.is_empty(): audio_service.restore_narrative_media(session.ending_media)
+	# 普通调查和结局续播都从存档里的统一媒体快照恢复；旧档没有该字段时
+	# 回退到按当前剧情曲目从合法起点重建。
+	var media_snapshot: Dictionary = session.narrative_media if not session.narrative_media.is_empty() else session.ending_media
+	if not media_snapshot.is_empty(): audio_service.restore_narrative_media(media_snapshot)
 	else: audio_service.set_narrative_soundscape(session.last_bgm, true)
 	_resume()
 

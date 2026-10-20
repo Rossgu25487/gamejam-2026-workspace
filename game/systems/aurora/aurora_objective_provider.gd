@@ -40,8 +40,14 @@ func objective_snapshot() -> Dictionary:
 			if not str(row.get("target_ref", "")).is_empty():
 				routes[str(row.item_id)] = row
 				entry = {"id": row.item_id, "available": route.ok, "reason": route.reason}
-			items.append({"id": row.item_id, "order": int(row.display_order), "text": row.text, "status": "checked" if done else "pending", "reason": "" if done or route.ok else route.reason, "basis": refs, "entry": entry})
-		return {"goal_id": goal.goal_id, "goal_text": goal.text, "items": items, "bases": bases}
+			items.append({"id": row.item_id, "order": int(row.display_order), "text": row.text, "status": "checked" if done else "pending", "reason": "" if done or route.ok else route.reason, "basis": refs, "entry": entry,
+				"scene_id": str(row.get("scene_id", "")), "view_id": str(row.get("view_id", "")), "target_kind": str(row.get("target_kind", "")), "target_ref": str(row.get("target_ref", ""))})
+		var done_count := 0
+		for item in items:
+			if item["status"] == "checked": done_count += 1
+		return {"goal_id": goal.goal_id, "goal_text": goal.text, "items": items, "bases": bases,
+			"progress": {"done": done_count, "total": items.size(), "text": "%02d/%02d" % [done_count, items.size()]},
+			"current_scene_id": str(session.case_state.data.scene)}
 	return {}
 
 func prepare_review() -> Variant:

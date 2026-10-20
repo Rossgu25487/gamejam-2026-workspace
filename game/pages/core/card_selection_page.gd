@@ -27,7 +27,11 @@ func render(core: Node) -> void:
 	if q.has("parent") and core.catalog.data.characters.has(q.parent):
 		var name_label := UI.label(header, core.catalog.text(core.catalog.data.characters[q.parent].name), 20)
 		name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
-	var chances := UI.label(header, "%s %s  (%d/3)" % [core.ui("UI_CORE_CHANCES_LABEL"), "●".repeat(int(core.state.chances[core.state.question_id])) + "○".repeat(3 - int(core.state.chances[core.state.question_id])), int(core.state.chances[core.state.question_id])], 18)
+	var max_chances: int = core.initial_chances()
+	var remaining: int = int(core.state.chances[core.state.question_id])
+	# 大容错数值不再渲染999个圆点，避免页眉撑出屏幕；数量仍显示完整。
+	var marks := ("●".repeat(mini(remaining, 9)) + ("…" if remaining > 9 else ""))
+	var chances := UI.label(header, "%s %s  (%d/%d)" % [core.ui("UI_CORE_CHANCES_LABEL"), marks, remaining, max_chances], 18)
 	chances.autowrap_mode = TextServer.AUTOWRAP_OFF
 	var target_text: String = core.catalog.text(d.target_ref.question_text_id) if d.target_ref.target_kind == "reasoning" else core.catalog.text(core.catalog.data.statements[d.target_ref.statement_ref.statement_id].text)
 	# 自主推理入口已确定目标，这里仅展示问题；实际校验始终由“出示”提交。

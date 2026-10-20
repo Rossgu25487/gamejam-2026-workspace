@@ -639,7 +639,8 @@ func _step_failure() -> int:
 	_stats.retries += 1
 	_note("关卡 %s：失败界面，重试" % question_id, "wrong")
 	var data: Dictionary = session.case_state.data
-	var clean: bool = int(data.chances.get(question_id, 3)) == 3 and str(session.mode) == "selection" and session.slots.all(func(id): return str(id).is_empty())
+	var max_chances := int(session.initial_chances()) if session != null and session.has_method("initial_chances") else 999
+	var clean: bool = int(data.chances.get(question_id, max_chances)) == max_chances and str(session.mode) == "selection" and session.slots.all(func(id): return str(id).is_empty())
 	if not clean: _anomaly("flow", "重试后关卡 %s 没有恢复到初始选材状态（机会 %s，模式 %s）。" % [question_id, data.chances.get(question_id, "-"), session.mode], "error")
 	return CONTINUE
 

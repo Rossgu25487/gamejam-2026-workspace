@@ -11,6 +11,7 @@ const CatalogScript = preload("res://systems/core_gameplay/core_catalog.gd")
 const StoreScript = preload("res://systems/core_gameplay/core_material_store.gd")
 const TalkStore = preload("res://systems/core_gameplay/core_talk_records.gd")
 const SNAPSHOT_VERSION := 1
+const DEFAULT_CHANCES := 999
 var catalog: RefCounted = CatalogScript.new()
 var store: RefCounted = StoreScript.new()
 var state: Dictionary = {}
@@ -18,6 +19,26 @@ var processing := false
 var presenting := false
 var inspection_depth := 0
 var paused := false
+
+func _chance_rule(key: String, fallback: int = DEFAULT_CHANCES) -> int:
+	# 容错由核心配置表统一提供；没有接入配置时使用正式规则的安全默认值。
+	var rows: Array = catalog.rules.get("容错策略", [])
+	if rows.size() == 1 and rows[0] is Dictionary:
+		var value := int(rows[0].get(key, fallback))
+		return maxi(0, value)
+	return fallback
+
+func initial_chances() -> int:
+	return _chance_rule("initial_chances")
+
+func retry_chances() -> int:
+	return _chance_rule("retry_chances")
+
+func error_cost() -> int:
+	return _chance_rule("error_cost", 1)
+
+func failure_at() -> int:
+	return _chance_rule("failure_at", 0)
 
 func initialize(path: String = "res://data/story/outputs/story-images-20261011/故事配置表.xlsx", asset_root: String = "") -> bool:
 	store.catalog = catalog
@@ -201,7 +222,7 @@ func open_card_session(id: String, caller: Dictionary = {}) -> bool:
 	if state.question_id != id: state.partial_result = {}
 	state.question_id = id
 	state.card_caller_ref = caller.duplicate(true)
-	if not state.chances.has(id): state.chances[id] = 3
+	if not state.chances.has(id): state.chances[id] = initial_chances()
 	state.call_index = int(state.call_index) + 1
 	state.call_id = "call-%d" % int(state.call_index)
 	if id in state.completed_questions:
@@ -430,12 +451,12 @@ func present_materials(attempt_id: String = "") -> Dictionary:
 	state.current_node_id = result.node
 	state.card_ui_page = "closed"
 	if r.feedback == "incorrect":
-		state.chances[state.question_id] = maxi(0, int(state.chances[state.question_id]) - 1)
+		state.chances[state.question_id] = maxi(failure_at(), int(state.chances[state.question_id]) - error_cost())
 		state.deducted_attempts.append(attempt_id)
 	if r.feedback in ["partial", "counter"]: state.partial_result = result.duplicate(true)
 	state.mode = "pending" if not str(result.inference_content_id).is_empty() and not result.get("replay", false) else "response"
 	if state.mode == "pending": state.card_ui_page = "pending"
-	if r.feedback == "incorrect" and int(state.chances[state.question_id]) == 0: state.mode = "failure"
+	if r.feedback == "incorrect" and int(state.chances[state.question_id]) <= failure_at(): state.mode = "failure"
 	if r.feedback == "incorrect": state.failure_records[state.question_id] = result.duplicate(true)
 	if state.mode != "pending" and r.feedback == "full" and not result.get("replay", false):
 		if not _apply_result("enter"):
@@ -605,7 +626,7 @@ func retry_question() -> bool:
 	var id: String = state.get("question_id", "")
 	if paused or presenting or processing or inspection_depth > 0 or state.mode != "failure" or id in state.completed_questions: return false
 	if not condition_met(catalog.data.questions[id].condition): return false
-	state.chances[id] = 3
+	state.chances[id] = retry_chances()
 	state.drafts[id] = _new_draft(id)
 	state.partial_result = {}
 	state.current_result = {}
@@ -637,7 +658,7 @@ func validate_card_state(snapshot: Dictionary) -> bool:
 	if snapshot.mode not in ["investigation", "selection", "dialogue", "response", "pending", "collected", "failure"]: return false
 	if snapshot.card_ui_page not in ["closed", "selection", "grid", "pending", "collected"]: return false
 	for id in snapshot.chances:
-		if not catalog.data.questions.has(id) or int(snapshot.chances[id]) < 0 or int(snapshot.chances[id]) > 3: return false
+		if not catalog.data.questions.has(id) or int(snapshot.chances[id]) < failure_at() or int(snapshot.chances[id]) > initial_chances(): return false
 	for id in snapshot.heard_statements:
 		if not catalog.data.statements.has(id): return false
 	for result in snapshot.confirmed_results:
@@ -695,7 +716,7 @@ func validate_card_state(snapshot: Dictionary) -> bool:
 	if snapshot.mode in ["response", "pending", "collected"] and snapshot.current_result.is_empty(): return false
 	if snapshot.mode in ["selection", "failure", "response", "pending", "collected"] and not snapshot.chances.has(snapshot.question_id): return false
 	if snapshot.mode == "selection" and (not snapshot.drafts.has(snapshot.question_id) or int(snapshot.chances[snapshot.question_id]) == 0): return false
-	if snapshot.mode == "failure" and (int(snapshot.chances[snapshot.question_id]) != 0 or snapshot.question_id in snapshot.completed_questions): return false
+	if snapshot.mode == "failure" and (int(snapshot.chances[snapshot.question_id]) > failure_at() or snapshot.question_id in snapshot.completed_questions): return false
 	if snapshot.mode in ["response", "failure", "dialogue", "investigation"] and snapshot.card_ui_page != "closed": return false
 	if snapshot.mode == "selection" and snapshot.card_ui_page not in ["selection", "grid"]: return false
 	if snapshot.mode == "pending" and (snapshot.card_ui_page != "pending" or snapshot.current_result.collected or str(snapshot.current_result.inference_content_id).is_empty()): return false

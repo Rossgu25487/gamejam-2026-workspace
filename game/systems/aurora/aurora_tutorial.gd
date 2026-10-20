@@ -101,6 +101,9 @@ func _choose_step() -> Dictionary:
 	if session.mode == "selection":
 		var group := "TUT_T00_ONE" if session.question == "T00_R01" else ("TUT_T00_TWO" if session.question == "T00_R02" else "")
 		if not group.is_empty(): return _core_step(group)
+		# L02 是正式首段货单核查。配置提供原话、合法材料集合和出示关系；
+		# 引导只锁定当前实际持有的合法卡牌，不发卡、不替玩家出示。
+		if session.question in ["L02_R01", "L02_R02"]: return _guided_question_step(str(session.question))
 		return _first_press_step()
 	if session.mode == "result":
 		for step in definition.get("steps", []):
@@ -158,6 +161,53 @@ func _core_step(group: String) -> Dictionary:
 	if not session.slots.has("E28_V1"): return steps[1]
 	if not completed(steps[1]): _mark(steps[1])
 	return steps[2]
+
+func _guided_question_step(question_id: String) -> Dictionary:
+	# 正式 L02 的完整操作链：选原话 → 选合法材料 → 入槽 → 出示。
+	# 允许多个等价解法时，按配置 accepted_material_sets 选择第一组已取得的材料；
+	# 没有材料时不伪造目标，等待调查流程真实授予材料后再继续引导。
+	var binding: Dictionary = session.question_binding(question_id)
+	var group_id := "TUT_L02_R01" if question_id == "L02_R01" else "TUT_L02_R02"
+	var target_ref := str(binding.get("target_text_ref", ""))
+	if not session.selected_target:
+		return {"group_id": group_id, "step": 1, "target_kind": "text", "target_ref": target_ref,
+			"text_ref": "UI_GUIDE_TARGET", "completion_kind": "target_selected", "completion_ref": target_ref,
+			"allow_pause": true, "allow_cancel": false, "complete_on_actual_success": true}
+
+	var accepted: Array = binding.get("accepted_material_sets", [])
+	var chosen: Array = []
+	for option in accepted:
+		var candidate: Array = option if option is Array else [option]
+		var available := true
+		for material_id in candidate:
+			if _current_owned_content(str(material_id)).is_empty():
+				available = false
+				break
+		if available:
+			chosen = candidate
+			break
+	if chosen.is_empty(): return {}
+
+	var next_slot := 0
+	for material_id in chosen:
+		var content_id := _current_owned_content(str(material_id))
+		if session.slots.has(content_id):
+			next_slot += 1
+			continue
+		return {"group_id": group_id, "step": 1 + next_slot, "target_kind": "material", "target_ref": content_id,
+			"text_ref": "UI_GUIDE_PAIR" if chosen.size() > 1 else "UI_GUIDE_SINGLE",
+			"completion_kind": "material_inserted", "completion_ref": content_id,
+			"allow_pause": true, "allow_cancel": false, "complete_on_actual_success": true}
+
+	return {"group_id": group_id, "step": 1 + chosen.size(), "target_kind": "control", "target_ref": "CORE_LAYOUT_PRESENT",
+		"text_ref": "UI_GUIDE_PRESENT", "completion_kind": "presentation_succeeded", "completion_ref": question_id,
+		"allow_pause": true, "allow_cancel": false, "complete_on_actual_success": true}
+
+func _current_owned_content(material_id: String) -> String:
+	if material_id.is_empty() or not session.config.materials.has(material_id): return ""
+	var record: Dictionary = session.case_state.data.materials.get(material_id, {})
+	var current := str(record.get("current", ""))
+	return current if not current.is_empty() and session.case_state.owns(current) else ""
 
 func _first_press_step() -> Dictionary:
 	if completed({"group_id": "TUT_PRESS_FIRST", "step": 2}): return {}

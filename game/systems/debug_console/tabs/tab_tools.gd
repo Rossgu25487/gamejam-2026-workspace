@@ -2,6 +2,7 @@ extends "res://systems/debug_console/tabs/tab_base.gd"
 ## 调试页：关卡机会、游戏速度、屏幕状态信息，以及控制台自身的锁定与日志。
 var chance_option: OptionButton
 var chance_value: OptionButton
+const CHANCE_VALUES := [0, 1, 2, 999]
 var level_ids: Array = []
 var speed_slider: HSlider
 var speed_label: Label
@@ -11,17 +12,17 @@ var _syncing := false
 func build() -> void:
 	var content := scrolled()
 	heading("关卡机会", content)
-	hint("每个关卡有 3 次出错机会，机会为 0 会进入失败界面。用来测试失败与重试流程。", content)
+	hint("每个关卡有 999 次出错机会，机会为 0 会进入失败界面。用来测试失败与重试流程。", content)
 	var row := hbox(content)
 	chance_option = option_button(["全部关卡"], row)
 	for id in config().questions:
 		level_ids.append(str(id))
 		chance_option.add_item(str(id))
 	caption("设为", row)
-	chance_value = option_button(["0 次", "1 次", "2 次", "3 次"], row, 3)
+	chance_value = option_button(["0 次", "1 次", "2 次", "999 次"], row, 3)
 	make_button("应用", _apply_chances, row)
 	var quick := flow(content)
-	run_button("全部关卡补满 3 次", "chances all 3", quick)
+	run_button("全部关卡补满 999 次", "chances all 999", quick)
 	run_button("全部关卡清零（走失败界面）", "chances all 0", quick)
 	run_button("查看各关卡机会", "chances", quick)
 	content.add_child(HSeparator.new())
@@ -76,4 +77,5 @@ func _slider_commit(changed: bool) -> void:
 
 func _apply_chances() -> void:
 	var target: String = "all" if chance_option.selected <= 0 else str(level_ids[chance_option.selected - 1])
-	console.run("chances %s %d" % [target, chance_value.selected])
+	var value: int = int(CHANCE_VALUES[clampi(chance_value.selected, 0, CHANCE_VALUES.size() - 1)])
+	console.run("chances %s %d" % [target, value])

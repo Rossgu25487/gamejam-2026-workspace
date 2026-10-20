@@ -32,7 +32,7 @@ func build() -> void:
 	levels.item_selected.connect(_update_buttons)
 	var level_row := hbox(content)
 	jump_level_button = make_button("跳到所选关卡", _jump_selected, level_row)
-	make_button("补齐所选关卡的机会（3 次）", _restore_chances, level_row)
+	make_button("补齐所选关卡的机会（999 次）", _restore_chances, level_row)
 	content.add_child(HSeparator.new())
 	heading("前往场景（无条件）", content)
 	hint("需要在可操作的调查画面使用；不检查场景是否已开放。", content)
@@ -77,7 +77,7 @@ func refresh() -> void:
 		var done: bool = data.completed_questions.has(id)
 		var open: bool = not done and AutoPlay.level_open(session(), id)
 		item.set_text(3, "已完成" if done else ("可进入" if open else "未开放"))
-		item.set_text(4, str(int(data.chances.get(id, 3))))
+		item.set_text(4, str(int(data.chances.get(id, 999))))
 		color_item(item, 6, DebugTheme.OK if done else (DebugTheme.ACCENT_TEXT if open else DebugTheme.DIM))
 	for id in scene_buttons:
 		var status: Dictionary = session().scene_status(id)
@@ -98,7 +98,7 @@ func _jump_selected() -> void:
 
 func _restore_chances() -> void:
 	var id := _selected_level()
-	if not id.is_empty(): console.run("chances %s 3" % id)
+	if not id.is_empty(): console.run("chances %s 999" % id)
 
 func _go_scene(id: String) -> void:
 	console.run("scene %s%s" % [id, " arrive" if arrive_check.button_pressed else ""])

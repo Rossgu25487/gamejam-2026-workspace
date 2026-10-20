@@ -246,7 +246,7 @@ func validate(incoming: Dictionary) -> bool:
 	for id in incoming.completed_questions:
 		if not config.questions.has(id): return false
 	for id in incoming.chances:
-		if not config.questions.has(id) or not _integer(incoming.chances[id]) or incoming.chances[id] < 0 or incoming.chances[id] > 3: return false
+		if not config.questions.has(id) or not _integer(incoming.chances[id]) or incoming.chances[id] < 0 or incoming.chances[id] > 999: return false
 	for id in incoming.drafts:
 		if not config.questions.has(id) or not incoming.drafts[id] is Dictionary: return false
 		for content_id in incoming.drafts[id].get("slots", []):
